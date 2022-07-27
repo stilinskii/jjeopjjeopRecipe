@@ -109,3 +109,10 @@ a:focus {
 .user_option .login:hover {
   background-color: #e69c00;
 }
+
+div.caption {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/fragments/head('쩝쩝박사')">
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,12 +20,18 @@
       href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
+    <link
+      rel="stylesheet"
+      href="/static/css/style.css"
+      th:href="@{/css/style.css}"
+    />
   </head>
   <body>
     <nav
       class="navbar navbar-expand-lg navbar-dark bg-dark py-3"
       aria-label="Eighth navbar example"
+      th:replace="fragments/nav :: front-nav('home')"
+
     >
       <div class="container">
         <a class="navbar-brand" href="#">NAME</a>
