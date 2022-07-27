@@ -1,13 +1,13 @@
-package com.jjeopjjeop.recipe;
+package com.jjeopjjeop.produce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RecipeApplication {
+public class ProduceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RecipeApplication.class, args);
+		SpringApplication.run(ProduceApplication.class, args);
 	}
 
 }
