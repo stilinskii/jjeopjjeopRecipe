@@ -1,11 +1,12 @@
 package com.jjeopjjeop.recipe.controller;
 
-import com.jjeopjjeop.recipe.dto.CommunityBoardDTO;
-import com.jjeopjjeop.recipe.service.CommunityBoardService;
+import com.jjeopjjeop.recipe.dto.Community;
+import com.jjeopjjeop.recipe.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,26 +19,30 @@ import java.util.List;
 @Controller
 @RequestMapping("/community")
 @RequiredArgsConstructor
-public class CommunityBoardController {
+public class CommunityController {
 
-    private final CommunityBoardService service;
+    private final CommunityService service;
 
     @GetMapping
     public String all(Model model){
-        List<CommunityBoardDTO> board = service.getBoard();
+        List<Community> board = service.getBoard();
         model.addAttribute("board",board);
         return "community/index";
     }
 
     @GetMapping("/form")
-    public String form(@Validated @ModelAttribute CommunityBoardDTO communityBoardDTO){
+    public String form(@ModelAttribute Community communityBoardDTO){
 
         return "community/form";
     }
 
     @PostMapping("/form")
-    public String forFormSubmit(@Validated @ModelAttribute CommunityBoardDTO dto){
-        log.info("dto={}",dto.getTitle());
+    public String forFormSubmit(@Validated @ModelAttribute Community dto, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            log.info("errors={}", bindingResult);
+            return "community/form";
+        }
+
         service.insert(dto);
 
         return "redirect:/community";

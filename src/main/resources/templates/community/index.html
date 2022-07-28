@@ -39,7 +39,9 @@
         <h3>전체글</h3>
 
         <div class="caption">
-          <p class="p-2 bd-highlight">글 수:</p>
+          <p class="p-2 bd-highlight" th:text="|글 수 : ${#lists.size(board)}|">
+            글 수:
+          </p>
           <div>
             <a th:href="@{/community/form}" class="btn btn btn-secondary"
               >글쓰기</a
