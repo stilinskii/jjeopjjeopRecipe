@@ -25,6 +25,11 @@
       href="/static/css/style.css"
       th:href="@{/css/style.css}"
     />
+    <link
+      rel="stylesheet"
+      href="/static/css/community.css"
+      th:href="@{/css/community.css}"
+    />
   </head>
   <body class="bg-light">
     <nav th:replace="fragments/nav :: front-nav('community')"></nav>
@@ -36,22 +41,27 @@
         <div class="caption">
           <p class="p-2 bd-highlight">글 수:</p>
           <div>
-            <button class="btn btn btn-secondary">글쓰기</button>
+            <a th:href="@{/community/form}" class="btn btn btn-secondary"
+              >글쓰기</a
+            >
           </div>
         </div>
 
         <div class="container-fluid">
           <div class="row">
-            <div class="col-2">
+            <div
+              class="col-2"
+              th:replace="/fragments/communityCategory::category('전체글')"
+            >
               <ul class="list-group">
                 <li class="list-group-item">
-                  <a href="/board" class="nav-link">전체글</a>
+                  <a href="/board" class="nav-link category">전체글</a>
                 </li>
                 <li class="list-group-item">
-                  <a href="/board" class="nav-link">레시피후기</a>
+                  <a href="/board" class="nav-link category">레시피후기</a>
                 </li>
                 <li class="list-group-item">
-                  <a href="/board" class="nav-link">자유게시판</a>
+                  <a href="/board" class="nav-link category">자유게시판</a>
                 </li>
               </ul>
             </div>
@@ -75,7 +85,7 @@
                     <td th:text="${el.user_id}">Otto</td>
                     <td th:text="${el.created_at}">@mdo</td>
                     <td th:text="${el.read_count}">@mdo</td>
-                    <td>@mdo</td>
+                    <td th:text="${el.like_count}">@mdo</td>
                   </tr>
                   <tr>
                     <th scope="row">2</th>

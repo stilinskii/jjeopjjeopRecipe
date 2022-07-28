@@ -15,4 +15,8 @@ public class CommunityBoardService {
     public List<CommunityBoardDTO> getBoard(){
         return boardMapper.listAll();
     }
+
+    public void insert(CommunityBoardDTO dto){
+        boardMapper.insert(dto);
+    }
 }
