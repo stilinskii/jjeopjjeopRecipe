@@ -82,8 +82,8 @@
                 </thead>
                 <tbody>
                   <tr th:each="el:${board}">
-                    <th scope="row">1</th>
-                    <td th:text="${el.title}">Mark</td>
+                    <th scope="row" th:text="${el.id}">1</th>
+                    <a th:href="@{|/community/post?id=${el.id}|}"><td th:text="${el.title}">제목</td></a>
                     <td th:text="${el.user_id}">Otto</td>
                     <td th:text="${el.created_at}">@mdo</td>
                     <td th:text="${el.read_count}">@mdo</td>

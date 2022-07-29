@@ -16,7 +16,11 @@ public class CommunityService {
         return boardMapper.listAll();
     }
 
-    public void insert(Community dto){
+    public void save(Community dto){
         boardMapper.insert(dto);
+    }
+
+    public Community findPostById(Integer id){
+        return boardMapper.findPostById(id);
     }
 }

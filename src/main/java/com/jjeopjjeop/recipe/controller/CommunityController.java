@@ -31,20 +31,35 @@ public class CommunityController {
     }
 
     @GetMapping("/form")
-    public String form(@ModelAttribute Community communityBoardDTO){
-
+    public String form(@ModelAttribute Community community){
+        //빈 객체 넘기기
+        // form.html에 th:object를 썼기때문에 모델 어트리뷰트가 있어야함.
+        // th:object를 쓰면 id name value 생략가능
         return "community/form";
     }
 
     @PostMapping("/form")
-    public String forFormSubmit(@Validated @ModelAttribute Community dto, BindingResult bindingResult){
+    public String forFormSubmit(@Validated @ModelAttribute Community community, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("errors={}", bindingResult);
             return "community/form";
         }
 
-        service.insert(dto);
-
-        return "redirect:/community";
+        //성공로직
+        service.save(community);
+        return "community/post";
+        //mybatis insert에서 community return하게 해야함
+//        Community savedPost = service.save(community);
+//        return "redirect:/community/post?id="+savedPost.getId();
     }
+
+    @GetMapping("/post")
+    public String post(Integer id,Model model){
+
+        Community post = service.findPostById(id);
+        model.addAttribute("community",post);
+
+        return "community/post";
+    }
+
 }

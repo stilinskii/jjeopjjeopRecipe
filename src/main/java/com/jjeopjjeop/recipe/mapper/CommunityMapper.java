@@ -17,7 +17,7 @@ public interface CommunityMapper {
     @Insert("Insert into CommunityBoard values(CommunityBoard_SEQ.nextval,'jenn',0,#{dto.category},#{dto.title},#{dto.content},sysdate,sysdate,0,0,0)")
     void insert(@Param("dto") Community communityBoardDTO);
 
-
-
+    @Select("select * from CommunityBoard where id=#{id}")
+    Community findPostById(@Param("id") Integer id);
 
 }

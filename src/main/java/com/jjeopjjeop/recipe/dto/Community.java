@@ -13,13 +13,14 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 public class Community {
+    private Integer id;
     private String user_id;
     private Integer rep_seq;
     private String category;
     @NotNull
-    @Size(min=2,max=30)
+    @Size(min=1,max=30)
     private String title;
-    @Size(min=2)
+    @Size(min=1)
     private String content;
     private String created_at;
     private String updated_at;
