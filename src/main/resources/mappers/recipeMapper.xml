@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjeopjjeop.recipe.dao.RecipeDAO">
+    <select id="count" resultType="int">
+        SELECT count(*) FROM recipe
+    </select>
+
+    <select id="list" parameterType="RecipePageDTO" resultType="RecipeDTO">
+        <![CDATA[
+        SELECT rcp_li.* FROM
+            (SELECT rcp.*, rownum rm FROM
+                (SELECT * FROM recipe
+                ORDER BY rcp_seq DESC)rcp)rcp_li
+        WHERE rm >=#{startRow} AND rm <= #{endRow}
+        ]]>
+    </select>
+
+    <select id="favoriteList" resultType="RecipeDTO">
+        <![CDATA[
+        SELECT * FROM (
+            SELECT * FROM recipe
+            ORDER BY scrap DESC)
+        WHERE rownum <= 3
+        ]]>
+    </select>
+
+    <select id="cateList" resultType="CategoryDTO">
+        SELECT * FROM category
+    </select>
+
+    <select id="content" parameterType="int" resultType="RecipeDTO">
+        SELECT * FROM recipe WHERE rcp_seq = #{rcp_seq}
+    </select>
+
+    <update id="viewCnt" parameterType="int">
+        UPDATE recipe SET rcp_viewcnt = rcp_viewcnt+1
+        WHERE rcp_seq = #{rcp_seq}
+    </update>
+
+    <insert id="write" parameterType="RecipeDTO">
+        INSERT INTO recipe(rcp_seq, rcp_name, user_id, filename, filepath, time, difficulty, amount, summary, hash_tag, rcp_parts_dtls, rcp_date)
+        VALUES(rcp_seq_seq.nextval, #{rcp_name}, '테스트', #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR}, #{time, jdbcType=VARCHAR}, #{difficulty, jdbcType=VARCHAR}, #{amount, jdbcType=VARCHAR}, #{summary, jdbcType=VARCHAR}, #{hash_tag, jdbcType=VARCHAR}, #{rcp_parts_dtls, jdbcType=VARCHAR}, sysdate)
+    </insert>
+</mapper>
