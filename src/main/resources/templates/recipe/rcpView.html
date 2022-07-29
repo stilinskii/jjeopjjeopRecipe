@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>레시피 본문</title>
 </head>
 <body>
-<h1>레시피 본문입니다.</h1>
+<h1 th:text="${rcp.rcp_seq}+'번 레시피 본문입니다.'"></h1>
+<th:block th:text="${rcp.rcp_name}"></th:block>
+<th:block th:text="${rcp.user_id}"></th:block>
+<th:block th:text="${rcp.time}"></th:block>
+<th:block th:text="${rcp.difficulty}"></th:block>
+<th:block th:text="${rcp.amount}"></th:block>
+<th:block th:text="${rcp.summary}"></th:block>
+<th:block th::text="${rcp.rcp_parts_dtls}"></th:block>
+<th:block th:text="${rcp.rcp_viewcnt}"></th:block>
 </body>
 </html>
