@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjeopjjeop.recipe.dao.AdminDAO">
+
+    <resultMap id="userResult" type="com.jjeopjjeop.recipe.dto.AdminDTO">
+        <result property="user_id" column="user_id" />
+        <result property="password" column="password" />
+        <result property="usertype" column="usertype" />
+        <result property="username" column="username" />
+        <result property="nickname" column="nickname" />
+        <result property="email" column="email" />
+        <result property="phone" column="phone" />
+        <result property="birthday" column="birthday" />
+        <result property="gender" column="gender" />
+        <result property="postno" column="postno" />
+        <result property="address" column="address" />
+    </resultMap>
+
+<!--    불러오는지 확인-->
+    <select id="count" resultType="int">
+        SELECT count(*) FROM User_j
+    </select>
+
+<!--    회원목록-->
+    <select id="userList" resultMap="userResult">
+        SELECT * FROM User_j
+    </select>
+
+    <!--회원등록-->
+<!--    <insert id="insertUser" parameterType="AdminDTO">-->
+<!--        INSERT User_j(user_id, password, usertype, username,-->
+<!--                      nickname, email, phone, birthday, gender, postno, address)-->
+<!--        VALUES(#{user_id}, #{password}, #{usertype}, #{username},-->
+<!--                           #{nickname}, #{email}, #{phone}, #{birthday}, #{gender},-->
+<!--                           #{postno}, #{address})-->
+<!--    </insert>-->
+
+    
+
+
+</mapper>
