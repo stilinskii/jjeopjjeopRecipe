@@ -1,0 +1,43 @@
+.container .input-group {
+padding: 20px 150px;
+margin: auto;
+margin-top: 20px;
+background-color: yellowgreen;
+}
+
+.cate_box {
+background-color: yellow;
+margin: auto;
+margin-bottom: 20px;
+padding: 20px;
+text-align: center;
+font-size: 15px;
+}
+
+.cate_box p {
+line-height: 1;
+}
+
+hr {
+margin-top: 0;
+}
+
+.rcp_best {
+margin: auto;
+text-align: center;
+}
+
+.col-4 {
+text-align: center;
+}
+
+.col-4 img {
+margin-bottom: 10px;
+}
+
+.col-4 p {
+display: inline-block;
+margin-left: auto;
+margin-right: auto;
+line-height: 0.5;
+width: 250px;
