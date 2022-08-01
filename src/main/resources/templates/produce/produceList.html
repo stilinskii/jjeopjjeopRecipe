@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--    th:replace="fragments/head('쇼핑')"-->
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--==========================임의추가 시작==========================-->
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"
+          th:href="@{/css/bootstrap.css}"/>
+
+    <!--아래 4줄은 드롭다운이 안돼서 임의로 넣음.https://coding-dahee.tistory.com/50-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <!--==========================임의 추가 끝==========================-->
+
+    <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
+
+
+
+
+
+    <style>
+        /*페이지처리*/
+        .site-block-27 ul, .site-block-27 ul li {
+          padding: 0;
+          margin: 0; }
+
+        .site-block-27 ul li {
+          display: inline-block;
+          margin-bottom: 4px; }
+          .site-block-27 ul li a, .site-block-27 ul li span {
+            text-align: center;
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ccc; }
+          .site-block-27 ul li.active a, .site-block-27 ul li.active span {
+            background: #7971ea;
+            color: #fff;
+            border: 1px solid transparent; }
+          /*아마 판매글 글씨체?*/
+        .block-4 {
+          -webkit-box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.1);
+          background: #fff; }
+        .block-4 .block-4-text h3 {
+            font-size: 20px;
+            margin-bottom: 0; }
+        .block-4 .block-4-text h3 a {
+              text-decoration: none; }
+
+    </style>
+</head>
+<body>
+<!--    <a th:href="@{/produce/write}" >판매글 쓰기</a>-->
+
+<!--    <div class="type">-->
+<!--        <a th:href="@{/produce/list}">전체</a>-->
+<!--        <a th:href="@{/produce/list/1}">채소</a>-->
+<!--        <a th:href="@{/produce/list/2}">과일</a>-->
+<!--        <a th:href="@{/produce/list/3}">곡물</a>-->
+<!--        <a th:href="@{/produce/list/4}">기타</a>-->
+<!--    </div>-->
+
+
+<!--    <table>-->
+<!--        <thead>-->
+<!--        <tr>  <th>이미지</th> <th>상품명</th> <th>판매자</th> <th>가격</th>  </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+
+<!--        <tr th:each="produce : ${list}">-->
+<!--            <td th:text="${produce.produce_image}" />-->
+<!--            <td>-->
+<!--                <a th:text="${produce.produce_name}" th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}" />-->
+<!--            </td>-->
+<!--            <td th:text="${produce.user_id}" />-->
+<!--            <td th:text="${produce.price}" />-->
+<!--        </tr>-->
+<!--&lt;!&ndash;http://localhost:8081/produce/view/?produce_num=10-->
+<!--th:href="@{/produce/view/(produce_num=${produce.produce_num})}-->
+<!--&ndash;&gt;-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--<nav th:replace="fragments/nav :: front-nav('shopping')"></nav>-->
+<div class="site-wrap">
+    <div class="site-section">
+        <div class="container">
+            <button class="secondary"><a th:href="@{/produce/write}">판매글 쓰기</a></button>
+            <div class="row mb-5">
+                <div class="col-md-9 order-2">
+                    <!--================드롭다운 시작=================-->
+                    <div class="row">
+                        <div class="col-md-12 mb-5">
+                            <div class="float-md-left mb-4"><h2 class="text-black h5">농산물 직거래 마당</h2></div>
+                            <div class="d-flex">
+                                <div class="dropdown mr-1 ml-md-auto">
+                                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        종류
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+                                        <a class="dropdown-item" th:href="@{/produce/list}">전체</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/1}">채소</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/2}">과일</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/3}">곡물</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/4}">기타</a>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                                        <a class="dropdown-item" href="#">Relevance</a>
+                                        <a class="dropdown-item" href="#">Name, A to Z</a>
+                                        <a class="dropdown-item" href="#">Name, Z to A</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Price, low to high</a>
+                                        <a class="dropdown-item" href="#">Price, high to low</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--================드롭다운 끝=================-->
+                    <div class="row mb-5" >
+                        <!--  ====================상품 카드 시작======================-->
+                        <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up" th:each="produce : ${list}">
+                            <div class="block-4 text-center border" th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"
+                                 style="cursor:pointer;">
+                                <figure class="block-4-image">
+                                    <a href="shop-single.html">
+                                        <img src="images/cloth_1.jpg" alt="상품이미지" class="img-fluid" th:text="${produce.produce_image}">
+                                    </a>
+                                </figure>
+                                <div class="block-4-text p-4">
+<!--                                    <h3><a th:text="${produce.produce_name}">상품명</a></h3>-->
+                                    <h3 class="text-success font-weight-bold" th:text="${produce.produce_name}">상품명</h3>
+                                    <p class="mb-0" th:text="${produce.user_id}">판매자</p>
+<!--                                <p class="text-primary font-weight-bold" th:text="${produce.price} + '원'" >상품가격</p>-->
+                                    <p class="font-weight-bold" data-th-text="${#numbers.formatInteger(produce.price, 3, 'COMMA') + '원'}" >상품가격</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  ====================상품 카드 끝======================-->
+
+
+                    <!--  ====================페이지네이션 시작======================-->
+<!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
+                    <div class="row fixed-bottom" data-aos="fade-up">
+                        <div class="col-md-12 text-center">
+                            <div class="site-block-27">
+                                <ul>
+                                    <li><a href="#">&lt;</a></li>
+                                    <li class="active"><span>1</span></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a href="#">&gt;</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--  ====================페이지네이션 끝======================-->
+                 
+
+
+
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+    </div>
+
+</body>
+</html>

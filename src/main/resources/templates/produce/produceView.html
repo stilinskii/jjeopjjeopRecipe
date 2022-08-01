@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <!--        임의추가 시작-->
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"
+          th:href="@{/css/bootstrap.css}"/>
+    <!--임의 추가 끝-->
+
+    <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
+    <!--    &lt;!&ndash; responsive style &ndash;&gt;-->
+    <!--    <link href="/static/css/responsive.css" th:href="@{/css/responsive.css}" rel="stylesheet"/>-->
+    <style>
+        body {
+          line-height: 1.7;
+          color: #8c92a0;
+          font-weight: 300;
+          font-size: 16px; }
+
+
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+	var sitePlusMinus = function() {
+		$('.js-btn-minus').on('click', function(e){
+			e.preventDefault();
+			if ( $(this).closest('.input-group').find('.form-control').val() != 0  ) {
+				$(this).closest('.input-group').find('.form-control').val(parseInt($(this).closest('.input-group').find('.form-control').val()) - 1);
+			} else {
+				$(this).closest('.input-group').find('.form-control').val(parseInt(0));
+			}
+		});
+		$('.js-btn-plus').on('click', function(e){
+			e.preventDefault();
+			$(this).closest('.input-group').find('.form-control').val(parseInt($(this).closest('.input-group').find('.form-control').val()) + 1);
+		});
+	};
+	sitePlusMinus();
+            });
+
+    </script>
+
+</head>
+<body>
+
+<!--        <p th:text="${dto.produce_num}"/>-->
+<!--        <p th:text="${dto.user_id}"/>-->
+<!--        <p th:text="${dto.produce_type}"/>-->
+<!--        <p th:text="${dto.produce_name}"/>-->
+<!--        <p th:text="${dto.price}"/>-->
+<!--        <p th:text="${dto.produce_image}"/>-->
+<!--        <p th:text="${dto.produce_image_path}"/>-->
+<!--        <p th:text="${dto.produce_description}"/>-->
+
+<!--        <a th:href="@{/produce/delete/{produce_num}(produce_num=${produceNum})}">삭제</a>-->
+<!--        <a th:href="@{/produce/update/{produce_num}(produce_num=${produceNum})}">수정</a>-->
+<div class="site-wrap">
+    <div class="bg-light py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 mb-0"><a th:href="@{/produce/list}">농산물직거래</a> <span class="mx-2 mb-0">/</span> <strong
+                        class="text-black" th:text="${dto.produce_name}">상품명</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="site-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="images/cloth_1.jpg" alt="Image" class="img-fluid">
+                </div>
+                <div class="col-md-6">
+                    <div class="seller-only">
+                        <a th:href="@{/produce/delete/{produce_num}(produce_num=${produceNum})}">삭제</a>
+                        <a th:href="@{/produce/update/{produce_num}(produce_num=${produceNum})}">수정</a>
+                    </div>
+                    <h2 class="text-black" th:text="${dto.produce_name}">상품명</h2>
+                    <p th:text="'판매자: '+${dto.user_id}">seller_name</p>
+                    <p><strong class="text-primary h4" data-th-text="${#numbers.formatInteger(dto.price, 3, 'COMMA') + '원'}">상품가격</strong></p>
+                    <p th:text="${dto.produce_description}">상품설명</p>
+                    <div class="mb-5">
+                        <div class="input-group mb-3" style="max-width: 120px;">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                            </div>
+                            <input type="text" class="form-control text-center" value="1" placeholder=""
+                                   aria-label="Example text with button addon" aria-describedby="button-addon1">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <span><a href="cart.html" class="buy-now btn btn-sm btn-primary">장바구니</a></span>
+                    <span><a href="cart.html" class="buy-now btn btn-sm btn-primary">구매</a></span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
