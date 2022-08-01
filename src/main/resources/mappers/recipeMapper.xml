@@ -44,4 +44,11 @@
         INSERT INTO recipe(rcp_seq, rcp_name, user_id, filename, filepath, time, difficulty, amount, summary, hash_tag, rcp_parts_dtls, rcp_date)
         VALUES(rcp_seq_seq.nextval, #{rcp_name}, '테스트', #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR}, #{time, jdbcType=VARCHAR}, #{difficulty, jdbcType=VARCHAR}, #{amount, jdbcType=VARCHAR}, #{summary, jdbcType=VARCHAR}, #{hash_tag, jdbcType=VARCHAR}, #{rcp_parts_dtls, jdbcType=VARCHAR}, sysdate)
     </insert>
+
+    <insert id="writeManual" parameterType="ManualDTO">
+        INSERT INTO manual(manual_no, rcp_seq, manual_txt, filename, filepath)
+        VALUES(#{manual_no, jdbcType=VARCHAR},
+        (SELECT max(rcp_seq) FROM recipe)
+        , #{manual_txt, jdbcType=VARCHAR}, null, null)
+    </insert>
 </mapper>

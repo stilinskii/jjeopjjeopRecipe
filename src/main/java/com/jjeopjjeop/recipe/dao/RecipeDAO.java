@@ -1,6 +1,7 @@
 package com.jjeopjjeop.recipe.dao;
 
 import com.jjeopjjeop.recipe.dto.CategoryDTO;
+import com.jjeopjjeop.recipe.dto.ManualDTO;
 import com.jjeopjjeop.recipe.dto.RecipeDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -20,6 +21,7 @@ public interface RecipeDAO {
     public void viewCnt(int num);
 //    public void reStepCount(RecipeDTO model);
     public void write(RecipeDTO dto);
+    public void writeManual(ManualDTO mDto);
     public RecipeDTO updateNum(int num);
     public void update(RecipeDTO dto);
     public void delete(int num);

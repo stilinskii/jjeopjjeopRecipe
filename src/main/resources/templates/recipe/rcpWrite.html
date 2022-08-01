@@ -3,6 +3,12 @@
 <head th:replace="fragments/head('레시피')">
     <meta charset="UTF-8" />
     <title>레시피 작성 폼</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+function testtest(){
+console.log("test");
+}
+</script>
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
@@ -79,6 +85,7 @@
         <p class="fw-bold fs-2 text-start">요리 순서</p>
         <div class="rcp_manual">
             <p class="fw-bold fs-4 text-start">1</p>
+            <input type="hidden" name="manual_no" value="1">
             <textarea name="manual_txt"></textarea>
             <input type="file" style="display:none;">
             <p class="d-flex justify-content-between">
@@ -87,12 +94,13 @@
                 이미지 추가
                 </label>
             </button>
-            <button type="button" class="btn btn-danger">순서 삭제</button>
+            <button type="button" class="btn btn-danger" onclick="testtest">순서 삭제</button>
             </p>
         </div>
         <div class="rcp_manual">
             <p class="fw-bold fs-4 text-start">2</p>
-            <textarea name="manual_txt"></textarea>
+            <input type="hidden" name="manual_no" value="2">
+            <textarea name="manual_txt" id="manual_test"></textarea>
             <input type="file" style="display:none;">
             <p class="d-flex justify-content-between">
                 <button type="button" id="manual_file" class="btn btn-dark">
@@ -105,6 +113,7 @@
         </div>
         <div class="rcp_manual">
             <p class="fw-bold fs-4 text-start">3</p>
+            <input type="hidden" name="manual_no" value="3">
             <textarea name="manual_txt"></textarea>
             <input type="file" style="display:none;">
             <p class="d-flex justify-content-between">
@@ -120,11 +129,13 @@
         <hr/>
         <p class="fw-bold fs-2 text-start">해쉬태그</p>
         <p>*레시피에 어울리는 해쉬태그를 입력해 주세요.</p>
-        <textarea name="rcp_parts_dtls" placeholder="귀찮을 때, 자취요리, 야채듬뿍..."></textarea>
+        <textarea name="hash_tag" placeholder="귀찮을 때, 자취요리, 야채듬뿍..."></textarea>
         <hr/>
     <p class="d-flex justify-content-between">
-        <button type="button" class="btn btn-danger">취소</button>
-        <button type="submit" class="btn btn-primary">작성</button>
+        <a th:href="@{/recipe/list}" class="btn btn-danger">
+            &nbsp&nbsp취소&nbsp&nbsp
+        </a>
+        <button type="submit" class="btn btn-primary">&nbsp&nbsp작성&nbsp&nbsp</button>
     </p>
 </form>
 </main>

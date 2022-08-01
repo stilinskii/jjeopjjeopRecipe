@@ -1,6 +1,7 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.CategoryDTO;
+import com.jjeopjjeop.recipe.dto.ManualDTO;
 import com.jjeopjjeop.recipe.dto.RecipeDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import com.jjeopjjeop.recipe.service.RecipeService;
@@ -96,9 +97,16 @@ public class RecipeController {
 
     // 레시피 작성 메소드
     @PostMapping("/recipe/write")
-    public String rcpWriteProMethod(RecipeDTO dto){
+    public String rcpWriteProMethod(RecipeDTO dto, String[] manual_txt){
         service.writeProcess(dto);
         // validation!!
+
+        ManualDTO mDto = new ManualDTO();
+        for(int i=0; i<manual_txt.length; i++){
+            mDto.setManual_no(i+1);
+            mDto.setManual_txt(manual_txt[i]);
+            service.writeMProcess(mDto);
+        }
 
         return "redirect:/recipe/list";
     }

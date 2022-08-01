@@ -2,6 +2,7 @@ package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dao.RecipeDAO;
 import com.jjeopjjeop.recipe.dto.CategoryDTO;
+import com.jjeopjjeop.recipe.dto.ManualDTO;
 import com.jjeopjjeop.recipe.dto.RecipeDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,11 @@ public class RecipeServiceImp implements RecipeService{
 
     @Override
     public void writeProcess(RecipeDTO dto) {
+
         dao.write(dto);
+    }
+
+    public void writeMProcess(ManualDTO mDto){
+        dao.writeManual(mDto);
     }
 }
