@@ -36,6 +36,11 @@ font-size: 15px;
 line-height: 1;
 }
 
+.viewBtn a{
+width: 350px;
+margin-bottom: 15px;
+}
+
 hr {
 margin-top: 0;
 }

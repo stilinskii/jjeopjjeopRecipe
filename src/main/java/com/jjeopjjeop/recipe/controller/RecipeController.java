@@ -66,6 +66,8 @@ public class RecipeController {
     public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq, ModelAndView mav){
 
         mav.addObject("rcp", service.contentProcess(rcp_seq));
+        mav.addObject("manualList", service.contentMnlProcess(rcp_seq));
+
         mav.setViewName("/recipe/rcpView");
         return mav;
     }

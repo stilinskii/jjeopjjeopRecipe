@@ -45,8 +45,12 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public void writeProcess(RecipeDTO dto) {
+    public List<ManualDTO> contentMnlProcess(int rcp_seq) {
+        return dao.contentMnl(rcp_seq);
+    }
 
+    @Override
+    public void writeProcess(RecipeDTO dto) {
         dao.write(dto);
     }
 

@@ -18,6 +18,7 @@ public interface RecipeDAO {
     public List<RecipeDTO> favoriteList();
     public List<CategoryDTO> cateList();
     public RecipeDTO content(int num);
+    public List<ManualDTO> contentMnl(int num);
     public void viewCnt(int num);
 //    public void reStepCount(RecipeDTO model);
     public void write(RecipeDTO dto);

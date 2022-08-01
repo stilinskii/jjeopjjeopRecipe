@@ -4,11 +4,6 @@
     <meta charset="UTF-8" />
     <title>레시피 작성 폼</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script type="text/javascript">
-function testtest(){
-console.log("test");
-}
-</script>
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
@@ -83,9 +78,9 @@ console.log("test");
         <textarea name="rcp_parts_dtls" placeholder="양파 반 쪽, 굴소스 한 숟갈, 베이컨 100g..."></textarea>
         <hr/>
         <p class="fw-bold fs-2 text-start">요리 순서</p>
+        <div class="manual_container">
         <div class="rcp_manual">
-            <p class="fw-bold fs-4 text-start">1</p>
-            <input type="hidden" name="manual_no" value="1">
+            <p class="fw-bold fs-4 text-start manual_step">1</p>
             <textarea name="manual_txt"></textarea>
             <input type="file" style="display:none;">
             <p class="d-flex justify-content-between">
@@ -97,35 +92,8 @@ console.log("test");
             <button type="button" class="btn btn-danger" onclick="testtest">순서 삭제</button>
             </p>
         </div>
-        <div class="rcp_manual">
-            <p class="fw-bold fs-4 text-start">2</p>
-            <input type="hidden" name="manual_no" value="2">
-            <textarea name="manual_txt" id="manual_test"></textarea>
-            <input type="file" style="display:none;">
-            <p class="d-flex justify-content-between">
-                <button type="button" id="manual_file" class="btn btn-dark">
-                    <label for="manual_file">
-                        이미지 추가
-                    </label>
-                </button>
-                <button type="button" class="btn btn-danger">순서 삭제</button>
-            </p>
         </div>
-        <div class="rcp_manual">
-            <p class="fw-bold fs-4 text-start">3</p>
-            <input type="hidden" name="manual_no" value="3">
-            <textarea name="manual_txt"></textarea>
-            <input type="file" style="display:none;">
-            <p class="d-flex justify-content-between">
-                <button type="button" id="manual_file" class="btn btn-dark">
-                    <label for="manual_file">
-                        이미지 추가
-                    </label>
-                </button>
-                <button type="button" class="btn btn-danger">순서 삭제</button>
-            </p>
-        </div>
-        <button type="button" class="btn btn-secondary" style="width: 100%; margin-bottom: 15px;">요리 순서 추가</button>
+        <button type="button" id="addManual" class="btn btn-secondary" style="width: 100%; margin-bottom: 15px;">요리 순서 추가</button>
         <hr/>
         <p class="fw-bold fs-2 text-start">해쉬태그</p>
         <p>*레시피에 어울리는 해쉬태그를 입력해 주세요.</p>
@@ -139,5 +107,17 @@ console.log("test");
     </p>
 </form>
 </main>
+<script>
+    var testNum = 1;
+    var inputContainer = document.querySelector(".manual_container");
+    var inputNode = document.querySelector(".rcp_manual");
+    addManual.onclick = function(){
+        testNum++;
+        console.log(testNum);
+        var n1 = inputNode.cloneNode(true);
+        n1.querySelector(".manual_step").innerHTML = testNum;
+        inputContainer.appendChild(n1);
+    };
+</script>
 </body>
 </html>

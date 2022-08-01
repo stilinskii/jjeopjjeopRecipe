@@ -13,6 +13,7 @@ public interface RecipeService {
     public List<RecipeDTO> favoriteListProcess();
     public List<CategoryDTO> cateListProcess();
     public RecipeDTO contentProcess(int rcp_seq);
+    public List<ManualDTO> contentMnlProcess(int rcp_seq);
     public void writeProcess(RecipeDTO dto);
     public void writeMProcess(ManualDTO mDto);
 }
