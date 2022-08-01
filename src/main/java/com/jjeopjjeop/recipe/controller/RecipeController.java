@@ -85,9 +85,13 @@ public class RecipeController {
 
     // 레시피 작성 페이지 요청 메소드
     @GetMapping("/recipe/write")
-    public String rcpWriteMethod(){
+    public ModelAndView rcpWriteMethod(ModelAndView mav){
+        // 레시피 분류 목록
+        List<CategoryDTO> cateList = service.cateListProcess();
 
-        return "/recipe/rcpWrite";
+        mav.addObject("cateList", cateList);
+        mav.setViewName("/recipe/rcpWrite");
+        return mav;
     }
 
     // 레시피 작성 메소드

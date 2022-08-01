@@ -6,17 +6,20 @@
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
-<main class="container">
+<main class="custom container">
 <p class="fw-bold fs-2 text-start">새 레시피 등록하기</p>
     <form action="/recipe/write" method="post" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-5">
-            <img src="/images/rcp_mainimg.png" width="100%" height="100%" alt="main image"/>
-            <input type="file" name="file">
+    <div class="row" style="margin-bottom:15px;">
+        <div class="col-4 d-grid gap-2 d-md-block">
+            <img src="/images/rcp_mainimg.png" width="100%" height="230px" alt="main image"/>
+            <input type="file" id="rcp_file" name="file" style="display: none;">
+            <button type="button" class="btn btn-dark" style="width: 100%;">
+            <label for="rcp_file" style="width: 100%; height:100%;">대표 이미지 첨부</label>
+            </button>
         </div>
-        <div class="col-7">
-            <p><input type="text" name="rcp_name" placeholder="title"></p>
-            <select name="time" id="rcp_time">
+        <div class="col-8">
+            <p><input type="text" class="form-control" name="rcp_name" width="90%" placeholder="레시피 이름"></p>
+            <select class="form-select" name="time" id="rcp_time">
                 <option value="">소요시간</option>
                 <option value="10분 이내">10분 이내</option>
                 <option value="20분 이내">20분 이내</option>
@@ -25,25 +28,104 @@
                 <option value="2시간 이내">2시간 이내</option>
                 <option value="2시간 이상">2시간 이상</option>
             </select>
-            <select name="difficulty" id="difficulty">
-                <option value="volvo">난이도</option>
+            <select class="form-select" name="difficulty" id="difficulty">
+                <option value="">난이도</option>
                 <option value="쉬움">쉬움</option>
                 <option value="보통">보통</option>
                 <option value="어려움">어려움</option>
             </select>
-            <select name="amount" id="amount">
+            <select class="form-select" name="amount" id="amount">
                 <option value="">양</option>
                 <option value="1인분">1인분</option>
                 <option value="2인분">2인분</option>
                 <option value="3인분">3인분</option>
                 <option value="4인분">4인분</option>
-                <option value="5인분">5인분 이상</option>
+                <option value="5인분 이상">5인분 이상</option>
             </select>
-            <p><input type="text" name="summary" placeholder="summary"></p>
+            <textarea class="form-control" name="summary" placeholder="레시피를 간단히 소개해 주세요."></textarea>
         </div>
     </div>
-    <input type="text" name="rcp_parts_dtls">
-    <button type="submit">작성</button>
+        <p>*레시피에 어울리는 분류를 선택해 주세요.</p>
+        <div class="cate_box">
+            <p>
+                <span>종류별</span>
+                <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
+             <a th:href="@{/recipe/search}">
+            <span th:text="${cate1.cate_name}">종류별</span>
+             </a>
+          </span>
+            </p>
+            <p>
+                <span>재료별</span>
+                <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
+            <a th:href="@{/recipe/search}">
+            <span th:text="${cate2.cate_name}">재료별</span>
+            </a>
+          </span>
+            </p>
+            <p>
+                <span>상황별</span>
+                <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
+            <a th:href="@{/recipe/search}">
+            <span th:text="${cate3.cate_name}">상황별</span>
+            </a>
+          </span>
+            </p>
+        </div>
+        <hr/>
+        <p class="fw-bold fs-2 text-start">재료</p>
+        <textarea name="rcp_parts_dtls" placeholder="양파 반 쪽, 굴소스 한 숟갈, 베이컨 100g..."></textarea>
+        <hr/>
+        <p class="fw-bold fs-2 text-start">요리 순서</p>
+        <div class="rcp_manual">
+            <p class="fw-bold fs-4 text-start">1</p>
+            <textarea name="manual_txt"></textarea>
+            <input type="file" style="display:none;">
+            <p class="d-flex justify-content-between">
+            <button type="button" id="manual_file" class="btn btn-dark">
+                <label for="manual_file">
+                이미지 추가
+                </label>
+            </button>
+            <button type="button" class="btn btn-danger">순서 삭제</button>
+            </p>
+        </div>
+        <div class="rcp_manual">
+            <p class="fw-bold fs-4 text-start">2</p>
+            <textarea name="manual_txt"></textarea>
+            <input type="file" style="display:none;">
+            <p class="d-flex justify-content-between">
+                <button type="button" id="manual_file" class="btn btn-dark">
+                    <label for="manual_file">
+                        이미지 추가
+                    </label>
+                </button>
+                <button type="button" class="btn btn-danger">순서 삭제</button>
+            </p>
+        </div>
+        <div class="rcp_manual">
+            <p class="fw-bold fs-4 text-start">3</p>
+            <textarea name="manual_txt"></textarea>
+            <input type="file" style="display:none;">
+            <p class="d-flex justify-content-between">
+                <button type="button" id="manual_file" class="btn btn-dark">
+                    <label for="manual_file">
+                        이미지 추가
+                    </label>
+                </button>
+                <button type="button" class="btn btn-danger">순서 삭제</button>
+            </p>
+        </div>
+        <button type="button" class="btn btn-secondary" style="width: 100%; margin-bottom: 15px;">요리 순서 추가</button>
+        <hr/>
+        <p class="fw-bold fs-2 text-start">해쉬태그</p>
+        <p>*레시피에 어울리는 해쉬태그를 입력해 주세요.</p>
+        <textarea name="rcp_parts_dtls" placeholder="귀찮을 때, 자취요리, 야채듬뿍..."></textarea>
+        <hr/>
+    <p class="d-flex justify-content-between">
+        <button type="button" class="btn btn-danger">취소</button>
+        <button type="submit" class="btn btn-primary">작성</button>
+    </p>
 </form>
 </main>
 </body>

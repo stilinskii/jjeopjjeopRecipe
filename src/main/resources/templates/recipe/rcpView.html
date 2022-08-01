@@ -6,7 +6,7 @@
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
-<main class="container">
+<main class="custom container">
 <h1 th:text="${rcp.rcp_seq}+'번 레시피 본문입니다.'"></h1>
 <th:block th:text="${rcp.rcp_name}"></th:block>
 <th:block th:text="${rcp.user_id}"></th:block>

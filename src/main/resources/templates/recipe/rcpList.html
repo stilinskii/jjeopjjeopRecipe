@@ -6,7 +6,7 @@
   </head>
   <body>
   <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
-  <main class="container">
+  <main class="custom container">
       <div class="input-group mb-3">
         <input
           type="text"
@@ -15,6 +15,7 @@
           aria-label="Recipient's username"
           aria-describedby="button-addon2"
         />
+        <a th:href="@{/recipe/search}">
         <button
           class="btn btn-outline-secondary"
           type="button"
@@ -22,6 +23,7 @@
         >
           레시피 검색
         </button>
+        </a>
       </div>
       <div class="rcp_best">
         <p class="fw-bold fs-2 text-start">오늘의 인기 레시피</p>

@@ -1,8 +1,26 @@
-.container .input-group {
+.custom {
+  min-width: 950px;
+}
+
+.custom .input-group {
 padding: 20px 150px;
 margin: auto;
 margin-top: 20px;
 background-color: yellowgreen;
+}
+
+select.form-select{
+display: inline-block;
+width: 200px;
+margin-bottom: 15px;
+}
+
+textarea{
+width: 100%;
+}
+
+textarea.form-control{
+height: auto;
 }
 
 .cate_box {
