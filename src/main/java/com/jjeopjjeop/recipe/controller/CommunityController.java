@@ -1,6 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
-import com.jjeopjjeop.recipe.dto.Community;
+import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,10 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,13 +23,14 @@ public class CommunityController {
 
     @GetMapping
     public String all(Model model){
-        List<Community> board = service.getBoard();
+        log.info("cnt={}",service.count());
+        List<CommunityDTO> board = service.getBoard();
         model.addAttribute("board",board);
         return "community/index";
     }
 
     @GetMapping("/form")
-    public String form(@ModelAttribute Community community){
+    public String form(@ModelAttribute("community") CommunityDTO community){
         //빈 객체 넘기기
         // form.html에 th:object를 썼기때문에 모델 어트리뷰트가 있어야함.
         // th:object를 쓰면 id name value 생략가능
@@ -39,24 +38,28 @@ public class CommunityController {
     }
 
     @PostMapping("/form")
-    public String forFormSubmit(@Validated @ModelAttribute Community community, BindingResult bindingResult){
+    public String forFormSubmit(@Validated @ModelAttribute("community") CommunityDTO community, BindingResult bindingResult, @RequestPart(value = "image",required=false) List<MultipartFile> image){
         if(bindingResult.hasErrors()){
             log.info("errors={}", bindingResult);
             return "community/form";
         }
 
         //성공로직
+        //transaction 처리 필요 TODO
         service.save(community);
-        return "community/post";
-        //mybatis insert에서 community return하게 해야함
-//        Community savedPost = service.save(community);
-//        return "redirect:/community/post?id="+savedPost.getId();
+        log.info("savedId={}",community.getId());
+        if(image!=null){
+            log.info("image={}",image.size());
+            service.saveImages(image,community.getId());
+        }
+
+        return "redirect:/community/post?id="+community.getId();
     }
 
     @GetMapping("/post")
     public String post(Integer id,Model model){
 
-        Community post = service.findPostById(id);
+        CommunityDTO post = service.findPostById(id);
         model.addAttribute("community",post);
 
         return "community/post";
