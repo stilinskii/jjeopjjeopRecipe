@@ -110,7 +110,7 @@
         <div class="row align-items-center" style="margin-bottom: 20px">
           <div th:each="rcp : ${rcpList}" class="col-4">
             <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq})}">
-            <img src="..." width="250px" height="180px" class="rounded float" />
+            <img th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
             <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>
             </a>
             <p class="d-flex justify-content-between">
@@ -130,11 +130,14 @@
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
-            <li th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}" class="page-item">
-
-              <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/recipe/list}" th:text="${pDtos}" class="active page-link"></a>
-              <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/recipe/list(currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+            <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
+            <li class="page-item active">
+              <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/recipe/list}" th:text="${pDtos}" class="page-link"></a>
             </li>
+              <li class="page-item">
+                <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/recipe/list(currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+              </li>
+            </th:block>
             <li class="page-item">
               <a class="page-link" href="#" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>

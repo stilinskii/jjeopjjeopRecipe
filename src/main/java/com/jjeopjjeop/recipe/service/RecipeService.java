@@ -16,4 +16,5 @@ public interface RecipeService {
     public List<ManualDTO> contentMnlProcess(int rcp_seq);
     public void writeProcess(RecipeDTO dto);
     public void writeMProcess(ManualDTO mDto);
+    public void deleteProcess(int rcp_seq);
 }

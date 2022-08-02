@@ -57,4 +57,10 @@ public class RecipeServiceImp implements RecipeService{
     public void writeMProcess(ManualDTO mDto){
         dao.writeManual(mDto);
     }
+
+    @Override
+    public void deleteProcess(int rcp_seq) {
+        dao.deleteManual(rcp_seq);
+        dao.delete(rcp_seq);
+    }
 }

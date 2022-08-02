@@ -26,5 +26,6 @@ public interface RecipeDAO {
     public RecipeDTO updateNum(int num);
     public void update(RecipeDTO dto);
     public void delete(int num);
+    public void deleteManual(int num);
     public String getFile(int num); // 파일 다운에 사용
 }

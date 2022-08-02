@@ -32,21 +32,21 @@
     </select>
 
     <select id="content" parameterType="int" resultType="RecipeDTO">
-        SELECT * FROM recipe WHERE rcp_seq = #{rcp_seq}
+        SELECT * FROM recipe WHERE rcp_seq = #{num}
     </select>
 
     <select id="contentMnl" parameterType="int" resultType="ManualDTO">
-        SELECT * FROM manual WHERE rcp_seq = #{rcp_seq}
+        SELECT * FROM manual WHERE rcp_seq = #{num}
     </select>
 
     <update id="viewCnt" parameterType="int">
         UPDATE recipe SET rcp_viewcnt = rcp_viewcnt+1
-        WHERE rcp_seq = #{rcp_seq}
+        WHERE rcp_seq = #{num}
     </update>
 
     <insert id="write" parameterType="RecipeDTO">
         INSERT INTO recipe(rcp_seq, rcp_name, user_id, filename, filepath, time, difficulty, amount, summary, hash_tag, rcp_parts_dtls, rcp_date)
-        VALUES(rcp_seq_seq.nextval, #{rcp_name}, '테스트', #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR}, #{time, jdbcType=VARCHAR}, #{difficulty, jdbcType=VARCHAR}, #{amount, jdbcType=VARCHAR}, #{summary, jdbcType=VARCHAR}, #{hash_tag, jdbcType=VARCHAR}, #{rcp_parts_dtls, jdbcType=VARCHAR}, sysdate)
+        VALUES(rcp_seq_seq.nextval, #{rcp_name}, '테스트', #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR} ,#{time, jdbcType=VARCHAR}, #{difficulty, jdbcType=VARCHAR}, #{amount, jdbcType=VARCHAR}, #{summary, jdbcType=VARCHAR}, #{hash_tag, jdbcType=VARCHAR}, #{rcp_parts_dtls, jdbcType=VARCHAR}, sysdate)
     </insert>
 
     <insert id="writeManual" parameterType="ManualDTO">
@@ -55,4 +55,14 @@
         (SELECT max(rcp_seq) FROM recipe)
         , #{manual_txt, jdbcType=VARCHAR}, null, null)
     </insert>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM recipe
+        WHERE rcp_seq=#{num}
+    </delete>
+
+    <delete id="deleteManual" parameterType="int">
+        DELETE FROM manual
+        WHERE rcp_seq=#{num}
+    </delete>
 </mapper>
