@@ -17,13 +17,9 @@
     <!--==========================임의 추가 끝==========================-->
 
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
-
-
-
-
-
+    
     <style>
-        /*페이지처리*/
+        /*페이지처리 원래색꺌 #7971ea*/
         .site-block-27 ul, .site-block-27 ul li {
           padding: 0;
           margin: 0; }
@@ -40,7 +36,7 @@
             border-radius: 50%;
             border: 1px solid #ccc; }
           .site-block-27 ul li.active a, .site-block-27 ul li.active span {
-            background: #7971ea;
+            background: #FFC947;
             color: #fff;
             border: 1px solid transparent; }
           /*아마 판매글 글씨체?*/
@@ -92,7 +88,7 @@
 <div class="site-wrap">
     <div class="site-section">
         <div class="container">
-            <button class="secondary"><a th:href="@{/produce/write}">판매글 쓰기</a></button>
+            <button class="warning"><a th:href="@{/produce/write}">판매글 쓰기</a></button>
             <div class="row mb-5">
                 <div class="col-md-9 order-2">
                     <!--================드롭다운 시작=================-->
@@ -101,7 +97,7 @@
                             <div class="float-md-left mb-4"><h2 class="text-black h5">농산물 직거래 마당</h2></div>
                             <div class="d-flex">
                                 <div class="dropdown mr-1 ml-md-auto">
-                                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         종류
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
@@ -113,7 +109,7 @@
                                     </div>
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
                                         <a class="dropdown-item" href="#">Relevance</a>
                                         <a class="dropdown-item" href="#">Name, A to Z</a>
@@ -133,15 +129,14 @@
                             <div class="block-4 text-center border" th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"
                                  style="cursor:pointer;">
                                 <figure class="block-4-image">
-                                    <a href="shop-single.html">
-                                        <img src="images/cloth_1.jpg" alt="상품이미지" class="img-fluid" th:text="${produce.produce_image}">
+<!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
+                                    <a th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}">
+                                        <img class="img-fluid" th:src="${produce.produce_image_path}" alt="상품이미지" />
                                     </a>
                                 </figure>
                                 <div class="block-4-text p-4">
-<!--                                    <h3><a th:text="${produce.produce_name}">상품명</a></h3>-->
-                                    <h3 class="text-success font-weight-bold" th:text="${produce.produce_name}">상품명</h3>
-                                    <p class="mb-0" th:text="${produce.user_id}">판매자</p>
-<!--                                <p class="text-primary font-weight-bold" th:text="${produce.price} + '원'" >상품가격</p>-->
+                                    <h3 class="text-dark font-weight-bold" th:text="${produce.produce_name}">상품명</h3>
+                                    <p class="mb-0 text-secondary" th:text="${produce.user_id}">판매자</p>
                                     <p class="font-weight-bold" data-th-text="${#numbers.formatInteger(produce.price, 3, 'COMMA') + '원'}" >상품가격</p>
                                 </div>
                             </div>

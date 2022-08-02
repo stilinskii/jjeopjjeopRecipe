@@ -4,18 +4,20 @@ package com.jjeopjjeop.recipe.controller;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import com.jjeopjjeop.recipe.service.ProduceService;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+@Slf4j
 @Controller
 public class ProduceController {
-    private static final Logger log = LoggerFactory.getLogger(ProduceController.class);
+
     @Autowired
     private ProduceService service;
 
@@ -28,11 +30,10 @@ public class ProduceController {
     }
 
     @PostMapping({"/produce/write"})
-    public String produceWrite(ProduceDTO dto) {
+    public String produceWrite(ProduceDTO dto, MultipartFile file) throws Exception{
         log.info("dto={}", dto.getUser_id());
-        log.info("dto={}", dto.getPrice());
-        log.info("dto={}", dto.getProduce_description());
-        this.service.writeProcess(dto);
+        log.info("dto={}", dto.getProduce_image());
+        this.service.writeProcess(dto, file);
         return "redirect:/produce/list";
     }
 

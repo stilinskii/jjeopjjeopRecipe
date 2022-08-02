@@ -93,7 +93,7 @@
     <div class="row d-flex justify-content-center">
       <div class="col-md-6">
         <div class="form_container">
-          <form name="write" id="write" method="post">
+          <form name="write" id="write" method="post" enctype="multipart/form-data">
             <div>
               <input type="text" class="form-control" name="user_id" id="user_id" placeholder="아이디" />
             </div>
@@ -111,6 +111,9 @@
             </div>
             <div>
               <input type="text" class="form-control" name="price" placeholder="금액(숫자만 입력해주세요)" />
+            </div>
+            <div>
+              <input type="file" name="file">
             </div>
             <div>
               <textarea class="form-control" name="produce_description" placeholder="상품상세설명"></textarea>

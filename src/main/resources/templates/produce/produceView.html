@@ -5,15 +5,9 @@
     <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
-    <link rel="stylesheet" href="fonts/icomoon/style.css">
-
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/magnific-popup.css">
-    <link rel="stylesheet" href="css/jquery-ui.css">
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="css/owl.theme.default.min.css">
-    <!--        임의추가 시작-->
+
+    <!--임의추가 시작-->
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"
           th:href="@{/css/bootstrap.css}"/>
     <!--임의 추가 끝-->
@@ -80,35 +74,38 @@
 
     <div class="site-section">
         <div class="container">
-            <div class="row">
+             <div class="row">
                 <div class="col-md-6">
-                    <img src="images/cloth_1.jpg" alt="Image" class="img-fluid">
+                    <img class="img-fluid" th:src="${dto.produce_image_path}" alt="첨부이미지" />
                 </div>
                 <div class="col-md-6">
                     <div class="seller-only">
                         <a th:href="@{/produce/delete/{produce_num}(produce_num=${produceNum})}">삭제</a>
                         <a th:href="@{/produce/update/{produce_num}(produce_num=${produceNum})}">수정</a>
                     </div>
-                    <h2 class="text-black" th:text="${dto.produce_name}">상품명</h2>
+                    <h2 class="text-dark" th:text="${dto.produce_name}">상품명</h2>
                     <p th:text="'판매자: '+${dto.user_id}">seller_name</p>
-                    <p><strong class="text-primary h4" data-th-text="${#numbers.formatInteger(dto.price, 3, 'COMMA') + '원'}">상품가격</strong></p>
+                    <p><strong class="text-dark h4" data-th-text="${#numbers.formatInteger(dto.price, 3, 'COMMA') + '원'}">상품가격</strong></p>
                     <p th:text="${dto.produce_description}">상품설명</p>
-                    <div class="mb-5">
-                        <div class="input-group mb-3" style="max-width: 120px;">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
-                            </div>
-                            <input type="text" class="form-control text-center" value="1" placeholder=""
-                                   aria-label="Example text with button addon" aria-describedby="button-addon1">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                    <form name="cartWrite" id="cartWrite" method="get" th:action="@{/cart/write/}">
+                        <div class="mb-5">
+                            <div class="input-group mb-3" style="max-width: 120px;">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-warning js-btn-minus" type="button">&minus;</button>
+                                </div>
+                                <input type="text" class="form-control text-center" value="1" placeholder=""
+                                   aria-label="Example text with button addon" aria-describedby="button-addon1"
+                                    name="quantity">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-warning js-btn-plus" type="button">&plus;</button>
+                                </div>
                             </div>
                         </div>
-
-                    </div>
-                    <span><a href="cart.html" class="buy-now btn btn-sm btn-primary">장바구니</a></span>
-                    <span><a href="cart.html" class="buy-now btn btn-sm btn-primary">구매</a></span>
-
+<!--                    장바구니넣을때 produce_num을 넣어주기위해-->
+                       <input type="hidden" th:value="${dto.produce_num}" name="produce_num" placeholder="게시글번호" />
+                        <button class="btn btn-sm btn-warning">장바구니</button>
+                        <button class="btn btn-sm btn-warning">구매</button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -1,10 +1,12 @@
 package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 public interface ProduceService {
-    void writeProcess(ProduceDTO dto);
+    void writeProcess(ProduceDTO produceDto, MultipartFile file) throws Exception;
 
     List<ProduceDTO> produceListProcess();
 
@@ -14,5 +16,5 @@ public interface ProduceService {
 
     ProduceDTO produceViewProcess(int produce_num);
 
-    void produceUpdateProcess(ProduceDTO dto);
+    void produceUpdateProcess(ProduceDTO produceDto);
 }
