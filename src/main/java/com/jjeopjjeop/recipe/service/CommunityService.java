@@ -3,6 +3,7 @@ package com.jjeopjjeop.recipe.service;
 import com.jjeopjjeop.recipe.dao.CommunityDAO;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.ImageDTO;
+import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.file.FileStore;
 import com.jjeopjjeop.recipe.mapper.CommunityMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,20 +17,19 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CommunityService {
-    private final CommunityMapper boardMapper;
 
     private final CommunityDAO communityDAO;
     private final FileStore fileStore;
 
-    public List<CommunityDTO> getBoard(){
-        return communityDAO.list();
+    public List<CommunityDTO> getBoard(PagenationDTO pagenationDTO){
+        return communityDAO.list(pagenationDTO);
     }
 
     public void save(CommunityDTO dto){
         communityDAO.insert(dto);
     }
 
-    public void saveImages(List<MultipartFile> multipartFiles,Integer boardId){
+    public void saveImagesToDB(List<MultipartFile> multipartFiles,Integer boardId){
         List<ImageDTO> community = fileStore.storeImages(multipartFiles, "community");
         for (ImageDTO imageDTO : community) {
             saveImageToDB(imageDTO,boardId);
@@ -42,7 +42,17 @@ public class CommunityService {
     }
 
     public CommunityDTO findPostById(Integer id){
-        return communityDAO.findPostById(id);
+        CommunityDTO post = communityDAO.findPostById(id);
+        List<ImageDTO> image = communityDAO.findImageByPostId(id);
+        if(hasImage(image)){
+        log.info("image={}",image.get(0).getFilename());
+            post.setImages(image);
+        }
+        return post;
+    }
+
+    private boolean hasImage(List<ImageDTO> image) {
+        return !image.isEmpty();
     }
 
     public int count(){

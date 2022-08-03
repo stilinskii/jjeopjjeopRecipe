@@ -31,7 +31,7 @@ public class CommunityDTO {
     private Integer like_count;
     private Integer report;
 
-    private List<ImageDTO> image;
+    private List<ImageDTO> images;
 
     public CommunityDTO(String user_id, String category, String title, String content) {
         this.user_id = user_id;

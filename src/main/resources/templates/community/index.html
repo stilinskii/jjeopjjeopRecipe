@@ -39,7 +39,7 @@
         <h3>전체글</h3>
 
         <div class="caption">
-          <p class="p-2 bd-highlight" th:text="|글 수 : ${#lists.size(board)}|">
+          <p class="p-2 bd-highlight" th:text="|글 수 : ${page.count}|">
             글 수:
           </p>
           <div>
@@ -81,9 +81,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr th:each="el:${board}">
-                    <th scope="row" th:text="${el.id}">1</th>
-                    <a th:href="@{|/community/post?id=${el.id}|}"><td th:text="${el.title}">제목</td></a>
+                  <tr th:each="el,iterStat:${board}">
+                    <th scope="row" th:text="${iterStat.count}">1</th>
+                    <td>
+                      <a
+                        th:href="@{|/community/post?id=${el.id}|}"
+                        th:text="${el.title}"
+                        >제목</a
+                      >
+                    </td>
                     <td th:text="${el.user_id}">Otto</td>
                     <td th:text="${el.created_at}">@mdo</td>
                     <td th:text="${el.read_count}">@mdo</td>
@@ -107,6 +113,38 @@
                   </tr>
                 </tbody>
               </table>
+              <nav class="mt-3" th:if="${page.count>page.perPage}">
+                <ul class="pagination">
+                  <li class="page-item" th:if="${page.page > 0}">
+                    <a
+                      th:href="@{${#httpServletRequest.requestURI}} + '?page=__${page.page-1}__'"
+                      class="page-link"
+                      >Previous</a
+                    >
+                  </li>
+                  <li
+                    class="page-item"
+                    th:each="number : ${#numbers.sequence(0,page.totalPageCnt-1)}"
+                    th:classappend="${page.page==number} ? 'active'"
+                  >
+                    <a
+                      th:href="@{${#httpServletRequest.requestURI}} + '?page=__${number}__'"
+                      class="page-link"
+                      th:text="${number+1}"
+                    ></a>
+                  </li>
+                  <li
+                    class="page-item"
+                    th:if="${page.page < page.totalPageCnt-1}"
+                  >
+                    <a
+                      th:href="@{${#httpServletRequest.requestURI}} + '?page=__${page.page+1}__'"
+                      class="page-link"
+                      >Next</a
+                    >
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>

@@ -1,9 +1,11 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
+import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -22,10 +25,23 @@ public class CommunityController {
     private final CommunityService service;
 
     @GetMapping
-    public String all(Model model){
-        log.info("cnt={}",service.count());
-        List<CommunityDTO> board = service.getBoard();
+    public String all(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model){
+        PagenationDTO pagenationDTO = new PagenationDTO();
+        int startPage = (page != null) ? page : 0;
+        int count = service.count();
+        double endPage = Math.ceil((double) count/(double) pagenationDTO.getPerPage());
+        pagenationDTO.setPage(startPage);
+        pagenationDTO.setCount(count);
+        pagenationDTO.setTotalPageCnt((int)endPage);
+        pagenationDTO.setStartPage(1 + (10 * (page)));
+        pagenationDTO.setEndPage(10*(page+1));
+
+        log.info("start and end = {},{}",pagenationDTO.getStartPage(),pagenationDTO.getEndPage());
+
+        List<CommunityDTO> board = service.getBoard(pagenationDTO);
+
         model.addAttribute("board",board);
+        model.addAttribute("page",pagenationDTO);
         return "community/index";
     }
 
@@ -50,7 +66,7 @@ public class CommunityController {
         log.info("savedId={}",community.getId());
         if(image!=null){
             log.info("image={}",image.size());
-            service.saveImages(image,community.getId());
+            service.saveImagesToDB(image,community.getId());
         }
 
         return "redirect:/community/post?id="+community.getId();

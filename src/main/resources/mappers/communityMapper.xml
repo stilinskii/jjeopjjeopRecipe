@@ -8,8 +8,10 @@
         SELECT count(*) FROM communityboard
     </select>
 
-    <select id="list" resultType="CommunityDTO">
-        select * from CommunityBoard
+    <select id="list" parameterType="PagenationDTO" resultType="CommunityDTO">
+        SELECT * FROM (select t1.*,row_number() over (order by id DESC) as seqnum
+        from CommunityBoard t1) t1
+        where seqnum between #{startPage} and #{endPage}
     </select>
 
     <insert id="insert" parameterType="CommunityDTO">
@@ -28,5 +30,9 @@
         Insert into Image
         values(Image_SEQ.nextval,#{filename},#{board_id})
     </insert>
-<!--이미지 불러오기-->
+
+    <select id="findImageByPostId" parameterType="int" resultType="ImageDTO">
+        select * from Image where board_id=#{id}
+    </select>
+
 </mapper>
