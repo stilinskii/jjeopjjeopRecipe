@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <!--==========================임의추가 시작==========================-->
-    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"
-          th:href="@{/css/bootstrap.css}"/>
+<!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"-->
+<!--          th:href="@{/css/bootstrap.css}"/>-->
 
     <!--아래 4줄은 드롭다운이 안돼서 임의로 넣음.https://coding-dahee.tistory.com/50-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -17,7 +17,8 @@
     <!--==========================임의 추가 끝==========================-->
 
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
-    
+
+
     <style>
         /*페이지처리 원래색꺌 #7971ea*/
         .site-block-27 ul, .site-block-27 ul li {
@@ -58,6 +59,7 @@
     <div class="site-section">
         <div class="container">
             <button class="warning"><a th:href="@{/produce/write}">판매글 쓰기</a></button>
+            <button class="warning"><a th:href="@{/produce/write}">임시 마이페이지 리뷰</a></button>
             <div class="row mb-5">
                 <div class="col-md-9 order-2">
                     <!--================드롭다운 시작=================-->
@@ -173,6 +175,9 @@
         </div>
     </div>
     </div>
+</div>
+<!-- **********************************-->
 
+<!-- **********************************-->
 </body>
 </html>

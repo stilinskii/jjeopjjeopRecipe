@@ -26,7 +26,7 @@ class ProduceServiceImp implements ProduceService {
 
     @Override
     public void writeProcess(ProduceDTO produceDTO, MultipartFile file) throws Exception{
-        String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
+        String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\media\\produce";
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + file.getOriginalFilename();
 
@@ -34,7 +34,7 @@ class ProduceServiceImp implements ProduceService {
         file.transferTo(saveFile);
 
         produceDTO.setProduce_image(fileName);
-        produceDTO.setProduce_image_path("/files/" + fileName);
+        produceDTO.setProduce_image_path("/media/produce/" + fileName);
 
         produceDAO.write(produceDTO);
     }

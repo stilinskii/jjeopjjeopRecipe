@@ -19,10 +19,10 @@ public class PayController {
     }
 
     @GetMapping("/cart/write")
-    public String cartWrite(PayDTO payDto){
-        log.info("dto={}", payDto.getProduce_num());
-        payService.cartWriteProcess(payDto);
-        log.info("dto={}", payDto.getProduce_num());
+    public String cartWrite(PayDTO payDTO){
+        log.info("dto={}", payDTO.getProduce_num());
+        payService.cartWriteProcess(payDTO);
+        log.info("dto={}", payDTO.getProduce_num());
         return "redirect:/produce/list";
     }
 }

@@ -5,8 +5,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.jjeopjjeop.recipe.dao.ReviewDAO">
-    <select id="reviewList" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ReviewDTO">
-        SELECT * FROM produce_review WHERE produce_name = #{produce_name}
+<!--    <select id="reviewList" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ReviewDTO">-->
+<!--        SELECT * FROM produce_review WHERE produce_name = #{produce_name}-->
+<!--    </select>-->
+
+    <select id="reviewList" parameterType="int" resultType="com.jjeopjjeop.recipe.dto.ReviewDTO">
+        SELECT produce_review.pay_num, produce_review.rating, produce_review.content, produce_review.created_date
+        FROM produce_review, pay_history
+        WHERE produce_review.pay_num = pay_history.pay_num
+        AND pay_history.produce_num = #{produce_num}
     </select>
+
+    <delete id="reviewDelete" parameterType="int">
+        DELETE FROM produce_review WHERE pay_num = #{pay_num}
+    </delete>
 
 </mapper>

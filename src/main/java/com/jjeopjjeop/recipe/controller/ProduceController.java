@@ -95,24 +95,11 @@ public class ProduceController {
         mav.setViewName("/produce/produceView");
 
        //리뷰
-        List<ReviewDTO> list = reviewService.reviewListProcess(produce_name);
-
+        List<ReviewDTO> list = reviewService.reviewListProcess(produce_num);
         mav.addObject("list", list);
 
         return mav;
     }
-//////////////////////////////////////////////////////////////
-    //여기할 때만 http://localhost:8081/produce/view/test/%7BproduceName%7D?produce_name=a 이렇게 %7B  %7D 이게 생김. 검색해보니까 ()같은데 난 없는데?
-    @GetMapping({"produce/view/test/{produceName}"})
-    public ModelAndView reviewList(@PathVariable("produceName") String produce_name, ModelAndView mav) {
-        List<ReviewDTO> list = reviewService.reviewListProcess(produce_name);
-
-        mav.addObject("list", list);
-        mav.setViewName("/produce/reviewList");
-        return mav;
-    }
-
-//////////////////////////////////////////////////////////////
 
     @GetMapping({"/produce/update/{produceNum}"})
     public ModelAndView produceUpdateForm(@PathVariable("produceNum") int produce_num, ModelAndView mav) {

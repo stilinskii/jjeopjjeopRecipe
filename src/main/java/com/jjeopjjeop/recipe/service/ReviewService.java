@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface ReviewService {
 
-    List<ReviewDTO> reviewListProcess(String produce_name);
+    public List<ReviewDTO> reviewListProcess(int produce_num);//리뷰 리스트
+    public void reviewDelete(int produce_num); //리뷰삭제
 }

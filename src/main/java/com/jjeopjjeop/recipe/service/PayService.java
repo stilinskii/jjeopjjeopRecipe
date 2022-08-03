@@ -4,5 +4,5 @@ import com.jjeopjjeop.recipe.dto.PayDTO;
 import org.springframework.stereotype.Service;
 
 public interface PayService {
-    public void cartWriteProcess(PayDTO payDto);
+    public void cartWriteProcess(PayDTO payDTO);
 }

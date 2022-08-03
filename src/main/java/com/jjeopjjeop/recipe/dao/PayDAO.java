@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface PayDAO {
-   public void cartWrite(PayDTO payDto);
+   public void cartWrite(PayDTO payDTO);
 }

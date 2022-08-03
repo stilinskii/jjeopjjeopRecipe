@@ -9,15 +9,14 @@ import org.springframework.stereotype.Service;
 public class PayServiceImp implements PayService{
 
     @Autowired
-    private PayDAO payDao;
+    private PayDAO payDAO;
 
     public PayServiceImp() {
 
     }
 
     @Override
-    public void cartWriteProcess(PayDTO payDto) {
-        payDao.cartWrite(payDto);
-
+    public void cartWriteProcess(PayDTO payDTO) {
+        payDAO.cartWrite(payDTO);
     }
 }

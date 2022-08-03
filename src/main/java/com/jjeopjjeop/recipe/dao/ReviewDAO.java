@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 @Mapper
 public interface ReviewDAO {
-    public List<ReviewDTO> reviewList(String produce_name);
+    public List<ReviewDTO> reviewList(int produce_num); //리뷰 리스트
+
+    public void reviewDelete(int produce_num); //리뷰 삭제
 }

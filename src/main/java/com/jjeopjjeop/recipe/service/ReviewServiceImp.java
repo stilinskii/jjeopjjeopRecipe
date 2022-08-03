@@ -17,11 +17,16 @@ public class ReviewServiceImp implements ReviewService{
     }
 
     @Override
-    public List<ReviewDTO> reviewListProcess(String produce_name) {
+    public List<ReviewDTO> reviewListProcess(int produce_num) {
 
-        return reviewDAO.reviewList(produce_name);
+        return reviewDAO.reviewList(produce_num);
     }
 
+    //리뷰삭제
+    @Override
+    public void reviewDelete(int produce_num) {
+        reviewDAO.reviewDelete(produce_num);
+    }
 
 
 }
