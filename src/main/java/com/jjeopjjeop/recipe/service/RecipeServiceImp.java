@@ -58,6 +58,14 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
+    public void reportProcess(ReportRecipeDTO reportRecipeDTO) {
+        if(dao.checkReport(reportRecipeDTO) == 0){
+            dao.report(reportRecipeDTO);
+            dao.updateReport(reportRecipeDTO.getRcp_seq());
+        }
+    }
+
+    @Override
     public void writeProcess(RecipeDTO recipeDTO) {
         dao.write(recipeDTO);
     }

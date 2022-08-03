@@ -25,6 +25,11 @@ public interface RecipeDAO {
     public void scrapM(UserScrapDTO userScrapDTO); //스크랩 해제
     public void updateScrapM(int num); //레시피 스크랩수 감소
 
+    // report 처리
+    public int checkReport(ReportRecipeDTO reportRecipeDTO); //중복인가?
+    public void report(ReportRecipeDTO reportRecipeDTO); //신고
+    public void updateReport(int num); //레시피 신고수 증가
+
 //    public void reStepCount(RecipeDTO model);
     public void write(RecipeDTO dto);
     public void writeManual(ManualDTO mDto);

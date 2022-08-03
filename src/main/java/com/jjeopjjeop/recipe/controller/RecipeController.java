@@ -88,10 +88,14 @@ public class RecipeController {
     }
 
     // 레시피 신고 메소드
-    @PutMapping("/recipe/report")
-    public String rcpReportMethod(){
+    @GetMapping("/recipe/report/{rcp_seq}")
+    public String rcpReportMethod(@PathVariable("rcp_seq") Integer rcp_seq){
+        ReportRecipeDTO reportRecipeDTO = new ReportRecipeDTO();
+        reportRecipeDTO.setUser_id("테스트");
+        reportRecipeDTO.setRcp_seq(rcp_seq);
+        service.reportProcess(reportRecipeDTO);
 
-        return "redirect:/recipe/view";
+        return "redirect:/recipe/view/"+rcp_seq;
     }
 
     // 레시피 작성 페이지 요청 메소드

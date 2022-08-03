@@ -69,6 +69,21 @@
         WHERE rcp_seq = #{num}
     </update>
 
+    <select id="checkReport" parameterType="ReportRecipeDTO" resultType="int">
+        SELECT count(*) from report_rcp
+        WHERE user_id = #{user_id} AND rcp_seq = #{rcp_seq}
+    </select>
+
+    <insert id="report" parameterType="ReportRecipeDTO">
+        INSERT INTO report_rcp(user_id, rcp_seq, scr_date)
+        VALUES(#{user_id}, #{rcp_seq}, sysdate)
+    </insert>
+
+    <update id="updateReport" parameterType="int">
+        UPDATE recipe SET report = report + 1
+        WHERE rcp_seq = #{num}
+    </update>
+
     <insert id="write" parameterType="RecipeDTO">
         INSERT INTO recipe(rcp_seq, rcp_name, user_id, filename, filepath, time, difficulty, amount, summary, hash_tag, rcp_parts_dtls, rcp_date)
         VALUES(rcp_seq_seq.nextval, #{rcp_name}, '테스트', #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR} ,#{time, jdbcType=VARCHAR}, #{difficulty, jdbcType=VARCHAR}, #{amount, jdbcType=VARCHAR}, #{summary, jdbcType=VARCHAR}, #{hash_tag, jdbcType=VARCHAR}, #{rcp_parts_dtls, jdbcType=VARCHAR}, sysdate)

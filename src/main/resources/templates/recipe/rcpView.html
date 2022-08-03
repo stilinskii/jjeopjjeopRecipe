@@ -65,10 +65,10 @@
             <br/>
             <p class="d-flex justify-content-between">
                 <span th:text="'조회수 '+${rcp.rcp_viewcnt}" class="left">조회수</span>
-                <a th:href="@{'/recipe/scrap/'+${rcp.rcp_seq}}"><span th:text="'♥ '+${rcp.scrap}">스크랩수</span></a>
+                <a th:href="@{'/recipe/scrap/'+${rcp.rcp_seq}}"><span th:text="'♥ 스크랩수 '+${rcp.scrap}">스크랩수</span></a>
                 <span th:text="'★ 공유'">공유</span>
                 <a href="#" data-bs-toggle="modal" data-bs-target="#reportModal">
-                <span class="right">신고</span></a>
+                <span th:text="'신고수 '+${rcp.report}" class="right">신고</span></a>
             </p>
         </div>
     </div>
