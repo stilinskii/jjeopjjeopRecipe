@@ -36,7 +36,7 @@
             <span class="fs-1"> ◀ </span>
           </div>
           <div th:each="favorite : ${favoriteRcpList}" class="col">
-            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${favorite.rcp_seq})}">
+            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${favorite.rcp_seq}, currentPage=${currentPage})}">
             <img th:if="${not #strings.isEmpty(favorite.filename)}" th:src="@{${favorite.filepath}+${favorite.filename}}" width="200px" height="150px" class="rounded float" />
               <img th:if="${#strings.isEmpty(favorite.filename)}" src="/media/images/rcp_mainimg.png" width="200px" height="150px" class="rounded float" />
               <p th:text="${favorite.rcp_name}" class="text-start fw-bold">레시피 제목</p>
@@ -112,9 +112,9 @@
             <option value="audi">조회수 많은 순</option>
           </select>
         </div>
-        <div class="row align-items-center" style="margin-bottom: 20px">
+        <div class="row align-items-center">
           <div th:each="rcp : ${rcpList}" class="col-4">
-            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq})}">
+            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage})}">
             <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
               <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
             <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>

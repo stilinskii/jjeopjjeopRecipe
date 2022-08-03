@@ -1,6 +1,7 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.service.RecipeCommentService;
 import com.jjeopjjeop.recipe.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +22,9 @@ import java.util.UUID;
 public class RecipeController {
     @Autowired
     private RecipeService service;
+
+    @Autowired
+    private RecipeCommentService commentService;
     private int currentPage;
     private String searchKey;
 
@@ -87,9 +92,23 @@ public class RecipeController {
     // 레시피 본문 조회 메소드
     @GetMapping("/recipe/view/{rcp_seq}")
     public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq, ModelAndView mav){
-
+        // 레시피 본문 내용
         mav.addObject("rcp", service.contentProcess(rcp_seq));
+
+        // 레시피별 요리 단계 내용
         mav.addObject("manualList", service.contentMnlProcess(rcp_seq));
+
+        // 덧글 처리
+        RecipePageDTO recipePageDTO = new RecipePageDTO();
+        int totalComment = commentService.countProcess(rcp_seq);
+//        if(totalComment>0){
+//            currentPage = 1;
+//            recipePageDTO = new RecipePageDTO(currentPage, totalComment);
+//            recipePageDTO.setBlockPage(3);
+//            recipePageDTO.setBlockCount(5);
+//        }
+        mav.addObject("totalComment", totalComment);
+        mav.addObject("commentList", commentService.listProcess(rcp_seq));
 
         mav.setViewName("/recipe/rcpView");
         return mav;
