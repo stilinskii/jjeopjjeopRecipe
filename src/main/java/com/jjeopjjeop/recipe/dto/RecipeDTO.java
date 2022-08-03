@@ -12,7 +12,4 @@ public class RecipeDTO {
             difficulty, amount, summary, hash_tag, rcp_parts_dtls;
     private String rcp_date;
     private MultipartFile upload;
-
-    public RecipeDTO() {
-    }
 }

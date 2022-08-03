@@ -1,10 +1,7 @@
 package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dao.RecipeDAO;
-import com.jjeopjjeop.recipe.dto.CategoryDTO;
-import com.jjeopjjeop.recipe.dto.ManualDTO;
-import com.jjeopjjeop.recipe.dto.RecipeDTO;
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +22,8 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public List<RecipeDTO> listProcess(RecipePageDTO pDto) {
-        return dao.list(pDto);
+    public List<RecipeDTO> listProcess(RecipePageDTO recipePageDTO) {
+        return dao.list(recipePageDTO);
     }
 
     @Override
@@ -50,12 +47,23 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public void writeProcess(RecipeDTO dto) {
-        dao.write(dto);
+    public void scrapProcess(UserScrapDTO userScrapDTO) {
+        if(dao.checkScrap(userScrapDTO) == 0){
+            dao.scrapP(userScrapDTO);
+            dao.updateScrapP(userScrapDTO.getRcp_seq());
+        }else{
+            dao.scrapM(userScrapDTO);
+            dao.updateScrapM(userScrapDTO.getRcp_seq());
+        }
     }
 
-    public void writeMProcess(ManualDTO mDto){
-        dao.writeManual(mDto);
+    @Override
+    public void writeProcess(RecipeDTO recipeDTO) {
+        dao.write(recipeDTO);
+    }
+
+    public void writeMProcess(ManualDTO manualDTO){
+        dao.writeManual(manualDTO);
     }
 
     @Override

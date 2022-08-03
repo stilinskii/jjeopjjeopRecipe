@@ -44,6 +44,31 @@
         WHERE rcp_seq = #{num}
     </update>
 
+    <select id="checkScrap" parameterType="UserScrapDTO" resultType="int">
+        SELECT count(*) from user_rcp
+        WHERE user_id = #{user_id} AND rcp_seq = #{rcp_seq}
+    </select>
+
+    <insert id="scrapP" parameterType="UserScrapDTO">
+        INSERT INTO user_rcp(user_id, rcp_seq, scr_date)
+        VALUES(#{user_id}, #{rcp_seq}, sysdate)
+    </insert>
+
+    <update id="updateScrapP" parameterType="int">
+        UPDATE recipe SET scrap = scrap + 1
+        WHERE rcp_seq = #{num}
+    </update>
+
+    <delete id="scrapM" parameterType="UserScrapDTO">
+        DELETE FROM user_rcp
+        WHERE user_id= #{user_id} AND rcp_seq = #{rcp_seq}
+    </delete>
+
+    <update id="updateScrapM" parameterType="int">
+        UPDATE recipe SET scrap = scrap - 1
+        WHERE rcp_seq = #{num}
+    </update>
+
     <insert id="write" parameterType="RecipeDTO">
         INSERT INTO recipe(rcp_seq, rcp_name, user_id, filename, filepath, time, difficulty, amount, summary, hash_tag, rcp_parts_dtls, rcp_date)
         VALUES(rcp_seq_seq.nextval, #{rcp_name}, '테스트', #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR} ,#{time, jdbcType=VARCHAR}, #{difficulty, jdbcType=VARCHAR}, #{amount, jdbcType=VARCHAR}, #{summary, jdbcType=VARCHAR}, #{hash_tag, jdbcType=VARCHAR}, #{rcp_parts_dtls, jdbcType=VARCHAR}, sysdate)
@@ -53,7 +78,7 @@
         INSERT INTO manual(manual_no, rcp_seq, manual_txt, filename, filepath)
         VALUES(#{manual_no, jdbcType=VARCHAR},
         (SELECT max(rcp_seq) FROM recipe)
-        , #{manual_txt, jdbcType=VARCHAR}, null, null)
+        , #{manual_txt, jdbcType=VARCHAR}, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR})
     </insert>
 
     <delete id="delete" parameterType="int">

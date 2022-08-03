@@ -7,12 +7,7 @@
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
-    <span class="fw-bold fs-2 text-start" th:text="${rcp.rcp_name}"></span>
-    <span class="upsideBtn text-end">
-        <button class="btn btn-primary">글수정</button>
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">글삭제</button>
-    </span>
-    <!-- Modal -->
+    <!-- //Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -30,10 +25,33 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">레시피 신고</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p th:text="'레시피 신고는 취소할 수 없습니다. [' + ${rcp.rcp_name} + '] 레시피를 신고하시겠습니까?'"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <a th:href="@{'/recipe/report/'+${rcp.rcp_seq}}" class="btn btn-danger">신고</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal// -->
+    <span class="fw-bold fs-2 text-start" th:text="${rcp.rcp_name}"></span>
+    <span class="upsideBtn text-end">
+        <button class="btn btn-primary">글수정</button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">글삭제</button>
+    </span>
     <hr/>
     <div class="row" style="margin-bottom:15px;">
         <div class="col-6 d-grid gap-2 d-md-block">
-            <img th:src="@{${rcp.filepath}+${rcp.filename}}" width="100%" height="330px" alt="main image"/>
+            <img class="test" th:src="@{${rcp.filepath}+${rcp.filename}}" width="100%" height="330px" alt="main image"/>
         </div>
         <div class="col-6">
             <p th:text="'글쓴이:'+${rcp.user_id}"></p>
@@ -47,9 +65,10 @@
             <br/>
             <p class="d-flex justify-content-between">
                 <span th:text="'조회수 '+${rcp.rcp_viewcnt}" class="left">조회수</span>
-                <a href="#"><span th:text="'♥ '+${rcp.scrap}">스크랩수</span></a>
+                <a th:href="@{'/recipe/scrap/'+${rcp.rcp_seq}}"><span th:text="'♥ '+${rcp.scrap}">스크랩수</span></a>
                 <span th:text="'★ 공유'">공유</span>
-                <span th:text="'신고 '+${rcp.report}" class="right">신고수</span>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#reportModal">
+                <span class="right">신고</span></a>
             </p>
         </div>
     </div>
@@ -59,10 +78,10 @@
     <p th::text="${rcp.rcp_parts_dtls}"></p>
     <hr/>
     <h2 th:text="'요리 순서'"></h2>
-    <p th:each="manualDto : ${manualList}">
-        <span class="h3" th:text="${manualDto.manual_no}"></span>
-        <br/>
-        <span th:text="${manualDto.manual_txt}"></span>
+    <p th:each="manual: ${manualList}" class="manual_step">
+        <span class="h3" th:text="${manual.manual_no}"></span>
+        <img th:if="${not #strings.isEmpty(manual.filename)}" th:src="@{${manual.filepath}+${manual.filename}}" alt="sub image"/>
+        <span th:text="${manual.manual_txt}"></span>
     </p>
     <hr/>
     <h2 th:text="'#'"></h2>
@@ -82,5 +101,9 @@
     <button class="btn btn-dark">댓글쓰기</button>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const test = document.querySelector(".test");
+    console.log(test);
+</script>
 </body>
 </html>

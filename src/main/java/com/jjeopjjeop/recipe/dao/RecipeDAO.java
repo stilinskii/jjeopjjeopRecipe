@@ -1,9 +1,6 @@
 package com.jjeopjjeop.recipe.dao;
 
-import com.jjeopjjeop.recipe.dto.CategoryDTO;
-import com.jjeopjjeop.recipe.dto.ManualDTO;
-import com.jjeopjjeop.recipe.dto.RecipeDTO;
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +17,14 @@ public interface RecipeDAO {
     public RecipeDTO content(int num);
     public List<ManualDTO> contentMnl(int num);
     public void viewCnt(int num);
+
+    // scrap 처리
+    public int checkScrap(UserScrapDTO userScrapDTO); //중복인가?
+    public void scrapP(UserScrapDTO userScrapDTO); //스크랩 등록
+    public void updateScrapP(int num); //레시피 스크랩수 증가
+    public void scrapM(UserScrapDTO userScrapDTO); //스크랩 해제
+    public void updateScrapM(int num); //레시피 스크랩수 감소
+
 //    public void reStepCount(RecipeDTO model);
     public void write(RecipeDTO dto);
     public void writeManual(ManualDTO mDto);

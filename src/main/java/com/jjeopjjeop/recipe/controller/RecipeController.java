@@ -1,9 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
-import com.jjeopjjeop.recipe.dto.CategoryDTO;
-import com.jjeopjjeop.recipe.dto.ManualDTO;
-import com.jjeopjjeop.recipe.dto.RecipeDTO;
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,8 +49,6 @@ public class RecipeController {
         List<RecipeDTO> rcpList = service.listProcess(pDto);
         //System.out.println(rcpList);
 
-        urlPath(request);
-
         mav.addObject("totalRecord", totalRecord);
         mav.addObject("cateList", cateList);
         mav.addObject("favoriteRcpList", favoriteRcpList);
@@ -82,10 +77,14 @@ public class RecipeController {
     }
 
     // 레시피 스크랩 메소드
-    @PutMapping("/recipe/scrap")
-    public String rcpScrapMethod(){
+    @GetMapping("/recipe/scrap/{rcp_seq}")
+    public String rcpScrapMethod(@PathVariable("rcp_seq") Integer rcp_seq){
+        UserScrapDTO userScrapDTO = new UserScrapDTO();
+        userScrapDTO.setUser_id("테스트");
+        userScrapDTO.setRcp_seq(rcp_seq);
+        service.scrapProcess(userScrapDTO);
 
-        return "redirect:/recipe/view";
+        return "redirect:/recipe/view/"+rcp_seq;
     }
 
     // 레시피 신고 메소드
@@ -108,22 +107,29 @@ public class RecipeController {
 
     // 레시피 작성 메소드
     @PostMapping("/recipe/write")
-    public String rcpWriteProMethod(RecipeDTO dto, String[] manual_txt, HttpServletRequest request){
-        MultipartFile file = dto.getUpload();
-        if(!file.isEmpty()){
-            UUID random = saveCopyFile(file, request);
-            dto.setFilename(random+"_"+file.getOriginalFilename());
-            dto.setFilepath("/media/recipe/");
+    public String rcpWriteProMethod(RecipeDTO recipeDTO, String[] manual_txt, MultipartFile[] upload_manual, HttpServletRequest request){
+        MultipartFile mainFile = recipeDTO.getUpload();
+        if(!mainFile.isEmpty()){
+            UUID random = saveCopyFile(mainFile, request, 0);
+            recipeDTO.setFilename(random+"_"+mainFile.getOriginalFilename());
+            recipeDTO.setFilepath("/media/recipe/");
         }
 
-        service.writeProcess(dto);
+        service.writeProcess(recipeDTO);
         // validation!!
 
-        ManualDTO mDto = new ManualDTO();
         for(int i=0; i<manual_txt.length; i++){
-            mDto.setManual_no(i+1);
-            mDto.setManual_txt(manual_txt[i]);
-            service.writeMProcess(mDto);
+            ManualDTO manualDTO = new ManualDTO();
+            manualDTO.setManual_no(i+1);
+            manualDTO.setManual_txt(manual_txt[i]);
+            if(!upload_manual[i].isEmpty()){
+                UUID random = saveCopyFile(upload_manual[i], request, 1);
+                manualDTO.setFilename(random+"_"+upload_manual[i].getOriginalFilename());
+                manualDTO.setFilepath("/media/recipe/manual/");
+            }
+            System.out.println(i+": "+upload_manual[i].getOriginalFilename());
+            System.out.println(manualDTO.getManual_no() + " " + manualDTO.getManual_txt() + " " + manualDTO.getFilename());
+            service.writeMProcess(manualDTO);
         }
 
         return "redirect:/recipe/list";
@@ -180,23 +186,28 @@ public class RecipeController {
     }
 
     // 첨부파일 처리를 위한 메소드
-    private String urlPath(HttpServletRequest request){
+    private String urlPath(HttpServletRequest request, int num){
         //String serverPath = request.getServletContext().getRealPath("/");
-        String root = "src/main/resources/static/media/recipe/";
+        String root = "";
+        if(num==0){
+            root = "src/main/resources/static/media/recipe/";
+        }else{
+            root = "src/main/resources/static/media/recipe/manual/";
+        }
         //String saveDirectory = root + "temp" + File.separator;
         return root;
     }
 
-    private UUID saveCopyFile(MultipartFile file, HttpServletRequest request){
+    private UUID saveCopyFile(MultipartFile file, HttpServletRequest request, int num){
         String fileName = file.getOriginalFilename();
         UUID random = UUID.randomUUID();
 
-        File fe = new File(urlPath(request));
+        File fe = new File(urlPath(request, num));
         if(!fe.exists()){
             fe.mkdir();
         }
 
-        File ff = new File(urlPath(request), random+"_"+fileName);
+        File ff = new File(urlPath(request, num), random+"_"+fileName);
 
         try{
             FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(ff));

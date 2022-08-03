@@ -15,7 +15,7 @@
             <img src="/media/images/rcp_mainimg.png" width="100%" height="230px" alt="main image"/>
             <input type="file" id="rcp_file" name="upload" style="display: none;">
             <button type="button" class="btn btn-dark" style="width: 100%;">
-            <label for="rcp_file" style="width: 100%; height:100%;">대표 이미지 첨부</label>
+            <label for="rcp_file" style="width: 100%; height:100%; cursor:pointer;">대표 이미지 첨부</label>
             </button>
         </div>
         <div class="col-8">
@@ -82,13 +82,11 @@
         <div class="rcp_manual">
             <p class="fw-bold fs-4 text-start manual_step">1</p>
             <textarea name="manual_txt"></textarea>
-            <input type="file" style="display:none;">
             <p class="d-flex justify-content-between">
-            <button type="button" id="manual_file" class="btn btn-dark">
-                <label for="manual_file">
-                이미지 추가
-                </label>
-            </button>
+            <input type="file" id="upload_manual" name="upload_manual" >
+              <button type="button" class="btn btn-dark">
+                <label for="upload_manual">이미지 첨부</label>
+              </button>
             <button type="button" class="btn btn-danger" onclick="testtest">순서 삭제</button>
             </p>
         </div>
@@ -111,6 +109,7 @@
     var manualNo = 1;
     var inputContainer = document.querySelector(".manual_container");
     var inputNode = document.querySelector(".rcp_manual");
+
     addManual.onclick = function(){
         manualNo++;
         var n1 = inputNode.cloneNode(true);

@@ -47,6 +47,14 @@ margin-left: 10px;
 margin-top: 4px;
 }
 
+
+
+.manual_step img{
+width: 500px;
+display: block;
+margin: auto;
+}
+
 hr {
 margin-top: 0;
 }
