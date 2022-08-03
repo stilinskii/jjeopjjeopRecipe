@@ -68,16 +68,16 @@
                 <div class="col-md-6">
                     <div class="form_container">
 <!--                        -->
-                        <form name="update" id="update" method="post" th:action="@{/produce/update/{produceNum}(produceNum=${dto.produce_num})}">
-                            <input type="hidden" name="produce_num" placeholder="게시글번호" th:value="${dto.produce_num}"/>
+                        <form name="update" id="update" method="post" th:action="@{/produce/update/{produceNum}(produceNum=${produceDTO.produce_num})}">
+                            <input type="hidden" name="produce_num" placeholder="게시글번호" th:value="${produceDTO.produce_num}"/>
                                 <!--이게 있어야 produce_num이 mapper로 넘어갈 수있다. -->
 
                             <div>
-                                <input type="text" class="form-control" name="user_id" id="user_id" placeholder="아이디" th:value="${dto.user_id}"/>
+                                <input type="text" class="form-control" name="user_id" id="user_id" placeholder="아이디" th:value="${produceDTO.user_id}"/>
                             </div>
                             <div>
                                 <select class="form-control nice-select wide" name='produce_type' size='1'
-                                        th:field="${dto.produce_type}" th:value="${dto.produce_type}">
+                                        th:field="${produceDTO.produce_type}" th:value="${produceDTO.produce_type}">
                                     <option th:value="0" disabled selected>상품종류선택</option>
                                     <option th:value="1">채소</option>
                                     <option th:value="2">과일 </option>
@@ -87,13 +87,13 @@
 
                             </div>
                             <div>
-                                <input type="text" class="form-control" name="produce_name" placeholder="상품명" th:value="${dto.produce_name}" />
+                                <input type="text" class="form-control" name="produce_name" placeholder="상품명" th:value="${produceDTO.produce_name}" />
                             </div>
                             <div>
-                                <input type="text" class="form-control" name="price" placeholder="금액(숫자만 입력해주세요)" th:value="${dto.price}"/>
+                                <input type="text" class="form-control" name="price" placeholder="금액(숫자만 입력해주세요)" th:value="${produceDTO.price}"/>
                             </div>
                             <div>
-                                <textarea class="form-control" name="produce_description" th:text="${dto.produce_description}">상품상세설명</textarea>
+                                <textarea class="form-control" name="produce_description" th:text="${produceDTO.produce_description}">상품상세설명</textarea>
 <!--                                textarea는 th:value 안먹힘. th:text로 하기.-->
                             </div>
                             <div class="btn_box d-flex justify-content-center">

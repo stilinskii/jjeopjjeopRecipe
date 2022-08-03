@@ -70,7 +70,11 @@
 		SET produce_type=#{produce_type}, produce_name=#{produce_name}, price=#{price}, produce_description=#{produce_description}
 		WHERE produce_num=#{produce_num}
 	</update>
-	
+
+	<!--페이지 처리를 위해 판매글 개수 세기-->
+	<select id="produceCount" resultType="int">
+		SELECT count(*) FROM produce_board
+	</select>
 
 
 </mapper>

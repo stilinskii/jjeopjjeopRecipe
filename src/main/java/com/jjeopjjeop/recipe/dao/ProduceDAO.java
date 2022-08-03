@@ -9,17 +9,19 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface ProduceDAO {
-    void write(ProduceDTO produceDto);
+    public void write(ProduceDTO produceDTO);
 
-    List<ProduceDTO> produceList();
+    public List<ProduceDTO> produceList();
 
-    List<ProduceDTO> produceListType(int type);
+    public List<ProduceDTO> produceListType(int type);
 
-    void produceDelete(int produce_num);
+    public void produceDelete(int produce_num);
 
-    ProduceDTO produceView(int produce_num);
+    public ProduceDTO produceView(int produce_num);
 
-    void produceUpdate(ProduceDTO produceDto);
+    public void produceUpdate(ProduceDTO produceDto);
+
+    public int produceCount();
 
 
 }

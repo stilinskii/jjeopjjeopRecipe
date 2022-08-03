@@ -53,37 +53,6 @@
     </style>
 </head>
 <body>
-<!--    <a th:href="@{/produce/write}" >판매글 쓰기</a>-->
-
-<!--    <div class="type">-->
-<!--        <a th:href="@{/produce/list}">전체</a>-->
-<!--        <a th:href="@{/produce/list/1}">채소</a>-->
-<!--        <a th:href="@{/produce/list/2}">과일</a>-->
-<!--        <a th:href="@{/produce/list/3}">곡물</a>-->
-<!--        <a th:href="@{/produce/list/4}">기타</a>-->
-<!--    </div>-->
-
-
-<!--    <table>-->
-<!--        <thead>-->
-<!--        <tr>  <th>이미지</th> <th>상품명</th> <th>판매자</th> <th>가격</th>  </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-
-<!--        <tr th:each="produce : ${list}">-->
-<!--            <td th:text="${produce.produce_image}" />-->
-<!--            <td>-->
-<!--                <a th:text="${produce.produce_name}" th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}" />-->
-<!--            </td>-->
-<!--            <td th:text="${produce.user_id}" />-->
-<!--            <td th:text="${produce.price}" />-->
-<!--        </tr>-->
-<!--&lt;!&ndash;http://localhost:8081/produce/view/?produce_num=10-->
-<!--th:href="@{/produce/view/(produce_num=${produce.produce_num})}-->
-<!--&ndash;&gt;-->
-<!--        </tbody>-->
-<!--    </table>-->
-
 <!--<nav th:replace="fragments/nav :: front-nav('shopping')"></nav>-->
 <div class="site-wrap">
     <div class="site-section">
@@ -142,6 +111,35 @@
                             </div>
                         </div>
                         <!--  ====================상품 카드 끝======================-->
+<!--    <div class="pagelist">-->
+<!--        &lt;!&ndash; 이전, 다음 버튼은 출력할게 있을 때만 보여주기. &ndash;&gt;-->
+<!--        &lt;!&ndash; 이전 출력 시작 &ndash;&gt;-->
+<!--        <li th:if test="${pdto.startPage>1}">-->
+<!--            <a href="list.do?currentPage=${pdto.startPage-pdto.blockPage}">이전</a>-->
+<!--        </li>-->
+<!--        &lt;!&ndash; 이전 출력 끝 &ndash;&gt;-->
+
+<!--        &lt;!&ndash; 페이지 출력 시작. 시작페이지와 끝 페이지 가지고 와서, 사이 숫자는 반복문으로 돌리기.  &ndash;&gt;-->
+<!--        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">-->
+<!--			<span>-->
+<!--				<c:url var="currPage" value="list.do">-->
+<!--					<c:param name="currentPage" value="${i}" />-->
+<!--				</c:url>-->
+<!--                <th:block th:switch="${i==pdto.currentPage}">-->
+<!--                     <em th:case=""><a href="${currPage}" class="pagecolor">${i}</a></em>-->
+<!--                     <em th:case="*"><a href="${currPage}">${i}</a></em>-->
+<!--						 &lt;!&ndash; href="list.do?currentPage=${i}"를 간단히 쓰기 위해 위에 url을 넣음.  &ndash;&gt;-->
+<!--				</th:block>-->
+<!--			</span>-->
+<!--        </th:block>-->
+<!--        &lt;!&ndash; 페이지 출력 끝 &ndash;&gt;-->
+
+<!--        &lt;!&ndash; 다음 출력 시작 &ndash;&gt;-->
+<!--        <li th:if test="${pdto.endPage < pdto.totalPage}">-->
+<!--            <a href="list.do?currentPage=${pdto.startPage+pdto.blockPage}">이후</a>-->
+<!--        </li>-->
+
+<!--    </div>-->
 
 
                     <!--  ====================페이지네이션 시작======================-->
@@ -161,7 +159,10 @@
                             </div>
                         </div>
                         <!--  ====================페이지네이션 끝======================-->
-                 
+<!--                        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">-->
+<!--                            <a th:if="${page != currentPage}" th:href="@{/produce/list(page = ${page -1})}" th:text="${page}" ></a>-->
+<!--                            <strong th:if="${page == currentPage}" th:text="${page}" style="color : red"></strong>-->
+<!--                        </th:block>-->
 
 
 
