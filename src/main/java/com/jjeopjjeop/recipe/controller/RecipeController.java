@@ -21,22 +21,22 @@ public class RecipeController {
     @Autowired
     private RecipeService service;
     private int currentPage;
+    private String searchKey;
 
     // 레시피 목록 조회 메소드
     @GetMapping("/recipe/list")
-    public ModelAndView rcpListMethod(ModelAndView mav, RecipePageDTO pDto, HttpServletRequest request){
+    public ModelAndView rcpListMethod(ModelAndView mav, RecipePageDTO recipePageDTO){
         // 전체 레코드 수
         int totalRecord = service.countProcess();
-        //System.out.println(totalRecord);
 
         if(totalRecord>0){
-            if(pDto.getCurrentPage()==0){
-                currentPage = 1;
-            }else{
-                currentPage = pDto.getCurrentPage();
-            }
-            //System.out.println(currentPage);
-            pDto = new RecipePageDTO(currentPage, totalRecord);
+//            if(recipePageDTO.getCurrentPage()==0){
+//                currentPage = 1;
+//            }else{
+//                currentPage = recipePageDTO.getCurrentPage();
+//            }
+            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
+            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);
         }
 
         // 오늘의 인기 레시피 목록
@@ -46,23 +46,42 @@ public class RecipeController {
         List<CategoryDTO> cateList = service.cateListProcess();
 
         // 전체 레시피 목록
-        List<RecipeDTO> rcpList = service.listProcess(pDto);
+        List<RecipeDTO> rcpList = service.listProcess(recipePageDTO);
         //System.out.println(rcpList);
 
         mav.addObject("totalRecord", totalRecord);
         mav.addObject("cateList", cateList);
         mav.addObject("favoriteRcpList", favoriteRcpList);
         mav.addObject("rcpList", rcpList);
-        mav.addObject("pDto", pDto);
+        mav.addObject("pDto", recipePageDTO);
         mav.setViewName("/recipe/rcpList");
         return mav;
     }
 
     // 레시피 목록 검색 메소드
     @GetMapping("/recipe/search")
-    public String rcpSearchMethod(){
+    public ModelAndView rcpSearchMethod(ModelAndView mav, RecipePageDTO recipePageDTO){
+        searchKey = recipePageDTO.getSearchKey();
+        int totalRecord = service.searchCountProcess(searchKey);
 
-        return "/recipe/rcpSearch";
+        if(totalRecord>0){
+            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
+            recipePageDTO = new RecipePageDTO(currentPage, totalRecord, searchKey);
+        }
+
+        // 레시피 분류 목록
+        List<CategoryDTO> cateList = service.cateListProcess();
+
+        // 검색 레시피 목록
+        List<RecipeDTO> rcpList = service.searchListProcess(recipePageDTO);
+        //System.out.println(rcpList);
+
+        mav.addObject("totalRecord", totalRecord);
+        mav.addObject("cateList", cateList);
+        mav.addObject("rcpList", rcpList);
+        mav.addObject("recipePageDTO", recipePageDTO);
+        mav.setViewName("/recipe/rcpSearch");
+        return mav;
     }
 
     // 레시피 본문 조회 메소드

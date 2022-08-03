@@ -41,7 +41,10 @@ public class RecipePageDTO {
 
         // 끝 페이지
         endPage = Math.min(startPage + blockPage - 1, totalPage);
+    }
 
-        //
+    public RecipePageDTO(int currentPage, int totalCount, String searchKey) {
+        this(currentPage, totalCount);
+        this.searchKey = searchKey;
     }
 }

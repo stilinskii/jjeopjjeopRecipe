@@ -27,6 +27,16 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
+    public int searchCountProcess(String searchKey) {
+        return dao.searchCount(searchKey);
+    }
+
+    @Override
+    public List<RecipeDTO> searchListProcess(RecipePageDTO recipePageDTO) {
+        return dao.searchList(recipePageDTO);
+    }
+
+    @Override
     public List<RecipeDTO> favoriteListProcess() {
         return dao.favoriteList();
     }

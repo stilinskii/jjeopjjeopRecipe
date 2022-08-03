@@ -9,9 +9,10 @@ import java.util.List;
 @Repository
 @Mapper
 public interface RecipeDAO {
-    public int count(); // 목록 숫자 세기
-//    public List<RecipeDTO> list(RecipePageDTO pDto);
-    public List<RecipeDTO> list(RecipePageDTO pDto);
+    public int count();
+    public List<RecipeDTO> list(RecipePageDTO recipePageDTO);
+    public int searchCount(String searchKey);
+    public List<RecipeDTO> searchList(RecipePageDTO recipePageDTO);
     public List<RecipeDTO> favoriteList();
     public List<CategoryDTO> cateList();
     public RecipeDTO content(int num);

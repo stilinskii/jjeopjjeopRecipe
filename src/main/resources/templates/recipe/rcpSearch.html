@@ -7,8 +7,131 @@
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
-<h1>레시피 검색 화면입니다.</h1>
-
-</main>
+    <form action="/recipe/search">
+        <div class="input-group mb-3">
+            <input
+                    type="text"
+                    class="form-control"
+                    placeholder="내용을 입력하세요."
+                    name="searchKey"
+                    th:value="${recipePageDTO.searchKey}"
+                    aria-label="searchKey"
+                    aria-describedby="button-addon2"
+            />
+            <a th:href="@{/recipe/search(searchKey=${searchKey})}">
+                <button
+                        class="btn btn-outline-secondary"
+                        type="submit"
+                        id="button-addon2"
+                >
+                    레시피 검색
+                </button>
+            </a>
+        </div>
+    </form>
+    <p class="fw-bold fs-3 text-start" th:text="${recipePageDTO.searchKey} + ' 검색 결과'"></p>
+    <hr />
+    <div class="rcp_list">
+        * 분류를 선택하여 상세검색을 해보세요!
+        <div class="cate_box">
+            <p>
+                <span>종류별</span>
+                <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
+             <a th:href="@{/recipe/search}">
+            <span th:text="${cate1.cate_name}">종류별</span>
+             </a>
+          </span>
+            </p>
+            <p>
+                <span>재료별</span>
+                <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
+            <a th:href="@{/recipe/search}">
+            <span th:text="${cate2.cate_name}">재료별</span>
+            </a>
+          </span>
+            </p>
+            <p>
+                <span>상황별</span>
+                <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
+            <a th:href="@{/recipe/search}">
+            <span th:text="${cate3.cate_name}">상황별</span>
+            </a>
+          </span>
+            </p>
+            <select name="rcp_time" id="rcp_time">
+                <option value="volvo">소요시간</option>
+                <option value="saab">10분</option>
+                <option value="mercedes">1시간</option>
+                <option value="audi">2시간</option>
+            </select>
+            <select name="difficulty" id="difficulty">
+                <option value="volvo">난이도</option>
+                <option value="saab">쉬움</option>
+                <option value="mercedes">보통</option>
+                <option value="audi">어려움</option>
+            </select>
+            <select name="amount" id="amount">
+                <option value="volvo">양</option>
+                <option value="saab">1~2인분</option>
+                <option value="mercedes">3~4인분</option>
+                <option value="audi">5인분 이상</option>
+            </select>
+        </div>
+        <p class="fs-5 fw-bold" style="margin-bottom: 0;" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
+        <hr />
+        <div style="text-align: right; margin-bottom: 20px">
+            <select name="rcp_sort" id="rcp_sort" style="margin-right: 0%">
+                <option value="volvo">최신순</option>
+                <option value="saab">오래된순</option>
+                <option value="mercedes">스크랩 많은 순</option>
+                <option value="audi">조회수 많은 순</option>
+            </select>
+        </div>
+        <div class="row align-items-center" style="margin-bottom: 20px">
+            <div th:each="rcp : ${rcpList}" class="col-4">
+                <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq})}">
+                    <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
+                    <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
+                    <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>
+                </a>
+                <p class="d-flex justify-content-between">
+              <span th:text="${rcp.user_id}" class="left">닉네임</span
+              ><span th:text="'♥'+${rcp.scrap}" class="right">스크랩수</span>
+                </p>
+                <p class="d-flex justify-content-between">
+                    <span th:text="${rcp.time}" class="left">시간</span><span th:text="${rcp.difficulty}">난이도 하</span
+                ><span th:text="${rcp.amount}" class="right">3인분</span>
+                </p>
+            </div>
+        </div>
+        <nav aria-label="Page navigation example" style="margin-top: 30px">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <th:block th:each="pDtos : ${#numbers.sequence(recipePageDTO.startPage, recipePageDTO.endPage)}">
+                    <li class="page-item active">
+                        <a th:if="${pDtos} == ${recipePageDTO.currentPage}" th:href="@{/recipe/search(searchKey=${searchKey})}" th:text="${pDtos}" class="page-link"></a>
+                    </li>
+                    <li class="page-item">
+                        <a th:if="${pDtos} != ${recipePageDTO.currentPage}" th:href="@{/recipe/search(currentPage=${pDtos}, searchKey=${recipePageDTO.searchKey})}" th:text="${pDtos}" class="page-link"></a>
+                    </li>
+                </th:block>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="d-grid col-4 mx-auto">
+            <a th:href="@{/recipe/write}" class="btn btn-primary">
+                새 레시피 등록하기
+            </a>
+        </div>
+    </div>
+</main>>
 </body>
 </html>

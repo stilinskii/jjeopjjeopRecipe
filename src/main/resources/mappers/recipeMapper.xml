@@ -14,7 +14,33 @@
             (SELECT rcp.*, rownum rm FROM
                 (SELECT * FROM recipe
                 ORDER BY rcp_seq DESC)rcp)rcp_li
-        WHERE rm >=#{startRow} AND rm <= #{endRow}
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
+    </select>
+
+    <select id="searchCount" parameterType="String" resultType="int">
+        SELECT count(*) FROM recipe
+        <if test="searchKey != null">
+            WHERE rcp_name LIKE '%' || #{searchKey} || '%'
+            OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
+            OR summary LIKE '%' || #{searchKey} || '%'
+            OR hash_tag LIKE '%' || #{searchKey} || '%'
+        </if>
+    </select>
+
+    <select id="searchList" parameterType="RecipePageDTO" resultType="RecipeDTO">
+        SELECT rcp_li.* FROM
+        (SELECT rcp.*, rownum rm FROM
+        (SELECT * FROM recipe
+        <if test="searchKey != null">
+            WHERE rcp_name LIKE '%' || #{searchKey} || '%'
+            OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
+            OR summary LIKE '%' || #{searchKey} || '%'
+            OR hash_tag LIKE '%' || #{searchKey} || '%'
+        </if>
+        <![CDATA[
+                ORDER BY rcp_seq DESC)rcp)rcp_li
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
     </select>
 

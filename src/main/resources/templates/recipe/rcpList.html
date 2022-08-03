@@ -8,24 +8,27 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
   <main class="custom container">
+    <form action="/recipe/search">
       <div class="input-group mb-3">
         <input
           type="text"
           class="form-control"
           placeholder="내용을 입력하세요."
-          aria-label="Recipient's username"
+          name="searchKey"
+          aria-label="searchKey"
           aria-describedby="button-addon2"
         />
-        <a th:href="@{/recipe/search}">
+        <a th:href="@{/recipe/search(searchKey=${searchKey})}">
         <button
           class="btn btn-outline-secondary"
-          type="button"
+          type="submit"
           id="button-addon2"
         >
           레시피 검색
         </button>
         </a>
       </div>
+    </form>
       <div class="rcp_best">
         <p class="fw-bold fs-2 text-start">오늘의 인기 레시피</p>
         <div class="row align-items-center">
@@ -99,7 +102,7 @@
             <option value="audi">5인분 이상</option>
           </select>
         </div>
-        <p class="fs-5 fw-bold" style="margin-bottom: 0" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'" />
+        <p class="fs-5 fw-bold" style="margin-bottom: 0" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
         <hr />
         <div style="text-align: right; margin-bottom: 20px">
           <select name="rcp_sort" id="rcp_sort" style="margin-right: 0%">
@@ -154,6 +157,6 @@
           </a>
         </div>
       </div>
-  </main>>
+  </main>
   </body>
 </html>
