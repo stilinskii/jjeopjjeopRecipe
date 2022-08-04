@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjeopjjeop.recipe.dao.UserDAO">
+
+    <resultMap id="userResult" type="userDTO">
+        <result property="user_id" column="user_id" />
+        <result property="password" column="password" />
+        <result property="usertype" column="usertype" />
+        <result property="username" column="username" />
+        <result property="nickname" column="nickname" />
+        <result property="email" column="email" />
+        <result property="phone" column="phone" />
+        <result property="birthday" column="birthday" />
+        <result property="gender" column="gender" />
+        <result property="postno" column="postno" />
+        <result property="address" column="address" />
+    </resultMap>
+
+    <select id="selectAllUserList" resultMap="userResult">
+        SELECT * FROM user_j
+    </select>
+
+    <insert id="insertUser" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
+        INSERT INTO user_j
+        (user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address)
+        VALUES(#{user_id}, #{password}, 1, #{username}, #{nickname}, #{email}, #{phone}, #{birthday},
+            #{gender}, #{postno}, #{address})
+    </insert>
+
+<!--    <insert id="insertSeller" parameterType="com.jjeopjjeop.recipe.dto.SellerDTO">-->
+<!--        INSERT INTO seller-->
+<!--        (user_id, business_name, registration_number, seller_phone, seller_address, approval)-->
+<!--        VALUES(#{user_id}, #{business_name}, #{registration_number}, #{seller_phone}, #{seller_address}, #{approval});-->
+<!--    </insert>-->
+
+    <select id="loginById" resultType="userDTO" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
+		SELECT * FROM user_j WHERE user_id=#{user_id} AND password=#{password}
+    </select>
+
+    <select id="findId" resultType="String" parameterType="String">
+        SELECT user_id FROM user_j WHERE username=#{username} AND email=#{email}
+    </select>
+
+    <select id="findPassword" resultType="userDTO" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
+        SELECT user_id, username, password, email FROM user_j WHERE user_id=#{user_id} AND email=#{email}
+    </select>
+
+    <update id="updatePassword" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
+        UPDATE user_j SET password=#{password} WHERE user_id=#{user_id} AND email=#{email}
+    </update>
+
+    <update id="updateMypage" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
+        UPDATE user_j
+        SET #{password}, username=#{username}, nickname=#{nickname}, email=#{email}, phone=#{phone}, #{birthday},
+        #{gender}, #{postno}, #{address}
+        WHERE user_id=#{user_id} AND password=#{password}
+    </update>
+</mapper>

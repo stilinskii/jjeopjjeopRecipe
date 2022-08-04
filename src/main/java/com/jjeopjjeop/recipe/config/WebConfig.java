@@ -1,3 +1,4 @@
+
 package com.jjeopjjeop.recipe.config;
 
 import org.springframework.context.annotation.Configuration;

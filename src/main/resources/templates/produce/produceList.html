@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--    th:replace="fragments/head('쇼핑')"-->
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--==========================임의추가 시작==========================-->
+<!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"-->
+<!--          th:href="@{/css/bootstrap.css}"/>-->
+
+    <!--아래 4줄은 드롭다운이 안돼서 임의로 넣음.https://coding-dahee.tistory.com/50-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <!--==========================임의 추가 끝==========================-->
+
+    <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
+
+
+    <style>
+        /*페이지처리 원래색꺌 #7971ea*/
+        .site-block-27 ul, .site-block-27 ul li {
+          padding: 0;
+          margin: 0; }
+
+        .site-block-27 ul li {
+          display: inline-block;
+          margin-bottom: 4px; }
+          .site-block-27 ul li a, .site-block-27 ul li span {
+            text-align: center;
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ccc; }
+          .site-block-27 ul li.active a, .site-block-27 ul li.active span {
+            background: #FFC947;
+            color: #fff;
+            border: 1px solid transparent; }
+          /*아마 판매글 글씨체?*/
+        .block-4 {
+          -webkit-box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.1);
+          background: #fff; }
+        .block-4 .block-4-text h3 {
+            font-size: 20px;
+            margin-bottom: 0; }
+        .block-4 .block-4-text h3 a {
+              text-decoration: none; }
+
+    </style>
+</head>
+<body>
+<!--<nav th:replace="fragments/nav :: front-nav('shopping')"></nav>-->
+<div class="site-wrap">
+    <div class="site-section">
+        <div class="container">
+            <button class="warning"><a th:href="@{/produce/write}">판매글 쓰기</a></button>
+            <button class="warning"><a th:href="@{/review/write}">임시 마이페이지 리뷰</a></button>
+            <div class="row mb-5">
+                <div class="col-md-9 order-2">
+                    <!--================드롭다운 시작=================-->
+                    <div class="row">
+                        <div class="col-md-12 mb-5">
+                            <div class="float-md-left mb-4"><h2 class="text-black h5">농산물 직거래 마당</h2></div>
+                            <div class="d-flex">
+                                <div class="dropdown mr-1 ml-md-auto">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        종류
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+                                        <a class="dropdown-item" th:href="@{/produce/list}">전체</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/1}">채소</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/2}">과일</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/3}">곡물</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/4}">기타</a>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                                        <a class="dropdown-item" href="#">Relevance</a>
+                                        <a class="dropdown-item" href="#">Name, A to Z</a>
+                                        <a class="dropdown-item" href="#">Name, Z to A</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Price, low to high</a>
+                                        <a class="dropdown-item" href="#">Price, high to low</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--================드롭다운 끝=================-->
+                    <div class="row mb-5" >
+                        <!--  ====================상품 카드 시작======================-->
+                        <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up" th:each="produce : ${list}">
+                            <div class="block-4 text-center border" th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"
+                                 style="cursor:pointer;">
+                                <figure class="block-4-image">
+<!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
+                                    <a th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}">
+                                        <img class="img-fluid" th:src="${produce.produce_image_path}" alt="상품이미지" />
+                                    </a>
+                                </figure>
+                                <div class="block-4-text p-4">
+                                    <h3 class="text-dark font-weight-bold" th:text="${produce.produce_name}">상품명</h3>
+                                    <p class="mb-0 text-secondary" th:text="${produce.user_id}">판매자</p>
+                                    <p class="font-weight-bold" data-th-text="${#numbers.formatInteger(produce.price, 3, 'COMMA') + '원'}" >상품가격</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  ====================상품 카드 끝======================-->
+<!--    <div class="pagelist">-->
+<!--        &lt;!&ndash; 이전, 다음 버튼은 출력할게 있을 때만 보여주기. &ndash;&gt;-->
+<!--        &lt;!&ndash; 이전 출력 시작 &ndash;&gt;-->
+<!--        <li th:if test="${pdto.startPage>1}">-->
+<!--            <a href="list.do?currentPage=${pdto.startPage-pdto.blockPage}">이전</a>-->
+<!--        </li>-->
+<!--        &lt;!&ndash; 이전 출력 끝 &ndash;&gt;-->
+
+<!--        &lt;!&ndash; 페이지 출력 시작. 시작페이지와 끝 페이지 가지고 와서, 사이 숫자는 반복문으로 돌리기.  &ndash;&gt;-->
+<!--        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">-->
+<!--			<span>-->
+<!--				<c:url var="currPage" value="list.do">-->
+<!--					<c:param name="currentPage" value="${i}" />-->
+<!--				</c:url>-->
+<!--                <th:block th:switch="${i==pdto.currentPage}">-->
+<!--                     <em th:case=""><a href="${currPage}" class="pagecolor">${i}</a></em>-->
+<!--                     <em th:case="*"><a href="${currPage}">${i}</a></em>-->
+<!--						 &lt;!&ndash; href="list.do?currentPage=${i}"를 간단히 쓰기 위해 위에 url을 넣음.  &ndash;&gt;-->
+<!--				</th:block>-->
+<!--			</span>-->
+<!--        </th:block>-->
+<!--        &lt;!&ndash; 페이지 출력 끝 &ndash;&gt;-->
+
+<!--        &lt;!&ndash; 다음 출력 시작 &ndash;&gt;-->
+<!--        <li th:if test="${pdto.endPage < pdto.totalPage}">-->
+<!--            <a href="list.do?currentPage=${pdto.startPage+pdto.blockPage}">이후</a>-->
+<!--        </li>-->
+
+<!--    </div>-->
+
+
+                    <!--  ====================페이지네이션 시작======================-->
+<!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
+                    <div class="row fixed-bottom" data-aos="fade-up">
+                        <div class="col-md-12 text-center">
+                            <div class="site-block-27">
+                                <ul>
+                                    <li><a href="#">&lt;</a></li>
+                                    <li class="active"><span>1</span></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a href="#">&gt;</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--  ====================페이지네이션 끝======================-->
+<!--                        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">-->
+<!--                            <a th:if="${page != currentPage}" th:href="@{/produce/list(page = ${page -1})}" th:text="${page}" ></a>-->
+<!--                            <strong th:if="${page == currentPage}" th:text="${page}" style="color : red"></strong>-->
+<!--                        </th:block>-->
+
+
+
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+    </div>
+</div>
+<!-- **********************************-->
+
+<!-- **********************************-->
+</body>
+</html>

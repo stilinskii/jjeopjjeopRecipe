@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('회원가입 완료')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입 완료</title>
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav('회원가입 완료')"></nav>
+<form action="/signupComplete" method="post">
+    <div class="signup-complete-container">
+        회원가입이 완료되었습니다.<br/>로그인 후 나만의 레시피를 공유해보세요!
+    </div>
+    <button type="button" onclick="location.href='login.html'" th:onclick="|location.href='@{/login}'|">로그인</button>
+    <button type="button" onclick="location.href='index.html'" th:onclick="|location.href='@{/}'|">홈으로</button>
+</form>
+</body>
+</html>

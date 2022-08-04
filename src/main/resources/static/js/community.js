@@ -36,3 +36,4 @@ $(function () {
     if (!confirm('Confirm deletion')) return false;
   });
 });
+
