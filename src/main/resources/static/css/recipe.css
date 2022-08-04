@@ -2,11 +2,15 @@
   min-width: 950px;
 }
 
+a {
+color: black;
+}
+
 .custom .input-group {
 padding: 20px 150px;
 margin: auto;
 margin-top: 20px;
-background-color: yellowgreen;
+background-color: #212529;
 }
 
 select.form-select{
@@ -24,7 +28,8 @@ height: auto;
 }
 
 .cate_box {
-background-color: yellow;
+background-color: #ffbe33;
+color: #212529;
 margin: auto;
 margin-bottom: 20px;
 padding: 20px;
@@ -34,6 +39,10 @@ font-size: 15px;
 
 .cate_box p {
 line-height: 1;
+}
+
+.cate_box a {
+color: #fff;
 }
 
 .viewBtn a{
@@ -46,8 +55,6 @@ float: right;
 margin-left: 10px;
 margin-top: 4px;
 }
-
-
 
 .manual_step img{
 width: 500px;
@@ -78,3 +85,24 @@ margin-left: auto;
 margin-right: auto;
 line-height: 0.5;
 width: 250px;
+}
+
+.page-link {
+  color: #888;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.page-item.active .page-link {
+ z-index: 1;
+ color: #fff;
+ background-color: #ffbe33;
+ border-color: #ccc;
+
+}
+
+.page-link:focus, .page-link:hover {
+  color: #555;
+  background-color: #fafafa;
+  border-color: #ccc;
+}
