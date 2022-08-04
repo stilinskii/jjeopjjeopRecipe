@@ -8,6 +8,7 @@
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
     <input type="hidden" th:value="${currentPage}">
+    <input type="hidden" name="rcp_seq" th:value="${rcp.rcp_seq}">
     <!-- //Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -55,7 +56,10 @@
             <img th:src="@{${rcp.filepath}+${rcp.filename}}" width="100%" height="330px" alt="main image"/>
         </div>
         <div class="col-6">
-            <p th:text="'글쓴이:'+${rcp.user_id}"></p>
+            <p class="d-flex justify-content-between">
+                <span th:text="'글쓴이 | '+${rcp.user_id}" class="left"></span>
+                <span th:text="${rcp.rcp_date} + ' 작성'" class="right" style="color: gray;"></span>
+            </p>
             <p class="d-flex justify-content-between">
                 <span th:text="'시간 | '+${rcp.time}" class="left">시간</span>
                 <span th:text="'난이도 | '+${rcp.difficulty}">난이도</span>
@@ -116,6 +120,10 @@
                 <b><span th:text="답글"></span></b>
                 <span>&nbsp&nbsp</span>
                 <span th:text="신고" style="color: red;"></span>
+                <span>&nbsp&nbsp</span>
+                <span th:text="수정" style="color: blue;"></span>
+                <span>&nbsp&nbsp</span>
+                <a th:href="@{/recipe/comment/delete(currentPage=${currentPage}, rcp_seq=${rcp_seq}, co_rcp_seq=${comment.co_rcp_seq})}"><span th:text="삭제"></span></a>
                 <br/>
                 <span th:text="${comment.comment_txt}">덧글 내용</span>
             </p>

@@ -19,4 +19,9 @@
         INSERT INTO comment_rcp(co_rcp_seq, rcp_seq, user_id, co_date, filename, filepath, comment_txt)
         VALUES(co_rcp_seq_seq.nextval, #{rcp_seq}, #{user_id}, sysdate, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR}, #{comment_txt, jdbcType=VARCHAR})
     </insert>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM comment_rcp
+        WHERE co_rcp_seq = #{co_rcp_seq}
+    </delete>
 </mapper>
