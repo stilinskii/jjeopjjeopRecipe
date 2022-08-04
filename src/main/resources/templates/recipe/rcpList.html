@@ -9,10 +9,10 @@
   <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
   <main class="custom container">
     <form action="/recipe/search">
-      <div class="input-group mb-3">
+      <div class="input-group mb-3 rounded">
         <input
           type="text"
-          class="form-control"
+          class="form-control rounded"
           placeholder="내용을 입력하세요."
           name="searchKey"
           aria-label="searchKey"
@@ -20,9 +20,10 @@
         />
         <a th:href="@{/recipe/search(searchKey=${searchKey})}">
         <button
-          class="btn btn-dark"
+          class="btn btn-warning"
           type="submit"
           id="button-addon2"
+          style="margin-left: 10px; color: #fff;"
         >
           레시피 검색
         </button>
@@ -58,7 +59,7 @@
       <hr />
       <div class="rcp_list">
         <p class="fw-bold fs-2 text-start">분류별 레시피</p>
-        <div class="cate_box">
+        <div class="cate_box rounded">
           <p>
             <span>종류별</span>
           <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
@@ -158,7 +159,7 @@
           </ul>
         </nav>
         <div class="d-grid col-4 mx-auto">
-          <a th:href="@{/recipe/write}" class="btn btn-warning">
+          <a th:href="@{/recipe/write}" class="btn btn-warning" style="color:#fff;">
             새 레시피 등록하기
           </a>
         </div>
