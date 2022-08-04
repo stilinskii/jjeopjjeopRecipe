@@ -153,6 +153,7 @@ public class RecipeController {
     @PostMapping("/recipe/write")
     public String rcpWriteProMethod(RecipeDTO recipeDTO, String[] manual_txt, MultipartFile[] upload_manual, HttpServletRequest request){
         MultipartFile mainFile = recipeDTO.getUpload();
+        System.out.println("작성중");
         if(!mainFile.isEmpty()){
             UUID random = saveCopyFile(mainFile, request, 0);
             recipeDTO.setFilename(random+"_"+mainFile.getOriginalFilename());

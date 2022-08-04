@@ -3,7 +3,7 @@ package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dto.A_userDTO;
 import com.jjeopjjeop.recipe.dto.AdminDTO;
-import com.jjeopjjeop.recipe.dto.Community;
+import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.SellerDTO;
 import com.jjeopjjeop.recipe.mapper.AdminMapper;
 import com.jjeopjjeop.recipe.mapper.CommunityMapper;
