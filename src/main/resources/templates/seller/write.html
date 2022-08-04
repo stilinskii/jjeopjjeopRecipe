@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>seller write form</title>
+</head>
+<body>
+<h2>판매자 등록</h2>
+<div class="layout">
+    <form action="/seller/write" method="post" enctype="multipart/form-data" th:object="${sellerDTO}">
+<!--        <input th:field="*{user_id}" type="text" placeholder="아이디">-->
+        <input name="business_name" type="text" placeholder="이름">
+        <input name="registration_number" type="text" placeholder="등록번호">
+        <input name="seller_phone" type="text" placeholder="폰번호">
+        <input name="seller_address" type="text" placeholder="판매자 주소">
+<!--        <input name="approval" type="text" placeholder="승인여부">-->
+
+        <button type="submit">판매자 등록</button>
+    </form>
+</div>
+</body>
+</html>
