@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RecipePageDTO {
     private int currentPage; //현재페이지
+    private int commentCurrentPage; // 덧글 현재페이지
     private int totalCount; //총 레코드수
     private int blockCount = 9; // 한 페이지에 보여줄 레코드수
     private int blockPage = 10; // 한 블록에 보여줄 페이지수
@@ -16,6 +17,8 @@ public class RecipePageDTO {
     private int startPage; // 한 블록의 시작 페이지 번호
     private int endPage; // 한 블록의 끝 페이지 번호
     private int number;
+
+    private int rcp_seq; // 덧글용
 
     private String searchKey;
     private String searchWord;
@@ -38,6 +41,29 @@ public class RecipePageDTO {
 
         // 시작 페이지
         startPage = (int)((currentPage - 1) / blockPage) * blockPage + 1;
+
+        // 끝 페이지
+        endPage = Math.min(startPage + blockPage - 1, totalPage);
+    }
+
+    public RecipePageDTO(int commentCurrentPage, int totalCount, int rcp_seq){
+        this.commentCurrentPage = commentCurrentPage;
+        this.totalCount = totalCount;
+        this.rcp_seq = rcp_seq;
+        this.blockCount = 5;
+        this.blockPage = 3;
+
+        // 시작 레코드
+        startRow = (commentCurrentPage - 1) * blockCount + 1;
+
+        // 끝 레코드
+        endRow = startRow + blockCount - 1;
+
+        // 총 페이지 수
+        totalPage = totalCount / blockCount + (totalCount % blockCount == 0 ? 0 : 1);
+
+        // 시작 페이지
+        startPage = (int)((commentCurrentPage - 1) / blockPage) * blockPage + 1;
 
         // 끝 페이지
         endPage = Math.min(startPage + blockPage - 1, totalPage);

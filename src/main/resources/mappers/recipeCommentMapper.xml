@@ -9,10 +9,15 @@
         WHERE rcp_seq = #{rcp_seq}
     </select>
 
-    <select id="list" parameterType="int" resultType="RecipeCommentDTO">
-        SELECT * FROM comment_rcp
-        WHERE rcp_seq = #{rcp_seq}
-        ORDER BY co_rcp_seq DESC
+    <select id="list" parameterType="RecipePageDTO" resultType="RecipeCommentDTO">
+        <![CDATA[
+        SELECT rcp_co.* FROM
+            (SELECT co.*, rownum rm FROM
+                (SELECT * FROM comment_rcp
+                WHERE rcp_seq = #{rcp_seq}
+                ORDER BY co_rcp_seq DESC)co)rcp_co
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
     </select>
 
     <insert id="write" parameterType="RecipeCommentDTO">

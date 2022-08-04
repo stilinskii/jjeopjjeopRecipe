@@ -20,7 +20,7 @@
         />
         <a th:href="@{/recipe/search(searchKey=${searchKey})}">
         <button
-          class="btn btn-outline-secondary"
+          class="btn btn-dark"
           type="submit"
           id="button-addon2"
         >
@@ -144,7 +144,7 @@
             </li>
             <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
             <li class="page-item active">
-              <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/recipe/list}" th:text="${pDtos}" class="page-link"></a>
+              <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/recipe/list(currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
             </li>
               <li class="page-item">
                 <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/recipe/list(currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
@@ -158,7 +158,7 @@
           </ul>
         </nav>
         <div class="d-grid col-4 mx-auto">
-          <a th:href="@{/recipe/write}" class="btn btn-primary">
+          <a th:href="@{/recipe/write}" class="btn btn-warning">
             새 레시피 등록하기
           </a>
         </div>

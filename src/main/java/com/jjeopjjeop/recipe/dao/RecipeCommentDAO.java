@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface RecipeCommentDAO {
     public int count(int rcp_seq);
-    public List<RecipeCommentDTO> list(int rcp_seq);
+    public List<RecipeCommentDTO> list(RecipePageDTO recipePageDTO);
 
     public void write(RecipeCommentDTO recipeCommentDTO);
     public void delete(int co_rcp_seq);

@@ -27,6 +27,7 @@ public class RecipeController {
     @Autowired
     private RecipeCommentService commentService;
     private int currentPage;
+    private int commentCurrentPage;
     private String searchKey;
 
     // 레시피 목록 조회 메소드
@@ -92,7 +93,7 @@ public class RecipeController {
 
     // 레시피 본문 조회 메소드
     @GetMapping("/recipe/view/{rcp_seq}")
-    public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq, Integer currentPage, ModelAndView mav){
+    public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq, Integer currentPage, RecipePageDTO recipePageDTO, ModelAndView mav){
         // 레시피 본문 내용
         mav.addObject("rcp", service.contentProcess(rcp_seq));
         mav.addObject("currentPage", currentPage);
@@ -101,16 +102,15 @@ public class RecipeController {
         mav.addObject("manualList", service.contentMnlProcess(rcp_seq));
 
         // 덧글 처리
-        RecipePageDTO recipePageDTO = new RecipePageDTO();
         int totalComment = commentService.countProcess(rcp_seq);
-//        if(totalComment>0){
-//            currentPage = 1;
-//            recipePageDTO = new RecipePageDTO(currentPage, totalComment);
-//            recipePageDTO.setBlockPage(3);
-//            recipePageDTO.setBlockCount(5);
-//        }
+        if(totalComment>0){
+            commentCurrentPage = Math.max(recipePageDTO.getCommentCurrentPage(), 1);
+            recipePageDTO = new RecipePageDTO(commentCurrentPage, totalComment, rcp_seq);
+            System.out.println(commentCurrentPage);
+        }
         mav.addObject("totalComment", totalComment);
-        mav.addObject("commentList", commentService.listProcess(rcp_seq));
+        mav.addObject("commentList", commentService.listProcess(recipePageDTO));
+        mav.addObject("recipePageDTO", recipePageDTO);
 
         mav.setViewName("/recipe/rcpView");
         return mav;

@@ -128,6 +128,28 @@
                 <span th:text="${comment.comment_txt}">덧글 내용</span>
             </p>
         </div>
+    <nav aria-label="Page navigation example" style="margin-top: 30px">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <th:block th:each="pDtos : ${#numbers.sequence(recipePageDTO.startPage, recipePageDTO.endPage)}">
+                <li class="page-item active">
+                    <a th:if="${pDtos} == ${recipePageDTO.commentCurrentPage}" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage}, commentCurrentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+                </li>
+                <li class="page-item">
+                    <a th:if="${pDtos} != ${recipePageDTO.commentCurrentPage}" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage}, commentCurrentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+                </li>
+            </th:block>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
