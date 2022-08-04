@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('레시피')">
+    <meta charset="UTF-8" />
+    <title>레시피 본문</title>
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
+<main class="custom container">
+    <input type="hidden" th:value="${currentPage}">
+    <!-- //Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">레시피 삭제</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p th:text="${rcp.rcp_name}+' 레시피를 삭제하시겠습니까?'"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <a th:href="@{/recipe/delete/{rcp_seq}(rcp_seq=${rcp.rcp_seq})}" class="btn btn-danger">삭제</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">레시피 신고</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p th:text="'레시피 신고는 취소할 수 없습니다. [' + ${rcp.rcp_name} + '] 레시피를 신고하시겠습니까?'"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <a th:href="@{/recipe/report/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage})}" class="btn btn-danger">신고</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal// -->
+    <span class="fw-bold fs-2 text-start" th:text="${rcp.rcp_name}"></span>
+    <span class="upsideBtn text-end">
+        <button class="btn btn-primary">글수정</button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">글삭제</button>
+    </span>
+    <hr/>
+    <div class="row" style="margin-bottom:15px;">
+        <div class="col-6 d-grid gap-2 d-md-block">
+            <img th:src="@{${rcp.filepath}+${rcp.filename}}" width="100%" height="330px" alt="main image"/>
+        </div>
+        <div class="col-6">
+            <p th:text="'글쓴이:'+${rcp.user_id}"></p>
+            <p class="d-flex justify-content-between">
+                <span th:text="'시간 | '+${rcp.time}" class="left">시간</span>
+                <span th:text="'난이도 | '+${rcp.difficulty}">난이도</span>
+                <span th:text="'양 | '+${rcp.amount}" class="right">양</span>
+            </p>
+            <p th:text="'분류 | '"></p>
+            <p th:text="'소개 | '+${rcp.summary}"></p>
+            <br/>
+            <p class="d-flex justify-content-between">
+                <span th:text="'조회수 '+${rcp.rcp_viewcnt}" class="left">조회수</span>
+                <a th:href="@{/recipe/scrap/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage})}"><span th:text="'♥ 스크랩수 '+${rcp.scrap}">스크랩수</span></a>
+                <span th:text="'★ 공유'">공유</span>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#reportModal">
+                <span th:text="'신고수 '+${rcp.report}" class="right">신고</span></a>
+            </p>
+        </div>
+    </div>
+    <hr/>
+    <h1 th:text="${rcp.rcp_seq}+'번 레시피 본문입니다. 이부분 나중에 삭제'"></h1>
+    <h2 th:text="'재료'"></h2>
+    <p th::text="${rcp.rcp_parts_dtls}"></p>
+    <hr/>
+    <h2 th:text="'요리 순서'"></h2>
+    <p th:each="manual: ${manualList}" class="manual_step">
+        <span class="h3" th:text="${manual.manual_no}"></span>
+        <img th:if="${not #strings.isEmpty(manual.filename)}" th:src="@{${manual.filepath}+${manual.filename}}" alt="sub image"/>
+        <span th:text="${manual.manual_txt}" style="display: block;"></span>
+    </p>
+    <hr/>
+    <h2 th:text="'#'"></h2>
+    <p th::text="${rcp.hash_tag}"></p>
+    <div class="d-grid d-md-block gap-3 viewBtn" style="text-align: center;">
+        <a th:href="@{/recipe/list(currentPage=${currentPage})}" class="btn btn-secondary me-md-5">
+            레시피 목록으로 돌아가기
+        </a>
+        <a href="#" class="btn btn-dark">
+            이 레시피 후기 작성하기
+        </a>
+    </div>
+    <hr/>
+    <h2 th:text="'댓글 '+${totalComment}"></h2>
+    <form action="#" th:action="@{/recipe/comment/write(currentPage=${currentPage}, searchKey=${searchKey})}" method="post" enctype="multipart/form-data">
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-10">
+                <textarea class="form-control" name="comment_txt" style="height: 100%;" placeholder="내용을 입력해주세요."></textarea>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 3px;">이미지 추가</button>
+                <button type="submit" class="btn btn-dark" style="width: 100%;">댓글쓰기</button>
+            </div>
+            <input class="form-control" type="hidden" name="rcp_seq" th:value="${rcp.rcp_seq}" width="500px">
+        </div>
+    </form>
+        <div th:if="${totalComment != 0}" th:each="comment : ${commentList}">
+            <p>
+              <b><span th:text="${comment.user_id} + '&nbsp&nbsp'" class="left" style="font-size: 15px;">닉네임</span></b>
+                <span th:text="${comment.co_date} + '&nbsp&nbsp'" style="color: gray;">작성일자</span>
+                <b><span th:text="답글"></span></b>
+                <span>&nbsp&nbsp</span>
+                <span th:text="신고" style="color: red;"></span>
+                <br/>
+                <span th:text="${comment.comment_txt}">덧글 내용</span>
+            </p>
+        </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+</script>
+</body>
+</html>

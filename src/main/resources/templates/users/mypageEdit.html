@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('마이페이지')">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>내 정보 수정</title>
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav('마이페이지')"></nav>
+<h4>내 정보 수정</h4>
+<div class="form-group-edit">
+    <div class="form-id">
+        <label for="user_id">아이디</label>
+        <input type="text" id="user_id" name="user_id" th:field="*{user_id}" readonly />
+    </div>
+    <div class="error-message"></div>
+    <div class="form-password">
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" name="password" th:field="*{password}" th:errorclass="field-error" />
+        <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
+    </div>
+    <div class="form-password-chk">
+        <label for="password2">비밀번호 재입력</label>
+        <input type="password" id="password2" name="password2" th:field="*{password}" th:errorclass="field-error" placeholder="비밀번호를 다시 한번 입력하세요" />
+        <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
+    </div>
+    <div class="form-username">
+        <label for="username">이름</label>
+        <input type="text" id="username" name="username" th:field="*{username}" th:errorclass="field-error" />
+        <div class="field-error" th:errors="*{username}">이름 오류</div>
+    </div>
+    <div class="form-nickname">
+        <label for="nickname">별명</label>
+        <input type="text" id="nickname" name="nickname" th:field="*{nickname}" th:errorclass="field-error" />
+        <div class="field-error" th:errors="*{nickname}">별명 오류</div>
+    </div>
+    <div class="form-email">
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" th:field="*{email}" th:errorclass="field-error" />
+        <div class="field-error" th:errors="*{email}">이메일 오류</div>
+    </div>
+    <div class="form-phone">
+        <label for="phone">전화번호</label>
+        <input type="text" id="phone" name="phone" th:field="*{phone}" th:errorclass="field-error" />
+        <div class="field-error" th:errors="*{phone}">전화번호 오류</div>
+    </div>
+    <div class="form-birthday">
+        <label for="birthday">생년월일</label>
+        <input type="date" id="birthday" name="birthday" th:field="*{birthday}" th:errorclass="field-error" />
+        <div class="field-error" th:errors="*{birthday}">생년월일 오류</div>
+    </div>
+    <div class="form-gender">
+        <label for="gender">성별</label>
+
+        <select name="gender" id="gender">
+            <option value="" selected disabled hidden>성별</option>
+            <option value="1">남</option>
+            <option value="2">여</option>
+        </select>
+        <!--            <div class="field-error" th:errors="*{gender}">성별 오류</div>-->
+    </div>
+    <div class="form-postno">
+        <label for="postno">우편번호</label>
+        <input type="text" id="postno" name="postno" size="7" readonly />
+        <!-- <input type="text" id="postno" name="postno" size="7" readonly> -->
+        <!-- put type="button" value="우편번호찾기" />-->
+        <input type="button" value="우편번호찾기" onclick="kakaopost()" />
+        <!--            <div class="field-error" th:errors="*{postno}">우편번호 오류</div>-->
+    </div>
+    <div class="form-address">
+        <label for="address">주소</label>
+        <input type="text" id="address" name="address" size="70" />
+        <!--            <div class="field-error" th:errors="*{address}">주소 오류</div>-->
+    </div>
+    <hr/>
+</body>
+</html>

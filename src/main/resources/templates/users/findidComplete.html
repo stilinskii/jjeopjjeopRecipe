@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('아이디 찾기 완료')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>아이디 찾기 완료</title>
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav('아이디 찾기 완료')"></nav>
+<div id="userListContent">
+    <h2>아이디는 </h2>
+        <span th:text="${user_id}">아이디</span>
+    <h2>입니다</h2>
+</div>
+</body>
+</html>
