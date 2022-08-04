@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('마이페이지')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마이 페이지</title>
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav('마이페이지')"></nav>
+<h4>마이페이지입니다.</h4>
+<button type="button" th:onclick="|location.href='@{/logout}'|">로그아웃</button>
+</body>
+</html>

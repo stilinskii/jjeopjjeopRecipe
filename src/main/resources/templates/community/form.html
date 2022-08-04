@@ -45,6 +45,7 @@
           enctype="multipart/form-data"
           th:object="${community}"
         >
+
           <select th:field="*{category}" class="form-select mb-3 category">
             <option value="0">자유글</option>
             <option value="1">레시피후기</option>
@@ -52,6 +53,7 @@
           <div class="recipeSearch mb-3">
             <button class="btn btn-primary">레시피 조회</button>
           </div>
+
           <div class="mb-3">
             <input
               type="text"
@@ -59,11 +61,14 @@
               th:errorclass="is-invalid"
               placeholder="제목을 입력해주세요."
               th:field="*{title}"
+
               maxlength="30"
+
             />
             <div class="invalid-feedback" th:errors="*{title}">제목오류</div>
           </div>
           <div class="mb-3">
+
             <label for="formFileSm" class="form-label">사진첨부</label>
             <input
               class="form-control form-control-sm"

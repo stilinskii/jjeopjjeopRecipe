@@ -2,6 +2,7 @@ package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
+
 import com.jjeopjjeop.recipe.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
