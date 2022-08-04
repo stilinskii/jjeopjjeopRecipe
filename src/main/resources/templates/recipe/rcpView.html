@@ -7,6 +7,7 @@
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
+    <input type="hidden" th:value="${currentPage}">
     <!-- //Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -20,7 +21,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <a th:href="@{'/recipe/delete/'+${rcp.rcp_seq}}" class="btn btn-danger">삭제</a>
+                    <a th:href="@{/recipe/delete/{rcp_seq}(rcp_seq=${rcp.rcp_seq})}" class="btn btn-danger">삭제</a>
                 </div>
             </div>
         </div>
@@ -37,7 +38,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <a th:href="@{'/recipe/report/'+${rcp.rcp_seq}}" class="btn btn-danger">신고</a>
+                    <a th:href="@{/recipe/report/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage})}" class="btn btn-danger">신고</a>
                 </div>
             </div>
         </div>
@@ -51,7 +52,7 @@
     <hr/>
     <div class="row" style="margin-bottom:15px;">
         <div class="col-6 d-grid gap-2 d-md-block">
-            <img class="test" th:src="@{${rcp.filepath}+${rcp.filename}}" width="100%" height="330px" alt="main image"/>
+            <img th:src="@{${rcp.filepath}+${rcp.filename}}" width="100%" height="330px" alt="main image"/>
         </div>
         <div class="col-6">
             <p th:text="'글쓴이:'+${rcp.user_id}"></p>
@@ -65,7 +66,7 @@
             <br/>
             <p class="d-flex justify-content-between">
                 <span th:text="'조회수 '+${rcp.rcp_viewcnt}" class="left">조회수</span>
-                <a th:href="@{'/recipe/scrap/'+${rcp.rcp_seq}}"><span th:text="'♥ 스크랩수 '+${rcp.scrap}">스크랩수</span></a>
+                <a th:href="@{/recipe/scrap/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage})}"><span th:text="'♥ 스크랩수 '+${rcp.scrap}">스크랩수</span></a>
                 <span th:text="'★ 공유'">공유</span>
                 <a href="#" data-bs-toggle="modal" data-bs-target="#reportModal">
                 <span th:text="'신고수 '+${rcp.report}" class="right">신고</span></a>
@@ -73,7 +74,7 @@
         </div>
     </div>
     <hr/>
-    <h1 th:text="${rcp.rcp_seq}+'번 레시피 본문입니다.'"></h1>
+    <h1 th:text="${rcp.rcp_seq}+'번 레시피 본문입니다. 이부분 나중에 삭제'"></h1>
     <h2 th:text="'재료'"></h2>
     <p th::text="${rcp.rcp_parts_dtls}"></p>
     <hr/>
@@ -81,7 +82,7 @@
     <p th:each="manual: ${manualList}" class="manual_step">
         <span class="h3" th:text="${manual.manual_no}"></span>
         <img th:if="${not #strings.isEmpty(manual.filename)}" th:src="@{${manual.filepath}+${manual.filename}}" alt="sub image"/>
-        <span th:text="${manual.manual_txt}"></span>
+        <span th:text="${manual.manual_txt}" style="display: block;"></span>
     </p>
     <hr/>
     <h2 th:text="'#'"></h2>
@@ -90,13 +91,13 @@
         <a th:href="@{/recipe/list(currentPage=${currentPage})}" class="btn btn-secondary me-md-5">
             레시피 목록으로 돌아가기
         </a>
-        <a th:href="@{/recipe/list}" class="btn btn-dark">
+        <a href="#" class="btn btn-dark">
             이 레시피 후기 작성하기
         </a>
     </div>
     <hr/>
     <h2 th:text="'댓글 '+${totalComment}"></h2>
-    <form action="/recipe/comment/write" method="post" enctype="multipart/form-data">
+    <form action="#" th:action="@{/recipe/comment/write(currentPage=${currentPage}, searchKey=${searchKey})}" method="post" enctype="multipart/form-data">
         <div class="row" style="margin-bottom: 20px;">
             <div class="col-10">
                 <textarea class="form-control" name="comment_txt" style="height: 100%;" placeholder="내용을 입력해주세요."></textarea>
@@ -122,8 +123,6 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    const test = document.querySelector(".test");
-    console.log(test);
 </script>
 </body>
 </html>

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -91,9 +92,10 @@ public class RecipeController {
 
     // 레시피 본문 조회 메소드
     @GetMapping("/recipe/view/{rcp_seq}")
-    public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq, ModelAndView mav){
+    public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq, Integer currentPage, ModelAndView mav){
         // 레시피 본문 내용
         mav.addObject("rcp", service.contentProcess(rcp_seq));
+        mav.addObject("currentPage", currentPage);
 
         // 레시피별 요리 단계 내용
         mav.addObject("manualList", service.contentMnlProcess(rcp_seq));
@@ -116,24 +118,24 @@ public class RecipeController {
 
     // 레시피 스크랩 메소드
     @GetMapping("/recipe/scrap/{rcp_seq}")
-    public String rcpScrapMethod(@PathVariable("rcp_seq") Integer rcp_seq){
+    public String rcpScrapMethod(@PathVariable("rcp_seq") Integer rcp_seq, Integer currentPage){
         UserScrapDTO userScrapDTO = new UserScrapDTO();
         userScrapDTO.setUser_id("테스트");
         userScrapDTO.setRcp_seq(rcp_seq);
         service.scrapProcess(userScrapDTO);
 
-        return "redirect:/recipe/view/"+rcp_seq;
+        return "redirect:/recipe/view/"+rcp_seq+"?currentPage="+currentPage;
     }
 
     // 레시피 신고 메소드
     @GetMapping("/recipe/report/{rcp_seq}")
-    public String rcpReportMethod(@PathVariable("rcp_seq") Integer rcp_seq){
+    public String rcpReportMethod(@PathVariable("rcp_seq") Integer rcp_seq, Integer currentPage){
         ReportRecipeDTO reportRecipeDTO = new ReportRecipeDTO();
         reportRecipeDTO.setUser_id("테스트");
         reportRecipeDTO.setRcp_seq(rcp_seq);
         service.reportProcess(reportRecipeDTO);
 
-        return "redirect:/recipe/view/"+rcp_seq;
+        return "redirect:/recipe/view/"+rcp_seq+"?currentPage="+currentPage;
     }
 
     // 레시피 작성 페이지 요청 메소드
@@ -169,8 +171,6 @@ public class RecipeController {
                 manualDTO.setFilename(random+"_"+upload_manual[i].getOriginalFilename());
                 manualDTO.setFilepath("/media/recipe/manual/");
             }
-            System.out.println(i+": "+upload_manual[i].getOriginalFilename());
-            System.out.println(manualDTO.getManual_no() + " " + manualDTO.getManual_txt() + " " + manualDTO.getFilename());
             service.writeMProcess(manualDTO);
         }
 

@@ -89,7 +89,7 @@
         </div>
         <div class="row align-items-center" style="margin-bottom: 20px">
             <div th:each="rcp : ${rcpList}" class="col-4">
-                <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq})}">
+                <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${recipePageDTO.currentPage}, searchKey=${searchKey})}">
                     <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
                     <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
                     <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>

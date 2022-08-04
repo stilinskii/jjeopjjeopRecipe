@@ -15,11 +15,11 @@ public class RecipeCommentController {
     private int currentPage;
 
     @PostMapping("/recipe/comment/write")
-    public String writeMethod(int rcp_seq, RecipeCommentDTO recipeCommentDTO){
+    public String writeMethod(int rcp_seq, Integer currentPage, RecipeCommentDTO recipeCommentDTO){
         recipeCommentDTO.setRcp_seq(rcp_seq);
         recipeCommentDTO.setUser_id("테스트");
         service.writeProcess(recipeCommentDTO);
 
-        return "redirect:/recipe/view/"+rcp_seq;
+        return "redirect:/recipe/view/"+rcp_seq+"?currentPage="+currentPage;
     }
 }

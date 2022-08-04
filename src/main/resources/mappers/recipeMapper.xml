@@ -112,7 +112,7 @@
 
     <insert id="write" parameterType="RecipeDTO">
         INSERT INTO recipe(rcp_seq, rcp_name, user_id, filename, filepath, time, difficulty, amount, summary, hash_tag, rcp_parts_dtls, rcp_date)
-        VALUES(rcp_seq_seq.nextval, #{rcp_name}, '테스트', #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR} ,#{time, jdbcType=VARCHAR}, #{difficulty, jdbcType=VARCHAR}, #{amount, jdbcType=VARCHAR}, #{summary, jdbcType=VARCHAR}, #{hash_tag, jdbcType=VARCHAR}, #{rcp_parts_dtls, jdbcType=VARCHAR}, sysdate)
+        VALUES(rcp_seq_seq.nextval, #{rcp_name}, #{user_id}, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR} ,#{time, jdbcType=VARCHAR}, #{difficulty, jdbcType=VARCHAR}, #{amount, jdbcType=VARCHAR}, #{summary, jdbcType=VARCHAR}, #{hash_tag, jdbcType=VARCHAR}, #{rcp_parts_dtls, jdbcType=VARCHAR}, sysdate)
     </insert>
 
     <insert id="writeManual" parameterType="ManualDTO">
