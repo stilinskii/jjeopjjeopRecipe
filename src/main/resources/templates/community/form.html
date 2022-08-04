@@ -45,10 +45,13 @@
           enctype="multipart/form-data"
           th:object="${community}"
         >
-          <select th:field="*{category}" class="form-select mb-3">
+          <select th:field="*{category}" class="form-select mb-3 category">
             <option value="0">자유글</option>
             <option value="1">레시피후기</option>
           </select>
+          <div class="recipeSearch mb-3">
+            <button class="btn btn-primary">레시피 조회</button>
+          </div>
           <div class="mb-3">
             <input
               type="text"

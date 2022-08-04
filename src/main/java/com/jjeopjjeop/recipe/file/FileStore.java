@@ -15,6 +15,7 @@ public class FileStore {
     private String imageDir = System.getProperty("user.dir")+"\\src\\main\\resources\\static\\media\\";
 
 
+
     public List<ImageDTO> storeImages(List<MultipartFile> multipartFiles,String dirName) {
         List<ImageDTO> storeImageResult = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {

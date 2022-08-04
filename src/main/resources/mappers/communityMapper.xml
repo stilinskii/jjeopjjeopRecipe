@@ -8,31 +8,58 @@
         SELECT count(*) FROM communityboard
     </select>
 
+    <select id="recipeReviewCount" resultType="int">
+        SELECT count(*) FROM communityboard WHERE category = 1
+    </select>
+
+    <select id="freeForumCount" resultType="int">
+        SELECT count(*) FROM communityboard WHERE category = 0
+    </select>
+
     <select id="list" parameterType="PagenationDTO" resultType="CommunityDTO">
-        SELECT * FROM (select t1.*,row_number() over (order by id DESC) as seqnum
-        from CommunityBoard t1) t1
-        where seqnum between #{startPage} and #{endPage}
+        SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
+        FROM CommunityBoard t1) t1
+        WHERE seqnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <select id="recipeReviewList" parameterType="PagenationDTO" resultType="CommunityDTO">
+        SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
+        from CommunityBoard t1
+        WHERE category = 1) t1
+        WHERE seqnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <select id="freeForumList" parameterType="PagenationDTO" resultType="CommunityDTO">
+        SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
+        FROM CommunityBoard t1
+        WHERE category = 0) t1
+        WHERE seqnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
     <insert id="insert" parameterType="CommunityDTO">
-        Insert into CommunityBoard
-        values(CommunityBoard_SEQ.nextval,'jenn',0,#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0)
+        INSERT INTO CommunityBoard
+        VALUES(CommunityBoard_SEQ.nextval,'jenn',0,#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0)
         <selectKey resultType="int" keyProperty="id" order="AFTER">
             SELECT CommunityBoard_SEQ.CURRVAL FROM DUAL
         </selectKey>
     </insert>
 
     <select id="findPostById" parameterType="int" resultType="CommunityDTO">
-        select * from CommunityBoard where id=#{id}
+        SELECT * FROM CommunityBoard WHERE id=#{id}
     </select>
 
     <insert id="storeImage" parameterType="ImageDTO">
-        Insert into Image
-        values(Image_SEQ.nextval,#{filename},#{board_id})
+        INSERT INTO Image
+        VALUES(Image_SEQ.nextval,#{filename},#{board_id})
     </insert>
 
     <select id="findImageByPostId" parameterType="int" resultType="ImageDTO">
-        select * from Image where board_id=#{id}
+        SELECT * FROM Image WHERE board_id=#{id}
     </select>
+
+    <update id="readCnt" parameterType="int">
+        UPDATE CommunityBoard SET read_count = read_count+1
+        WHERE id=#{id}
+    </update>
 
 </mapper>

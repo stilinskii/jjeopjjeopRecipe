@@ -4,7 +4,7 @@
   th:fragment="front-nav(title)"
 >
   <div class="container">
-    <a class="navbar-brand logo" href="#">쩝쩝박사</a>
+    <a class="navbar-brand logo" href="/">쩝쩝박사</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -45,15 +45,26 @@
         </li>
       </ul>
       <div class="user_option d-flex">
-        <a href="" class="user_link">
-          <i class="fa fa-user" aria-hidden="true"></i>
+        <a class="user_link" href="">
+          <i
+            class="fa fa-user"
+            aria-hidden="true"
+            th:classappend="${title}=='mypage'? 'active'"
+          ></i>
         </a>
         <a class="cart_link" href="#">
-          <i class="fa fa-shopping-cart"></i>
+          <i
+            class="fa fa-shopping-cart"
+            th:classappend="${title}=='shoppingCart'? 'active'"
+          ></i>
         </a>
 
         <a class="search_link" href="#">
-          <i class="fa fa-search" aria-hidden="true"></i>
+          <i
+            class="fa fa-search"
+            aria-hidden="true"
+            th:classappend="${title}=='search'? 'active'"
+          ></i>
         </a>
 
         <a href="" class="login"> Login </a>

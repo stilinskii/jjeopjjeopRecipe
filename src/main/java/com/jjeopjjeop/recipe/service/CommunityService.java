@@ -24,6 +24,13 @@ public class CommunityService {
     public List<CommunityDTO> getBoard(PagenationDTO pagenationDTO){
         return communityDAO.list(pagenationDTO);
     }
+    public List<CommunityDTO> getRecipeReviews(PagenationDTO pagenationDTO){
+        return communityDAO.recipeReviewList(pagenationDTO);
+    }
+
+    public List<CommunityDTO> getFreeForums(PagenationDTO pagenationDTO){
+        return communityDAO.freeForumList(pagenationDTO);
+    }
 
     public void save(CommunityDTO dto){
         communityDAO.insert(dto);
@@ -42,6 +49,7 @@ public class CommunityService {
     }
 
     public CommunityDTO findPostById(Integer id){
+        communityDAO.readCnt(id);
         CommunityDTO post = communityDAO.findPostById(id);
         List<ImageDTO> image = communityDAO.findImageByPostId(id);
         if(hasImage(image)){
@@ -58,4 +66,6 @@ public class CommunityService {
     public int count(){
         return communityDAO.count();
     }
+    public int recipeReviewCount(){ return communityDAO.recipeReviewCount();}
+    public int freeForumCount(){ return communityDAO.freeForumCount();}
 }
