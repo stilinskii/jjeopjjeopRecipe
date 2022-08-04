@@ -1,0 +1,80 @@
+.custom {
+  min-width: 950px;
+}
+
+.custom .input-group {
+padding: 20px 150px;
+margin: auto;
+margin-top: 20px;
+background-color: yellowgreen;
+}
+
+select.form-select{
+display: inline-block;
+width: 200px;
+margin-bottom: 15px;
+}
+
+textarea{
+width: 100%;
+}
+
+textarea.form-control{
+height: auto;
+}
+
+.cate_box {
+background-color: yellow;
+margin: auto;
+margin-bottom: 20px;
+padding: 20px;
+text-align: center;
+font-size: 15px;
+}
+
+.cate_box p {
+line-height: 1;
+}
+
+.viewBtn a{
+width: 350px;
+margin-bottom: 15px;
+}
+
+.upsideBtn{
+float: right;
+margin-left: 10px;
+margin-top: 4px;
+}
+
+
+
+.manual_step img{
+width: 500px;
+display: block;
+margin: auto;
+}
+
+hr {
+margin-top: 0;
+}
+
+.rcp_best {
+margin: auto;
+text-align: center;
+}
+
+.col-4 {
+text-align: center;
+}
+
+.col-4 img {
+margin-bottom: 10px;
+}
+
+.col-4 p {
+display: inline-block;
+margin-left: auto;
+margin-right: auto;
+line-height: 0.5;
+width: 250px;

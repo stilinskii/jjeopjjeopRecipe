@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjeopjjeop.recipe.dao.RecipeDAO">
+    <select id="count" resultType="int">
+        SELECT count(*) FROM recipe
+    </select>
+
+    <select id="list" parameterType="RecipePageDTO" resultType="RecipeDTO">
+        <![CDATA[
+        SELECT rcp_li.* FROM
+            (SELECT rcp.*, rownum rm FROM
+                (SELECT * FROM recipe
+                ORDER BY rcp_seq DESC)rcp)rcp_li
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
+    </select>
+
+    <select id="searchCount" parameterType="String" resultType="int">
+        SELECT count(*) FROM recipe
+        <if test="searchKey != null">
+            WHERE rcp_name LIKE '%' || #{searchKey} || '%'
+            OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
+            OR summary LIKE '%' || #{searchKey} || '%'
+            OR hash_tag LIKE '%' || #{searchKey} || '%'
+        </if>
+    </select>
+
+    <select id="searchList" parameterType="RecipePageDTO" resultType="RecipeDTO">
+        SELECT rcp_li.* FROM
+        (SELECT rcp.*, rownum rm FROM
+        (SELECT * FROM recipe
+        <if test="searchKey != null">
+            WHERE rcp_name LIKE '%' || #{searchKey} || '%'
+            OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
+            OR summary LIKE '%' || #{searchKey} || '%'
+            OR hash_tag LIKE '%' || #{searchKey} || '%'
+        </if>
+        <![CDATA[
+                ORDER BY rcp_seq DESC)rcp)rcp_li
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
+    </select>
+
+    <select id="favoriteList" resultType="RecipeDTO">
+        <![CDATA[
+        SELECT * FROM (
+            SELECT * FROM recipe
+            ORDER BY scrap DESC)
+        WHERE rownum <= 3
+        ]]>
+    </select>
+
+    <select id="cateList" resultType="CategoryDTO">
+        SELECT * FROM category
+    </select>
+
+    <select id="content" parameterType="int" resultType="RecipeDTO">
+        SELECT * FROM recipe WHERE rcp_seq = #{num}
+    </select>
+
+    <select id="contentMnl" parameterType="int" resultType="ManualDTO">
+        SELECT * FROM manual WHERE rcp_seq = #{num}
+    </select>
+
+    <update id="viewCnt" parameterType="int">
+        UPDATE recipe SET rcp_viewcnt = rcp_viewcnt+1
+        WHERE rcp_seq = #{num}
+    </update>
+
+    <select id="checkScrap" parameterType="UserScrapDTO" resultType="int">
+        SELECT count(*) from user_rcp
+        WHERE user_id = #{user_id} AND rcp_seq = #{rcp_seq}
+    </select>
+
+    <insert id="scrapP" parameterType="UserScrapDTO">
+        INSERT INTO user_rcp(user_id, rcp_seq, scr_date)
+        VALUES(#{user_id}, #{rcp_seq}, sysdate)
+    </insert>
+
+    <update id="updateScrapP" parameterType="int">
+        UPDATE recipe SET scrap = scrap + 1
+        WHERE rcp_seq = #{num}
+    </update>
+
+    <delete id="scrapM" parameterType="UserScrapDTO">
+        DELETE FROM user_rcp
+        WHERE user_id= #{user_id} AND rcp_seq = #{rcp_seq}
+    </delete>
+
+    <update id="updateScrapM" parameterType="int">
+        UPDATE recipe SET scrap = scrap - 1
+        WHERE rcp_seq = #{num}
+    </update>
+
+    <select id="checkReport" parameterType="ReportRecipeDTO" resultType="int">
+        SELECT count(*) from report_rcp
+        WHERE user_id = #{user_id} AND rcp_seq = #{rcp_seq}
+    </select>
+
+    <insert id="report" parameterType="ReportRecipeDTO">
+        INSERT INTO report_rcp(user_id, rcp_seq, scr_date)
+        VALUES(#{user_id}, #{rcp_seq}, sysdate)
+    </insert>
+
+    <update id="updateReport" parameterType="int">
+        UPDATE recipe SET report = report + 1
+        WHERE rcp_seq = #{num}
+    </update>
+
+    <insert id="write" parameterType="RecipeDTO">
+        INSERT INTO recipe(rcp_seq, rcp_name, user_id, filename, filepath, time, difficulty, amount, summary, hash_tag, rcp_parts_dtls, rcp_date)
+        VALUES(rcp_seq_seq.nextval, #{rcp_name}, #{user_id}, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR} ,#{time, jdbcType=VARCHAR}, #{difficulty, jdbcType=VARCHAR}, #{amount, jdbcType=VARCHAR}, #{summary, jdbcType=VARCHAR}, #{hash_tag, jdbcType=VARCHAR}, #{rcp_parts_dtls, jdbcType=VARCHAR}, sysdate)
+    </insert>
+
+    <insert id="writeManual" parameterType="ManualDTO">
+        INSERT INTO manual(manual_no, rcp_seq, manual_txt, filename, filepath)
+        VALUES(#{manual_no, jdbcType=VARCHAR},
+        (SELECT max(rcp_seq) FROM recipe)
+        , #{manual_txt, jdbcType=VARCHAR}, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM recipe
+        WHERE rcp_seq=#{num}
+    </delete>
+
+    <delete id="deleteManual" parameterType="int">
+        DELETE FROM manual
+        WHERE rcp_seq=#{num}
+    </delete>
+</mapper>
