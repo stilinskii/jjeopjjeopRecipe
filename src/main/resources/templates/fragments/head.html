@@ -1,0 +1,28 @@
+<head th:fragment="head(title)">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="${title}">Document</title>
+  <!-- bootstrap  -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <link
+    href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    rel="stylesheet"
+  />
+  <!-- icons -->
+  <link
+    href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+  <!-- 나중에 동적으로 바꿔놓기 -->
+  <link
+    rel="stylesheet"
+    href="/static/css/community.css"
+    th:href="@{/css/community.css}"
+  />
+</head>

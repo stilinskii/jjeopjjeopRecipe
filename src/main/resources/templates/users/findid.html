@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('아이디 찾기')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/user.css" />
+    <title>아이디 찾기</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<!--<script type="text/javascript">-->
+<script th:inline="javascript">
+<![CDATA[
+    $("#username").focusout(function(){
+        if($("#username").val == "") {
+            $("#check").text("이름을 입력해주세요");
+            $("#check").css("color", "red");
+        }else {
+            $("#check").hide();
+        }
+    });
+
+
+   function findIdComplete() {
+        $.ajax({
+            type: "POST",
+            url: "/findid/findidComplete",
+            data: {
+                username:$("#username").val(),
+                email:$("#email").val()
+            },
+            dataType: "JSON",
+            success: function (data) {
+                if(data == 0){
+                    $("#userListContent").text("회원정보를 확인해 주세요");
+                    $("#username").val("");
+                    $("#email").val("");
+                }else {
+                    $("#userListContent").text(data);
+                    $("#username").val("");
+                    $("#email").val("");
+                }
+            },
+            error: function(jqXHR) {
+                console.log("Error: "+jqXHR.status+jqXHR.message);
+            }
+        });
+    }
+]]>
+</script>
+<body>
+<nav th:replace="fragments/nav :: front-nav('아이디 찾기')"></nav>
+    <h4>아이디 찾기</h4>
+    <h5>이름과 이메일 주소를 입력해 주세요.</h5>
+    <form action="/findid" method="post" th:object="${userDTO}">
+        <div class="findid-form">
+            <p>
+                <label for="username">이름</label>
+                <input type="text" id="username" name="username" required="" placeholder="이름을 입력하세요"/>
+            </p>
+            <p>
+                <label for="email">이메일 주소</label>
+                <input type="text" id="email" name="email" required="" placeholder="ex) abc@test.tt"/>
+            </p>
+            <p class="check" id="check"></p>
+        </div>
+<!--        <div th:if="${message}==''" class="alert" role="alert" th:text="${message}" th:if="${message}"></div>-->
+        <div class="container">
+            <button type="button" onclick="findIdComplete()">아이디 찾기</button>
+            <div id="userListContent"></div>
+        </div>
+
+        <button type="submit">아이디 찾기</button>
+        <button type="button" th:onclick="|location.href='@{/login}'|">취소</button>
+    </form>
+</body>
+</html>
