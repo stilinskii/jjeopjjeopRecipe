@@ -26,3 +26,4 @@ public class PayController {
         return "redirect:/produce/list";
     }
 }
+//service는 사용자가 이해하기 편하게.

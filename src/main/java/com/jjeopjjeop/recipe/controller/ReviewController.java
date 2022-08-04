@@ -18,6 +18,12 @@ public class ReviewController {
 
     }
 
+    @GetMapping("/review/write")
+    public String reviewWrite(){
+
+        return "/produce/reviewWrite";
+    }
+
     //@PostMapping("/review/delete/{payNum}")  <-이걸로 하면 오류남(There was an unexpected error (type=Method Not Allowed, status=405).
     //Request method 'GET' not supported)
     @GetMapping("/review/delete/{payNum}")
