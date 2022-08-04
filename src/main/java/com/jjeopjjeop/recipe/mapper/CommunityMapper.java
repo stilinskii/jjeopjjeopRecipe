@@ -3,6 +3,7 @@ package com.jjeopjjeop.recipe.mapper;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import org.apache.ibatis.annotations.*;
 
+
 import java.util.List;
 
 @Mapper
