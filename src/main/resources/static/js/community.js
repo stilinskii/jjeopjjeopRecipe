@@ -15,3 +15,24 @@ $(function () {
     });
   }
 });
+
+// form (글쓰기) 카테고리에따라 양식 다르게 보이기
+const categorySelect = document.querySelector('select.category');
+const recipeSearchBtn = document.querySelector('.recipeSearch');
+categorySelect.addEventListener('change', showRecipeSearchBtn);
+function showRecipeSearchBtn() {
+  if (categorySelect.value == 1) {
+    recipeSearchBtn.classList.remove('d-none');
+  } else {
+    recipeSearchBtn.classList.add('d-none');
+  }
+}
+
+showRecipeSearchBtn();
+
+// 삭제 확인
+$(function () {
+  $('a.confirmDeletion').click(function () {
+    if (!confirm('Confirm deletion')) return false;
+  });
+});

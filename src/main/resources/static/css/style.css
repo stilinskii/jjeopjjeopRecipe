@@ -137,3 +137,7 @@ a:focus {
 .user_option .login:hover {
   background-color: #e69c00;
 }
+
+.active {
+  color: #e69c00;
+}
