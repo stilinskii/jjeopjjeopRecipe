@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://mybatis.org/mybatis-3/configuration.html#mappers에서 세줄만 복붙 -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjeopjjeop.recipe.dao.PayDAO">
+
+    <!--로그인 기능 만들어지기 전까지는 일단 user_id 'a'로 통일(한사람이 쓰는것처럼.)
+        구매기능 만들기 전까지는 일단 pay는 다 0으로 해둠. 나중에 바꾸기.-->
+    <insert id="cartWrite" parameterType="com.jjeopjjeop.recipe.dto.PayDTO">
+        INSERT INTO pay_history
+        VALUES(pay_num_seq.nextval, 'a', #{produce_num}, #{quantity}, 0,
+        #{quantity} * (SELECT price FROM produce_board WHERE produce_num = #{produce_num}))
+    </insert>
+
+
+</mapper>
