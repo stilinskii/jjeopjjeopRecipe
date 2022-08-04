@@ -1,0 +1,73 @@
+<nav
+  class="navbar navbar-expand-lg navbar-dark bg-dark py-3"
+  aria-label="Eighth navbar example"
+  th:fragment="front-nav(title)"
+>
+  <div class="container">
+    <a class="navbar-brand logo" href="#">쩝쩝박사</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarsExample07"
+      aria-controls="navbarsExample07"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExample07">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- home없애기 의견 물어보기 -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            th:classappend="${title}=='home'? 'active'"
+            aria-current="page"
+            th:href="@{/}"
+            >Home</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            th:classappend="${title}=='recipe'? 'active'"
+            href="#"
+            >레시피</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            th:classappend="${title}=='shopping'? 'active'"
+            href="#"
+            >쇼핑마당</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            th:classappend="${title}=='community'? 'active'"
+            th:href="@{/community}"
+            >커뮤니티</a
+          >
+        </li>
+      </ul>
+      <div class="user_option d-flex">
+        <a href="" class="user_link">
+          <i class="fa fa-user" aria-hidden="true"></i>
+        </a>
+        <a class="cart_link" href="#">
+          <i class="fa fa-shopping-cart"></i>
+        </a>
+
+        <a class="search_link" href="#">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </a>
+
+        <a href="" class="login"> Login </a>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -16,5 +16,9 @@ public class SellerService {
     public List<SellerDTO> getSeller(){
         return sellerMapper.listSeller();
     }
+    //insert
+    public void save(SellerDTO seller) {
+        sellerMapper.insert(seller);
+    }
 
 }

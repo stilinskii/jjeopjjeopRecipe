@@ -8,32 +8,32 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class AdminServiceImp implements AdminService{
+//@Service
+//@RequiredArgsConstructor
+public class AdminServiceImp {
 
 
-    @Autowired
-    private AdminDAO adminDao;
-
-    public AdminServiceImp(AdminDAO adminDao) {
-
-    }
-
-    @Override
-    public int countProcess() {
-        return adminDao.count();
-    }
-
-    @Override
-    public List<AdminDTO> listUser() throws Exception {
-        return adminDao.userList();
-    }
-
-    @Override
-    public int addUser(AdminDTO adminDTO) throws Exception {
-        return adminDao.insertUser(adminDTO);
-    }
+//    @Autowired
+//    private AdminDAO adminDao;
+//
+//    public AdminServiceImp(AdminDAO adminDao) {
+//
+//    }
+//
+//    @Override
+//    public int countProcess() {
+//        return adminDao.count();
+//    }
+//
+//    @Override
+//    public List<AdminDTO> listUser() throws Exception {
+//        return adminDao.userList();
+//    }
+//
+//    @Override
+//    public int addUser(AdminDTO adminDTO) throws Exception {
+//        return adminDao.insertUser(adminDTO);
+//    }
 
 
 }
