@@ -48,3 +48,9 @@ section.comment {
   width: 90%;
   margin-right: 10px;
 }
+
+/* post */
+.post-img {
+  height: 100%;
+  max-height: 500px;
+}

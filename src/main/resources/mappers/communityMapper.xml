@@ -62,4 +62,12 @@
         WHERE id=#{id}
     </update>
 
+    <delete id="deletePostById" parameterType="int">
+        DELETE FROM CommunityBoard WHERE id=#{id}
+    </delete>
+
+    <delete id="deleteImageByPostId" parameterType="int">
+        DELETE FROM Image WHERE board_id=#{id}
+    </delete>
+
 </mapper>

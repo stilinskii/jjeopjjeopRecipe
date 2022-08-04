@@ -47,7 +47,11 @@
             카테고리>
           </p>
           <a class="btn btn-secondary btn-sm bd-highlight mx-1">수정</a>
-          <a class="btn btn-secondary btn-sm bd-highlight mx-1">삭제</a>
+          <a
+            class="btn btn-secondary btn-sm bd-highlight mx-1 confirmDeletion"
+            th:href="@{|/community/delete/${community.id}|}"
+            >삭제</a
+          >
         </div>
         <h1 th:text="${community.title}">글제목</h1>
         <div class="d-flex bd-highlight detail">
@@ -100,9 +104,12 @@
               <button type="button" class="btn btn-secondary btn-sm">
                 수정
               </button>
-              <button type="button" class="btn btn-secondary btn-sm">
+              <a
+                th:href="@{/community/delete}"
+                class="btn btn-secondary btn-sm confirmDeletion"
+              >
                 삭제
-              </button>
+              </a>
             </div>
             <div class="d-none">
               <button type="button" class="btn btn-secondary btn-sm">
@@ -118,9 +125,9 @@
               <button type="button" class="btn btn-secondary btn-sm">
                 수정
               </button>
-              <button type="button" class="btn btn-secondary btn-sm">
+              <a href="#" class="btn btn-secondary btn-sm confirmDeletion">
                 삭제
-              </button>
+              </a>
             </div>
             <div class="d-none">
               <button type="button" class="btn btn-secondary btn-sm">
@@ -139,7 +146,6 @@
         </section>
       </div>
     </main>
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

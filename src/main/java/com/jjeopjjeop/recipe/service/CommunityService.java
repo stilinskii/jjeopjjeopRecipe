@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @Slf4j
@@ -68,4 +69,17 @@ public class CommunityService {
     }
     public int recipeReviewCount(){ return communityDAO.recipeReviewCount();}
     public int freeForumCount(){ return communityDAO.freeForumCount();}
+    public void deletePostById(int id){
+        communityDAO.deletePostById(id);
+        //이미지 삭제 로직
+        List<ImageDTO> images = communityDAO.findImageByPostId(id);
+        for (ImageDTO image : images) {
+
+            String path="C:\\Users\\hayeong\\Desktop\\final\\recipe\\src\\main\\resources\\static\\media\\community";
+            String fullPath=path + image.getFilename();
+            new File(fullPath).delete();
+        }
+
+        communityDAO.deleteImageByPostId(id);
+    }
 }

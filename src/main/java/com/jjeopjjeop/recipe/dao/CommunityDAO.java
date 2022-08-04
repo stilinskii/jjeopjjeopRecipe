@@ -6,6 +6,7 @@ import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.awt.*;
 import java.util.List;
 
 @Repository
@@ -22,4 +23,8 @@ public interface CommunityDAO {
     void storeImage(ImageDTO imageDTO);
     List<ImageDTO> findImageByPostId(int id);
     void readCnt(int id);
+
+    void deletePostById(int id);
+    void deleteImageByPostId(int id);
+
 }
