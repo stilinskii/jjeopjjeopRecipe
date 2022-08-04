@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- bootstrap  -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <!-- icons -->
+    <link
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="/static/css/style.css"
+      th:href="@{/css/style.css}"
+    />
+    <link
+      rel="stylesheet"
+      href="/static/css/community.css"
+      th:href="@{/css/community.css}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css"
+    />
+  </head>
+  <body class="bg-light">
+    <nav th:replace="fragments/nav :: front-nav('community')"></nav>
+    <main class="container">
+      <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
+        <div class="d-flex bd-highlight detail">
+          <p
+            class="me-auto bd-highlight category"
+            th:text="${community.category=='0'}? '자유게시판 >':'레시피후기 >'"
+          >
+            카테고리>
+          </p>
+          <a class="btn btn-secondary btn-sm bd-highlight mx-1">수정</a>
+          <a
+            class="btn btn-secondary btn-sm bd-highlight mx-1 confirmDeletion"
+            th:href="@{|/community/delete/${community.id}|}"
+            >삭제</a
+          >
+        </div>
+        <h1 th:text="${community.title}">글제목</h1>
+        <div class="d-flex bd-highlight detail">
+          <p class="me-auto bd-highlight" th:text="${community.user_id}">
+            글 작성자
+          </p>
+          <p
+            class="bd-highlight"
+            th:text="|글 작성일자 : ${community.created_at}|"
+          >
+            글 작성일자
+          </p>
+          <p class="bd-highlight" th:text="|조회 : ${community.read_count}|">
+            조회
+          </p>
+        </div>
+        <hr class="my-2 line border border-dark" />
+        <section class="content">
+          <div class="slider" th:if="${community.images != null}">
+            <th:block th:each="img : ${community.images}">
+              <img
+                th:src="@{/media/community/{image}(image=${img.filename})}"
+                alt=""
+                class="post-img"
+              />
+            </th:block>
+          </div>
+          <div th:utext="${community.content}">content</div>
+        </section>
+        <div class="d-flex bd-highlight detail">
+          <a class="btn btn-secondary btn-sm me-auto bd-highlight">신고</a>
+          <i
+            class="fa fa-heart-o bd-highlight"
+            th:text="| ${community.like_count}|"
+          >
+            0</i
+          >
+        </div>
+        <hr class="my-2 line border border-dark" />
+        <section class="comment">
+          <div class="d-flex bd-highlight detail">
+            <h4 class="me-auto bd-highlight px-2">댓글</h4>
+            <p class="bd-highlight px-2">댓글 수: 0</p>
+          </div>
+          <div class="comment-content d-flex justify-content-around py-2">
+            <h6>작성자</h6>
+            <input type="text" value="testtest" disabled />
+            <p>작성일자</p>
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm">
+                수정
+              </button>
+              <a
+                th:href="@{/community/delete}"
+                class="btn btn-secondary btn-sm confirmDeletion"
+              >
+                삭제
+              </a>
+            </div>
+            <div class="d-none">
+              <button type="button" class="btn btn-secondary btn-sm">
+                신고
+              </button>
+            </div>
+          </div>
+          <div class="comment-content d-flex justify-content-around py-2">
+            <h6>작성자</h6>
+            <input type="text" value="testtest" disabled />
+            <p>작성일자</p>
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm">
+                수정
+              </button>
+              <a href="#" class="btn btn-secondary btn-sm confirmDeletion">
+                삭제
+              </a>
+            </div>
+            <div class="d-none">
+              <button type="button" class="btn btn-secondary btn-sm">
+                신고
+              </button>
+            </div>
+          </div>
+          <hr class="my-2 line border border-dark" />
+          <div class="post_comment">
+            <h6>로그인한 회원 이름</h6>
+            <div class="d-flex justify-content-between py-2">
+              <input type="text" />
+              <button type="button" class="btn btn-dark btn-sm">등록</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+    <script src="/static/js/community.js" th:src="@{/js/community.js}"></script>
+    <script>
+      $(document).ready(function () {
+        $('.slider').bxSlider({
+          adaptiveHeight: true,
+        });
+      });
+    </script>
+  </body>
+</html>
