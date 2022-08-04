@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>view</title>
+</head>
+
+<style>
+    .layout {
+       width: 500px;
+       margin : 0 auto;
+       margin-top : 40px;
+    }
+
+    .layout  input {
+      width : 100%;
+      box-sizing : boarder-box;
+
+    }
+
+    .layout  textarea{
+     width : 100%;
+     margin-top: 10px;
+     min-height : 300px;
+    }
+    </style>
+
+<body>
+<div class="layout">
+    <form action="/admin/view" method="post" enctype="multipart/form-data">
+        <input name="user_id" type="text">
+        <input name="password" type="text">
+        <input name="usertype" type="text">
+        <input name="username" type="text">
+        <input name="nickname" type="text">
+        <input name="email" type="text">
+        <input name="phone" type="text">
+        <input name="birthday" type="text">
+        <input name="gender" type="text">
+        <input name="postno" type="text">
+        <input name="address" type="text">
+<!--        <textarea name="content"></textarea>-->
+<!--        <input type="file" name="file">-->
+        <button type="submit">작성</button>
+    </form>
+</div>
+</body>
+</html>
