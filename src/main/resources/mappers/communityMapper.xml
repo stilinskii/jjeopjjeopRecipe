@@ -38,7 +38,7 @@
 
     <insert id="insert" parameterType="CommunityDTO">
         INSERT INTO CommunityBoard
-        VALUES(CommunityBoard_SEQ.nextval,'jenn',0,#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0)
+        VALUES(CommunityBoard_SEQ.nextval,'jenn',null,#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0)
         <selectKey resultType="int" keyProperty="id" order="AFTER">
             SELECT CommunityBoard_SEQ.CURRVAL FROM DUAL
         </selectKey>

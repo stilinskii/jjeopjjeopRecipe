@@ -82,7 +82,9 @@
           <div th:utext="${community.content}">content</div>
         </section>
         <div class="d-flex bd-highlight detail">
-          <a class="btn btn-secondary btn-sm me-auto bd-highlight">신고</a>
+          <a th:href="" class="btn btn-secondary btn-sm me-auto bd-highlight"
+            >신고</a
+          >
           <i
             class="fa fa-heart-o bd-highlight"
             th:text="| ${community.like_count}|"
