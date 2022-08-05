@@ -45,13 +45,43 @@
           enctype="multipart/form-data"
           th:object="${community}"
         >
-
           <select th:field="*{category}" class="form-select mb-3 category">
             <option value="0">자유글</option>
-            <option value="1">레시피후기</option>
+            <option value="1" selected>레시피후기</option>
           </select>
           <div class="recipeSearch mb-3">
-            <button class="btn btn-primary">레시피 조회</button>
+            <hr />
+            <p class="title">레시피 선택</p>
+            <div>
+              <div class="recipeSearch-box">
+                <input type="text" class="form-control mx-3" />
+                <a href="#" class="btn btn-primary mx-3">레시피 조회</a>
+              </div>
+              <div
+                class="recipeSearh-results m-3 border border-secondary rounded"
+              >
+                <div class="result d-flex border border-secondary m-1 rounded">
+                  <img
+                    src="/static/media/community/026c960a-0c41-4c2c-9388-212eff749316_ggo.png"
+                    width="130px"
+                    height="130px"
+                    class="m-3"
+                  />
+                  <p>레시피 이름 : gkdl</p>
+                </div>
+                <div class="result d-flex border border-secondary m-1 rounded">
+                  <img
+                    src="/static/media/community/026c960a-0c41-4c2c-9388-212eff749316_ggo.png"
+                    width="130px"
+                    height="130px"
+                    class="m-3"
+                  />
+                  <p>레시피 이름 : gkdl</p>
+                </div>
+              </div>
+            </div>
+            <p class="pt-4">선택 레시피 :</p>
+            <hr />
           </div>
 
           <div class="mb-3">
@@ -61,14 +91,11 @@
               th:errorclass="is-invalid"
               placeholder="제목을 입력해주세요."
               th:field="*{title}"
-
               maxlength="30"
-
             />
             <div class="invalid-feedback" th:errors="*{title}">제목오류</div>
           </div>
           <div class="mb-3">
-
             <label for="formFileSm" class="form-label">사진첨부</label>
             <input
               class="form-control form-control-sm"

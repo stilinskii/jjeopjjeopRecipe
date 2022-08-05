@@ -1,5 +1,6 @@
 package com.jjeopjjeop.recipe.service;
 
+import com.jjeopjjeop.DirNameConst;
 import com.jjeopjjeop.recipe.dao.CommunityDAO;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.ImageDTO;
@@ -13,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
+
+import static com.jjeopjjeop.DirNameConst.*;
 
 @Slf4j
 @Service
@@ -38,7 +41,7 @@ public class CommunityService {
     }
 
     public void saveImagesToDB(List<MultipartFile> multipartFiles,Integer boardId){
-        List<ImageDTO> community = fileStore.storeImages(multipartFiles, "community");
+        List<ImageDTO> community = fileStore.storeImages(multipartFiles, COMMUNITY);
         for (ImageDTO imageDTO : community) {
             saveImageToDB(imageDTO,boardId);
         }
@@ -70,16 +73,13 @@ public class CommunityService {
     public int recipeReviewCount(){ return communityDAO.recipeReviewCount();}
     public int freeForumCount(){ return communityDAO.freeForumCount();}
     public void deletePostById(int id){
-        communityDAO.deletePostById(id);
         //이미지 삭제 로직
         List<ImageDTO> images = communityDAO.findImageByPostId(id);
-        for (ImageDTO image : images) {
+        fileStore.deleteImages(images,COMMUNITY);
 
-            String path="C:\\Users\\hayeong\\Desktop\\final\\recipe\\src\\main\\resources\\static\\media\\community";
-            String fullPath=path + image.getFilename();
-            new File(fullPath).delete();
-        }
-
+        communityDAO.deletePostById(id);
         communityDAO.deleteImageByPostId(id);
     }
+
+
 }

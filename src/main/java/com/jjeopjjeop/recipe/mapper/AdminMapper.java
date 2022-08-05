@@ -2,12 +2,8 @@ package com.jjeopjjeop.recipe.mapper;
 
 import com.jjeopjjeop.recipe.dto.A_userDTO;
 
-import com.jjeopjjeop.recipe.dto.Community;
-import com.jjeopjjeop.recipe.dto.SellerDTO;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
