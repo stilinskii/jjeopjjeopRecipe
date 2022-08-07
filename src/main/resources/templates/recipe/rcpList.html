@@ -37,7 +37,7 @@
             <span class="fs-1"> ◀ </span>
           </div>
           <div th:each="favorite : ${favoriteRcpList}" class="col">
-            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${favorite.rcp_seq}, currentPage=${pDto.currentPage})}">
+            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${favorite.rcp_seq}, rcp_sort=${pDto.rcp_sort}, currentPage=${pDto.currentPage})}">
             <img th:if="${not #strings.isEmpty(favorite.filename)}" th:src="@{${favorite.filepath}+${favorite.filename}}" width="200px" height="150px" class="rounded float" />
               <img th:if="${#strings.isEmpty(favorite.filename)}" src="/media/images/rcp_mainimg.png" width="200px" height="150px" class="rounded float" />
               <p th:text="${favorite.rcp_name}" class="text-start fw-bold">레시피 제목</p>
@@ -112,16 +112,18 @@
         <p class="fs-5 fw-bold" style="margin-bottom: 0" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
         <hr />
         <div style="text-align: right; margin-bottom: 20px">
-          <select name="rcp_sort" id="rcp_sort" style="margin-right: 0%">
-            <option value="volvo">최신순</option>
-            <option value="saab">오래된순</option>
-            <option value="mercedes">스크랩 많은 순</option>
-            <option value="audi">조회수 많은 순</option>
+          <form role="form" id="rcp_sort_form" th:action="@{/recipe/list(rcp_sort=${pDto.rcp_sort}, currentPage=${pDto.currentPage})}">
+          <select th:name="rcp_sort" id="rcp_sort" style="margin-right: 0%">
+            <option th:value="0" th:attr="selected = ${pDto.rcp_sort == 0 ? 'true' : 'false'}">최신순</option>
+            <option th:value="1" th:attr="selected = ${pDto.rcp_sort == 1 ? 'true' : 'false'}">오래된순</option>
+            <option th:value="2" th:attr="selected = ${pDto.rcp_sort == 2 ? 'true' : 'false'}">스크랩 많은 순</option>
+            <option th:value="3" th:attr="selected = ${pDto.rcp_sort == 3 ? 'true' : 'false'}">조회수 많은 순</option>
           </select>
+          </form>
         </div>
         <div class="row align-items-center">
           <div th:each="rcp : ${rcpList}" class="col-4">
-            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${pDto.currentPage})}">
+            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${pDto.rcp_sort}, currentPage=${pDto.currentPage})}">
             <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
               <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
             <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>
@@ -145,10 +147,10 @@
             </li>
             <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
             <li class="page-item active">
-              <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/recipe/list(currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+              <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/recipe/list(rcp_sort=${pDto.rcp_sort}, currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
             </li>
               <li class="page-item">
-                <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/recipe/list(currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+                <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/recipe/list(rcp_sort=${pDto.rcp_sort}, currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
               </li>
             </th:block>
             <li class="page-item">
@@ -166,5 +168,12 @@
       </div>
     <input type="hidden" th:value="${pDto.currentPage}">
   </main>
+  <script>
+    var selected = document.querySelector("#rcp_sort").value;
+
+    $('#rcp_sort').change(function(){
+      $('#rcp_sort_form').submit();
+    });
+  </script>
   </body>
 </html>

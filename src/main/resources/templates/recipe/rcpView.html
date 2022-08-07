@@ -9,6 +9,7 @@
 <main class="custom container">
     <input type="hidden" th:value="${currentPage}">
     <input type="hidden" name="rcp_seq" th:value="${rcp.rcp_seq}">
+    <input type="hidden" th:value="${rcp_sort}">
     <!-- //Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -22,7 +23,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <a th:href="@{/recipe/delete/{rcp_seq}(rcp_seq=${rcp.rcp_seq})}" class="btn btn-danger">삭제</a>
+                    <a th:href="@{/recipe/delete/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${rcp_sort}, currentPage=${currentPage})}" class="btn btn-danger">삭제</a>
                 </div>
             </div>
         </div>
@@ -38,8 +39,8 @@
                     <p th:text="'레시피 신고는 취소할 수 없습니다. [' + ${rcp.rcp_name} + '] 레시피를 신고하시겠습니까?'"></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <a th:href="@{/recipe/report/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage})}" class="btn btn-danger">신고</a>
+                    <button type="button" class="btn btn-secondary" id="reportBtn" data-bs-dismiss="modal">취소</button>
+                    <a th:href="@{/recipe/report/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${rcp_sort}, currentPage=${currentPage})}" class="btn btn-danger">신고</a>
                 </div>
             </div>
         </div>
@@ -70,7 +71,9 @@
             <br/>
             <p class="d-flex justify-content-between">
                 <span th:text="'조회수 '+${rcp.rcp_viewcnt}" class="left">조회수</span>
-                <a th:href="@{/recipe/scrap/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage})}"><span th:text="'♥ 스크랩수 '+${rcp.scrap}">스크랩수</span></a>
+                <a id="scrapBtn" th:href="@{/recipe/scrap/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${rcp_sort}, currentPage=${currentPage})}">
+                    <span th:text="'♥ 스크랩수 '+${rcp.scrap}">스크랩수</span>
+                </a>
                 <span th:text="'★ 공유'">공유</span>
                 <a href="#" data-bs-toggle="modal" data-bs-target="#reportModal">
                 <span th:text="'신고수 '+${rcp.report}" class="right">신고</span></a>
@@ -92,7 +95,7 @@
     <h2 th:text="'#'"></h2>
     <p th::text="${rcp.hash_tag}"></p>
     <div class="d-grid d-md-block gap-3 viewBtn" style="text-align: center;">
-        <a th:href="@{/recipe/list(currentPage=${currentPage})}" class="btn btn-secondary me-md-5">
+        <a th:href="@{/recipe/list(rcp_sort=${rcp_sort}, currentPage=${currentPage})}" class="btn btn-secondary me-md-5">
             레시피 목록으로 돌아가기
         </a>
         <a href="#" class="btn btn-dark">
@@ -101,7 +104,7 @@
     </div>
     <hr/>
     <h2 th:text="'댓글 '+${totalComment}"></h2>
-    <form action="#" th:action="@{/recipe/comment/write(currentPage=${currentPage}, searchKey=${searchKey})}" method="post" enctype="multipart/form-data">
+    <form action="#" th:action="@{/recipe/comment/write(rcp_sort=${rcp_sort}, currentPage=${currentPage}, searchKey=${searchKey})}" method="post" enctype="multipart/form-data">
         <div class="row" style="margin-bottom: 20px;">
             <div class="col-10">
                 <textarea class="form-control" name="comment_txt" style="height: 100%;" placeholder="내용을 입력해주세요."></textarea>
@@ -123,7 +126,7 @@
                 <span>&nbsp&nbsp</span>
                 <span th:text="수정" style="color: blue;"></span>
                 <span>&nbsp&nbsp</span>
-                <a th:href="@{/recipe/comment/delete(currentPage=${currentPage}, rcp_seq=${rcp_seq}, co_rcp_seq=${comment.co_rcp_seq})}"><span th:text="삭제"></span></a>
+                <a th:href="@{/recipe/comment/delete(rcp_sort=${rcp_sort}, currentPage=${currentPage}, rcp_seq=${rcp_seq}, co_rcp_seq=${comment.co_rcp_seq})}"><span th:text="삭제"></span></a>
                 <br/>
                 <span th:text="${comment.comment_txt}">덧글 내용</span>
             </p>
@@ -135,12 +138,12 @@
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <th:block th:each="pDtos : ${#numbers.sequence(recipePageDTO.startPage, recipePageDTO.endPage)}">
+            <th:block th:each="pDtos : ${#numbers.sequence(recipeCommentPageDTO.startPage, recipeCommentPageDTO.endPage)}">
                 <li class="page-item active">
-                    <a th:if="${pDtos} == ${recipePageDTO.commentCurrentPage}" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage}, commentCurrentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+                    <a th:if="${pDtos} == ${recipeCommentPageDTO.commentCurrentPage}" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${rcp_sort}, currentPage=${currentPage}, commentCurrentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
                 </li>
                 <li class="page-item">
-                    <a th:if="${pDtos} != ${recipePageDTO.commentCurrentPage}" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${currentPage}, commentCurrentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+                    <a th:if="${pDtos} != ${recipeCommentPageDTO.commentCurrentPage}" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${rcp_sort}, currentPage=${currentPage}, commentCurrentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
                 </li>
             </th:block>
             <li class="page-item">
@@ -153,6 +156,9 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    $('#scrapBtn').onClick(function(){
+        console.log();
+    });
 </script>
 </body>
 </html>
