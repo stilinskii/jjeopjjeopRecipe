@@ -17,9 +17,12 @@ public class RecipePageDTO {
     private int startPage; // 한 블록의 시작 페이지 번호
     private int endPage; // 한 블록의 끝 페이지 번호
     private int number;
+    private int rcp_sort; // 정렬 기준
 
-    private int rcp_seq; // 덧글용
+    // 덧글용
+    private int rcp_seq;
 
+    // 검색용
     private String searchKey;
     private String searchWord;
 

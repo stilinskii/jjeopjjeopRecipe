@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('레시피')">
+    <meta charset="UTF-8" />
+    <title>오픈API 테스트</title>
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
+<main class="custom container">
+    <h1>오픈API 테스트</h1>
+    <th:block th:each="api: ${getApiList}">
+        <p th:text="${api.rcp_seq}"></p>
+        <p th:text="${api.rcp_name}"></p>
+        <img th:src="${api.filepath}">
+        <th:block th:each="manual: ${api.manualDTOList}">
+            <p th:text="${manual.manual_txt}"></p>
+        </th:block>
+    </th:block>
+</main>
+</body>
+</html>
