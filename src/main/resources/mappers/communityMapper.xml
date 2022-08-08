@@ -38,7 +38,7 @@
 
     <insert id="insert" parameterType="CommunityDTO">
         INSERT INTO CommunityBoard
-        VALUES(CommunityBoard_SEQ.nextval,'jenn',null,#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0)
+        VALUES(CommunityBoard_SEQ.nextval,#{user_id,jdbcType=VARCHAR},null,#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0)
         <selectKey resultType="int" keyProperty="id" order="AFTER">
             SELECT CommunityBoard_SEQ.CURRVAL FROM DUAL
         </selectKey>
@@ -57,7 +57,7 @@
         SELECT * FROM Image WHERE board_id=#{id}
     </select>
 
-    <update id="readCnt" parameterType="int">
+    <update id="addReadCnt" parameterType="int">
         UPDATE CommunityBoard SET read_count = read_count+1
         WHERE id=#{id}
     </update>
@@ -69,5 +69,34 @@
     <delete id="deleteImageByPostId" parameterType="int">
         DELETE FROM Image WHERE board_id=#{id}
     </delete>
+
+    <update id="reportPostById" parameterType="int">
+        UPDATE CommunityBoard SET report = report+1
+        WHERE id=#{id}
+    </update>
+
+    <update id="addLikeCntByPostId" parameterType="int">
+        UPDATE CommunityBoard SET like_count = like_count+1
+        WHERE id=#{id}
+    </update>
+
+    <update id="subtractLikeCntByPostId" parameterType="int">
+        UPDATE CommunityBoard SET like_count = like_count-1
+        WHERE id=#{id}
+    </update>
+
+    <insert id="insertLikeInfo" parameterType="Map">
+        INSERT INTO COMMUNITYLIKETABLE
+        VALUES(#{userId},#{postId})
+    </insert>
+
+    <delete id="deleteLikeInfo" parameterType="Map">
+        DELETE FROM COMMUNITYLIKETABLE WHERE COMMUNITY_BOARD_ID=#{postId} AND User_id=#{userId}
+    </delete>
+
+    <select id="checkIfUserLikedPost" parameterType="Map" resultType="int">
+        select COMMUNITY_BOARD_ID from COMMUNITYLIKETABLE
+        where USER_ID =#{userId} and COMMUNITY_BOARD_ID=#{postId}
+    </select>
 
 </mapper>

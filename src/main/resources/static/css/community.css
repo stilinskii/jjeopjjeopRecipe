@@ -31,7 +31,7 @@ div.detail {
   color: rgb(119, 119, 119);
 }
 
-i.fa-heart-o {
+#like-btn {
   color: rgb(255, 51, 51);
 }
 
@@ -84,3 +84,7 @@ section.comment {
   max-height: 300px;
   overflow: auto;
 }
+/* post end */
+/* .categories a,li{
+  margin: 0;
+} */

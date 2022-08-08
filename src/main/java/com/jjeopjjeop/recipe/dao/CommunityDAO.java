@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
@@ -22,9 +23,19 @@ public interface CommunityDAO {
     CommunityDTO findPostById(int id);
     void storeImage(ImageDTO imageDTO);
     List<ImageDTO> findImageByPostId(int id);
-    void readCnt(int id);
+    void addReadCnt(int id);
 
     void deletePostById(int id);
     void deleteImageByPostId(int id);
 
+    void reportPostById(int id);
+
+    void addLikeCntByPostId(int id);
+    void subtractLikeCntByPostId(int id);
+
+    void insertLikeInfo(Map<String,Object> likeInfo);
+
+    void deleteLikeInfo(Map<String,Object> likeInfo);
+
+    Integer checkIfUserLikedPost(Map<String,Object> likeInfo);
 }
