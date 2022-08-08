@@ -1,6 +1,7 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.service.RecipeAPIService;
 import com.jjeopjjeop.recipe.service.RecipeCommentService;
 import com.jjeopjjeop.recipe.service.RecipeService;
 import org.json.simple.JSONArray;
@@ -25,7 +26,6 @@ import java.util.UUID;
 public class RecipeController {
     @Autowired
     private RecipeService service;
-
     @Autowired
     private RecipeCommentService commentService;
     private int currentPage;
@@ -38,7 +38,7 @@ public class RecipeController {
         List<RecipeDTO> getApiList = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         try {
-            URL url = new URL("https://openapi.foodsafetykorea.go.kr/api/f25a7b4b1923449dbe5d/COOKRCP01/json/1/3");
+            URL url = new URL("https://openapi.foodsafetykorea.go.kr/api/f25a7b4b1923449dbe5d/COOKRCP01/json/1355/1358");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -55,6 +55,7 @@ public class RecipeController {
                 recipeDTO.setRcp_seq(i * -1);
                 recipeDTO.setUser_id("식품의약품안전처");
                 recipeDTO.setRcp_name(info.get("RCP_NM").toString());
+                recipeDTO.setRcp_parts_dtls(info.get("RCP_PARTS_DTLS").toString());
                 recipeDTO.setFilepath(info.get("ATT_FILE_NO_MAIN").toString());
 
                 List<ManualDTO> manualDTOList = new ArrayList<>();
@@ -82,7 +83,7 @@ public class RecipeController {
             e.printStackTrace();
         }
 
-        mav.addObject("getApiList", getApiList);
+        mav.addObject("recipeApiList", getApiList);
         //mav.addObject("getApiManualList", getApiManualList);
         mav.setViewName("/recipe/apiTest");
         return mav;
