@@ -5,26 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <!-- bootstrap  -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <th:block th:replace="fragments/head :: links">
+      <!-- bootstrap  -->
+      <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+      />
 
-    <link
-      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-    <!-- icons -->
-    <link
-      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="/static/css/style.css"
-      th:href="@{/css/style.css}"
-    />
+      <link
+        href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+      />
+      <!-- icons -->
+      <link
+        href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+      />
+      <link
+        rel="stylesheet"
+        href="/static/css/style.css"
+        th:href="@{/css/style.css}"
+      />
+    </th:block>
     <link
       rel="stylesheet"
       href="/static/css/community.css"
@@ -55,12 +57,16 @@
         </div>
         <h1 th:text="${community.title}">글제목</h1>
         <div class="d-flex bd-highlight detail">
-          <p class="me-auto bd-highlight" th:text="${community.user_id}">
+          <p
+            class="me-auto bd-highlight"
+            th:text="${community.user_id}"
+            id="userId"
+          >
             글 작성자
           </p>
           <p
-            class="bd-highlight"
-            th:text="|글 작성일자 : ${community.created_at}|"
+            class="bd-highlight px-2"
+            th:text="|글 작성일자 : ${community.formatted_created_at}|"
           >
             글 작성일자
           </p>
@@ -82,11 +88,15 @@
           <div th:utext="${community.content}">content</div>
         </section>
         <div class="d-flex bd-highlight detail">
-          <a th:href="" class="btn btn-secondary btn-sm me-auto bd-highlight"
+          <a
+            th:href="@{|/community/report/${community.id}|}"
+            class="btn btn-secondary btn-sm me-auto bd-highlight confirmReport"
             >신고</a
           >
           <i
-            class="fa fa-heart-o bd-highlight"
+            class="fa fa-heart-o bd-highlight like-btn"
+            id="like-btn"
+            th:class="${community.isLiked == true}? 'fa fa-heart bd-highlight like-btn':'fa fa-heart-o bd-highlight like-btn'"
             th:text="| ${community.like_count}|"
           >
             0</i
@@ -148,7 +158,7 @@
         </section>
       </div>
     </main>
-
+    <input type="hidden" id="postId" th:value="${community.id}" />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -157,6 +167,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+    <script th:src="@{/js/community_post.js}"></script>
     <script src="/static/js/community.js" th:src="@{/js/community.js}"></script>
     <script>
       $(document).ready(function () {

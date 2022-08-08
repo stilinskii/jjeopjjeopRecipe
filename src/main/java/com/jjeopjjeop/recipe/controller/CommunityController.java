@@ -3,6 +3,7 @@ package com.jjeopjjeop.recipe.controller;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
 
+import com.jjeopjjeop.recipe.dto.UserDTO;
 import com.jjeopjjeop.recipe.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -88,7 +92,7 @@ public class CommunityController {
     }
 
     @PostMapping("/form")
-    public String forFormSubmit(@Validated @ModelAttribute("community") CommunityDTO community, BindingResult bindingResult, @RequestPart(value = "image",required=false) List<MultipartFile> image){
+    public String forFormSubmit(@Validated @ModelAttribute("community") CommunityDTO community, BindingResult bindingResult, @RequestPart(value = "image",required=false) List<MultipartFile> image,HttpSession session){
         if(bindingResult.hasErrors()){
             log.info("errors={}", bindingResult);
             return "community/form";
@@ -96,6 +100,9 @@ public class CommunityController {
 
         //성공로직
         //transaction 처리 필요 TODO
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        String userId = user.getUser_id();
+        community.setUser_id(userId);
         service.save(community);
         log.info("savedId={}",community.getId());
         if(image!=null){
@@ -107,20 +114,52 @@ public class CommunityController {
     }
 
     @GetMapping("/post")
-    public String post(Integer id,Model model){
-        String projectPath = System.getProperty("user.dir")+"\\src\\main\\resources\\static\\media\\";
+    public String post(Integer id, Model model, HttpSession session){
 
-        log.info(projectPath);
-        CommunityDTO post = service.findPostById(id);
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        String userId = user.getUser_id();
+        CommunityDTO post = service.findPost(id,userId);
+
+//        model.addAttribute("like",post.isLiked());
         model.addAttribute("community",post);
 
         return "community/post";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deletePostById(@PathVariable Integer id){
-        service.deletePostById(id);
+    @GetMapping("/delete/{postId}")
+    public String deletePostById(@PathVariable Integer postId){
+        service.deletePost(postId);
         return "redirect:/community";
+    }
+
+    @GetMapping("/report/{postId}")
+    public String reportPostById(@PathVariable Integer postId){
+        service.reportPost(postId);
+
+        return "redirect:/community/post?id="+postId;
+    }
+
+    //ajax
+    @PostMapping("/like")
+    public String updateLikeCnt(Model model, Integer postId, boolean add,HttpSession session){
+
+        //라이크할때 라이크테이블에 유저아이디, 포스트아이디 추가 / 해당포스트 like ++
+        //라이크 취소 라이크테이블에 유저아이디, 포스프아이디로된 데이터 삭제/ 해당 포스트 like --
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        String userId = user.getUser_id();
+
+        //코드 맘에안듦. TODO
+        CommunityDTO post;
+        if(add==true){
+            service.addLikeCnt(postId,userId);
+            post = service.findPost(postId, userId);
+            post.setLiked(true);
+        }else{
+            service.subtractLikeCnt(postId,userId);
+            post = service.findPost(postId, userId);
+        }
+        model.addAttribute("community",post);
+        return "community/post :: #like-btn";
     }
 
 }

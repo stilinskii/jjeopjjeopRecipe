@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -25,18 +27,31 @@ public class CommunityDTO {
     private String title;
     @Size(min=1)
     private String content;
-    private String created_at;
+    private Date created_at;
+    private String formatted_created_at;
     private String updated_at;
     private Integer read_count;
     private Integer like_count;
     private Integer report;
 
     private List<ImageDTO> images;
+    private boolean isLiked;
 
     public CommunityDTO(String user_id, String category, String title, String content) {
         this.user_id = user_id;
         this.category = category;
         this.title = title;
         this.content = content;
+    }
+
+    public String getFormatted_created_at() {
+        //오늘이면 시간만 넣고 아니면 날짜만 넣기
+        SimpleDateFormat simpleDateFormatForPast = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat simpleDateFormatForToday = new SimpleDateFormat("HH:mm");
+
+        String created_at_str=simpleDateFormatForPast.format(created_at);
+        String today=simpleDateFormatForPast.format(new Date());
+
+        return created_at_str.equals(today) ? simpleDateFormatForToday.format(created_at):simpleDateFormatForPast.format(created_at);
     }
 }

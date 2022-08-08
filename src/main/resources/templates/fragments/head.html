@@ -26,5 +26,26 @@
     th:href="@{/css/recipe.css}"
   />
 
-  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script
+    defer
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+  ></script>
 </head>
+
+<th:block th:fragment="links">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <link
+    href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    rel="stylesheet"
+  />
+  <!-- icons -->
+  <link
+    href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</th:block>
