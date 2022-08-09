@@ -17,8 +17,8 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public int countProcess() {
-        return dao.count();
+    public int countProcess(int[] cate_seq) {
+        return dao.count(cate_seq);
     }
 
     @Override
