@@ -25,6 +25,7 @@ public class RecipePageDTO {
     // 검색용
     private String searchKey;
     private String searchWord;
+    private int[] cate_seq;
 
     public RecipePageDTO() {
     }

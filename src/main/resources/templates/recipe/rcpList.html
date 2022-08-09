@@ -63,7 +63,7 @@
           <p>
             <span>종류별</span>
           <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
-             <a th:href="@{/recipe/search}">
+             <a th:href="@{/recipe/list(cate_seq=${cate1.cate_seq})}">
             <span th:text="${cate1.cate_name}">종류별</span>
              </a>
           </span>
@@ -71,7 +71,7 @@
           <p>
             <span>재료별</span>
           <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
-            <a th:href="@{/recipe/search}">
+            <a th:href="@{/recipe/list(cate_seq=${cate1.cate_seq})}">
             <span th:text="${cate2.cate_name}">재료별</span>
             </a>
           </span>
@@ -79,7 +79,7 @@
           <p>
             <span>상황별</span>
           <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
-            <a th:href="@{/recipe/search}">
+            <a th:href="@{/recipe/list(cate_seq=${cate1.cate_seq})}">
             <span th:text="${cate3.cate_name}">상황별</span>
             </a>
           </span>

@@ -91,17 +91,26 @@ public class RecipeController {
 
     // 레시피 목록 조회 메소드
     @GetMapping("/recipe/list")
-    public ModelAndView rcpListMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") int rcp_sort,
+    public ModelAndView rcpListMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
+                                      @RequestParam(value="cate_seq", required=false) int[] cate_seq,
                                       RecipePageDTO recipePageDTO, ModelAndView mav){
+        // sql 필요한 데이터
+        if(cate_seq != null){
+            for(int data : cate_seq){
+                System.out.println(data);
+            }
+        }
+
+
         // 전체 레코드 수
-        int totalRecord = service.countProcess();
+        int totalRecord = service.countProcess(cate_seq);
 
         if(totalRecord>0){
             currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
             recipePageDTO = new RecipePageDTO(currentPage, totalRecord);
             recipePageDTO.setRcp_sort(rcp_sort);
+            recipePageDTO.setCate_seq(cate_seq);
         }
-        System.out.println(recipePageDTO.getRcp_sort());
 
         // 오늘의 인기 레시피 목록
         List<RecipeDTO> favoriteRcpList = service.favoriteListProcess();
@@ -152,6 +161,7 @@ public class RecipeController {
     public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq,
                                       @RequestParam(value="currentPage", required=false, defaultValue = "1") Integer currentPage,
                                       @RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
+                                      @RequestParam(value="rcp_sort", required=false) Integer cate_seq,
                                       RecipePageDTO recipeCommentPageDTO, ModelAndView mav){
         // 레시피 본문 내용
         mav.addObject("rcp", service.contentProcess(rcp_seq));
