@@ -1,6 +1,8 @@
 package com.jjeopjjeop.recipe.service;
 
+import com.jjeopjjeop.recipe.dao.CommunityCommentDAO;
 import com.jjeopjjeop.recipe.dao.CommunityDAO;
+import com.jjeopjjeop.recipe.dto.CommunityCommentDTO;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.ImageDTO;
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
@@ -21,6 +23,7 @@ import static com.jjeopjjeop.DirNameConst.*;
 public class CommunityService {
 
     private final CommunityDAO communityDAO;
+    private final CommunityCommentDAO communityCommentDAO;
     private final FileStore fileStore;
 
     public List<CommunityDTO> getBoard(PagenationDTO pagenationDTO){
@@ -34,8 +37,11 @@ public class CommunityService {
         return communityDAO.freeForumList(pagenationDTO);
     }
 
-    public void save(CommunityDTO dto){
+    public void save(CommunityDTO dto, List<MultipartFile> image){
         communityDAO.insert(dto);
+        if(image!=null){
+            saveImagesToDB(image,dto.getId());
+        }
     }
 
     public void saveImagesToDB(List<MultipartFile> multipartFiles,Integer boardId){
@@ -55,15 +61,13 @@ public class CommunityService {
         communityDAO.addReadCnt(id);
         //포스트 찾기
         CommunityDTO post = communityDAO.findPostById(id);
-        //포스트에 해당하는 이미지 set하기
+        //포스트에 해당하는 이미지들 db에서 불러와서 set하기
         List<ImageDTO> image = communityDAO.findImageByPostId(id);
         if(hasImage(image)){
         log.info("image={}",image.get(0).getFilename());
             post.setImages(image);
         }
         //유저가 해당 포스트 like했는지 확인
-        log.info("postid={}",id);
-        log.info("userId={}",userId);
         Integer liked = communityDAO.checkIfUserLikedPost(Map.of("postId", id, "userId", userId));
         if(liked!=null){
             post.setLiked(true);
@@ -107,4 +111,23 @@ public class CommunityService {
         communityDAO.subtractLikeCntByPostId(postId);
     }
 
+    public void postComment(CommunityCommentDTO communityCommentDTO){
+        communityCommentDAO.insert(communityCommentDTO);
+    }
+
+    public List<CommunityCommentDTO> findComments(Integer id) {
+        return communityCommentDAO.findCommentsByBoardId(id);
+    }
+
+    public void deleteComment(Integer commentId) {
+        communityCommentDAO.deleteCommentById(commentId);
+    }
+
+    public void reportComment(Integer commentId){
+        communityCommentDAO.reportCommentById(commentId);
+    }
+
+    public void editComment(Map<String,Object> commentEditInfo){
+        communityCommentDAO.editComment(commentEditInfo);
+    }
 }

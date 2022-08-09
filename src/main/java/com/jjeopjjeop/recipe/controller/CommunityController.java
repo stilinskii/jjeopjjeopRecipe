@@ -1,5 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
+import com.jjeopjjeop.recipe.dto.CommunityCommentDTO;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
 
@@ -9,13 +10,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.http.HttpRequest;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +40,7 @@ public class CommunityController {
 
         model.addAttribute("board",board);
         model.addAttribute("page",pagenationDTO);
+        model.addAttribute("localDateTime", LocalDateTime.now());
         return "community/index";
     }
 
@@ -45,6 +51,7 @@ public class CommunityController {
 
         model.addAttribute("board",board);
         model.addAttribute("page",pagenationDTO);
+        model.addAttribute("localDateTime", LocalDateTime.now());
         return "community/recipeReview";
     }
 
@@ -55,6 +62,7 @@ public class CommunityController {
 
         model.addAttribute("board",board);
         model.addAttribute("page",pagenationDTO);
+        model.addAttribute("localDateTime", LocalDateTime.now());
         return "community/freeForum";
     }
 
@@ -103,12 +111,16 @@ public class CommunityController {
         UserDTO user = (UserDTO) session.getAttribute("user");
         String userId = user.getUser_id();
         community.setUser_id(userId);
-        service.save(community);
-        log.info("savedId={}",community.getId());
+
+        //로직 매우 맘에안듦.
+
+        //이미지 테이블에 포스트 아이디로 된 이미지가있는지 확인하는 로직을 짜도 되긴되지만
+        //그게 더 속도가 느릴껏같음.
         if(image!=null){
-            log.info("image={}",image.size());
-            service.saveImagesToDB(image,community.getId());
+            community.setImage_exists(1);
         }
+        service.save(community,image);
+
 
         return "redirect:/community/post?id="+community.getId();
     }
@@ -118,10 +130,20 @@ public class CommunityController {
 
         UserDTO user = (UserDTO) session.getAttribute("user");
         String userId = user.getUser_id();
+        //로그인한 유저가 해당 포스트 좋아요 했는지 확인도 함.
         CommunityDTO post = service.findPost(id,userId);
+        List<CommunityCommentDTO> comments = service.findComments(id);
 
-//        model.addAttribute("like",post.isLiked());
+//        //해당 포스트를 쓴 유저가 로그인한 유저일때.
+//        if(post.getUser_id().equals(userId)){
+//            model.addAttribute("IsWriter",true);
+//            log.info("id={},{}",post.getUser_id(),userId);
+//        }
+
+        //로그인한 유저의 정보도 뷰에 넘김.
+        model.addAttribute("user",user);
         model.addAttribute("community",post);
+        model.addAttribute("comments",comments);
 
         return "community/post";
     }
@@ -161,5 +183,51 @@ public class CommunityController {
         model.addAttribute("community",post);
         return "community/post :: #like-btn";
     }
+
+    //댓글
+    @PostMapping("/post/comment")
+    public String submitComment(CommunityCommentDTO communityCommentDTO,HttpSession session, HttpServletRequest request){
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        String userId = user.getUser_id();
+        communityCommentDTO.setUser_id(userId);
+        service.postComment(communityCommentDTO);
+
+        String refererLink = request.getHeader("referer");
+        log.info(refererLink);
+        return "redirect:"+refererLink;
+    }
+
+    //ajax
+    @PostMapping("/post/comment/edit")
+    public String editComment(Integer commentId, String content, Integer postId, HttpServletRequest request,Model model,HttpSession session){
+        log.info("commentId={}",commentId);
+        log.info("content={}",content);
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        String userId = user.getUser_id();
+        service.editComment(Map.of("commentId",commentId,"content",content));
+//        String refererLink = request.getHeader("referer");
+//        log.info("refererLink={}",refererLink);
+        List<CommunityCommentDTO> comments = service.findComments(postId);
+        model.addAttribute("comments",comments);
+        model.addAttribute("user",user);
+        return "community/post :: .comment-content-box";
+    }
+
+    @GetMapping("/post/comment/delete")
+    public String deleteComment(Integer commentId, HttpServletRequest request){
+        service.deleteComment(commentId);
+        String refererLink = request.getHeader("referer");
+        log.info(refererLink);
+        return "redirect:"+refererLink;
+    }
+
+    @GetMapping("/post/comment/report")
+    public String reportComment(Integer commentId, HttpServletRequest request){
+        service.reportComment(commentId);
+        String refererLink = request.getHeader("referer");
+        log.info(refererLink);
+        return "redirect:"+refererLink;
+    }
+
 
 }

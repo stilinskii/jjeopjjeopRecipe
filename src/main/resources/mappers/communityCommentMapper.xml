@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjeopjjeop.recipe.dao.CommunityCommentDAO">
+    <select id="count" resultType="int">
+        SELECT count(*) FROM comment_board
+    </select>
+
+
+    <insert id="insert" parameterType="CommunityCommentDTO">
+        INSERT INTO comment_board
+        VALUES(comment_board_SEQ.nextval,#{board_id},#{user_id},#{content},sysdate,sysdate,0)
+    </insert>
+
+    <select id="findCommentsByBoardId" parameterType="int" resultType="CommunityCommentDTO">
+        SELECT * FROM comment_board where board_id=#{id}
+    </select>
+
+    <delete id="deleteCommentById" parameterType="int">
+        DELETE FROM comment_board WHERE id=#{commentId}
+    </delete>
+
+    <update id="reportCommentById" parameterType="int">
+        UPDATE comment_board SET report = report+1
+        WHERE id=#{commentId}
+    </update>
+
+    <update id="editComment" parameterType="Map">
+        UPDATE comment_board SET content = #{content}
+        WHERE id=#{commentId}
+    </update>
+
+</mapper>
