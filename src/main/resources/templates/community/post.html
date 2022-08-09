@@ -32,6 +32,7 @@
       href="/static/css/community.css"
       th:href="@{/css/community.css}"
     />
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css"
@@ -48,12 +49,14 @@
           >
             카테고리>
           </p>
-          <a class="btn btn-secondary btn-sm bd-highlight mx-1">수정</a>
-          <a
-            class="btn btn-secondary btn-sm bd-highlight mx-1 confirmDeletion"
-            th:href="@{|/community/delete/${community.id}|}"
-            >삭제</a
-          >
+          <div th:if="${user.user_id}==${community.user_id}">
+            <a class="btn btn-secondary btn-sm bd-highlight mx-1">수정</a>
+            <a
+              class="btn btn-secondary btn-sm bd-highlight mx-1 confirmDeletion"
+              th:href="@{|/community/delete/${community.id}|}"
+              >삭제</a
+            >
+          </div>
         </div>
         <h1 th:text="${community.title}">글제목</h1>
         <div class="d-flex bd-highlight detail">
@@ -103,56 +106,86 @@
           >
         </div>
         <hr class="my-2 line border border-dark" />
+        <!-- 댓글 ㅅ ㅣ작 -->
         <section class="comment">
           <div class="d-flex bd-highlight detail">
             <h4 class="me-auto bd-highlight px-2">댓글</h4>
-            <p class="bd-highlight px-2">댓글 수: 0</p>
+            <p
+              class="bd-highlight px-2"
+              th:text="|댓글 수: ${#lists.size(comments)}|"
+            >
+              댓글 수: 0
+            </p>
           </div>
-          <div class="comment-content d-flex justify-content-around py-2">
-            <h6>작성자</h6>
-            <input type="text" value="testtest" disabled />
-            <p>작성일자</p>
+          <div class="comment-content-box">
+            <div th:each="comment : ${comments}" class="comment-content">
+              <h6 th:text="${comment.user_id}">작성자</h6>
+              <input type="hidden" th:value="${comment.id}" />
+              <input
+                type="text"
+                value="testtest"
+                th:value="${comment.content}"
+                disabled
+              />
+              <p th:text="${comment.formatted_created_at}">작성일자</p>
+              <div th:if="${user.user_id}==${comment.user_id}">
+                <button type="button" class="btn btn-secondary btn-sm edit-btn">
+                  수정
+                </button>
+                <a
+                  th:href="@{|/community/post/comment/delete?commentId=${comment.id}|}"
+                  class="btn btn-secondary btn-sm confirmDeletion"
+                >
+                  삭제
+                </a>
+              </div>
+              <div th:unless="${user.user_id}==${comment.user_id}">
+                <a
+                  th:href="@{|/community/post/comment/report?commentId=${comment.id}|}"
+                  class="btn btn-secondary btn-sm confirmReport"
+                >
+                  신고
+                </a>
+              </div>
+            </div>
+
             <div>
-              <button type="button" class="btn btn-secondary btn-sm">
-                수정
-              </button>
-              <a
-                th:href="@{/community/delete}"
-                class="btn btn-secondary btn-sm confirmDeletion"
-              >
-                삭제
-              </a>
-            </div>
-            <div class="d-none">
-              <button type="button" class="btn btn-secondary btn-sm">
-                신고
-              </button>
-            </div>
-          </div>
-          <div class="comment-content d-flex justify-content-around py-2">
-            <h6>작성자</h6>
-            <input type="text" value="testtest" disabled />
-            <p>작성일자</p>
-            <div>
-              <button type="button" class="btn btn-secondary btn-sm">
-                수정
-              </button>
-              <a href="#" class="btn btn-secondary btn-sm confirmDeletion">
-                삭제
-              </a>
-            </div>
-            <div class="d-none">
-              <button type="button" class="btn btn-secondary btn-sm">
-                신고
-              </button>
+              <h6>작성자</h6>
+              <input type="text" value="testtest" disabled />
+              <p>작성일자</p>
+              <div>
+                <button type="button" class="btn btn-secondary btn-sm edit-btn">
+                  수정
+                </button>
+                <a href="#" class="btn btn-secondary btn-sm confirmDeletion">
+                  삭제
+                </a>
+              </div>
+              <div class="d-none">
+                <button type="button" class="btn btn-secondary btn-sm">
+                  신고
+                </button>
+              </div>
             </div>
           </div>
+          <!-- 댓글 남기기 -->
           <hr class="my-2 line border border-dark" />
           <div class="post_comment">
-            <h6>로그인한 회원 이름</h6>
+            <h6 th:text="${user.user_id}">로그인한 회원 아이디</h6>
             <div class="d-flex justify-content-between py-2">
-              <input type="text" />
-              <button type="button" class="btn btn-dark btn-sm">등록</button>
+              <form
+                action="/community/post/comment"
+                class="comment-box"
+                method="post"
+              >
+                <input
+                  type="hidden"
+                  name="board_id"
+                  th:value="${community.id}"
+                />
+                <input type="text" name="content" required />
+                <button type="submit" class="btn btn-dark btn-sm">등록</button>
+              </form>
             </div>
           </div>
         </section>
@@ -167,8 +200,11 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
-    <script th:src="@{/js/community_post.js}"></script>
-    <script src="/static/js/community.js" th:src="@{/js/community.js}"></script>
+    <script
+      src="/static/js/community_post.js"
+      th:src="@{/js/community_post.js}"
+    ></script>
+
     <script>
       $(document).ready(function () {
         $('.slider').bxSlider({
