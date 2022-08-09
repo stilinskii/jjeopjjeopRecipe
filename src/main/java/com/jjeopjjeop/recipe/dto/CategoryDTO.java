@@ -9,4 +9,7 @@ public class CategoryDTO {
     private Integer cate_seq;
     private String cate_name;
     private Integer cate_cate;
+
+    // 데이터 삽입용
+    private Integer rcp_seq;
 }

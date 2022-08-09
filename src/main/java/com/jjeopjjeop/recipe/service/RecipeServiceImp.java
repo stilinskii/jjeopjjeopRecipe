@@ -2,6 +2,7 @@ package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dao.RecipeDAO;
 import com.jjeopjjeop.recipe.dto.*;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,10 @@ public class RecipeServiceImp implements RecipeService{
     @Override
     public List<ManualDTO> contentMnlProcess(int rcp_seq) {
         return dao.contentMnl(rcp_seq);
+    }
+
+    public int chkScrapProcess(UserScrapDTO userScrapDTO){
+        return dao.checkScrap(userScrapDTO);
     }
 
     @Override
