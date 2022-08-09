@@ -3,7 +3,6 @@
 <head th:replace="fragments/head('레시피')">
     <meta charset="UTF-8" />
     <title>레시피 작성 폼</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
@@ -53,26 +52,29 @@
             <p>
                 <span>종류별</span>
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
-             <a th:href="@{/recipe/search}">
-            <span th:text="${cate1.cate_name}">종류별</span>
-             </a>
-          </span>
+                    &nbsp&nbsp
+                    <a href="#" th:value="${cate3.cate_seq}">
+                        <span th:text="${cate1.cate_name}">종류별</span>
+                    </a>
+                </span>
             </p>
             <p>
                 <span>재료별</span>
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
-            <a th:href="@{/recipe/search}">
-            <span th:text="${cate2.cate_name}">재료별</span>
-            </a>
-          </span>
+                    &nbsp&nbsp
+                    <a href="#" th:value="${cate3.cate_seq}">
+                        <span th:text="${cate2.cate_name}">재료별</span>
+                    </a>
+                </span>
             </p>
             <p>
                 <span>상황별</span>
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
-            <a th:href="@{/recipe/search}">
-            <span th:text="${cate3.cate_name}">상황별</span>
-            </a>
-          </span>
+                    &nbsp&nbsp
+                    <a href="#" th:value="${cate3.cate_seq}">
+                        <span th:text="${cate3.cate_name}">상황별</span>
+                    </a>
+                </span>
             </p>
         </div>
         <hr/>
@@ -107,6 +109,7 @@
     </p>
 </form>
 </main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
     var manualNo = 1;
     var inputContainer = document.querySelector(".manual_container");
@@ -129,6 +132,21 @@
 		});
 		reader.readAsDataURL(fileInput.files[0]);
     });
+
+    $(".cate_box a").on("click", function(e){
+        e.preventDefault();
+        console.log($(this).attr("value"));
+        console.log($(this).attr("href"));
+        $.ajax({
+            type: 'post',
+            url: '/recipe/scrap',
+			data: scrapData,
+			success : function(data) {
+				console.log("변경 성공");
+			}
+        })
+    });
+
 </script>
 </body>
 </html>

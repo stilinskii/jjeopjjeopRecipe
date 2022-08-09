@@ -105,8 +105,6 @@
         ]]>
     </select>
 
-
-
     <select id="favoriteList" resultType="RecipeDTO">
         <![CDATA[
         SELECT * FROM (
@@ -186,6 +184,11 @@
         , #{manual_txt, jdbcType=VARCHAR}, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR})
     </insert>
 
+    <insert id="writeCate" parameterType="int">
+        INSERT INTO cate_rcp(cate_seq, rcp_seq)
+        VALUES(#{cate_seq}, (SELECT max(rcp_seq) FROM recipe))
+    </insert>
+
     <delete id="delete" parameterType="int">
         DELETE FROM recipe
         WHERE rcp_seq=#{num}
@@ -193,6 +196,11 @@
 
     <delete id="deleteManual" parameterType="int">
         DELETE FROM manual
+        WHERE rcp_seq=#{num}
+    </delete>
+
+    <delete id="deleteCate" parameterType="int">
+        DELETE FROM cate_rcp
         WHERE rcp_seq=#{num}
     </delete>
 </mapper>

@@ -13,6 +13,7 @@ public interface RecipeService {
     public List<CategoryDTO> cateListProcess();
     public RecipeDTO contentProcess(int rcp_seq);
     public List<ManualDTO> contentMnlProcess(int rcp_seq);
+    public int chkScrapProcess(UserScrapDTO userScrapDTO);
     public void scrapProcess(UserScrapDTO userScrapDTO);
     public void reportProcess(ReportRecipeDTO reportRecipeDTO);
     public void writeProcess(RecipeDTO recipeDTO);

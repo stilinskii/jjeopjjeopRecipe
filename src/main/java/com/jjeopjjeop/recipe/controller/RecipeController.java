@@ -95,12 +95,9 @@ public class RecipeController {
                                       @RequestParam(value="cate_seq", required=false) int[] cate_seq,
                                       RecipePageDTO recipePageDTO, ModelAndView mav){
         // sql 필요한 데이터
-        if(cate_seq != null){
-            for(int data : cate_seq){
-                System.out.println(data);
-            }
+        if(cate_seq != null && cate_seq.length == 0){
+            cate_seq = null;
         }
-
 
         // 전체 레코드 수
         int totalRecord = service.countProcess(cate_seq);
@@ -168,6 +165,12 @@ public class RecipeController {
         mav.addObject("currentPage", currentPage);
         mav.addObject("rcp_sort", rcp_sort);
 
+        // 스크랩 체크
+        UserScrapDTO userScrapDTO = new UserScrapDTO();
+        userScrapDTO.setUser_id("테스트");
+        userScrapDTO.setRcp_seq(rcp_seq);
+        mav.addObject("scrapOrNot", service.chkScrapProcess(userScrapDTO));
+
         // 레시피별 요리 단계 내용
         mav.addObject("manualList", service.contentMnlProcess(rcp_seq));
 
@@ -187,22 +190,15 @@ public class RecipeController {
     }
 
     // 레시피 스크랩 메소드
-    @GetMapping("/recipe/scrap/{rcp_seq}")
-    public ModelAndView rcpScrapMethod(@PathVariable("rcp_seq") Integer rcp_seq,
-                                       @RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
-                                       @RequestParam(value="currentPage", required=false, defaultValue = "1") Integer currentPage,
-                                       ModelAndView mav){
+    @ResponseBody
+    @PostMapping("/recipe/scrap")
+    public void rcpScrapMethod(@RequestParam String rcp_seq,
+                               @RequestParam String user_id){
         UserScrapDTO userScrapDTO = new UserScrapDTO();
         userScrapDTO.setUser_id("테스트");
-        userScrapDTO.setRcp_seq(rcp_seq);
+        userScrapDTO.setRcp_seq(Integer.parseInt(rcp_seq));
         service.scrapProcess(userScrapDTO);
         //mav.addObject("rcp_seq", rcp_seq);
-        mav.addObject("rcp_sort", rcp_sort);
-        mav.addObject("currentPage", currentPage);
-
-        mav.setViewName("redirect:/recipe/view/"+rcp_seq);
-
-        return mav;
     }
 
     // 레시피 신고 메소드
@@ -254,6 +250,14 @@ public class RecipeController {
         }
 
         return "redirect:/recipe/list";
+    }
+
+    // 레시피-카테고리 적용 메소드
+    @ResponseBody
+    @PostMapping("/recipe/category")
+    public void rcpCateWriteMethod(@RequestParam String cate_seq,
+                                   @RequestParam int rcp_seq){
+
     }
 
     // 레시피 수정 페이지 요청 메소드
