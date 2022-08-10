@@ -35,20 +35,6 @@ div.detail {
   color: rgb(255, 51, 51);
 }
 
-/* comment */
-section.comment {
-  width: 100%;
-}
-
-.comment-content > input {
-  width: 50%;
-}
-
-.post_comment > div > input {
-  width: 90%;
-  margin-right: 10px;
-}
-
 /* post */
 .post-img {
   height: 100%;
@@ -84,7 +70,35 @@ section.comment {
   max-height: 300px;
   overflow: auto;
 }
+
+.like-btn {
+  cursor: pointer;
+}
 /* post end */
+
 /* .categories a,li{
   margin: 0;
 } */
+
+/* comment */
+.comment-box input {
+  width: 90%;
+}
+
+section.comment {
+  width: 100%;
+}
+
+.comment-content > input {
+  width: 50%;
+}
+
+.post_comment > div > input {
+  width: 90%;
+  margin-right: 10px;
+}
+.comment-content {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 10px;
+}
