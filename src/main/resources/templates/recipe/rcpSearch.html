@@ -121,10 +121,10 @@
                 </li>
                 <th:block th:each="pDtos : ${#numbers.sequence(recipePageDTO.startPage, recipePageDTO.endPage)}">
                     <li class="page-item active">
-                        <a th:if="${pDtos} == ${recipePageDTO.currentPage}" th:href="@{/recipe/search(searchKey=${searchKey})}" th:text="${pDtos}" class="page-link"></a>
+                        <a th:if="${pDtos} == ${recipePageDTO.currentPage}" th:href="@{/recipe/search(rcp_sort=${recipePageDTO.rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, searchKey=${recipePageDTO.searchKey})}" th:text="${pDtos}" class="page-link"></a>
                     </li>
                     <li class="page-item">
-                        <a th:if="${pDtos} != ${recipePageDTO.currentPage}" th:href="@{/recipe/search(currentPage=${pDtos}, searchKey=${recipePageDTO.searchKey})}" th:text="${pDtos}" class="page-link"></a>
+                        <a th:if="${pDtos} != ${recipePageDTO.currentPage}" th:href="@{/recipe/search(rcp_sort=${recipePageDTO.rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${pDtos}, searchKey=${recipePageDTO.searchKey})}" th:text="${pDtos}" class="page-link"></a>
                     </li>
                 </th:block>
                 <li class="page-item">

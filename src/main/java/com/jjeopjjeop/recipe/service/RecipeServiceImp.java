@@ -28,8 +28,8 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public int searchCountProcess(String searchKey) {
-        return dao.searchCount(searchKey);
+    public int searchCountProcess(RecipePageDTO recipePageDTO) {
+        return dao.searchCount(recipePageDTO);
     }
 
     @Override

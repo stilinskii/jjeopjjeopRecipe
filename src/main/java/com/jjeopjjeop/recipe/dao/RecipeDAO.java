@@ -12,7 +12,7 @@ public interface RecipeDAO {
     public int count(int cate_seq);
     //public int count();
     public List<RecipeDTO> list(RecipePageDTO recipePageDTO);
-    public int searchCount(String searchKey);
+    public int searchCount(RecipePageDTO recipePageDTO);
     public List<RecipeDTO> searchList(RecipePageDTO recipePageDTO);
     public List<RecipeDTO> favoriteList();
     public List<CategoryDTO> cateList();

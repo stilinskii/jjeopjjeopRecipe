@@ -73,13 +73,17 @@
         ]]>
     </select>
 
-    <select id="searchCount" parameterType="String" resultType="int">
+    <select id="searchCount" parameterType="RecipePageDTO" resultType="int">
         SELECT count(*) FROM recipe
-        <if test="searchKey != null">
-            WHERE rcp_name LIKE '%' || #{searchKey} || '%'
-            OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
-            OR summary LIKE '%' || #{searchKey} || '%'
-            OR hash_tag LIKE '%' || #{searchKey} || '%'
+        WHERE (rcp_name LIKE '%' || #{searchKey} || '%'
+        OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
+        OR summary LIKE '%' || #{searchKey} || '%'
+        OR hash_tag LIKE '%' || #{searchKey} || '%')
+        <if test="cate_seq != 0">
+            AND rcp_seq IN (
+            SELECT rcp_seq FROM cate_rcp
+            WHERE cate_seq IN #{cate_seq}
+            )
         </if>
     </select>
 

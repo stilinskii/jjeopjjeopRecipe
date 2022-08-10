@@ -7,7 +7,7 @@ import java.util.List;
 public interface RecipeService {
     public int countProcess(int cate_seq);
     public List<RecipeDTO> listProcess(RecipePageDTO recipePageDTO);
-    public int searchCountProcess(String searchKey);
+    public int searchCountProcess(RecipePageDTO recipePageDTO);
     public List<RecipeDTO> searchListProcess(RecipePageDTO recipePageDTO);
     public List<RecipeDTO> favoriteListProcess();
     public List<CategoryDTO> cateListProcess();

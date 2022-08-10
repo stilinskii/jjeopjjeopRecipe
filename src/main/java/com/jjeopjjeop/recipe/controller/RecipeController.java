@@ -128,7 +128,7 @@ public class RecipeController {
                                         @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
                                         ModelAndView mav, RecipePageDTO recipePageDTO){
         searchKey = recipePageDTO.getSearchKey();
-        int totalRecord = service.searchCountProcess(searchKey);
+        int totalRecord = service.searchCountProcess(recipePageDTO);
 
         if(totalRecord>0){
             currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
