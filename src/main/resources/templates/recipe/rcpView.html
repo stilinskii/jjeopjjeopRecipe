@@ -10,8 +10,10 @@
     <input type="hidden" th:value="${currentPage}">
     <input type="hidden" name="rcp_seq" th:value="${rcp.rcp_seq}" id="rcp_seq">
     <input type="hidden" th:value="${rcp_sort}">
-    <input type="text" th:value="${scrapOrNot}" id="scrapOrNot">
-    <input type="text" th:value="${rcp.scrap}" id="scraps">
+    <input type="hidden" th:value="${scrapOrNot}" id="scrapOrNot">
+    <input type="hidden" th:value="${rcp.scrap}" id="scraps">
+    <input type="text" name="cate_seq" th:value="${recipePageDTO.cate_seq}">
+    <input type="text" name="searchKey" th:value="${recipePageDTO.searchKey}">
     <!-- //Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -98,7 +100,10 @@
     <h2 th:text="'#'"></h2>
     <p th::text="${rcp.hash_tag}"></p>
     <div class="d-grid d-md-block gap-3 viewBtn" style="text-align: center;">
-        <a th:href="@{/recipe/list(rcp_sort=${rcp_sort}, currentPage=${currentPage})}" class="btn btn-secondary me-md-5">
+        <a th:if="${recipePageDTO.searchKey != null}" th:href="@{/recipe/search(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey})}" class="btn btn-secondary me-md-5">
+            레시피 검색 목록으로 돌아가기
+        </a>
+        <a th:if="${recipePageDTO.searchKey == null}" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, currentPage=${currentPage})}" class="btn btn-secondary me-md-5">
             레시피 목록으로 돌아가기
         </a>
         <a href="#" class="btn btn-dark">

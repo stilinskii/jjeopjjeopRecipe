@@ -49,7 +49,7 @@
     </div>
         <p>*레시피에 어울리는 분류를 선택해 주세요.</p>
         <div class="cate_box">
-            <input type="text" name="cateArr" id="cateArr" value="">
+            <input type="hidden" name="cateArr" id="cateArr" value="">
             <p>
                 <span>종류별</span>
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
@@ -140,10 +140,10 @@
         e.preventDefault();
         if(cateArr.indexOf($(this).attr("value")) == -1){
             cateArr.push($(this).attr("value"));
-            console.log(cateArr);
+            $(this).attr("style", "color: black; font-weight: bold;");
         }else{
             cateArr.splice(cateArr.indexOf($(this).attr("value")), 1);
-            console.log(cateArr);
+            $(this).attr("style", "color: #FFF;");
         }
         console.log($(this).attr("value"));
         $('#cateArr').attr('value', cateArr);

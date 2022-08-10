@@ -92,13 +92,8 @@ public class RecipeController {
     // 레시피 목록 조회 메소드
     @GetMapping("/recipe/list")
     public ModelAndView rcpListMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
-                                      @RequestParam(value="cate_seq", required=false) int[] cate_seq,
+                                      @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
                                       RecipePageDTO recipePageDTO, ModelAndView mav){
-        // sql 필요한 데이터
-        if(cate_seq != null && cate_seq.length == 0){
-            cate_seq = null;
-        }
-
         // 전체 레코드 수
         int totalRecord = service.countProcess(cate_seq);
 
@@ -129,13 +124,17 @@ public class RecipeController {
 
     // 레시피 목록 검색 메소드
     @GetMapping("/recipe/search")
-    public ModelAndView rcpSearchMethod(ModelAndView mav, RecipePageDTO recipePageDTO){
+    public ModelAndView rcpSearchMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
+                                        @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
+                                        ModelAndView mav, RecipePageDTO recipePageDTO){
         searchKey = recipePageDTO.getSearchKey();
         int totalRecord = service.searchCountProcess(searchKey);
 
         if(totalRecord>0){
             currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
             recipePageDTO = new RecipePageDTO(currentPage, totalRecord, searchKey);
+            recipePageDTO.setRcp_sort(rcp_sort);
+            recipePageDTO.setCate_seq(cate_seq);
         }
 
         // 레시피 분류 목록
@@ -158,12 +157,12 @@ public class RecipeController {
     public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq,
                                       @RequestParam(value="currentPage", required=false, defaultValue = "1") Integer currentPage,
                                       @RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
-                                      @RequestParam(value="rcp_sort", required=false) Integer cate_seq,
                                       RecipePageDTO recipeCommentPageDTO, ModelAndView mav){
         // 레시피 본문 내용
         mav.addObject("rcp", service.contentProcess(rcp_seq));
         mav.addObject("currentPage", currentPage);
         mav.addObject("rcp_sort", rcp_sort);
+        mav.addObject("cate_seq", recipeCommentPageDTO.getCate_seq());
 
         // 스크랩 체크
         UserScrapDTO userScrapDTO = new UserScrapDTO();
