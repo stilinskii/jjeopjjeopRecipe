@@ -90,8 +90,15 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
+    public void writeCProcess(int cate_seq) {
+        dao.writeCate(cate_seq);
+    }
+
+    @Override
     public void deleteProcess(int rcp_seq) {
+        dao.deleteCate(rcp_seq);
         dao.deleteManual(rcp_seq);
         dao.delete(rcp_seq);
+
     }
 }

@@ -225,9 +225,11 @@ public class RecipeController {
 
     // 레시피 작성 메소드
     @PostMapping("/recipe/write")
-    public String rcpWriteProMethod(RecipeDTO recipeDTO, String[] manual_txt, MultipartFile[] upload_manual, HttpServletRequest request){
+    public String rcpWriteProMethod(RecipeDTO recipeDTO, String[] manual_txt,
+                                    @RequestParam(value="cateArr", required=false) List<String> cateArr,
+                                    MultipartFile[] upload_manual, HttpServletRequest request){
+        // 본문 작성
         MultipartFile mainFile = recipeDTO.getUpload();
-        System.out.println("작성중");
         if(!mainFile.isEmpty()){
             UUID random = saveCopyFile(mainFile, request, 0);
             recipeDTO.setFilename(random+"_"+mainFile.getOriginalFilename());
@@ -237,6 +239,7 @@ public class RecipeController {
         service.writeProcess(recipeDTO);
         // validation!!
 
+        // 요리과정 작성
         for(int i=0; i<manual_txt.length; i++){
             ManualDTO manualDTO = new ManualDTO();
             manualDTO.setManual_no(i+1);
@@ -249,15 +252,21 @@ public class RecipeController {
             service.writeMProcess(manualDTO);
         }
 
+        // 카테고리 작성
+        System.out.println(cateArr);
+        for(String data : cateArr){
+            int num = Integer.parseInt(data);
+            service.writeCProcess(num);
+        }
+
         return "redirect:/recipe/list";
     }
 
     // 레시피-카테고리 적용 메소드
     @ResponseBody
     @PostMapping("/recipe/category")
-    public void rcpCateWriteMethod(@RequestParam String cate_seq,
-                                   @RequestParam int rcp_seq){
-
+    public void rcpCateWriteMethod(@RequestBody List<String> cateArr){
+        System.out.println(cateArr);
     }
 
     // 레시피 수정 페이지 요청 메소드

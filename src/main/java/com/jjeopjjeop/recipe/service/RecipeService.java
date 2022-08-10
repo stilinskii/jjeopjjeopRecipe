@@ -18,5 +18,6 @@ public interface RecipeService {
     public void reportProcess(ReportRecipeDTO reportRecipeDTO);
     public void writeProcess(RecipeDTO recipeDTO);
     public void writeMProcess(ManualDTO manualDTO);
+    public void writeCProcess(int cate_seq);
     public void deleteProcess(int rcp_seq);
 }
