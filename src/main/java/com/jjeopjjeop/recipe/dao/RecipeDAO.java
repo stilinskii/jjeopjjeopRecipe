@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 @Mapper
 public interface RecipeDAO {
-    public int count(int[] cate_seq);
+    public int count(int cate_seq);
     //public int count();
     public List<RecipeDTO> list(RecipePageDTO recipePageDTO);
     public int searchCount(String searchKey);

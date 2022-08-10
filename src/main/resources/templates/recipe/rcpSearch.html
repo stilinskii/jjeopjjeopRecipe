@@ -5,6 +5,7 @@
     <title>레시피 검색</title>
 </head>
 <body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
     <form action="/recipe/search">
@@ -37,26 +38,29 @@
             <p>
                 <span>종류별</span>
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
-             <a th:href="@{/recipe/search}">
-            <span th:text="${cate1.cate_name}">종류별</span>
-             </a>
-          </span>
+                &nbsp&nbsp
+                <a th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
+                <span th:text="${cate1.cate_name}" th:attr="style = ${cate1.cate_seq == recipePageDTO.cate_seq ? 'color: black;' : 'color: #fff'}">종류별</span>
+                </a>
+                </span>
             </p>
             <p>
                 <span>재료별</span>
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
-            <a th:href="@{/recipe/search}">
-            <span th:text="${cate2.cate_name}">재료별</span>
-            </a>
-          </span>
+                &nbsp&nbsp
+                <a th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
+                <span th:text="${cate2.cate_name}" th:attr="style = ${cate2.cate_seq == recipePageDTO.cate_seq ? 'color: black;' : 'color: #fff'}">재료별</span>
+                </a>
+                </span>
             </p>
             <p>
                 <span>상황별</span>
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
-            <a th:href="@{/recipe/search}">
-            <span th:text="${cate3.cate_name}">상황별</span>
-            </a>
-          </span>
+                &nbsp&nbsp
+                <a th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
+                <span th:text="${cate3.cate_name}" th:attr="style = ${cate3.cate_seq == recipePageDTO.cate_seq ? 'color: black;' : 'color: #fff'}">상황별</span>
+                </a>
+                </span>
             </p>
             <select name="rcp_time" id="rcp_time">
                 <option value="volvo">소요시간</option>
@@ -80,16 +84,20 @@
         <p class="fs-5 fw-bold" style="margin-bottom: 0;" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
         <hr />
         <div style="text-align: right; margin-bottom: 20px">
-            <select name="rcp_sort" id="rcp_sort" style="margin-right: 0%">
-                <option value="volvo">최신순</option>
-                <option value="saab">오래된순</option>
-                <option value="mercedes">스크랩 많은 순</option>
-                <option value="audi">조회수 많은 순</option>
-            </select>
+            <form role="form" id="rcp_sort_form" th:action="@{/recipe/search(rcp_sort=${recipePageDTO.rcp_sort})}">
+                <select th:name="rcp_sort" id="rcp_sort" style="margin-right: 0%">
+                    <option th:value="0" th:attr="selected = ${recipePageDTO.rcp_sort == 0 ? 'true' : 'false'}">최신순</option>
+                    <option th:value="1" th:attr="selected = ${recipePageDTO.rcp_sort == 1 ? 'true' : 'false'}">오래된순</option>
+                    <option th:value="2" th:attr="selected = ${recipePageDTO.rcp_sort == 2 ? 'true' : 'false'}">스크랩 많은 순</option>
+                    <option th:value="3" th:attr="selected = ${recipePageDTO.rcp_sort == 3 ? 'true' : 'false'}">조회수 많은 순</option>
+                </select>
+                <input type="hidden" name="cate_seq" th:value="${recipePageDTO.cate_seq}">
+                <input type="hidden" name="searchKey" th:value="${recipePageDTO.searchKey}">
+            </form>
         </div>
         <div class="row align-items-center" style="margin-bottom: 20px">
             <div th:each="rcp : ${rcpList}" class="col-4">
-                <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${recipePageDTO.currentPage}, searchKey=${searchKey})}">
+                <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${recipePageDTO.rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${recipePageDTO.currentPage}, searchKey=${recipePageDTO.searchKey})}">
                     <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
                     <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
                     <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>
@@ -132,6 +140,12 @@
             </a>
         </div>
     </div>
-</main>>
+</main>
+<script>
+    $('#rcp_sort').change(function(){
+      $('#rcp_sort_form').submit();
+    });
+
+</script>
 </body>
 </html>

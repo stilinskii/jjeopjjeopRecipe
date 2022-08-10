@@ -5,7 +5,7 @@ import com.jjeopjjeop.recipe.dto.*;
 import java.util.List;
 
 public interface RecipeService {
-    public int countProcess(int[] cate_seq);
+    public int countProcess(int cate_seq);
     public List<RecipeDTO> listProcess(RecipePageDTO recipePageDTO);
     public int searchCountProcess(String searchKey);
     public List<RecipeDTO> searchListProcess(RecipePageDTO recipePageDTO);
