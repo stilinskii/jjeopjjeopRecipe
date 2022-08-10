@@ -49,11 +49,12 @@
     </div>
         <p>*레시피에 어울리는 분류를 선택해 주세요.</p>
         <div class="cate_box">
+            <input type="text" name="cateArr" id="cateArr" value="">
             <p>
                 <span>종류별</span>
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
                     &nbsp&nbsp
-                    <a href="#" th:value="${cate3.cate_seq}">
+                    <a href="#" th:value="${cate1.cate_seq}">
                         <span th:text="${cate1.cate_name}">종류별</span>
                     </a>
                 </span>
@@ -62,7 +63,7 @@
                 <span>재료별</span>
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
                     &nbsp&nbsp
-                    <a href="#" th:value="${cate3.cate_seq}">
+                    <a href="#" th:value="${cate2.cate_seq}">
                         <span th:text="${cate2.cate_name}">재료별</span>
                     </a>
                 </span>
@@ -133,18 +134,19 @@
 		reader.readAsDataURL(fileInput.files[0]);
     });
 
+    var cateArr = [];
+
     $(".cate_box a").on("click", function(e){
         e.preventDefault();
+        if(cateArr.indexOf($(this).attr("value")) == -1){
+            cateArr.push($(this).attr("value"));
+            console.log(cateArr);
+        }else{
+            cateArr.splice(cateArr.indexOf($(this).attr("value")), 1);
+            console.log(cateArr);
+        }
         console.log($(this).attr("value"));
-        console.log($(this).attr("href"));
-        $.ajax({
-            type: 'post',
-            url: '/recipe/scrap',
-			data: scrapData,
-			success : function(data) {
-				console.log("변경 성공");
-			}
-        })
+        $('#cateArr').attr('value', cateArr);
     });
 
 </script>

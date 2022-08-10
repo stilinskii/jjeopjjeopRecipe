@@ -33,11 +33,16 @@ public interface RecipeDAO {
     public void updateReport(int num); //레시피 신고수 증가
 
 //    public void reStepCount(RecipeDTO model);
+
+    // write 처리
     public void write(RecipeDTO recipeDTO);
     public void writeManual(ManualDTO manualDTO);
+    public void writeCate(int cate_seq);
+
     public RecipeDTO updateNum(int num);
     public void update(RecipeDTO recipeDTO);
     public void delete(int num);
     public void deleteManual(int num);
+    public void deleteCate(int num);
     public String getFile(int num); // 파일 다운에 사용
 }
