@@ -38,7 +38,7 @@
 
     <insert id="insert" parameterType="CommunityDTO">
         INSERT INTO CommunityBoard
-        VALUES(CommunityBoard_SEQ.nextval,#{user_id,jdbcType=VARCHAR},null,#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0,#{image_exists})
+        VALUES(CommunityBoard_SEQ.nextval,#{user_id,jdbcType=VARCHAR},#{rep_seq},#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0,#{image_exists})
         <selectKey resultType="int" keyProperty="id" order="AFTER">
             SELECT CommunityBoard_SEQ.CURRVAL FROM DUAL
         </selectKey>
@@ -99,4 +99,15 @@
         where USER_ID =#{userId} and COMMUNITY_BOARD_ID=#{postId}
     </select>
 
+    <insert id="updatePost" parameterType="CommunityDTO">
+        UPDATE communityboard
+        SET
+        CATEGORY = #{category},
+        TITLE = #{title,jdbcType=VARCHAR},
+        CONTENT = #{content,jdbcType=VARCHAR},
+        rcp_seq = #{rcp_seq, jdbcType=VARCHAR},
+        UPDATED_AT = sysdate
+        WHERE
+        id = #{id}
+      </insert>
 </mapper>

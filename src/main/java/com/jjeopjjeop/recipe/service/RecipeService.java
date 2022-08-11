@@ -18,4 +18,7 @@ public interface RecipeService {
     public void writeProcess(RecipeDTO recipeDTO);
     public void writeMProcess(ManualDTO manualDTO);
     public void deleteProcess(int rcp_seq);
+
+    //hayeong
+    List<RecipeDTO> searchListByKeyword(String searchKey);
 }
