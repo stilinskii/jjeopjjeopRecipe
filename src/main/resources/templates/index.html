@@ -123,7 +123,7 @@
           </ul>
         </div>
       </div>
-      <!-- ===============안기레시피========= m-2 p-2======= -->
+      <!-- ===============안기레시피================ -->
       <div class="recipe-popular bg-white">
         <div class="d-flex title">
           <h5 class="me-auto">인기레시피</h5>
@@ -138,16 +138,15 @@
               <img
                 th:if="${not #strings.isEmpty(rcp.filename)}"
                 th:src="@{${rcp.filepath}+${rcp.filename}}"
-                width="190px"
-                height="150px"
+                width="250px"
+                height="180px"
                 class="rounded float"
-                style="align-items: center"
               />
               <img
                 th:if="${#strings.isEmpty(rcp.filename)}"
                 src="/media/images/rcp_mainimg.png"
-                width="190px"
-                height="150px"
+                width="250px"
+                height="180px"
                 class="rounded float"
               />
               <p th:text="${rcp.rcp_name}" class="text-start fw-bold">
@@ -162,15 +161,8 @@
             </p>
           </div>
           <div class="col-3">
+            <img width="190px" height="150px" class="rounded float" />
             <img
-              th:if="${not #strings.isEmpty(rcp.filename)}"
-              th:src="@{${rcp.filepath}+${rcp.filename}}"
-              width="190px"
-              height="150px"
-              class="rounded float"
-            />
-            <img
-              th:if="${#strings.isEmpty(rcp.filename)}"
               src="/media/images/rcp_mainimg.png"
               width="190px"
               height="150px"
@@ -269,11 +261,7 @@
               <figure class="block-4-image">
                 <!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
 
-                <img
-                  class="img-fluid"
-                  th:src="${produce.produce_image_path}"
-                  alt="상품이미지"
-                />
+                <img class="img-fluid" alt="상품이미지" />
               </figure>
               <div class="block-4-text p-4">
                 <h3 class="text-dark font-weight-bold">상품명</h3>

@@ -95,6 +95,11 @@
                         th:text="${el.title}"
                         >제목</a
                       >
+                      <img
+                        th:if="${el.image_exists}==1"
+                        th:src="@{/media/images/imageExists.jpg}"
+                        class="mx-3"
+                      />
                     </td>
                     <td th:text="${el.user_id}">Otto</td>
                     <td th:text="${el.formatted_created_at}">@mdo</td>

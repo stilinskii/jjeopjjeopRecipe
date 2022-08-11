@@ -56,7 +56,11 @@ public class CommunityService {
         communityDAO.storeImage(imageDTO);
     }
 
-    public CommunityDTO findPost(Integer id,String userId){
+    public CommunityDTO findPostById(Integer id){
+        return communityDAO.findPostById(id);
+    }
+
+    public CommunityDTO findPostWithLikeInfo(Integer id, String userId){
         //조회수 올리기
         communityDAO.addReadCnt(id);
         //포스트 찾기
@@ -129,5 +133,9 @@ public class CommunityService {
 
     public void editComment(Map<String,Object> commentEditInfo){
         communityCommentDAO.editComment(commentEditInfo);
+    }
+
+    public void editPost(CommunityDTO community) {
+        communityDAO.updatePost(community);
     }
 }

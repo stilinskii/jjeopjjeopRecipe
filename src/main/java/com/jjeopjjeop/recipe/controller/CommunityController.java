@@ -1,10 +1,8 @@
 package com.jjeopjjeop.recipe.controller;
 
-import com.jjeopjjeop.recipe.dto.CommunityCommentDTO;
-import com.jjeopjjeop.recipe.dto.CommunityDTO;
-import com.jjeopjjeop.recipe.dto.PagenationDTO;
-import com.jjeopjjeop.recipe.dto.UserDTO;
+import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.service.CommunityService;
+import com.jjeopjjeop.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -16,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +24,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CommunityController {
 
-    private final CommunityService service;
+    private final CommunityService communityService;
+    private final RecipeService recipeService;
 
     @GetMapping
     public String all(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model){
-        PagenationDTO pagenationDTO = getPagenationDTO(page,service.count());
-        List<CommunityDTO> board = service.getBoard(pagenationDTO);
+        PagenationDTO pagenationDTO = getPagenationDTO(page, communityService.count());
+        List<CommunityDTO> board = communityService.getBoard(pagenationDTO);
 
         model.addAttribute("board",board);
         model.addAttribute("page",pagenationDTO);
@@ -40,8 +40,8 @@ public class CommunityController {
 
     @GetMapping("/recipeReview")
     public String recipeReview(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model){
-        PagenationDTO pagenationDTO = getPagenationDTO(page,service.recipeReviewCount());
-        List<CommunityDTO> board = service.getRecipeReviews(pagenationDTO);
+        PagenationDTO pagenationDTO = getPagenationDTO(page, communityService.recipeReviewCount());
+        List<CommunityDTO> board = communityService.getRecipeReviews(pagenationDTO);
 
         model.addAttribute("board",board);
         model.addAttribute("page",pagenationDTO);
@@ -51,8 +51,8 @@ public class CommunityController {
 
     @GetMapping("/freeForum")
     public String freeForum(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model){
-        PagenationDTO pagenationDTO = getPagenationDTO(page, service.freeForumCount());
-        List<CommunityDTO> board = service.getFreeForums(pagenationDTO);
+        PagenationDTO pagenationDTO = getPagenationDTO(page, communityService.freeForumCount());
+        List<CommunityDTO> board = communityService.getFreeForums(pagenationDTO);
 
         model.addAttribute("board",board);
         model.addAttribute("page",pagenationDTO);
@@ -86,12 +86,17 @@ public class CommunityController {
     }
 
     @GetMapping("/form")
-    public String form(@ModelAttribute("community") CommunityDTO community){
+    public String form(@ModelAttribute("community") CommunityDTO community, Model model){
         //빈 객체 넘기기
         // form.html에 th:object를 썼기때문에 모델 어트리뷰트가 있어야함.
         // th:object를 쓰면 id name value 생략가능
+        List<RecipeDTO> recipes = Collections.emptyList();
+        model.addAttribute("recipes",recipes);
         return "community/form";
     }
+
+
+
 
     @PostMapping("/form")
     public String forFormSubmit(@Validated @ModelAttribute("community") CommunityDTO community, BindingResult bindingResult, @RequestPart(value = "image",required=false) List<MultipartFile> image,HttpSession session){
@@ -112,10 +117,22 @@ public class CommunityController {
         if(image!=null){
             community.setImage_exists(1);
         }
-        service.save(community,image);
+        communityService.save(community,image);
 
 
         return "redirect:/community/post?id="+community.getId();
+    }
+
+    //ajax
+    //고치기
+    @PostMapping("/form/searchRecipe")
+    public String searchKeyword(String searchKey, Model model){
+        log.info("searchKey={}",searchKey);
+
+        List<RecipeDTO> recipes = recipeService.searchListByKeyword(searchKey);
+        log.info("recipes={}",recipes.size());
+        model.addAttribute("recipes",recipes);
+        return "community/form :: .recipe-box";
     }
 
     @GetMapping("/post")
@@ -123,11 +140,16 @@ public class CommunityController {
 
         UserDTO user = getUser(session);
         String userId = user.getUser_id();
-        //로그인한 유저가 해당 포스트 좋아요 했는지 확인도 함.
-        CommunityDTO post = service.findPost(id,userId);
-        List<CommunityCommentDTO> comments = service.findComments(id);
+        //로그인한 유저가 해당 포스트 좋아요 했는지도 확인함.
+        CommunityDTO post = communityService.findPostWithLikeInfo(id,userId);
+        List<CommunityCommentDTO> comments = communityService.findComments(id);
 
 
+        //글이 레시피 후기글이면 레시피 정보도 넘기기.
+        Integer rep_scq = post.getRcp_seq();
+        if(rep_scq != null && rep_scq !=0){
+            model.addAttribute("recipe",recipeService.contentProcess(rep_scq));
+        }
         //로그인한 유저의 정보도 뷰에 넘김.
         model.addAttribute("user",user);
         //포스트
@@ -142,15 +164,40 @@ public class CommunityController {
         return (UserDTO) session.getAttribute("user");
     }
 
+
+    @GetMapping("/edit/{postId}")
+    public String editPostById(@PathVariable Integer postId, Model model){
+        CommunityDTO post = communityService.findPostById(postId);
+
+        List<RecipeDTO> recipes = Collections.emptyList();
+        model.addAttribute("community",post);
+        model.addAttribute("recipes",recipes);
+        return "community/edit";
+    }
+
+    @PostMapping("/edit/{postId}")
+    public String editPostByIdSubmit(@PathVariable Integer postId, CommunityDTO community){
+        //,
+        //        IMAGE_EXISTS = #{image_exists} mapper 부분 처리
+        log.info("getContent={}",community.getContent());
+        log.info("getId={}",community.getId());
+        log.info("getTitle={}",community.getRcp_seq());
+        community.setId(postId);
+        communityService.editPost(community);
+        return "redirect:/community/post?id="+postId;
+    }
+
+
+
     @GetMapping("/delete/{postId}")
     public String deletePostById(@PathVariable Integer postId){
-        service.deletePost(postId);
+        communityService.deletePost(postId);
         return "redirect:/community";
     }
 
     @GetMapping("/report/{postId}")
     public String reportPostById(@PathVariable Integer postId){
-        service.reportPost(postId);
+        communityService.reportPost(postId);
         return "redirect:/community/post?id="+postId;
     }
 
@@ -165,12 +212,12 @@ public class CommunityController {
         //코드 맘에안듦. TODO
         CommunityDTO post;
         if(add==true){
-            service.addLikeCnt(postId,userId);
-            post = service.findPost(postId, userId);
+            communityService.addLikeCnt(postId,userId);
+            post = communityService.findPostWithLikeInfo(postId, userId);
             post.setLiked(true);
         }else{
-            service.subtractLikeCnt(postId,userId);
-            post = service.findPost(postId, userId);
+            communityService.subtractLikeCnt(postId,userId);
+            post = communityService.findPostWithLikeInfo(postId, userId);
         }
         model.addAttribute("community",post);
         return "community/post :: #like-btn";
@@ -182,7 +229,7 @@ public class CommunityController {
         UserDTO user = getUser(session);
         String userId = user.getUser_id();
         communityCommentDTO.setUser_id(userId);
-        service.postComment(communityCommentDTO);
+        communityService.postComment(communityCommentDTO);
 
         String refererLink = request.getHeader("referer");
         log.info(refererLink);
@@ -194,10 +241,10 @@ public class CommunityController {
     @PostMapping("/post/comment/edit")
     public String editComment(Integer commentId, String content, Integer postId,  Model model, HttpSession session){
 
-        service.editComment(Map.of("commentId",commentId,"content",content));
+        communityService.editComment(Map.of("commentId",commentId,"content",content));
 
         UserDTO user = getUser(session);
-        List<CommunityCommentDTO> comments = service.findComments(postId);
+        List<CommunityCommentDTO> comments = communityService.findComments(postId);
 
         model.addAttribute("comments",comments);
         model.addAttribute("user",user);
@@ -206,7 +253,7 @@ public class CommunityController {
 
     @GetMapping("/post/comment/delete")
     public String deleteComment(Integer commentId, HttpServletRequest request){
-        service.deleteComment(commentId);
+        communityService.deleteComment(commentId);
         String refererLink = request.getHeader("referer");
 
         return "redirect:"+refererLink;
@@ -214,7 +261,7 @@ public class CommunityController {
 
     @GetMapping("/post/comment/report")
     public String reportComment(Integer commentId, HttpServletRequest request){
-        service.reportComment(commentId);
+        communityService.reportComment(commentId);
         String refererLink = request.getHeader("referer");
 
         return "redirect:"+refererLink;

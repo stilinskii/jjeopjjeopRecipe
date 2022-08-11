@@ -50,7 +50,11 @@
             카테고리>
           </p>
           <div th:if="${user.user_id}==${community.user_id}">
-            <a class="btn btn-secondary btn-sm bd-highlight mx-1">수정</a>
+            <a
+              class="btn btn-secondary btn-sm bd-highlight mx-1"
+              th:href="@{|/community/edit/${community.id}|}"
+              >수정</a
+            >
             <a
               class="btn btn-secondary btn-sm bd-highlight mx-1 confirmDeletion"
               th:href="@{|/community/delete/${community.id}|}"
@@ -76,6 +80,51 @@
           <p class="bd-highlight" th:text="|조회 : ${community.read_count}|">
             조회
           </p>
+        </div>
+        <hr class="my-2 line border border-dark" />
+        <div
+          th:if="${recipe}"
+          class="result d-flex justify-content-between border border-secondary m-1 rounded"
+          style="width: 70%"
+        >
+          <img
+            src="/static/media/community/026c960a-0c41-4c2c-9388-212eff749316_ggo.png"
+            th:src="@{${recipe.filepath}+${recipe.filename}}"
+            width="130px"
+            height="130px"
+            class="m-3"
+          />
+          <div class="mt-3" style="width: 60%">
+            <p class="d-flex justify-content-between">
+              <a
+                th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${recipe.rcp_seq})}"
+                target="_blank"
+              >
+                <span th:text="|레시피 이름 : ${recipe.rcp_name}|">
+                  레시피 이름 : gkdl
+                </span>
+              </a>
+              <span th:text="'♥'+${recipe.scrap}" class="right">스크랩수</span>
+            </p>
+            <p class="d-flex justify-content-between">
+              <span th:text="|작성자: ${recipe.user_id}|" class="left"
+                >닉네임</span
+              >
+            </p>
+            <p class="d-flex justify-content-between">
+              <span th:text="${recipe.time}" class="left">시간</span
+              ><span th:text="${recipe.difficulty}">난이도 하</span
+              ><span th:text="${recipe.amount}" class="right">3인분</span>
+            </p>
+          </div>
+          <div class="mt-5 mx-3">
+            <input
+              type="hidden"
+              name=""
+              th:value="${recipe.rcp_seq}"
+              class="recipe-id"
+            />
+          </div>
         </div>
         <hr class="my-2 line border border-dark" />
         <section class="content">

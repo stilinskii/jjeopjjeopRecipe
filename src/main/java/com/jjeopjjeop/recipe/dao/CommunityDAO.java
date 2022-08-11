@@ -38,4 +38,6 @@ public interface CommunityDAO {
     void deleteLikeInfo(Map<String,Object> likeInfo);
 
     Integer checkIfUserLikedPost(Map<String,Object> likeInfo);
+
+    void updatePost(CommunityDTO community);
 }

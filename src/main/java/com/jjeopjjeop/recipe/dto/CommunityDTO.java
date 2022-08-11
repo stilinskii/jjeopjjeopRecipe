@@ -4,6 +4,7 @@ package com.jjeopjjeop.recipe.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
@@ -20,7 +21,7 @@ public class CommunityDTO {
 
     private Integer id;
     private String user_id;
-    private Integer rep_seq;//레시피후기일경우 번호
+    private Integer rcp_seq;//레시피후기일경우 번호
     private String category;
     @NotNull
     @Size(min=1,max=30)

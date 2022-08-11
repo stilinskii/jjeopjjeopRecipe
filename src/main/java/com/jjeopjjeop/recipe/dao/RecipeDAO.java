@@ -39,4 +39,8 @@ public interface RecipeDAO {
     public void delete(int num);
     public void deleteManual(int num);
     public String getFile(int num); // 파일 다운에 사용
+
+    //hayeong
+    List<RecipeDTO> searchListByKeyword(String searchKey);
+
 }
