@@ -60,13 +60,12 @@
       <div class="rcp_list">
         <p class="fw-bold fs-2 text-start">분류별 레시피</p>
         <div class="cate_box rounded">
-          <input type="text" th:value="${pDto.cate_seq}">
           <p>
             <span>종류별</span>
           <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
             &nbsp&nbsp
              <a th:href="@{/recipe/list(cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
-            <span th:text="${cate1.cate_name}" th:attr="style = ${cate1.cate_seq == pDto.cate_seq ? 'color: black;' : 'color: #fff'}">종류별</span>
+            <span th:text="${cate1.cate_name}" th:attr="style = ${cate1.cate_seq == pDto.cate_seq ? 'color: black; font-weight:bold;' : 'color: #fff'}">종류별</span>
              </a>
           </span>
           </p>

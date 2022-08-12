@@ -40,7 +40,7 @@
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
                 &nbsp&nbsp
                 <a th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
-                <span th:text="${cate1.cate_name}" th:attr="style = ${cate1.cate_seq == recipePageDTO.cate_seq ? 'color: black;' : 'color: #fff'}">종류별</span>
+                <span th:text="${cate1.cate_name}" th:attr="style = ${cate1.cate_seq == recipePageDTO.cate_seq ? 'color: black; font-weight:bold;' : 'color: #fff'}">종류별</span>
                 </a>
                 </span>
             </p>
@@ -49,7 +49,7 @@
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
                 &nbsp&nbsp
                 <a th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
-                <span th:text="${cate2.cate_name}" th:attr="style = ${cate2.cate_seq == recipePageDTO.cate_seq ? 'color: black;' : 'color: #fff'}">재료별</span>
+                <span th:text="${cate2.cate_name}" th:attr="style = ${cate2.cate_seq == recipePageDTO.cate_seq ? 'color: black; font-weight:bold;' : 'color: #fff'}">재료별</span>
                 </a>
                 </span>
             </p>
@@ -58,7 +58,7 @@
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
                 &nbsp&nbsp
                 <a th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
-                <span th:text="${cate3.cate_name}" th:attr="style = ${cate3.cate_seq == recipePageDTO.cate_seq ? 'color: black;' : 'color: #fff'}">상황별</span>
+                <span th:text="${cate3.cate_name}" th:attr="style = ${cate3.cate_seq == recipePageDTO.cate_seq ? 'color: black; font-weight:bold;' : 'color: #fff'}">상황별</span>
                 </a>
                 </span>
             </p>
