@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="userSidebar" id="sidebar-menu" class="main_menu_side hidden-print main_menu" data-th-fragment="sidebar-menu">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a
+                    class="nav-link"
+                    th:classappend="${title}=='mypage' ? 'active'"
+                    th:href="@{/mypage}"
+                    th:aria-current="${title}=='mypage' ? 'page' : false"
+                >
+                    <i class="fa-solid fa-circle-user"></i>
+                    My Page
+                </a>
+            </li>
+            <li class="nav-item">
+                <a
+                    class="nav-link"
+                    th:classappend="${title}=='내 레시피' ? 'active'"
+                    th:href="@{/mypage/recipe}"
+                    th:aria-current="${title}=='내 장바구니' ? 'page' : false"
+                    >
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    My Recipe
+                </a>
+            </li>
+            <li class="nav-item">
+                <a
+                    class="nav-link"
+                    th:classappend="${title}=='내 게시글'? 'active'"
+                    th:href="@{/mypage/board}"
+                    th:aria-current="${title}=='내 게시글' ? 'page' : false"
+                >
+                    <i class="fa-solid fa-table-list"></i>
+                    My Board
+                </a>
+            </li>
+            <li class="nav-item">
+                <i class="bi bi-bag-check"></i>
+                <a
+                    class="nav-link"
+                    th:classappend="${title}=='내 장바구니'? 'active'"
+                    th:href="@{/mypage/cart}"
+                    th:aria-current="${title}=='내 장바구니' ? 'page' : false"
+                >
+                    <i class="fa-solid fa-utensils"></i>
+                    My Shopping
+                </a>
+            </li>
+            <li class="nav-item">
+                <a
+                   class="nav-link"
+                   th:classappend="${title}=='회원탈퇴'? 'active'"
+                   th:href="@{/mypage/withdraw}"
+                   th:aria-current="${title}=='회원탈퇴' ? 'page' : false"
+                >
+                    <i class="fa-solid fa-user-gear"></i>
+                    My Account
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</html>

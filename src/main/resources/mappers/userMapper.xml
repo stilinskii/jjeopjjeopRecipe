@@ -5,7 +5,7 @@
 
 <mapper namespace="com.jjeopjjeop.recipe.dao.UserDAO">
 
-    <resultMap id="userResult" type="userDTO">
+    <resultMap id="userResult" type="com.jjeopjjeop.recipe.dto.UserDTO">
         <result property="user_id" column="user_id" />
         <result property="password" column="password" />
         <result property="usertype" column="usertype" />
@@ -19,6 +19,25 @@
         <result property="address" column="address" />
     </resultMap>
 
+    <resultMap id="userCommunity" type="com.jjeopjjeop.recipe.dto.CommunityDTO">
+        <result property="id" column="id" />
+        <result property="user_id" column="user_id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="created_at" column="created_at" />
+        <result property="updated_at" column="updated_at" />
+        <result property="report" column="report" />
+        <result property="read_count" column="read_count" />
+        <result property="like_count" column="like_count" />
+    </resultMap>
+
+    <resultMap id="myCommunityResult" type="com.jjeopjjeop.recipe.dto.UserDTO" autoMapping="true">
+
+        <collection property="communityDTOList" javaType="java.util.List"
+                    ofType="com.jjeopjjeop.recipe.dto.UserDTO" autoMapping="true"/>
+    </resultMap>
+
+
     <select id="selectAllUserList" resultMap="userResult">
         SELECT * FROM user_j
     </select>
@@ -27,7 +46,7 @@
         INSERT INTO user_j
         (user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address)
         VALUES(#{user_id}, #{password}, 1, #{username}, #{nickname}, #{email}, #{phone}, #{birthday},
-            #{gender}, #{postno}, #{address})
+            #{gender}, #{postno}, #{address, jdbcType=VARCHAR})
     </insert>
 
 <!--    <insert id="insertSeller" parameterType="com.jjeopjjeop.recipe.dto.SellerDTO">-->
@@ -40,22 +59,41 @@
 		SELECT * FROM user_j WHERE user_id=#{user_id} AND password=#{password}
     </select>
 
-    <select id="findId" resultType="String" parameterType="String">
-        SELECT user_id FROM user_j WHERE username=#{username} AND email=#{email}
+    <select id="findId" resultType="userDTO" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
+        SELECT * FROM user_j WHERE username=#{username} AND email=#{email}
     </select>
 
     <select id="findPassword" resultType="userDTO" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
-        SELECT user_id, username, password, email FROM user_j WHERE user_id=#{user_id} AND email=#{email}
+        SELECT * FROM user_j WHERE user_id=#{user_id} AND email=#{email}
     </select>
 
     <update id="updatePassword" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
         UPDATE user_j SET password=#{password} WHERE user_id=#{user_id} AND email=#{email}
     </update>
 
-    <update id="updateMypage" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
+    <select id="readMypage" parameterType="String" resultType="userDTO">
+        SELECT * FROM user_j WHERE user_id=#{user_id}
+    </select>
+
+    <update id="updateMypage">
         UPDATE user_j
-        SET #{password}, username=#{username}, nickname=#{nickname}, email=#{email}, phone=#{phone}, #{birthday},
-        #{gender}, #{postno}, #{address}
-        WHERE user_id=#{user_id} AND password=#{password}
+        SET password=#{password}, username=#{username}, nickname=#{nickname}, email=#{email}, phone=#{phone},
+            birthday=#{birthday}, gender=#{gender}, postno=#{postno}, address=#{address, jdbcType=VARCHAR}
+        WHERE user_id=#{user_id}
     </update>
+
+    <select id="checkPassword" resultType="int" parameterType="String">
+        SELECT count(*) FROM user_j WHERE user_id = #{user_id} AND password = #{password}
+    </select>
+
+    <delete id="deleteUser">
+        DELETE FROM user_j WHERE user_id=#{user_id} AND password=#{password}
+    </delete>
+
+    <select id="showMyCommunity" resultMap="myCommunityResult">
+        SELECT b.id, a.user_id, b.category, b.title, b.content, b.created_at, b.updated_at, b.report, b.read_count, b.like_count
+        FROM user_j a
+        LEFT OUTER JOIN communityboard b ON a.user_id = b.user_id
+        WHERE a.user_id = #{user_id}
+    </select>
 </mapper>

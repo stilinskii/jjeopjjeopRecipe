@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('내 게시글')">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- bootstrap: header에 추가하지 않으면 서버 재시작해야 적용된 내용 확인할 수 있음 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- icons -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav(title)"></nav>
+<div class="wrapper d-flex align-items-stretch">
+    <div class="col" th:replace="fragments/userSidebar :: userSidebar"></div>
+    <div id="content" class="pt-5">
+        <div class="container py-5 h-100">
+            <h4 class="row d-flex justify-content-center align-items-center mb-3">내 게시글</h4>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">조회</th>
+                    <th scope="col">좋아요</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="myCommunity :${myCommunityList}">
+                    <th scope="row" th:text="${myCommunity.id}">1</th>
+                    <td th:text="${myCommunity.title}" th:href="@{community/post?id=${myCommunity.user_id}">Title</td>
+                    <td th:text="${myCommunity.user_id}">Writer</td>
+                    <td th:text="${myCommunity.created_at}">WriteDate</td>
+                    <td th:text="${myCommunity.read_count}">ViewCount</td>
+                    <td th:text="${myCommunity.like_count}">LikeCount</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
