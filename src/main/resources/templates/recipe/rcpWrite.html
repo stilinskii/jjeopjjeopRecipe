@@ -92,7 +92,7 @@
               <button type="button" class="btn btn-dark">
                 <label for="upload_manual">이미지 첨부</label>
               </button>
-            <button type="button" class="btn btn-danger" onclick="testtest">순서 삭제</button>
+            <a class="btn btn-danger removeManual">순서 삭제</a>
             </p>
         </div>
         </div>
@@ -115,13 +115,27 @@
     var manualNo = 1;
     var inputContainer = document.querySelector(".manual_container");
     var inputNode = document.querySelector(".rcp_manual");
+    var n1 = inputNode.cloneNode(true);
 
-    addManual.onclick = function(){
+    $('#addManual').on("click", function(e){
+        e.preventDefault();
         manualNo++;
-        var n1 = inputNode.cloneNode(true);
+
+        console.log(n1);
+        console.log(n1.childNodes[2].value);
         n1.querySelector(".manual_step").innerHTML = manualNo;
-        inputContainer.appendChild(n1);
-    };
+        inputContainer.appendChild(n1.cloneNode(true));
+    });
+
+    $(".removeManual").on("click", function(e){
+        e.preventDefault();
+        console.log($(this));
+        if(manualNo > 1){
+            manualNo--;
+            console.log(manualNo);
+            $(this).parent().parent().remove();
+        }
+    });
 
     var imgUp = document.querySelector(".img_up");
     var imgSrc = imgUp.querySelector("img");
