@@ -187,8 +187,6 @@ public class CommunityController {
         return "redirect:/community/post?id="+postId;
     }
 
-
-
     @GetMapping("/delete/{postId}")
     public String deletePostById(@PathVariable Integer postId){
         communityService.deletePost(postId);
