@@ -12,11 +12,14 @@ import java.util.List;
 public interface UserDAO {
    public List<UserDTO> selectAllUserList() throws DataAccessException;
    public int insertUser(UserDTO userDTO) throws DataAccessException;
-   public int deleteUser(String user_id);
+   public int deleteUser(UserDTO userDTO) throws DataAccessException;
+   public int checkPassword(String user_id, String password) throws DataAccessException;
    public UserDTO loginById(UserDTO userDTO) throws DataAccessException;
-
-   public String findId(String username, String email) throws DataAccessException;
-
+   public UserDTO findId(UserDTO userDTO) throws DataAccessException;
    public UserDTO findPassword(UserDTO userDTO) throws DataAccessException;
    public int updatePassword(UserDTO userDTO) throws DataAccessException;
+   public UserDTO readMypage(String user_id) throws DataAccessException;
+   public int updateMypage(UserDTO userDTO) throws DataAccessException;
+   public List<UserDTO> showMyCommunity(String user_id) throws DataAccessException;
+
 }
