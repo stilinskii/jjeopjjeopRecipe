@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('레시피')">
+    <meta charset="UTF-8" />
+    <title>오픈API 테스트</title>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
+<main class="custom container">
+    <h1>식품의약품안전처 추천 레시피</h1>
+    <a th:href="@{/recipe/list}">유저 레시피로 돌아가기</a>
+    <form action="/recipe/search">
+        <div class="input-group mb-3 rounded">
+            <input
+                    type="text"
+                    class="form-control rounded"
+                    placeholder="내용을 입력하세요."
+                    name="searchKey"
+                    aria-label="searchKey"
+                    aria-describedby="button-addon2"
+            />
+            <a th:href="@{/recipe/search(searchKey=${searchKey})}">
+                <button
+                        class="btn btn-warning"
+                        type="submit"
+                        id="button-addon2"
+                        style="margin-left: 10px; color: #fff;"
+                >
+                    레시피 검색
+                </button>
+            </a>
+        </div>
+    </form>
+    <div class="row align-items-center">
+        <div th:each="rcp : ${recipeApiList}" class="col-4">
+            <a th:href="@{/recipe/apiview/{rcp_seq}(rcp_seq=${rcp.rcp_seq})}">
+                <img th:if="${not #strings.isEmpty(rcp.filepath)}" th:src="@{${rcp.filepath}}" width="250px" height="180px" class="rounded float" />
+                <img th:if="${#strings.isEmpty(rcp.filepath)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
+                <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>
+            </a>
+            <p class="d-flex justify-content-between">
+              <span th:text="${rcp.user_id}" class="left">닉네임</span
+              >
+            </p>
+        </div>
+    </div>
+</main>
+</body>
+</html>
