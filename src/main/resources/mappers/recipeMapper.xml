@@ -220,4 +220,8 @@
         DELETE FROM cate_rcp
         WHERE rcp_seq=#{num}
     </delete>
+
+    <select id="searchListByKeyword" parameterType="String" resultType="RecipeDTO">
+        SELECT * FROM recipe WHERE rcp_name LIKE '%' || #{searchKey} || '%'
+    </select>
 </mapper>

@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="fragments/head('게시판')">
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <!-- bootstrap  -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <th:block th:replace="fragments/head :: links">
+      <!-- bootstrap  -->
+      <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+      />
 
-    <link
-      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-    <!-- icons -->
-    <link
-      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="/static/css/style.css"
-      th:href="@{/css/style.css}"
-    />
+      <link
+        href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+      />
+      <!-- icons -->
+      <link
+        href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+      />
+      <link
+        rel="stylesheet"
+        href="/static/css/style.css"
+        th:href="@{/css/style.css}"
+      />
+    </th:block>
     <link
       rel="stylesheet"
       href="/static/css/community.css"
@@ -87,15 +89,20 @@
                 <tbody>
                   <tr th:each="el,iterStat:${board}">
                     <th scope="row" th:text="${iterStat.count}">1</th>
-                    <td>
+                    <td class="d-flex">
                       <a
                         th:href="@{|/community/post?id=${el.id}|}"
                         th:text="${el.title}"
                         >제목</a
                       >
+                      <img
+                        th:if="${el.image_exists}==1"
+                        th:src="@{/media/images/imageExists.jpg}"
+                        class="mx-3"
+                      />
                     </td>
                     <td th:text="${el.user_id}">Otto</td>
-                    <td th:text="${el.created_at}">@mdo</td>
+                    <td th:text="${el.formatted_created_at}">@mdo</td>
                     <td th:text="${el.read_count}">@mdo</td>
                     <td th:text="${el.like_count}">@mdo</td>
                   </tr>
