@@ -134,6 +134,5 @@
 
     <select id="searchListByKeyword" parameterType="String" resultType="RecipeDTO">
         SELECT * FROM recipe WHERE rcp_name LIKE '%' || #{searchKey} || '%'
-
     </select>
 </mapper>
