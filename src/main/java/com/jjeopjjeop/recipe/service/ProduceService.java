@@ -1,16 +1,15 @@
 package com.jjeopjjeop.recipe.service;
 
-import com.jjeopjjeop.recipe.dto.PageDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
+import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 public interface ProduceService {
     void writeProcess(ProduceDTO produceDTO, MultipartFile file) throws Exception;
 
-    List<ProduceDTO> produceListProcess(PageDTO pageDTO);
+    List<ProduceDTO> produceListProcess(RecipePageDTO recipePageDTO);
 
     List<ProduceDTO> produceListTypeProcess(int type);
 
@@ -20,5 +19,5 @@ public interface ProduceService {
 
     void produceUpdateProcess(ProduceDTO produceDTO);
 
-    int produceCountProcess(); //페이지 처리를 위해 판매글 개수 세기
+    int countProcess(); //페이지 처리를 위해 판매글 개수 세기
 }
