@@ -2,21 +2,19 @@
 package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dao.ProduceDAO;
-import com.jjeopjjeop.recipe.dto.PageDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 
-import java.awt.print.Pageable;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
+import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 class ProduceServiceImp implements ProduceService {
-
 
     @Autowired
     private ProduceDAO produceDAO;
@@ -39,8 +37,8 @@ class ProduceServiceImp implements ProduceService {
         produceDAO.write(produceDTO);
     }
     @Override
-    public List<ProduceDTO> produceListProcess(PageDTO pageDTO) {
-        return produceDAO.produceList();
+    public List<ProduceDTO> produceListProcess(RecipePageDTO recipePageDTO) {
+        return produceDAO.produceList(recipePageDTO);
     }
 
     @Override
@@ -65,7 +63,7 @@ class ProduceServiceImp implements ProduceService {
 
     //페이지 처리를 위해 판매글 개수 세기
     @Override
-    public int produceCountProcess() {
+    public int countProcess() {
         return produceDAO.produceCount();
     }
 

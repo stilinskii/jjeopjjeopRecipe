@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        alert('결제 완료');
+        chk.click();
+      });
+    </script>
+</head>
+<body>
+<!--결제성공후 이 화면으로 넘어오면 자동으로 pay=1로 update된다.
+kakaoPaySuccess-->
+<form method="post" th:action="@{/mypage/cart/update/{pay_num}(pay_num=${info.partner_order_id})}">
+    <button id="chk">완료</button>
+</form>
+카카오페이 결제가 정상적으로 완료되었습니다.<br/>
+
+결제일시:     [[${info.approved_at}]]<br/>
+주문번호:    [[${info.partner_order_id}]]<br/>
+상품명:    [[${info.item_name}]]<br/>
+상품수량:    [[${info.quantity}]]<br/>
+결제금액:    [[${info.amount.total}]]<br/>
+결제방법:    [[${info.payment_method_type}]]<br/>
+
+
+<h2>[[${info}]]</h2>
+
+</body>
