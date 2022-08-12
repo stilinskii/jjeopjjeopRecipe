@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('게시판')">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <!-- bootstrap  -->
+  <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+  />
+
+  <link
+          href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet"
+  />
+  <!-- icons -->
+  <link
+          href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet"
+  />
+  <link
+          rel="stylesheet"
+          href="/static/css/style.css"
+          th:href="@{/css/style.css}"
+  />
+  <link
+          rel="stylesheet"
+          href="/static/css/community.css"
+          th:href="@{/css/community.css}"
+  />
+</head>
+<body class="bg-light">
+<nav th:replace="fragments/nav :: front-nav('')"></nav>
+<main class="container">
+  <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
+    <h1>커뮤니티 게시판</h1>
+    <h3>전체글</h3>
+
+    <!--    <div class="caption">-->
+    <!--      <p class="p-2 bd-highlight" th:text="|글 수 : ${#lists.size(board)}|">-->
+    <!--        글 수:-->
+    <!--      </p>-->
+    <!--      <div>-->
+    <!--        <a th:href="@{/community/form}" class="btn btn btn-secondary"-->
+    <!--        >글쓰기</a-->
+    <!--        >-->
+    <!--      </div>-->
+    <!--    </div>-->
+
+    <div class="container-fluid">
+      <div class="row">
+        <div
+                class="col-2"
+                th:replace="/fragments/communityCategory::category('전체글')"
+        >
+          <ul class="list-group">
+            <li class="list-group-item">
+              <a href="/board" class="nav-link category">회원관리</a>
+            </li>
+            <li class="list-group-item">
+              <a href="/board" class="nav-link category">레시피관리</a>
+            </li>
+            <li class="list-group-item">
+              <a href="/board" class="nav-link category">쇼핑관리</a>
+            </li>
+            <li class="list-group-item">
+              <a href="/board" class="nav-link category">게시판 관리</a>
+            </li>
+          </ul>
+        </div>
+<!--        <div style="text-align: right; margin-bottom: 20px" class="col-10">-->
+<!--          <select name="rcp_sort" id="rcp_sort" style="margin-right: 0%">-->
+<!--            <option value="volvo">최신순</option>-->
+<!--            <option value="saab">오래된순</option>-->
+<!--            <option value="mercedes">스크랩 많은 순</option>-->
+<!--            <option value="audi">조회수 많은 순</option>-->
+<!--          </select>-->
+<!--        </div>-->
+        <div class="col-10">
+          <div th:each="rcp : ${rcpList}" class="col-4">
+            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${pDto.currentPage})}">
+              <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
+              <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
+              <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>
+            </a>
+            <p class="d-flex justify-content-between">
+              <span th:text="${rcp.user_id}" class="left">닉네임</span
+              ><span th:text="'♥'+${rcp.report}" class="right">신고수</span>
+            </p>
+<!--            <p class="d-flex justify-content-between">-->
+<!--              <span th:text="${rcp.time}" class="left">시간</span><span th:text="${rcp.difficulty}">난이도 하</span-->
+<!--            ><span th:text="${rcp.amount}" class="right">3인분</span>-->
+<!--            </p>-->
+          </div>
+        </div>
+
+
+
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>
