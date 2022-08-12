@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <!--카카오 오픈API-->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script th:inline="javascript">
@@ -19,102 +19,193 @@ function kakaopost() {
 <head th:replace="fragments/head('회원가입')">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>회원가입</title>
+    <title>Title</title>
+    <!-- bootstrap  -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- icons -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <svg xmlns="http://www.w3.org/2000/svg" />
+    <style>
+        #signup {
+          width: 376px;
+          height: 100%;
+          align-items: center;
+          justify-content: center;
+        }
+    </style>
 </head>
+
 <body>
 <nav th:replace="fragments/nav :: front-nav('회원가입')"></nav>
-<form action="/signup" method="post" th:object="${userDTO}">
-    <div class="form-group">
-        <div class="form-id">
-            <label for="user_id">아이디</label>
-            <input type="text" id="user_id" name="user_id" th:field="*{user_id}" th:errorclass="field-error" placeholder="아이디를 입력하세요" />
-            <!-- 에러메시지 출력 -->
-            <div class="field-error" th:errors="*{user_id}">아이디 오류</div>
-        </div>
-        <div class="error-message"></div>
-        <div class="form-password">
-            <label for="password">비밀번호</label>
-            <input type="password" id="password" name="password" th:field="*{password}" th:errorclass="field-error" placeholder="비밀번호를 입력하세요" />
-            <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
-        </div>
-        <div class="form-password-chk">
-            <label for="password2">비밀번호 재입력</label>
-            <input type="password" id="password2" name="password2" th:field="*{password}" th:errorclass="field-error" placeholder="비밀번호를 다시 한번 입력하세요" />
-            <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
-        </div>
-        <div class="form-username">
-            <label for="username">이름</label>
-            <input type="text" id="username" name="username" th:field="*{username}" th:errorclass="field-error"placeholder="이름을 입력하세요" />
-            <div class="field-error" th:errors="*{username}">이름 오류</div>
-        </div>
-        <div class="form-nickname">
-            <label for="nickname">별명</label>
-            <input type="text" id="nickname" name="nickname" th:field="*{nickname}" th:errorclass="field-error" placeholder="별명을 입력하세요" />
-            <div class="field-error" th:errors="*{nickname}">별명 오류</div>
-        </div>
-        <div class="form-email">
-            <label for="email">이메일</label>
-            <input type="email" id="email" name="email" th:field="*{email}" th:errorclass="field-error" placeholder="ex) abc@test.tt" />
-            <div class="field-error" th:errors="*{email}">이메일 오류</div>
-        </div>
-        <div class="form-phone">
-            <label for="phone">전화번호</label>
-            <input type="text" id="phone" name="phone" th:field="*{phone}" th:errorclass="field-error" placeholder="ex) 000-0000-0000" />
-            <div class="field-error" th:errors="*{phone}">전화번호 오류</div>
-        </div>
-        <div class="form-birthday">
-            <label for="birthday">생년월일</label>
-            <input type="date" id="birthday" name="birthday" th:field="*{birthday}" th:errorclass="field-error" />
-            <div class="field-error" th:errors="*{birthday}">생년월일 오류</div>
-        </div>
-        <div class="form-gender">
-            <label for="gender">성별</label>
+<div class="wrapper d-flex align-items-center">
+    <div id="content justify-content-center" class="p-4 p-md-5 pt-5">
+        <form action="/signup" method="post" th:object="${user}">
+            <div class="form-group h-100" id="signup">
+                <div class="mb-3 pt-4 px-5">
+                    <label for="user_id" class="form-label">아이디</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="user_id"
+                            th:field="*{user_id}"
+                            th:errorclass="is-invalid"
+                            placeholder="아이디를 입력하세요"
+                            maxlength="30"
+                    />
+                    <div class="invalid-feedback" th:errors="*{user_id}">아이디 오류</div>
+                </div>
+                <div class="mb-3 py-1 px-5">
+                    <label for="password" class="form-label">비밀번호</label>
+                    <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            th:field="*{password}"
+                            th:errorclass="is-invalid"
+                            placeholder="비밀번호를 입력하세요"
+                    />
+                    <div class="invalid-feedback" th:errors="*{password}">비밀번호 오류</div>
+                </div>
+                <div class="mb-3 py-1 px-5">
+                    <label for="password2" class="form-label">비밀번호 재입력</label>
+                    <input
+                            type="password"
+                            class="form-control"
+                            id="password2"
+                            placeholder="비밀번호를 다시 한번 입력하세요"
+                    />
+                </div>
 
-            <select name="gender" id="gender">
-                <option value="" selected disabled hidden>성별</option>
-                <option value="1">남</option>
-                <option value="2">여</option>
-            </select>
-<!--            <div class="field-error" th:errors="*{gender}">성별 오류</div>-->
-        </div>
-        <div class="form-postno">
-            <label for="postno">우편번호</label>
-            <input type="text" id="postno" name="postno" size="7" readonly />
-            <!-- <input type="text" id="postno" name="postno" size="7" readonly> -->
-            <!-- put type="button" value="우편번호찾기" />-->
-            <input type="button" value="우편번호찾기" onclick="kakaopost()" />
-<!--            <div class="field-error" th:errors="*{postno}">우편번호 오류</div>-->
-        </div>
-        <div class="form-address">
-            <label for="address">주소</label>
-            <input type="text" id="address" name="address" size="70" />
-<!--            <div class="field-error" th:errors="*{address}">주소 오류</div>-->
-        </div>
-        <hr/>
-        <!-- 판매자인 경우 아래 추가 기입 -->
-<!--        <div class="form-business_name">-->
-<!--            <label for="business_name">상호명</label>-->
-<!--            <input type="text" id="business_name" name="business_name" />-->
-<!--        </div>-->
-<!--        <div class="form-registration_number">-->
-<!--            <label for="registration_number">사업자 등록번호</label>-->
-<!--            <input type="text" id="registration_number" name="registration_number" />-->
-<!--        </div>-->
-<!--        <div class="form-seller_phone">-->
-<!--            <label for="seller_phone">사업장 전화번호</label>-->
-<!--            <input type="text" id="seller_phone" name="seller_phone" />-->
-<!--        </div>-->
-<!--        <div class="form-seller_address">-->
-<!--            <label for="seller_address">사업장 주소</label>-->
-<!--            <input type="text" id="seller_address" name="seller_address" />-->
-<!--        </div>-->
-        <div>
-            <input type="submit" value="등록" />
-        </div>
-        <div>
-            <input type="button" value="취소" onclick="location.href='login.html'" th:onclick="|location.href='@{/login}'|" />
-        </div>
+
+                <div class="mb-3 py-1 px-5">
+                    <label for="username" class="form-label">이름</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="username"
+                            th:field="*{username}"
+                            th:errorclass="is-invalid"
+                            placeholder="이름을 입력하세요"
+                            maxlength="30"
+                    />
+                    <div class="invalid-feedback" th:errors="*{username}">이름오류</div>
+                </div>
+                <div class="mb-3 py-1 px-5">
+                    <label for="nickname" class="form-label">별명</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="nickname"
+                            th:field="*{nickname}"
+                            th:errorclass="field-error"
+                            placeholder="별명을 입력하세요"
+                    />
+                    <div class="invalid-feedback" th:errors="*{nickname}">별명 오류</div>
+                </div>
+                <div class="mb-3 py-1 px-5">
+                    <label for="email" class="form-label">이메일</label>
+                    <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            th:field="*{email}"
+                            th:errorclass="field-error"
+                            placeholder="ex) abc@test.tt"
+                    />
+                    <div class="invalid-feedback" th:errors="*{email}">이메일 오류</div>
+                </div>
+                <div class="mb-3 py-1 px-5">
+                    <label for="phone" class="form-label">전화번호</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="phone"
+                            th:field="*{phone}"
+                            th:errorclass="field-error"
+                            placeholder="ex) 000-0000-0000"
+                    />
+                    <div class="invalid-feedback" th:errors="*{phone}">전화번호 오류</div>
+                </div>
+                <div class="mb-3 py-1 px-5">
+                    <label for="birthday" class="form-label">생년월일</label>
+                    <input
+                            type="date"
+                            class="form-control"
+                            id="birthday"
+                            th:field="*{birthday}"
+                            th:errorclass="field-error"
+                    />
+                    <div class="invalid-feedback" th:errors="*{birthday}">생년월일오류</div>
+                </div>
+                <div class="mb-3 py-1 px-5">
+                    <label for="gender" class="form-label">성별</label>
+
+                    <select name="gender" id="gender" class="form-select">
+                        <option value="" selected disabled hidden>성별</option>
+                        <option value="1">남</option>
+                        <option value="2">여</option>
+                    </select>
+                    <div class="invalid-feedback" th:errors="*{gender}">성별 오류</div>
+                </div>
+                <div class="mb-3 py-1 px-5">
+                    <label for="postno" class="form-label">우편번호</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="postno" size="7" readonly />
+                        <input type="button" class="btn btn-outline-warning" value="우편번호찾기" onclick="kakaopost()" />
+                    </div>
+                    <div class="invalid-feedback" th:errors="*{postno}">우편번호 오류</div>
+                </div>
+                <div class="mb-3 py-1 px-5">
+                    <label for="address" class="form-label">주소</label>
+                    <input type="text" class="form-control" id="address" size="70" />
+                    <div class="invalid-feedback" th:errors="*{address}">주소 오류</div>
+                </div>
+                <!-- 판매자인 경우 아래 추가 기입 -->
+                <!--        <div class="mb-3">-->
+                <!--            <label for="business_name">상호명</label>-->
+                <!--            <input type="text" id="business_name" name="business_name" />-->
+                <!--        </div>-->
+                <!--        <div class="mb-3">-->
+                <!--            <label for="registration_number">사업자 등록번호</label>-->
+                <!--            <input type="text" id="registration_number" name="registration_number" />-->
+                <!--        </div>-->
+                <!--        <div class="mb-3">-->
+                <!--            <label for="seller_phone">사업장 전화번호</label>-->
+                <!--            <input type="text" id="seller_phone" name="seller_phone" />-->
+                <!--        </div>-->
+                <!--        <div class="mb-3">-->
+                <!--            <label for="seller_address">사업장 주소</label>-->
+                <!--            <input type="text" id="seller_address" name="seller_address" />-->
+                <!--        </div>-->
+                <div class="d-flex justify-content-center pt-5">
+                    <input
+                            type="submit"
+                            class="btn btn-warning mt-3"
+                            value="등록"
+                    />
+                    <input
+                            type="button"
+                            class="btn btn-secondary mt-3 ms-3"
+                            value="취소"
+                            th:onclick="|location.href='@{/login}'|"
+                    />
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 </body>
 </html>

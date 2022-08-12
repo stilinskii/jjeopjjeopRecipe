@@ -28,7 +28,7 @@ public class HomeController {
         recipePageDTO.setEndPage(3);
 
         List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
-        List<ProduceDTO> list = produceService.produceListProcess(new PageDTO());
+        List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
         model.addAttribute("rcpList",rcpList);
         model.addAttribute("list",list);
 

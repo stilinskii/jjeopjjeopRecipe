@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragment/head('게시판')">
+<head th:replace="fragments/head('게시판')">
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,13 +30,19 @@
 </head>
 
 <body class="bg-light">
-<nav th:replace="fragments/nav :: front-nav('community')"></nav>
+<nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
   <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
 
 <tr>
-  <td img src="static/media/admin/admin.png"  width="50" height="50"><h1>판매자 관리</h1></td>
-    <h3>판매자 승인</h3>
+  <td img src="static/media/admin/admin.png"  width="50" height="50">
+    <h1>판매자 관리</h1>
+  <h3>미승인 목록</h3></td>
+
+  <div style="text-align: right; margin-bottom: 20px" class="btn-group col-50">
+    <a href="/admin/s_index" class="btn btn-dark">신청목록</a>
+    <a href="/admin/ss_index" class="btn btn-dark ">승인목록</a>
+  </div>
 </tr>
 <!--    <div class="caption">-->
 <!--    <div>-->
@@ -44,28 +50,51 @@
 <!--    </div>-->
 <!--    </div>-->
 
+
+
+<!--  <div style="text-align: right; margin-bottom: 20px"class="col-15">-->
+<!--    <select name="rcp_sort" id="rcp_sort" style="margin-right: 0%">-->
+<!--      <option value="volvo">판매자 신청목록</option>-->
+<!--      <option value="saab">판매자 승인목록</option>-->
+<!--&lt;!&ndash;      <option value="mercedes">스크랩 많은 순</option>&ndash;&gt;-->
+<!--&lt;!&ndash;      <option value="audi">조회수 많은 순</option>&ndash;&gt;-->
+<!--    </select>-->
+<!--  </div>-->
+
+<!--신청 승인 목록-->
+
+
+
+<!--    <ol class="breadcrumb" style="float:right">-->
+<!--      <li class="breadcrumb-item"><a href="/admin/s_index">신청목록</a></li>-->
+<!--      <li class="breadcrumb-item"><a href="/admin/ss_index">승인목록</a></li>-->
+<!--    </ol>-->
+
 <!-- 사이드 nav -->
     <div class="container-fluid">
       <div class="row">
         <div
                 class="col-2"
-                th:replace="/fragments/communityCategory::category('전체글')"
+
         >
           <ul class="list-group">
             <li class="list-group-item">
-              <a href="/board" class="nav-link category">회원관리</a>
+              <a href="/admin/u_index" class="nav-link category">회원관리</a>
             </li>
             <li class="list-group-item">
-              <a href="/board" class="nav-link category">레시피관리</a>
+              <a href="/recipe/rcpList" class="nav-link category">레시피관리</a>
             </li>
             <li class="list-group-item">
-              <a href="/board" class="nav-link category">쇼핑관리</a>
+              <a href="/admin/s_index" class="nav-link category">쇼핑관리</a>
             </li>
             <li class="list-group-item">
-              <a href="/board" class="nav-link category">게시판 관리</a>
+              <a href="/community" class="nav-link category">게시판 관리</a>
             </li>
           </ul>
         </div>
+
+
+
         <!-- 사이드 nav end -->
 
         <div class="col-10">
@@ -78,20 +107,22 @@
     <th scope="col">사업자 등록 번호</th>
     <th scope="col">사업장 전화번호</th>
     <th scope="col">사업장 주소</th>
-    <th scope="col">승인 여부</th>
+    <th scope="col">승인</th>
   </tr>
 
             </thead>
 <tbody>
-  <tr th:each = "sellerDTO : ${sellers}">
-    <th scope="row" th:text="${sellerDTO.id}">1</th>
+  <tr th:each = "sellerDTO : ${nsellers}">
+    <th scope="row">1</th>
       <td th:text="${sellerDTO.user_id}"></td>
       <td th:text="${sellerDTO.business_name}"></td>
       <td th:text="${sellerDTO.registration_number}"></td>
       <td th:text="${sellerDTO.seller_phone}"></td>
       <td th:text="${sellerDTO.seller_address}"></td>
+    <td><a th:href="@{|/admin/upSel/${sellerDTO.user_id}|}"  class="btn btn btn-secondary">승인</a></td>
+
 <!--      <td th:text="${sellerDTO.approval}"></td>-->
-    <td th:href="#" class="btn btn btn-secondary active btn-sm ">승인</td>
+<!--    <td th:href="#" class="btn btn btn-secondary active btn-sm ">승인</td>-->
 <!--      <td><a href=#>승인</a></td>-->
     </tr>
 

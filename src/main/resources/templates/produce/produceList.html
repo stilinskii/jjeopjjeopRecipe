@@ -8,6 +8,8 @@
 <!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"-->
 <!--          th:href="@{/css/bootstrap.css}"/>-->
 
+
+
     <!--아래 4줄은 드롭다운이 안돼서 임의로 넣음.https://coding-dahee.tistory.com/50-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -17,9 +19,33 @@
     <!--==========================임의 추가 끝==========================-->
 
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
+    <link href="/static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+
+    <!--============================nav스타일 적용위해 넣음 시작(나중에 삭제할것.)=============================-->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+
+    <link
+            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            rel="stylesheet"
+    />
+    <link
+            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--============================nav스타일 적용위해 넣음 끝=============================-->
 
 
     <style>
+        a{color:black;}
+        /*모든 a의 글씨색 검정색으로 */
+
+
         /*페이지처리 원래색꺌 #7971ea*/
         .site-block-27 ul, .site-block-27 ul li {
           padding: 0;
@@ -54,18 +80,19 @@
     </style>
 </head>
 <body>
-<!--<nav th:replace="fragments/nav :: front-nav('shopping')"></nav>-->
+<nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
 <div class="site-wrap">
     <div class="site-section">
         <div class="container">
-            <button class="warning"><a th:href="@{/produce/write}">판매글 쓰기</a></button>
-            <button class="warning"><a th:href="@{/review/write}">임시 마이페이지 리뷰</a></button>
+            <button class="btn btn-warning"><a th:href="@{/produce/write}">판매글 쓰기</a></button>
+            <button class="btn btn-warning"><a th:href="@{/review/write}">임시 마이페이지 리뷰</a></button>
+            <button class="btn btn-warning"><a th:href="@{/produce/temp}">임시 업데이트</a></button>
             <div class="row mb-5">
                 <div class="col-md-9 order-2">
                     <!--================드롭다운 시작=================-->
                     <div class="row">
                         <div class="col-md-12 mb-5">
-                            <div class="float-md-left mb-4"><h2 class="text-black h5">농산물 직거래 마당</h2></div>
+                            <div class="float-md-left mb-4"><h1>농산물 직거래 마당</h1></div>
                             <div class="d-flex">
                                 <div class="dropdown mr-1 ml-md-auto">
                                     <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -113,61 +140,29 @@
                             </div>
                         </div>
                         <!--  ====================상품 카드 끝======================-->
-<!--    <div class="pagelist">-->
-<!--        &lt;!&ndash; 이전, 다음 버튼은 출력할게 있을 때만 보여주기. &ndash;&gt;-->
-<!--        &lt;!&ndash; 이전 출력 시작 &ndash;&gt;-->
-<!--        <li th:if test="${pdto.startPage>1}">-->
-<!--            <a href="list.do?currentPage=${pdto.startPage-pdto.blockPage}">이전</a>-->
-<!--        </li>-->
-<!--        &lt;!&ndash; 이전 출력 끝 &ndash;&gt;-->
-
-<!--        &lt;!&ndash; 페이지 출력 시작. 시작페이지와 끝 페이지 가지고 와서, 사이 숫자는 반복문으로 돌리기.  &ndash;&gt;-->
-<!--        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">-->
-<!--			<span>-->
-<!--				<c:url var="currPage" value="list.do">-->
-<!--					<c:param name="currentPage" value="${i}" />-->
-<!--				</c:url>-->
-<!--                <th:block th:switch="${i==pdto.currentPage}">-->
-<!--                     <em th:case=""><a href="${currPage}" class="pagecolor">${i}</a></em>-->
-<!--                     <em th:case="*"><a href="${currPage}">${i}</a></em>-->
-<!--						 &lt;!&ndash; href="list.do?currentPage=${i}"를 간단히 쓰기 위해 위에 url을 넣음.  &ndash;&gt;-->
-<!--				</th:block>-->
-<!--			</span>-->
-<!--        </th:block>-->
-<!--        &lt;!&ndash; 페이지 출력 끝 &ndash;&gt;-->
-
-<!--        &lt;!&ndash; 다음 출력 시작 &ndash;&gt;-->
-<!--        <li th:if test="${pdto.endPage < pdto.totalPage}">-->
-<!--            <a href="list.do?currentPage=${pdto.startPage+pdto.blockPage}">이후</a>-->
-<!--        </li>-->
-
-<!--    </div>-->
-
-
                     <!--  ====================페이지네이션 시작======================-->
 <!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
                     <div class="row fixed-bottom" data-aos="fade-up">
                         <div class="col-md-12 text-center">
+<!--                            이거 없으면 페이지네이션 왼쪽하단으로 이동됨-->
                             <div class="site-block-27">
+<!--                                이거없으면 스타일 적용안됨.-->
                                 <ul>
                                     <li><a href="#">&lt;</a></li>
-                                    <li class="active"><span>1</span></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
+                                    <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
+                                        <li class="page-item active">
+                                            <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/produce/list}" th:text="${pDtos}"></a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/produce/list(currentPage=${pDtos})}" th:text="${pDtos}"></a>
+                                        </li>
+                                    </th:block>
                                     <li><a href="#">&gt;</a></li>
                                 </ul>
                             </div>
                         </div>
                         <!--  ====================페이지네이션 끝======================-->
-<!--                        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">-->
-<!--                            <a th:if="${page != currentPage}" th:href="@{/produce/list(page = ${page -1})}" th:text="${page}" ></a>-->
-<!--                            <strong th:if="${page == currentPage}" th:text="${page}" style="color : red"></strong>-->
-<!--                        </th:block>-->
-
-
-
+<!--                        <input type="hidden" th:value="${pDto.currentPage}">-->
                 </div>
             </div>
         </div>
