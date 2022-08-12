@@ -1,8 +1,12 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.service.RecipeAPIService;
 import com.jjeopjjeop.recipe.service.RecipeCommentService;
 import com.jjeopjjeop.recipe.service.RecipeService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -11,10 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,26 +26,82 @@ import java.util.UUID;
 public class RecipeController {
     @Autowired
     private RecipeService service;
-
     @Autowired
     private RecipeCommentService commentService;
     private int currentPage;
+    private int commentCurrentPage;
     private String searchKey;
+
+    // 오픈 API 테스트
+    @GetMapping("/")
+    public ModelAndView openApiTest(ModelAndView mav){
+        List<RecipeDTO> getApiList = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        try {
+            URL url = new URL("https://openapi.foodsafetykorea.go.kr/api/f25a7b4b1923449dbe5d/COOKRCP01/json/1355/1358");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+            String result = br.readLine();
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
+            JSONObject cookrcp01 = (JSONObject) jsonObject.get("COOKRCP01");
+            JSONArray row = (JSONArray) cookrcp01.get("row");
+
+            for(int i=0; i<row.size(); i++){
+                JSONObject info = (JSONObject) row.get(i);
+                RecipeDTO recipeDTO = new RecipeDTO();
+                recipeDTO.setRcp_seq(i * -1);
+                recipeDTO.setUser_id("식품의약품안전처");
+                recipeDTO.setRcp_name(info.get("RCP_NM").toString());
+                recipeDTO.setRcp_parts_dtls(info.get("RCP_PARTS_DTLS").toString());
+                recipeDTO.setFilepath(info.get("ATT_FILE_NO_MAIN").toString());
+
+                List<ManualDTO> manualDTOList = new ArrayList<>();
+                int num = 1;
+                while (info.get("MANUAL0"+num) != null && !info.get("MANUAL0"+num).toString().isBlank()){
+                    ManualDTO manualDTO = new ManualDTO();
+                    //manualDTO.setRcp_seq(i * -1);
+                    manualDTO.setManual_txt(info.get("MANUAL0"+num).toString().replaceAll("[a-z]$",""));
+                    manualDTOList.add(manualDTO);
+                    num++;
+                }
+
+                while (info.get("MANUAL"+num) != null && !info.get("MANUAL"+num).toString().isBlank()){
+                    ManualDTO manualDTO = new ManualDTO();
+                    //manualDTO.setRcp_seq(i * -1);
+                    manualDTO.setManual_txt(info.get("MANUAL"+num).toString().replaceAll("[a-z]$",""));
+                    manualDTOList.add(manualDTO);
+                    num++;
+                }
+
+                recipeDTO.setManualDTOList(manualDTOList);
+                getApiList.add(recipeDTO);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        mav.addObject("recipeApiList", getApiList);
+        //mav.addObject("getApiManualList", getApiManualList);
+        mav.setViewName("/recipe/apiTest");
+        return mav;
+    }
 
     // 레시피 목록 조회 메소드
     @GetMapping("/recipe/list")
-    public ModelAndView rcpListMethod(ModelAndView mav, RecipePageDTO recipePageDTO){
+    public ModelAndView rcpListMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
+                                      @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
+                                      RecipePageDTO recipePageDTO, ModelAndView mav){
         // 전체 레코드 수
-        int totalRecord = service.countProcess();
+        int totalRecord = service.countProcess(cate_seq);
 
         if(totalRecord>0){
-//            if(recipePageDTO.getCurrentPage()==0){
-//                currentPage = 1;
-//            }else{
-//                currentPage = recipePageDTO.getCurrentPage();
-//            }
             currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
             recipePageDTO = new RecipePageDTO(currentPage, totalRecord);
+            recipePageDTO.setRcp_sort(rcp_sort);
+            recipePageDTO.setCate_seq(cate_seq);
         }
 
         // 오늘의 인기 레시피 목록
@@ -53,7 +112,6 @@ public class RecipeController {
 
         // 전체 레시피 목록
         List<RecipeDTO> rcpList = service.listProcess(recipePageDTO);
-        //System.out.println(rcpList);
 
         mav.addObject("totalRecord", totalRecord);
         mav.addObject("cateList", cateList);
@@ -66,13 +124,17 @@ public class RecipeController {
 
     // 레시피 목록 검색 메소드
     @GetMapping("/recipe/search")
-    public ModelAndView rcpSearchMethod(ModelAndView mav, RecipePageDTO recipePageDTO){
+    public ModelAndView rcpSearchMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
+                                        @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
+                                        ModelAndView mav, RecipePageDTO recipePageDTO){
         searchKey = recipePageDTO.getSearchKey();
-        int totalRecord = service.searchCountProcess(searchKey);
+        int totalRecord = service.searchCountProcess(recipePageDTO);
 
         if(totalRecord>0){
             currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
             recipePageDTO = new RecipePageDTO(currentPage, totalRecord, searchKey);
+            recipePageDTO.setRcp_sort(rcp_sort);
+            recipePageDTO.setCate_seq(cate_seq);
         }
 
         // 레시피 분류 목록
@@ -92,39 +154,50 @@ public class RecipeController {
 
     // 레시피 본문 조회 메소드
     @GetMapping("/recipe/view/{rcp_seq}")
-    public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq, Integer currentPage, ModelAndView mav){
+    public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq,
+                                      @RequestParam(value="currentPage", required=false, defaultValue = "1") Integer currentPage,
+                                      @RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
+                                      RecipePageDTO recipeCommentPageDTO, ModelAndView mav){
         // 레시피 본문 내용
         mav.addObject("rcp", service.contentProcess(rcp_seq));
         mav.addObject("currentPage", currentPage);
+        mav.addObject("rcp_sort", rcp_sort);
+        mav.addObject("cate_seq", recipeCommentPageDTO.getCate_seq());
+
+        // 스크랩 체크
+        UserScrapDTO userScrapDTO = new UserScrapDTO();
+        userScrapDTO.setUser_id("테스트");
+        userScrapDTO.setRcp_seq(rcp_seq);
+        mav.addObject("scrapOrNot", service.chkScrapProcess(userScrapDTO));
 
         // 레시피별 요리 단계 내용
         mav.addObject("manualList", service.contentMnlProcess(rcp_seq));
 
         // 덧글 처리
-        RecipePageDTO recipePageDTO = new RecipePageDTO();
         int totalComment = commentService.countProcess(rcp_seq);
-//        if(totalComment>0){
-//            currentPage = 1;
-//            recipePageDTO = new RecipePageDTO(currentPage, totalComment);
-//            recipePageDTO.setBlockPage(3);
-//            recipePageDTO.setBlockCount(5);
-//        }
+        if(totalComment>0){
+            commentCurrentPage = Math.max(recipeCommentPageDTO.getCommentCurrentPage(), 1);
+            recipeCommentPageDTO = new RecipePageDTO(commentCurrentPage, totalComment, rcp_seq);
+            System.out.println(commentCurrentPage);
+        }
         mav.addObject("totalComment", totalComment);
-        mav.addObject("commentList", commentService.listProcess(rcp_seq));
+        mav.addObject("commentList", commentService.listProcess(recipeCommentPageDTO));
+        mav.addObject("recipeCommentPageDTO", recipeCommentPageDTO);
 
         mav.setViewName("/recipe/rcpView");
         return mav;
     }
 
     // 레시피 스크랩 메소드
-    @GetMapping("/recipe/scrap/{rcp_seq}")
-    public String rcpScrapMethod(@PathVariable("rcp_seq") Integer rcp_seq, Integer currentPage){
+    @ResponseBody
+    @PostMapping("/recipe/scrap")
+    public void rcpScrapMethod(@RequestParam String rcp_seq,
+                               @RequestParam String user_id){
         UserScrapDTO userScrapDTO = new UserScrapDTO();
         userScrapDTO.setUser_id("테스트");
-        userScrapDTO.setRcp_seq(rcp_seq);
+        userScrapDTO.setRcp_seq(Integer.parseInt(rcp_seq));
         service.scrapProcess(userScrapDTO);
-
-        return "redirect:/recipe/view/"+rcp_seq+"?currentPage="+currentPage;
+        //mav.addObject("rcp_seq", rcp_seq);
     }
 
     // 레시피 신고 메소드
@@ -151,7 +224,10 @@ public class RecipeController {
 
     // 레시피 작성 메소드
     @PostMapping("/recipe/write")
-    public String rcpWriteProMethod(RecipeDTO recipeDTO, String[] manual_txt, MultipartFile[] upload_manual, HttpServletRequest request){
+    public String rcpWriteProMethod(RecipeDTO recipeDTO, String[] manual_txt,
+                                    @RequestParam(value="cateArr", required=false) List<String> cateArr,
+                                    MultipartFile[] upload_manual, HttpServletRequest request){
+        // 본문 작성
         MultipartFile mainFile = recipeDTO.getUpload();
         if(!mainFile.isEmpty()){
             UUID random = saveCopyFile(mainFile, request, 0);
@@ -162,6 +238,7 @@ public class RecipeController {
         service.writeProcess(recipeDTO);
         // validation!!
 
+        // 요리과정 작성
         for(int i=0; i<manual_txt.length; i++){
             ManualDTO manualDTO = new ManualDTO();
             manualDTO.setManual_no(i+1);
@@ -174,7 +251,21 @@ public class RecipeController {
             service.writeMProcess(manualDTO);
         }
 
+        // 카테고리 작성
+        System.out.println(cateArr);
+        for(String data : cateArr){
+            int num = Integer.parseInt(data);
+            service.writeCProcess(num);
+        }
+
         return "redirect:/recipe/list";
+    }
+
+    // 레시피-카테고리 적용 메소드
+    @ResponseBody
+    @PostMapping("/recipe/category")
+    public void rcpCateWriteMethod(@RequestBody List<String> cateArr){
+        System.out.println(cateArr);
     }
 
     // 레시피 수정 페이지 요청 메소드

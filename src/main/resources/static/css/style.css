@@ -45,10 +45,10 @@ a:focus {
 }
 
 /* 컨테이너 너비 좁히기 */
-@media (min-width: 992px){
-    .container{
-        width: 940px;
-    }
+@media (min-width: 992px) {
+  .container {
+    width: 940px;
+  }
 }
 
 .navbar-brand {
