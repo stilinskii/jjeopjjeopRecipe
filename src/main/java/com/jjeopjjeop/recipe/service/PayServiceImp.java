@@ -3,6 +3,7 @@ package com.jjeopjjeop.recipe.service;
 import com.jjeopjjeop.recipe.dao.PayDAO;
 import com.jjeopjjeop.recipe.dto.PayDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
+import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,8 @@ public class PayServiceImp implements PayService{
 
     //마이페이지 들어가서 장바구니 보기
     @Override
-    public List<ProduceDTO> cartView(String user_id) {
-        return payDAO.cartView(user_id);
+    public List<ProduceDTO> cartView(RecipePageDTO recipePageDTO) {
+        return payDAO.cartView(recipePageDTO);
     }
 
     //장바구니 항목 삭제
@@ -47,6 +48,12 @@ public class PayServiceImp implements PayService{
     @Override
     public void cartUpdate(int pay_num) {
         payDAO.cartUpdate(pay_num);
+    }
+
+    //페이지 처리를 위해 장바구니 항목 개수 세기. 나중에 id부분변경
+    @Override
+    public int cartCount() {
+        return payDAO.cartCount();
     }
 
 

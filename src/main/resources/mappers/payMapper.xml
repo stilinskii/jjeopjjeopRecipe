@@ -34,17 +34,30 @@
         <collection property="payDTOList" javaType="java.util.List" ofType="com.jjeopjjeop.recipe.dto.PayDTO" autoMapping="true" />
     </resultMap>
 
-
-
-    <!--장바구니 버튼 누르면 나오는 장바구니 목록. 클릭한 회원의 장바구니가 보임. -->
-    <select id="cartView" parameterType="String" resultMap="produce_pay">
-        SELECT produce_board.produce_num, pay_history.pay_num, pay_history.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price
+<!--<select id="cartView" parameterType="String" resultMap="produce_pay">
+   SELECT produce_board.produce_num, pay_history.pay_num, pay_history.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price
         FROM pay_history, produce_board
         WHERE pay_history.user_id=#{user_id}
         AND pay_history.pay = 0
         AND pay_history.produce_num=produce_board.produce_num
-        ORDER BY pay_history.pay_num DESC
+        ORDER BY pay_history.pay_num DESC-->
+
+    <!--장바구니 버튼 누르면 나오는 장바구니 목록. 클릭한 회원의 장바구니가 보임. -->
+    <select id="cartView" parameterType="RecipePageDTO" resultMap="produce_pay">
+        <![CDATA[
+        SELECT rcp_li.* FROM
+            (SELECT rcp.*, rownum rm FROM
+                ( SELECT produce_board.produce_num, pay_history.pay_num, pay_history.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price
+                    FROM pay_history, produce_board
+                    WHERE pay_history.user_id='a'
+                    AND pay_history.pay = 0
+                    AND pay_history.produce_num=produce_board.produce_num
+                    ORDER BY pay_history.pay_num DESC)rcp)rcp_li
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
     </select>
+
+
 
     <!--결제에 필요한 정보 담기. 나중에 user_id부분 산 회원으로 바꿔야함.  -->
     <select id="payInfo" parameterType="int" resultMap="produce_pay">
@@ -73,6 +86,11 @@
         WHERE pay_num = #{pay_num}
         AND pay=0
     </update>
+
+    <!--페이지 처리를 위해 장바구니 항목 개수 세기. 나중에 id부분변경-->
+    <select id="cartCount" resultType="int">
+        SELECT count(*) FROM pay_history WHERE pay=0 AND user_id = 'a'
+    </select>
 
 
 </mapper>

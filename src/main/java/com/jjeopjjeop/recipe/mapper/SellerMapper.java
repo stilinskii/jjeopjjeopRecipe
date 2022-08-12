@@ -16,7 +16,9 @@ public interface SellerMapper {
 
     //(user_id, business_name, registration_number, seller_phone, seller_address)
     //pk문제로 값이 안 넘어가는 것 같음....(user_id)-> 값을 넣으니 들어감
-    @Insert("insert into Seller values('hy', #{seller.business_name}, #{seller.registration_number}, #{seller.seller_phone}, #{seller.seller_address},'0')")
+    @Insert("insert into Seller values(#{seller.user_id}, #{seller.business_name}, #{seller.registration_number}, #{seller.seller_phone}, #{seller.seller_address},'0')")
      void insert(@Param("seller") SellerDTO SellerDTO);
+
+    //hee였는데 바뀜.
 
 }
