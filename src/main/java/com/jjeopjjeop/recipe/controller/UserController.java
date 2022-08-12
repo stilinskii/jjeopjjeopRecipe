@@ -235,9 +235,6 @@ public class UserController {
    }
 
    //내 게시글 보기
-   @Autowired
-   private UserCommunityDTO userCommunityDTO;
-
    @GetMapping("/mypage/board")
    public String showMyCommunity(String user_id, HttpSession session){
       logger.info("Get myboard");

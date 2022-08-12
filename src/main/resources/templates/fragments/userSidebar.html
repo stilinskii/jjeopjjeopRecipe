@@ -11,7 +11,7 @@
                     th:href="@{/mypage}"
                     th:aria-current="${title}=='mypage' ? 'page' : false"
                 >
-                    <i class="fa-solid fa-circle-user"></i>
+                    <i class="fa fa-user-circle"></i>
                     My Page
                 </a>
             </li>
@@ -20,9 +20,9 @@
                     class="nav-link"
                     th:classappend="${title}=='내 레시피' ? 'active'"
                     th:href="@{/mypage/recipe}"
-                    th:aria-current="${title}=='내 장바구니' ? 'page' : false"
+                    th:aria-current="${title}=='내 레시피' ? 'page' : false"
                     >
-                    <i class="fa-solid fa-cart-shopping"></i>
+                    <i class="fa fa-cutlery"></i>
                     My Recipe
                 </a>
             </li>
@@ -33,20 +33,30 @@
                     th:href="@{/mypage/board}"
                     th:aria-current="${title}=='내 게시글' ? 'page' : false"
                 >
-                    <i class="fa-solid fa-table-list"></i>
+                    <i class="fa fa-pencil-square-o"></i>
                     My Board
                 </a>
             </li>
             <li class="nav-item">
-                <i class="bi bi-bag-check"></i>
                 <a
                     class="nav-link"
                     th:classappend="${title}=='내 장바구니'? 'active'"
                     th:href="@{/mypage/cart}"
                     th:aria-current="${title}=='내 장바구니' ? 'page' : false"
                 >
-                    <i class="fa-solid fa-utensils"></i>
+                    <i class="fa fa-shopping-basket"></i>
                     My Shopping
+                </a>
+            </li>
+            <li class="nav-item">
+                <a
+                        class="nav-link"
+                        th:classappend="${title}=='내 결제내역'? 'active'"
+                        th:href="@{/mypage/pay}"
+                        th:aria-current="${title}=='내 결제내역' ? 'page' : false"
+                >
+                    <i class="fa fa-money"></i>
+                    My PayHistory
                 </a>
             </li>
             <li class="nav-item">
@@ -56,7 +66,7 @@
                    th:href="@{/mypage/withdraw}"
                    th:aria-current="${title}=='회원탈퇴' ? 'page' : false"
                 >
-                    <i class="fa-solid fa-user-gear"></i>
+                    <i class="fa fa-cog"></i>
                     My Account
                 </a>
             </li>
