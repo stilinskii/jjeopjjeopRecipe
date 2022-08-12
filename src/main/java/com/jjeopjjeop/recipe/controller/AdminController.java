@@ -2,14 +2,21 @@ package com.jjeopjjeop.recipe.controller;
 
 
 import com.jjeopjjeop.recipe.dto.A_userDTO;
+import com.jjeopjjeop.recipe.dto.AdminDTO;
+import com.jjeopjjeop.recipe.dto.CommunityDTO;
+import com.jjeopjjeop.recipe.dto.SellerDTO;
 import com.jjeopjjeop.recipe.service.AdminService;
 import com.jjeopjjeop.recipe.service.CommunityService;
 import com.jjeopjjeop.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RequestMapping("/admin/*")
