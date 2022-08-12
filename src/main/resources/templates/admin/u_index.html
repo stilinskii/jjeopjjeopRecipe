@@ -120,31 +120,31 @@
 
 <!--         페이지처리-->
 <!--           https://github.com/tjdghks1994/DailyCookingPJ/blob/master/src/main/webapp/WEB-INF/views/admin/member/memberList.jsp-->
-<!--           <nav aria-label="Page navigation example" style="...">-->
-<!--             <ul class="pagination justify-content-center">-->
-<!--               <li class="page-item">-->
-<!--                 <a class="page-link" th:href="#" aria-label="Previous">-->
-<!--                   <span aria-hidden="true">&laquo;</span>-->
-<!--                 </a>-->
-<!--               </li>-->
+           <nav aria-label="Page navigation example" style="...">
+             <ul class="pagination justify-content-center">
+               <li class="page-item">
+                 <a class="page-link" th:href="#" aria-label="Previous">
+                   <span aria-hidden="true">&laquo;</span>
+                 </a>
+               </li>
 
 
-<!--               <th:block th:each="pdto : ${#numbers.sequence(pdto.startPage, pdto.endPage)}">-->
-<!--               <li class="page-item active">-->
-<!--                 <a th:if="${pdto} == ${pdto.currentPage}" th:href="@{/admin/u_index}" th:text="${pdto}" class="page-link"></a>-->
-<!--               </li>-->
-<!--                 <li class="page-item">-->
-<!--                   <a th:if="${pdto} != ${pdto.currentPage}" th:href="@{/admin/u_index(currentPage=${pdto})}" th:text="${pdto}" class="page-link"></a>-->
-<!--                 </li>-->
-<!--               </th:block>-->
+               <th:block th:each="pdto : ${#numbers.sequence(pdto.startPage, pdto.endPage)}">
+               <li class="page-item active">
+                 <a th:if="${pdto} == ${pdto.currentPage}" th:href="@{/admin/u_index}" th:text="${pdto}" class="page-link"></a>
+               </li>
+                 <li class="page-item">
+                   <a th:if="${pdto} != ${pdto.currentPage}" th:href="@{/admin/u_index(currentPage=${pdto})}" th:text="${pdto}" class="page-link"></a>
+                 </li>
+               </th:block>
 
-<!--               <li class="page-item">-->
-<!--                 <a class="page-link"  th:href="#" aria-label="Next">-->
-<!--                   <span aria-hidden="true">&raquo;</span>-->
-<!--                 </a>-->
-<!--               </li>-->
-<!--             </ul>-->
-<!--           </nav>-->
+               <li class="page-item">
+                 <a class="page-link"  th:href="#" aria-label="Next">
+                   <span aria-hidden="true">&raquo;</span>
+                 </a>
+               </li>
+             </ul>
+           </nav>
 
         </div>
       </div>

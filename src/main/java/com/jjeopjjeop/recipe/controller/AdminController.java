@@ -27,7 +27,7 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @Autowired
+
    private int currentPage;
 
 
@@ -47,7 +47,7 @@ public class AdminController {
 //    public ModelAndView listUser(ModelAndView mav, HttpServletRequest request) throws Exception {
 //        String viewName = (String)request.getAttribute("viewName");
 //        System.out.println("list viewName :" + viewName);
-//        mav.addObject("listUser", adminService.listUser());
+//        mav.addObject("listUser", adminService.UserList(PageDTO pageDTO));
 //        mav.setViewName("/admin/userlist");
 //        return mav;
 //    }
