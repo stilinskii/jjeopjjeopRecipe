@@ -101,4 +101,10 @@ public class RecipeServiceImp implements RecipeService{
         dao.delete(rcp_seq);
 
     }
+
+    //heyeong
+    @Override
+    public List<RecipeDTO> searchListByKeyword(String searchKey) {
+        return dao.searchListByKeyword(searchKey);
+    }
 }
