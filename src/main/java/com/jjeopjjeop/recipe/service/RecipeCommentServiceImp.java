@@ -24,8 +24,9 @@ public class RecipeCommentServiceImp implements RecipeCommentService{
     }
 
     @Override
-    public List<RecipeCommentDTO> listProcess(int rcp_seq) {
-        return dao.list(rcp_seq);
+    public List<RecipeCommentDTO> listProcess(RecipePageDTO recipePageDTO) {
+
+        return dao.list(recipePageDTO);
     }
 
     @Override
