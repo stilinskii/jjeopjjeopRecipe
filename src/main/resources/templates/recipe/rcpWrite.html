@@ -55,7 +55,7 @@
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
                     &nbsp&nbsp
                     <a href="#" th:value="${cate1.cate_seq}">
-                        <span th:text="${cate1.cate_name}">종류별</span>
+                        <span th:text="${cate1.cate_name}" style="color: #fff;">종류별</span>
                     </a>
                 </span>
             </p>
@@ -64,7 +64,7 @@
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
                     &nbsp&nbsp
                     <a href="#" th:value="${cate2.cate_seq}">
-                        <span th:text="${cate2.cate_name}">재료별</span>
+                        <span th:text="${cate2.cate_name}" style="color: #fff;">재료별</span>
                     </a>
                 </span>
             </p>
@@ -73,7 +73,7 @@
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
                     &nbsp&nbsp
                     <a href="#" th:value="${cate3.cate_seq}">
-                        <span th:text="${cate3.cate_name}">상황별</span>
+                        <span th:text="${cate3.cate_name}" style="color: #fff;">상황별</span>
                     </a>
                 </span>
             </p>
@@ -120,20 +120,20 @@
     $('#addManual').on("click", function(e){
         e.preventDefault();
         manualNo++;
-
-        console.log(n1);
-        console.log(n1.childNodes[2].value);
         n1.querySelector(".manual_step").innerHTML = manualNo;
         inputContainer.appendChild(n1.cloneNode(true));
     });
 
-    $(".removeManual").on("click", function(e){
-        e.preventDefault();
-        console.log($(this));
+    $(document).on('click', '.removeManual', function(){
         if(manualNo > 1){
             manualNo--;
             console.log(manualNo);
+            console.log($(this).parent().parent().children(":first").html());
             $(this).parent().parent().remove();
+
+            $('.rcp_manual').each(function(index, item){
+                console.log(item.firstChild);
+            });
         }
     });
 
