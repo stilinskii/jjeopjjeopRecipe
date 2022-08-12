@@ -20,6 +20,4 @@ total_price	NUMBER		NOT NULL
     private Integer quantity;
     private Integer pay;
     private Integer total_price;
-
-
 }

@@ -13,6 +13,66 @@
         VALUES(pay_num_seq.nextval, 'a', #{produce_num}, #{quantity}, 0,
         #{quantity} * (SELECT price FROM produce_board WHERE produce_num = #{produce_num}))
     </insert>
+<!--===========================================================================-->
+
+<!--    <resultMap type="com.jjeopjjeop.recipe.dto.ProduceDTO" id="produce_pay">-->
+<!--        <result column="produce_num" property="produce_num" />-->
+<!--        <result column="user_id" property="user_id" />-->
+<!--        <result column="produce_type" property="produce_type" />-->
+<!--        <result column="produce_name" property="produce_name" />-->
+<!--        <result column="price" property="price" />-->
+<!--        <association property="payDTO" javaType="com.jjeopjjeop.recipe.dto.PayDTO">-->
+<!--            <result column="pay_num" property="pay_num"/>-->
+<!--            <result column="user_id" property="user_id"/>-->
+<!--            <result column="produce_num" property="produce_num"/>-->
+<!--            <result column="quantity" property="quantity"/>-->
+<!--            <result column="pay" property="pay"/>-->
+<!--            <result column="total_price" property="total_price"/>-->
+<!--        </association>-->
+<!--    </resultMap>-->
+    <resultMap type="com.jjeopjjeop.recipe.dto.ProduceDTO" id="produce_pay" autoMapping="true">
+        <collection property="payDTOList" javaType="java.util.List" ofType="com.jjeopjjeop.recipe.dto.PayDTO" autoMapping="true" />
+    </resultMap>
+
+
+
+    <!--장바구니 버튼 누르면 나오는 장바구니 목록. 클릭한 회원의 장바구니가 보임. -->
+    <select id="cartView" parameterType="String" resultMap="produce_pay">
+        SELECT produce_board.produce_num, pay_history.pay_num, pay_history.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price
+        FROM pay_history, produce_board
+        WHERE pay_history.user_id=#{user_id}
+        AND pay_history.pay = 0
+        AND pay_history.produce_num=produce_board.produce_num
+        ORDER BY pay_history.pay_num DESC
+    </select>
+
+    <!--결제에 필요한 정보 담기. 나중에 user_id부분 산 회원으로 바꿔야함.  -->
+    <select id="payInfo" parameterType="int" resultMap="produce_pay">
+        SELECT pay_history.pay_num, produce_board.user_id, produce_board.produce_name, pay_history.quantity, pay_history.total_price
+        FROM pay_history, produce_board
+        WHERE pay_history.user_id='a'
+        AND pay_history.pay = 0
+        AND pay_history.produce_num=produce_board.produce_num
+        AND pay_history.pay_num = #{pay_num}
+    </select>
+
+
+    <!--===========================================================================-->
+
+    <!-- 장바구니 목록에서 제거하기. 나중에 user_id부분도 넣어야할듯?-->
+    <delete id="cartDelete" parameterType="int">
+        DELETE FROM pay_history
+        WHERE pay_num = #{pay_num}
+        AND pay = 0
+    </delete>
+
+    <!--결제완료된 품목의 pay를 1로 바꾸기. 나중에 user_id부분도 넣어야할듯?->아닌듯. 어차피 앞에서 다 걸러졌으니까 괜찮겠다.-->
+    <update id="cartUpdate" parameterType="int">
+        UPDATE pay_history
+        SET pay = 1
+        WHERE pay_num = #{pay_num}
+        AND pay=0
+    </update>
 
 
 </mapper>

@@ -44,6 +44,13 @@ a:focus {
   padding-left: 25px;
 }
 
+/* 컨테이너 너비 좁히기 */
+@media (min-width: 992px){
+    .container{
+        width: 940px;
+    }
+}
+
 .navbar-brand {
   font-family: 'Dancing Script', cursive;
 }
@@ -129,4 +136,8 @@ a:focus {
 
 .user_option .login:hover {
   background-color: #e69c00;
+}
+
+.active {
+  color: #e69c00;
 }

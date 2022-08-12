@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('비밀번호 찾기')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>비밀번호 찾기</title>
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav('비밀번호 찾기')"></nav>
+<h4>비밀번호 찾기</h4>
+<h5>이름과 아이디, 이메일 주소를 입력하세요.</h5>
+<form action="/findpw" method="post">
+    <div class="findpw-form">
+        <p>
+            <label for="username">이름</label>
+            <input type="text" id="username" name="username" required="" placeholder="이름을 입력하세요" />
+        </p>
+        <p>
+            <label for="user_id">아이디</label>
+            <input type="text" id="user_id" name="user_id" required="" placeholder="아이디를 입력하세요" />
+        </p>
+        <p>
+            <label for="email">이메일 주소</label>
+            <input type="text" id="email" name="email" required="" placeholder="ex) abc@test.tt" />
+        </p>
+    </div>
+    <input type="submit" value="확인" />
+    <button type="button" th:onclick="|location.href='@{/login}'|">취소</button>
+</form>
+</body>
+</html>

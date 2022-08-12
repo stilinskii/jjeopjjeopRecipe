@@ -25,7 +25,7 @@
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
         $(document).ready(function() {
 
         //+, -버튼
@@ -44,44 +44,48 @@
             });
         };
         sitePlusMinus();
-                });
+        });
 
 
         //삭제 확인 알림창 띄우기
-            $(function() {
-                 $('a.confirmDeletion').click(function(){
-                  if(!confirm('삭제확인')) return false;});
-            });
+        $(function() {
+             $('a.confirmDeletion').click(function(){
+              if(!confirm('삭제확인')) return false;});
+        });
+
 
     </script>
-
 </head>
 <body>
-
+<nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
 <div class="site-wrap">
     <div class="bg-light py-3">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 mb-0"><a th:href="@{/produce/list}">농산물직거래</a> <span class="mx-2 mb-0">/</span> <strong
-                        class="text-black" th:text="${produceDTO.produce_name}">상품명</strong></div>
+                <div class="col-md-12 mb-0"><a th:href="@{/produce/list}">농산물직거래</a> <span class="mx-2 mb-0">/</span>
+                    <strong class="text-black" th:text="${produceDTO.produce_name}">상품명</strong></div>
             </div>
         </div>
     </div>
 
     <div class="site-section">
         <div class="container">
+            <!-- ===========================상품소개 시작=======================================-->
              <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6"><!--왼쪽 6칸은 상품이미지-->
                     <img class="img-fluid" th:src="${produceDTO.produce_image_path}" alt="첨부이미지" />
                 </div>
-                <div class="col-md-6">
-                    <div class="seller-only">
+                <div class="col-md-6"><!--오른쪽 6칸은 기타 상품설명 등-->
+                    <div class="seller-only"><!--나중에 글쓴사람만 이거 보이게 css적용해두기.-->
                         <a th:href="@{/produce/delete/{produce_num}(produce_num=${produceNum})}">삭제</a>
                         <a th:href="@{/produce/update/{produce_num}(produce_num=${produceNum})}">수정</a>
                     </div>
-                    <h2 class="text-dark" th:text="${produceDTO.produce_name}">상품명</h2>
+                    <h2 class="text-dark" th:text="${produceDTO.produce_name}" style="display: inline-block">상품명</h2>
+                    <th:block th:unless="${#lists.isEmpty(list)}">
+                         &nbsp&nbsp<span class="text-dark h5" th:text="'리뷰평점: '+ ${#numbers.formatDecimal(#aggregates.sum(list.![rating])*1.0 / #lists.size(list), 1, 1)} + '점'"> </span>
+                    </th:block>
                     <p th:text="'판매자: '+${produceDTO.user_id}">seller_name</p>
-                    <p><strong class="text-dark h4" data-th-text="${#numbers.formatInteger(produceDTO.price, 3, 'COMMA') + '원'}">상품가격</strong></p>
+                    <span><strong class="text-dark h4" data-th-text="${#numbers.formatInteger(produceDTO.price, 3, 'COMMA') + '원'}">상품가격</strong></span>
                     <p th:text="${produceDTO.produce_description}">상품설명</p>
                     <form name="cartWrite" id="cartWrite" method="get" th:action="@{/cart/write/}">
                         <div class="mb-5">
@@ -89,7 +93,7 @@
                                 <div class="input-group-prepend">
                                     <button class="btn btn-outline-warning js-btn-minus" type="button">&minus;</button>
                                 </div>
-                                <input type="text" class="form-control text-center" value="1" placeholder=""
+                                <input type="text" class="form-control text-center" value="1"
                                    aria-label="Example text with button addon" aria-describedby="button-addon1"
                                     name="quantity">
                                 <div class="input-group-append">
@@ -99,11 +103,16 @@
                         </div>
 <!--                    장바구니넣을때 produce_num을 넣어주기위해-->
                        <input type="hidden" th:value="${produceDTO.produce_num}" name="produce_num" placeholder="게시글번호" />
-                        <button class="btn btn-lg btn-warning">장바구니</button>
-                        <button class="btn btn-lg btn-warning">구매</button>
+                       <button class="btn btn-lg btn-warning">장바구니</button>
+                    </form> <br />
+
+                    <form method="post" action="/kakaoPay">
+                        <button class="btn btn-lg btn-warning">카카오페이로 결제하기</button>
                     </form>
+
                 </div>
             </div>
+            <!-- ===========================상품소개 끝=======================================-->
             <!-- ===========================리뷰 시작=======================================-->
 <!--            <form name="reviewList" method="post" th:action="@{/produce/view/test/{produceNum}(produceNum=${produceDTO.produce_num})}">-->
 <!--                <input type="text" th:value="${produceDTO.produce_num}" name="produce_num" />-->
@@ -118,35 +127,37 @@
             <!--인코딩방식때문에 get으로 하니까 안됨. post로 하기. href로 하면-->
             <br /><br />
             <h2>구매자 리뷰</h2> <br />
-<!--            여기 문제: 색깔이 적용이 잘 안됨. 한번에 다 열리고 닫힘. https://eond.com/coding/376803-->
-            <div class="accordion warning" id="accordionPanelsStayOpenExample">
-                <div class="accordion-item" th:each="reviewDTO : ${list}">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button btn-warning btn-outline-warning" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                           <th:block th:text="${reviewDTO.rating}" />&nbsp&nbsp&nbsp
-                           <th:block th:text="'(작성날짜: ' + ${reviewDTO.created_date} + ')'" />&nbsp&nbsp&nbsp
-                           <th:block th:text="${#strings.substring(reviewDTO.content, 0, 20)+'... 클릭하여 계속읽기'}" />
-                        </button>
-                    </h2>
-                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
-                        <div class="accordion-body">
 
-                            <th:block th:text="${reviewDTO.content}"/>
-                            <br />
-                            <a th:href="@{/review/delete/{payNum}(payNum=${reviewDTO.pay_num})}"
-                               class="confirmDeletion">리뷰 삭제</a> &nbsp&nbsp&nbsp
-                            <a href="#">리뷰 수정</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <th:block th:if="${#lists.isEmpty(list)}">
+                <h5>등록된 리뷰가 없습니다.</h5>
+            </th:block>
+            <th:block th:unless="${#lists.isEmpty(list)}">
+                <table class="table">
+                    <thead class="table-warning">
+                    <tr>
+                        <th scope="col">일련번호</th>
+                        <th scope="col">점수</th>
+                        <th scope="col">날짜</th>
+                        <th scope="col">내용</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="reviewDTO : ${list}">
+                            <td th:text="${reviewDTOStat.count}"></td><!--변수명Stat.count는 1부터 시작하는 일련번호-->
+                            <td><th:block th:text="${reviewDTO.rating} +'점'" /></td>
+                            <td><th:block th:text="${reviewDTO.created_date}" /></td>
+                            <td><th:block th:text="${reviewDTO.content}"/><br />
+                                <a th:href="@{/review/delete/{payNum}(payNum=${reviewDTO.pay_num})}"
+                                   class="confirmDeletion">리뷰 삭제</a> &nbsp&nbsp&nbsp
+                                <a href="#">리뷰 수정</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </th:block>
+            <br><br><br>
             <!--=======================================리뷰 끝=============================================== -->
-
         </div>
     </div>
-
-
-
 </div>
 
 <!--임의 추가 시작-->

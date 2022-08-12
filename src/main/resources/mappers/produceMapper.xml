@@ -44,8 +44,18 @@
 
 	<!--모든 판매글 조회-->
 <!--<select id="produceList" resultMap="produceResult">-->
-	<select id="produceList" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
-		SELECT * FROM produce_board ORDER BY produce_num DESC
+<!--	<select id="produceList" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">-->
+<!--		SELECT * FROM produce_board ORDER BY produce_num DESC-->
+<!--	</select>-->
+
+	<select id="produceList" parameterType="RecipePageDTO" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+		<![CDATA[
+        SELECT rcp_li.* FROM
+            (SELECT rcp.*, rownum rm FROM
+                (SELECT * FROM produce_board
+                ORDER BY produce_num DESC)rcp)rcp_li
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
 	</select>
 
 	<!--필터링한 판매글 조회-->

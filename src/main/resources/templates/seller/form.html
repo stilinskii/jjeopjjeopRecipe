@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>sellerList</title>
+
+</head>
+<body>
+<h2>sellerList</h2>
+<table>
+    <thead>
+    <tr>
+        <th>아이디</th>
+        <th>사업자이름</th>
+        <th>등록번호</th>
+        <th>핸드폰</th>
+        <th>주소</th>
+<!--        <th>승인</th>-->
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="seller: ${sellers}">
+        <td th:text="${seller.user_id}"></td>
+<!--        <td>-->
+<!--            <a th:href="@{|/seller/${seller.user_id}|}">-->
+<!--                <span th:text="${seller.business_name}"></span>-->
+<!--            </a>-->
+<!--        </td>-->
+        <td th:text="${seller.business_name}"></td>
+<!--        <td th:text="${seller.registration_number}"></td>-->
+
+<!--        <td th:text="${seller.seller_phone}"></td>-->
+<!--        <td th:text="${seller.seller_address}"></td>-->
+<!--        <td th:text="${seller.approval}"></td>-->
+    </tr>
+    </tbody>
+</table>
+<!--<form action="/board/search" method="get">-->
+<!--    <select name="searchType">-->
+<!--        <option th:value="boardTitle">제목</option>-->
+<!--        <option th:value="boardWriter">작성자</option>-->
+<!--    </select>-->
+<!--    <input type="text" name="keyword" placeholder="검색어를 입력하세요">-->
+<!--    <input type="submit" value="검색">-->
+<!--</form>-->
+<!--<div id="board-detail"></div>-->
+</body>
+</body>
+</html>

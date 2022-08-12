@@ -1,26 +1,23 @@
-//package com.jjeopjjeop.recipe.config;
-//
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.http.CacheControl;
-//import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-//import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-//
-//import java.util.concurrent.TimeUnit;
-//
-//@RequiredArgsConstructor
-//@Configuration
-//public class WebConfig implements WebMvcConfigurer {
-//
-//    // 캐시 정책 적용
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        CacheControl cacheControl = CacheControl
-////                .noCache();
-//                .maxAge(5, TimeUnit.SECONDS);
-//
-//        registry.addResourceHandler("**")
-//                .addResourceLocations("resources/static/")
-//                .setCacheControl(cacheControl);
-//    }
-//}
+
+package com.jjeopjjeop.recipe.config;
+
+import org.springframework.context.annotation.Configuration;
+
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    //이미지등록시 서버재가동 없이 바로 볼 수 있게 설정.
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String projectPath = "file:\\" + System.getProperty("user.dir") +"\\src\\main\\resources\\static\\media\\";
+        registry
+                .addResourceHandler("/media/**")
+                .addResourceLocations(projectPath);
+
+    }
+
+
+}
