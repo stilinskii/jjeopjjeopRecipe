@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head('레시피')">
+<head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>레시피 작성 폼</title>
+    <th:block th:replace="fragments/head :: links">
+    </th:block>
+    <link
+            rel="stylesheet"
+            href="/static/css/recipe.css"
+            th:href="@{/css/recipe.css}"
+    />
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
@@ -127,12 +136,14 @@
     $(document).on('click', '.removeManual', function(){
         if(manualNo > 1){
             manualNo--;
-            console.log(manualNo);
-            console.log($(this).parent().parent().children(":first").html());
+            var manualIndex = $(this).parent().parent().children(":first").html();
             $(this).parent().parent().remove();
 
             $('.rcp_manual').each(function(index, item){
-                console.log(item.firstChild);
+                var manualIndex2 = item.firstChild.nextSibling.innerHTML;
+                if(manualIndex < manualIndex2){
+                    item.firstChild.nextSibling.innerHTML = manualIndex2 - 1;
+                };
             });
         }
     });

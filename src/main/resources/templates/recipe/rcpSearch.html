@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head('레시피')">
+<head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>레시피 검색</title>
+    <th:block th:replace="fragments/head :: links">
+    </th:block>
+    <link
+            rel="stylesheet"
+            href="/static/css/recipe.css"
+            th:href="@{/css/recipe.css}"
+    />
 </head>
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
     <form action="/recipe/search">
-        <div class="input-group mb-3">
+        <div class="input-group mb-3 rounded">
             <input
                     type="text"
-                    class="form-control"
+                    class="form-control rounded"
                     placeholder="내용을 입력하세요."
                     name="searchKey"
                     th:value="${recipePageDTO.searchKey}"
@@ -21,9 +30,10 @@
             />
             <a th:href="@{/recipe/search(searchKey=${searchKey})}">
                 <button
-                        class="btn btn-dark"
+                        class="btn btn-warning"
                         type="submit"
                         id="button-addon2"
+                        style="margin-left: 10px; color: #fff;"
                 >
                     레시피 검색
                 </button>
@@ -34,7 +44,7 @@
     <hr />
     <div class="rcp_list">
         * 분류를 선택하여 상세검색을 해보세요!
-        <div class="cate_box">
+        <div class="cate_box rounded">
             <p>
                 <span>종류별</span>
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">

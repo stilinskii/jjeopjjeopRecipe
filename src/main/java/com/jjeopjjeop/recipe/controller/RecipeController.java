@@ -1,12 +1,8 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
-import com.jjeopjjeop.recipe.service.RecipeAPIService;
 import com.jjeopjjeop.recipe.service.RecipeCommentService;
 import com.jjeopjjeop.recipe.service.RecipeService;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -16,8 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,62 +26,6 @@ public class RecipeController {
     private int commentCurrentPage;
     private String searchKey;
 
-    // 오픈 API 테스트
-    @GetMapping("/")
-    public ModelAndView openApiTest(ModelAndView mav){
-        List<RecipeDTO> getApiList = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        try {
-            URL url = new URL("https://openapi.foodsafetykorea.go.kr/api/f25a7b4b1923449dbe5d/COOKRCP01/json/1355/1358");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-            String result = br.readLine();
-
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
-            JSONObject cookrcp01 = (JSONObject) jsonObject.get("COOKRCP01");
-            JSONArray row = (JSONArray) cookrcp01.get("row");
-
-            for(int i=0; i<row.size(); i++){
-                JSONObject info = (JSONObject) row.get(i);
-                RecipeDTO recipeDTO = new RecipeDTO();
-                recipeDTO.setRcp_seq(i * -1);
-                recipeDTO.setUser_id("식품의약품안전처");
-                recipeDTO.setRcp_name(info.get("RCP_NM").toString());
-                recipeDTO.setRcp_parts_dtls(info.get("RCP_PARTS_DTLS").toString());
-                recipeDTO.setFilepath(info.get("ATT_FILE_NO_MAIN").toString());
-
-                List<ManualDTO> manualDTOList = new ArrayList<>();
-                int num = 1;
-                while (info.get("MANUAL0"+num) != null && !info.get("MANUAL0"+num).toString().isBlank()){
-                    ManualDTO manualDTO = new ManualDTO();
-                    //manualDTO.setRcp_seq(i * -1);
-                    manualDTO.setManual_txt(info.get("MANUAL0"+num).toString().replaceAll("[a-z]$",""));
-                    manualDTOList.add(manualDTO);
-                    num++;
-                }
-
-                while (info.get("MANUAL"+num) != null && !info.get("MANUAL"+num).toString().isBlank()){
-                    ManualDTO manualDTO = new ManualDTO();
-                    //manualDTO.setRcp_seq(i * -1);
-                    manualDTO.setManual_txt(info.get("MANUAL"+num).toString().replaceAll("[a-z]$",""));
-                    manualDTOList.add(manualDTO);
-                    num++;
-                }
-
-                recipeDTO.setManualDTOList(manualDTOList);
-                getApiList.add(recipeDTO);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        mav.addObject("recipeApiList", getApiList);
-        //mav.addObject("getApiManualList", getApiManualList);
-        mav.setViewName("/recipe/apiTest");
-        return mav;
-    }
 
     // 레시피 목록 조회 메소드
     @GetMapping("/recipe/list")

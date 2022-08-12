@@ -34,8 +34,8 @@ public class AdminController {
 
     private final AdminService adminService;
 
-//    @Autowired
-//   private int currentPage;
+    //@Autowired
+    private int currentPage;
 
 
 
@@ -58,7 +58,7 @@ public class AdminController {
 //        mav.setViewName("/admin/userlist");
 //        return mav;
 //    }
-/*
+
     //회원목록
     @GetMapping("/u_index")
       public String UserList(Model model, PageDTO pageDTO) {
@@ -78,7 +78,7 @@ public class AdminController {
 
           return "admin/u_index";
     }
-*/
+
     //회원상세
     @GetMapping("/detailU")
     public String detailU(String user_id, Model model){
