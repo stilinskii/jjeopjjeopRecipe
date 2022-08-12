@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head('로그아웃')">
+<head th:replace="fragments/head('회원탈퇴 완료')">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -15,11 +15,13 @@
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>
-<h4 class="d-flex justify-content-center align-items-center p-5">로그아웃이 완료되었습니다.</h4>
-<div class="d-flex justify-content-center">
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    회원탈퇴가 완료되었습니다.
+</div>
+<div class="d-flex justify-content-center pt-5">
     <input
             type="button"
-            class="btn btn-warning"
+            class="btn btn-secondary ms-3"
             value="홈으로"
             th:onclick="|location.href='@{/}'|"
     />
