@@ -32,7 +32,7 @@
   />
 </head>
 <body class="bg-light">
-<nav th:replace="fragments/nav :: front-nav('community')"></nav>
+<nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
   <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
     <h1>커뮤니티 게시판</h1>
@@ -53,20 +53,20 @@
       <div class="row">
         <div
                 class="col-2"
-                th:replace="/fragments/communityCategory::category('전체글')"
+
         >
           <ul class="list-group">
             <li class="list-group-item">
-              <a href="/board" class="nav-link category">회원관리</a>
+              <a href="/admin/u_index" class="nav-link category">회원관리</a>
             </li>
             <li class="list-group-item">
-              <a href="/board" class="nav-link category">레시피관리</a>
+              <a href="/admin/r_index" class="nav-link category">레시피관리</a>
             </li>
             <li class="list-group-item">
-              <a href="/board" class="nav-link category">쇼핑관리</a>
+              <a href="/admin/s_index" class="nav-link category">쇼핑관리</a>
             </li>
             <li class="list-group-item">
-              <a href="/board" class="nav-link category">게시판 관리</a>
+              <a href="/admin/c_index" class="nav-link category">게시판관리</a>
             </li>
           </ul>
         </div>
@@ -81,19 +81,21 @@
               <th scope="col">작성일</th>
               <th scope="col">조회</th>
               <th scope="col">좋아요</th>
+              <th scope="col">신고</th>
               <th scope="col">삭제</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="${appboard}">
-              <th scope="row" th:text="${id}">1</th>
+            <tr th:each="cu:${appboard}">
+              <th scope="row">1</th>
 <!--              <a th:href="@{|/community/post?id=${el.id}|}">-->
-                <td th:text="${title}">제목</td></a>
-              <td th:text="${user_id}">Otto</td>
-              <td th:text="${created_at}">@mdo</td>
-              <td th:text="${read_count}">@mdo</td>
-              <td th:text="${like_count}">@mdo</td>
-              <td><a th:href="@{|/admin/delcomm?id=${id}|}"  class="btn btn btn-secondary">삭제</a></td>
+                <td th:text="${cu.title}"></td></a>
+              <td th:text="${cu.user_id}"></td>
+              <td th:text="${cu.created_at}"></td>
+              <td th:text="${cu.read_count}"></td>
+              <td th:text="${cu.like_count}"></td>
+              <td th:text="${cu.report}"></td>
+              <td><a th:href="@{|/admin/delcom/${cu.id}|}"  class="btn btn btn-secondary">삭제</a></td>
 
             </tr>
 <!--            <tr>-->
