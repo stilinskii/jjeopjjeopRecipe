@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@RequestMapping("/seller")
+//@RequestMapping("/")
+
 @Controller
 @RequiredArgsConstructor
 public class SellerController {
@@ -48,7 +49,7 @@ public class SellerController {
 //        return mav;
 //    }
 
-    @GetMapping("/form")
+    @GetMapping("/seller/form")
     public String all(Model model){
         //List 뒤는 html에서 참조?
         List<SellerDTO> sellers = sellerService.getSeller();
@@ -56,19 +57,19 @@ public class SellerController {
         return "seller/form";
     }
 
-    //insert부분 알아봐야함
-    //form을 리턴하는 문제 발생 해결해야함->해결
-    @GetMapping("/write")
-    public String form(@ModelAttribute SellerDTO sellerDTO){
-        return "seller/write";
+    //insert
+
+    @GetMapping("/seller/sellerwrite")
+    public String form(){
+        return "/seller/sellerwrite";
     }
 
-    @PostMapping("/write")
-    public String forFormSubmit(@ModelAttribute SellerDTO sellerDTO, BindingResult bindingResult){
+    @PostMapping("/seller/sellerwrite")
+    public String forFormSubmit(@ModelAttribute SellerDTO sellerDTO){
 //        sellerDTO.setUser_id(sellerDTO.getUser_id());
 //        sellerDTO.getBusiness_name(sellerDTO.getBusiness_name());
         sellerService.save(sellerDTO);
-        return "seller/write";
+        return "redirect:/produce/list";
 
     }
 

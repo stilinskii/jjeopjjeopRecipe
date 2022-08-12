@@ -37,12 +37,8 @@
 <tr>
   <td img src="static/media/admin/admin.png"  width="50" height="50">
     <h1>판매자 관리</h1>
-  <h3>미승인 목록</h3></td>
+    <h3>승인 목록</h3></td>
 
-  <div style="text-align: right; margin-bottom: 20px" class="btn-group col-50">
-    <a href="/admin/s_index" class="btn btn-dark">신청목록</a>
-    <a href="/admin/ss_index" class="btn btn-dark ">승인목록</a>
-  </div>
 </tr>
 <!--    <div class="caption">-->
 <!--    <div>-->
@@ -61,14 +57,10 @@
 <!--    </select>-->
 <!--  </div>-->
 
-<!--신청 승인 목록-->
-
-
-
-<!--    <ol class="breadcrumb" style="float:right">-->
-<!--      <li class="breadcrumb-item"><a href="/admin/s_index">신청목록</a></li>-->
-<!--      <li class="breadcrumb-item"><a href="/admin/ss_index">승인목록</a></li>-->
-<!--    </ol>-->
+  <div style="text-align: right; margin-bottom: 20px" class="btn-group col-15">
+    <a href="/admin/s_index" class="btn btn-dark">신청목록</a>
+    <a href="/admin/ss_index" class="btn btn-dark">승인목록</a>
+  </div>
 
 <!-- 사이드 nav -->
     <div class="container-fluid">
@@ -107,20 +99,18 @@
     <th scope="col">사업자 등록 번호</th>
     <th scope="col">사업장 전화번호</th>
     <th scope="col">사업장 주소</th>
-    <th scope="col">승인</th>
+
   </tr>
 
             </thead>
 <tbody>
-  <tr th:each = "sellerDTO : ${nsellers}">
+  <tr th:each = "sellerDTO : ${sellers}">
     <th scope="row">1</th>
       <td th:text="${sellerDTO.user_id}"></td>
       <td th:text="${sellerDTO.business_name}"></td>
       <td th:text="${sellerDTO.registration_number}"></td>
       <td th:text="${sellerDTO.seller_phone}"></td>
       <td th:text="${sellerDTO.seller_address}"></td>
-    <td><a th:href="@{|/admin/upSel/${sellerDTO.user_id}|}"  class="btn btn btn-secondary">승인</a></td>
-
 <!--      <td th:text="${sellerDTO.approval}"></td>-->
 <!--    <td th:href="#" class="btn btn btn-secondary active btn-sm ">승인</td>-->
 <!--      <td><a href=#>승인</a></td>-->
