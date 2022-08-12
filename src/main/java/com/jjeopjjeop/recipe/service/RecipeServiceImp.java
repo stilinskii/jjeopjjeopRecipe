@@ -2,6 +2,7 @@ package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dao.RecipeDAO;
 import com.jjeopjjeop.recipe.dto.*;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,8 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public int countProcess() {
-        return dao.count();
+    public int countProcess(int cate_seq) {
+        return dao.count(cate_seq);
     }
 
     @Override
@@ -27,8 +28,8 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public int searchCountProcess(String searchKey) {
-        return dao.searchCount(searchKey);
+    public int searchCountProcess(RecipePageDTO recipePageDTO) {
+        return dao.searchCount(recipePageDTO);
     }
 
     @Override
@@ -54,6 +55,10 @@ public class RecipeServiceImp implements RecipeService{
     @Override
     public List<ManualDTO> contentMnlProcess(int rcp_seq) {
         return dao.contentMnl(rcp_seq);
+    }
+
+    public int chkScrapProcess(UserScrapDTO userScrapDTO){
+        return dao.checkScrap(userScrapDTO);
     }
 
     @Override
@@ -85,8 +90,21 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
+    public void writeCProcess(int cate_seq) {
+        dao.writeCate(cate_seq);
+    }
+
+    @Override
     public void deleteProcess(int rcp_seq) {
+        dao.deleteCate(rcp_seq);
         dao.deleteManual(rcp_seq);
         dao.delete(rcp_seq);
+
+    }
+
+    //heyeong
+    @Override
+    public List<RecipeDTO> searchListByKeyword(String searchKey) {
+        return dao.searchListByKeyword(searchKey);
     }
 }

@@ -11,7 +11,7 @@
 	<!--판매글 작성 반영-->
 	<insert id="write" parameterType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		INSERT INTO produce_board
-		VALUES(produce_num_seq.nextval, #{user_id}, #{produce_type}, #{produce_name}, #{price}, #{produce_image}, #{produce_image_path}, #{produce_description})
+		VALUES(produce_num_seq.nextval, '테스트', #{produce_type}, #{produce_name}, #{price}, #{produce_image}, #{produce_image_path}, #{produce_description})
 	</insert>
 
 <!--	나중에 검색때 쓰면 될듯~~-->
