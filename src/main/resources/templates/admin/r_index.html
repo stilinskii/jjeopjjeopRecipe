@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragment/head('게시판')">
+<head th:replace="fragments/head('게시판')">
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,9 +28,9 @@
           th:href="@{/css/community.css}"
   />
 </head>
-<body>
+
 <body class="bg-light">
-<nav th:replace="fragments/nav :: front-nav('community')"></nav>
+<nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
   <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
     <h1>관리자 페이지</h1>
@@ -45,8 +45,8 @@
         <a th:href="@{/community/form}" class="btn btn btn-secondary"
           >글쓰기</a
         >
-      </div>
-    </div> -->
+      </div> -->
+    </div>
 
     <div class="container-fluid">
       <div class="row">
@@ -57,61 +57,45 @@
           <!-- admin은 controller에서? -->
           <ul class="list-group">
             <li class="list-group-item">
-              <a href="#" class="nav-link category">회원관리</a>
+              <a href="/admin" class="nav-link category">회원관리</a>
             </li>
             <li class="list-group-item">
-              <a href="#" class="nav-link category">레시피관리</a>
+              <a href="/recipe/rcpList" class="nav-link category">레시피관리</a>
             </li>
             <li class="list-group-item">
-              <a href="#" class="nav-link category">쇼핑관리</a>
+              <a href="/admin/s_index" class="nav-link category">쇼핑관리</a>
             </li>
             <li class="list-group-item">
-              <a href="# " class="nav-link category">신고관리</a>
+              <a href="/community" class="nav-link category">게시판 관리</a>
             </li>
           </ul>
         </div>
 
         <!-- 게시판 부분? -->
-        <!-- <div class="col-10">
+         <div class="col-10">
           <table class="table caption-top">
             <thead class="bg-secondary bg-gradient">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">제목</th>
-                <th scope="col">작성자</th>
-                <th scope="col">작성일</th>
-                <th scope="col">조회</th>
-                <th scope="col">좋아요</th>
-              </tr>
+             <tr>
+    <th scope="col">#</th>
+    <th scope="col">사용자 아이디</th>
+    <th scope="col">레시피 이름</th>
+    <th scope="col">신고수</th>
+    <th scope="col">삭제</th>
+
+  </tr>
             </thead>
             <tbody>
-              <tr th:each="el:${board}">
-                <th scope="row" th:text="${el.id}">1</th>
-                <a th:href="@{|/community/post?id=${el.id}|}"><td th:text="${el.title}">제목</td></a>
-                <td th:text="${el.user_id}">Otto</td>
-                <td th:text="${el.created_at}">@mdo</td>
-                <td th:text="${el.read_count}">@mdo</td>
-                <td th:text="${el.like_count}">@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>@fat</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-                <td>@twitter</td>
-                <td>@twitter</td>
+              <tr th:each="rd:${apprcplist}">
+                <th scope="row"></th>
+<!--                <a th:href="@{|/admin/detail?user_id=${rd.user_id}|}"><td th:text="${rd.title}"></td></a>-->
+                <td th:text="${rd.user_id}"></td>
+                <td th:text="${rd.rcp_name}"></td>
+                <td th:text="${rd.report}"></td>
+                <td><a th:href="@{|/admin/delrcp/${rd.user_id}|}"  class="btn btn btn-secondary">삭제</a></td>
               </tr>
             </tbody>
           </table>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
