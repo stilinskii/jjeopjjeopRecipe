@@ -41,8 +41,9 @@ font-size: 15px;
 line-height: 1;
 }
 
-.cate_box a {
-
+.validationError {
+color: red;
+margin-bottom: 3px;
 }
 
 .viewBtn a{

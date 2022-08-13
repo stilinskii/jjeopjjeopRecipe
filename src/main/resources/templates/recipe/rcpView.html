@@ -67,7 +67,8 @@
     <hr/>
     <div class="row" style="margin-bottom:15px;">
         <div class="col-6 d-grid gap-2 d-md-block">
-            <img th:src="@{${rcp.filepath}+${rcp.filename}}" width="100%" height="330px" alt="main image"/>
+            <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="100%" height="330px" class="rounded float" />
+            <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="100%" height="330px" class="rounded float" />
         </div>
         <div class="col-6">
             <p class="d-flex justify-content-between">

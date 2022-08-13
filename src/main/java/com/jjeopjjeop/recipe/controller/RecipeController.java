@@ -3,19 +3,27 @@ package com.jjeopjjeop.recipe.controller;
 import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.service.RecipeCommentService;
 import com.jjeopjjeop.recipe.service.RecipeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 public class RecipeController {
     @Autowired
@@ -32,6 +40,7 @@ public class RecipeController {
     public ModelAndView rcpListMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
                                       @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
                                       RecipePageDTO recipePageDTO, ModelAndView mav){
+
         // 전체 레코드 수
         int totalRecord = service.countProcess(cate_seq);
 
@@ -152,9 +161,12 @@ public class RecipeController {
     // 레시피 작성 페이지 요청 메소드
     @GetMapping("/recipe/write")
     public ModelAndView rcpWriteMethod(ModelAndView mav){
+        RecipeDTO recipeDTO = new RecipeDTO();
+
         // 레시피 분류 목록
         List<CategoryDTO> cateList = service.cateListProcess();
 
+        mav.addObject("recipeDTO", recipeDTO);
         mav.addObject("cateList", cateList);
         mav.setViewName("/recipe/rcpWrite");
         return mav;
@@ -162,9 +174,19 @@ public class RecipeController {
 
     // 레시피 작성 메소드
     @PostMapping("/recipe/write")
-    public String rcpWriteProMethod(RecipeDTO recipeDTO, String[] manual_txt,
-                                    @RequestParam(value="cateArr", required=false) List<String> cateArr,
+    public String rcpWriteProMethod(@Validated @ModelAttribute("recipeDTO") RecipeDTO recipeDTO, BindingResult bindingResult, String[] manual_txt,
+                                    @RequestParam(value="cateArr", required=false) List<String> cateArr, Model model,
                                     MultipartFile[] upload_manual, HttpServletRequest request){
+        // 유효성 검사
+        if(bindingResult.hasErrors()){
+            // 레시피 분류 목록
+            List<CategoryDTO> cateList = service.cateListProcess();
+            model.addAttribute("cateList", cateList);
+
+            //log.info("errors={}", bindingResult);
+            return "recipe/rcpWrite";
+        }
+
         // 본문 작성
         MultipartFile mainFile = recipeDTO.getUpload();
         if(!mainFile.isEmpty()){
