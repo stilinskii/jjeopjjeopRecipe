@@ -193,6 +193,14 @@
         WHERE rcp_seq=#{num}
     </delete>
 
+    <select id="getFile" parameterType="int" resultType="String">
+        SELECT filename FROM recipe WHERE rcp_seq=#{rcp_seq}
+    </select>
+
+    <select id="getFileM" parameterType="int" resultType="String">
+        SELECT filename FROM manual WHERE rcp_seq=#{rcp_seq}
+    </select>
+
     <select id="searchListByKeyword" parameterType="String" resultType="RecipeDTO">
         SELECT * FROM recipe WHERE rcp_name LIKE '%' || #{searchKey} || '%'
     </select>

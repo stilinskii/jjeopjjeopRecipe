@@ -253,8 +253,8 @@ public class RecipeController {
 
     // 레시피 삭제 메소드
     @GetMapping("/recipe/delete/{rcp_seq}")
-    public String rcpDeleteMethod(@PathVariable("rcp_seq") int rcp_seq){
-        service.deleteProcess(rcp_seq);
+    public String rcpDeleteMethod(@PathVariable("rcp_seq") int rcp_seq, HttpServletRequest request){
+        service.deleteProcess(rcp_seq, urlPath(request, 0), urlPath(request, 1));
 
         return "redirect:/recipe/list";
     }
