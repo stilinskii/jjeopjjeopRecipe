@@ -10,7 +10,7 @@ color: black;
 padding: 20px 150px;
 margin: auto;
 margin-top: 20px;
-background-color: #212529;
+margin-bottom: 25px;
 }
 
 select.form-select{
@@ -69,7 +69,13 @@ margin-top: 0;
 
 .rcp_best {
 margin: auto;
+margin-top: 10px;
 text-align: center;
+line-height: 0.5;
+}
+
+.rcp_best img{
+margin-bottom: 10px;
 }
 
 .col-4 {
@@ -106,4 +112,20 @@ width: 250px;
   color: #555;
   background-color: #fafafa;
   border-color: #ccc;
+}
+
+/* The hero image */
+.hero-image {
+  /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('https://cdn.pixabay.com/photo/2016/12/26/17/28/spaghetti-1932466_960_720.jpg');
+
+  /* Set a specific height */
+  height: 50%;
+
+  /* Position and center the image to scale nicely on all screens */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
 }

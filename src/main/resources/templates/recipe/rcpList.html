@@ -20,11 +20,11 @@
   <input type="hidden" th:value="${pDto.cate_seq}">
   <main class="custom container">
     <form action="/recipe/search">
-      <div class="input-group mb-3 rounded">
+      <div class="input-group rounded hero-image">
         <input
           type="text"
           class="form-control rounded"
-          placeholder="내용을 입력하세요."
+          placeholder="검색어를 입력하세요."
           name="searchKey"
           aria-label="searchKey"
           aria-describedby="button-addon2"
@@ -42,16 +42,16 @@
       </div>
     </form>
       <div class="rcp_best">
-        <p class="fw-bold fs-2 text-start">오늘의 인기 레시피</p>
+        <p class="fw-bold fs-2 text-start" style="margin-bottom: 30px;">오늘의 인기 레시피</p>
         <div class="row align-items-center">
           <div class="col">
             <span class="fs-1"> ◀ </span>
           </div>
-          <div th:each="favorite : ${favoriteRcpList}" class="col">
+          <div th:each="favorite : ${favoriteRcpList}" class="col colimg">
             <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${favorite.rcp_seq}, rcp_sort=${pDto.rcp_sort}, cate_seq=${pDto.cate_seq}, currentPage=${pDto.currentPage})}">
             <img th:if="${not #strings.isEmpty(favorite.filename)}" th:src="@{${favorite.filepath}+${favorite.filename}}" width="200px" height="150px" class="rounded float" />
-              <img th:if="${#strings.isEmpty(favorite.filename)}" src="/media/images/rcp_mainimg.png" width="200px" height="150px" class="rounded float" />
-              <p th:text="${favorite.rcp_name}" class="text-start fw-bold">레시피 제목</p>
+            <img th:if="${#strings.isEmpty(favorite.filename)}" src="/media/images/rcp_mainimg.png" width="200px" height="150px" class="rounded float" />
+            <p th:text="${favorite.rcp_name}" class="text-start fw-bold">레시피 제목</p>
             </a>
             <p class="d-flex justify-content-between">
               <span th:text="${favorite.user_id}" class="left">닉네임</span
@@ -75,17 +75,23 @@
             <span>종류별</span>
           <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
             &nbsp&nbsp
-             <a th:href="@{/recipe/list(cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
-            <span th:text="${cate1.cate_name}" th:attr="style = ${cate1.cate_seq == pDto.cate_seq ? 'color: black; font-weight:bold;' : 'color: #fff'}">종류별</span>
-             </a>
+            <a th:if="${cate1.cate_seq} == ${pDto.cate_seq}" th:href="@{/recipe/list}" class="category" th:value="${cate1.cate_seq}">
+            <span th:text="${cate1.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">상황별</span>
+            </a>
+            <a th:if="${cate1.cate_seq} != ${pDto.cate_seq}" th:href="@{/recipe/list(cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
+            <span th:text="${cate1.cate_name}" th:attr="style = 'color: #fff;'">상황별</span>
+            </a>
           </span>
           </p>
           <p>
             <span>재료별</span>
           <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
             &nbsp&nbsp
-            <a th:href="@{/recipe/list(cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
-            <span th:text="${cate2.cate_name}" th:attr="style = ${cate2.cate_seq == pDto.cate_seq ? 'color: black;' : 'color: #fff'}">재료별</span>
+            <a th:if="${cate2.cate_seq} == ${pDto.cate_seq}" th:href="@{/recipe/list}" class="category">
+            <span th:text="${cate2.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">재료별</span>
+            </a>
+            <a th:if="${cate2.cate_seq} != ${pDto.cate_seq}" th:href="@{/recipe/list(cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
+            <span th:text="${cate2.cate_name}" th:attr="style = 'color: #fff;'">재료별</span>
             </a>
           </span>
           </p>
@@ -93,8 +99,11 @@
             <span>상황별</span>
           <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
             &nbsp&nbsp
-            <a th:href="@{/recipe/list(cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
-            <span th:text="${cate3.cate_name}" th:attr="style = ${cate3.cate_seq == pDto.cate_seq ? 'color: black;' : 'color: #fff'}">상황별</span>
+            <a th:if="${cate3.cate_seq} == ${pDto.cate_seq}" th:href="@{/recipe/list}" class="category">
+            <span th:text="${cate3.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">상황별</span>
+            </a>
+            <a th:if="${cate3.cate_seq} != ${pDto.cate_seq}" th:href="@{/recipe/list(cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
+            <span th:text="${cate3.cate_name}" th:attr="style = 'color: #fff;'">상황별</span>
             </a>
           </span>
           </p>
@@ -153,7 +162,7 @@
             </li>
           </ul>
         </nav>
-        <div class="d-grid col-4 mx-auto">
+        <div class="d-grid col-4 mx-auto" style="margin-bottom: 30px;">
           <a th:href="@{/recipe/write}" class="btn btn-warning" style="color:#fff;">
             새 레시피 등록하기
           </a>

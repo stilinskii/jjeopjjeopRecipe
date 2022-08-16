@@ -6,7 +6,7 @@
 <mapper namespace="com.jjeopjjeop.recipe.dao.RecipeDAO">
     <select id="count" parameterType="int" resultType="int">
         SELECT count(*) FROM recipe
-        <if test="cate_seq != 0">
+        <if test="cate_seq > 0">
             WHERE rcp_seq IN (
             SELECT rcp_seq FROM cate_rcp
             WHERE cate_seq IN #{cate_seq}
@@ -18,7 +18,7 @@
         SELECT rcp_li.* FROM
         (SELECT rcp.*, rownum rm FROM
         (SELECT * FROM recipe
-        <if test="cate_seq != 0">
+        <if test="cate_seq > 0">
         WHERE rcp_seq IN (
         SELECT rcp_seq FROM cate_rcp
         WHERE cate_seq IN #{cate_seq}
@@ -51,7 +51,7 @@
         OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
         OR summary LIKE '%' || #{searchKey} || '%'
         OR hash_tag LIKE '%' || #{searchKey} || '%')
-        <if test="cate_seq != 0">
+        <if test="cate_seq > 0">
             AND rcp_seq IN (
             SELECT rcp_seq FROM cate_rcp
             WHERE cate_seq IN #{cate_seq}
@@ -67,7 +67,7 @@
             OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
             OR summary LIKE '%' || #{searchKey} || '%'
             OR hash_tag LIKE '%' || #{searchKey} || '%')
-        <if test="cate_seq != 0">
+        <if test="cate_seq > 0">
             AND rcp_seq IN (
             SELECT rcp_seq FROM cate_rcp
             WHERE cate_seq IN #{cate_seq}
