@@ -15,6 +15,7 @@ public interface RecipeService {
     public List<ManualDTO> contentMnlProcess(int rcp_seq);
     public int chkScrapProcess(UserScrapDTO userScrapDTO);
     public void scrapProcess(UserScrapDTO userScrapDTO);
+    public int chkReportProcess(ReportRecipeDTO reportRecipeDTO);
     public void reportProcess(ReportRecipeDTO reportRecipeDTO);
     public void writeProcess(RecipeDTO recipeDTO);
     public void writeMProcess(ManualDTO manualDTO);

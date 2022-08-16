@@ -117,6 +117,12 @@ public class RecipeController {
         userScrapDTO.setRcp_seq(rcp_seq);
         mav.addObject("scrapOrNot", service.chkScrapProcess(userScrapDTO));
 
+        // 신고 체크
+        ReportRecipeDTO reportRecipeDTO = new ReportRecipeDTO();
+        reportRecipeDTO.setUser_id("테스트");
+        reportRecipeDTO.setRcp_seq(rcp_seq);
+        mav.addObject("reportOrNot", service.chkReportProcess(reportRecipeDTO));
+
         // 레시피별 요리 단계 내용
         mav.addObject("manualList", service.contentMnlProcess(rcp_seq));
 
@@ -148,14 +154,14 @@ public class RecipeController {
     }
 
     // 레시피 신고 메소드
-    @GetMapping("/recipe/report/{rcp_seq}")
-    public String rcpReportMethod(@PathVariable("rcp_seq") Integer rcp_seq, Integer currentPage){
+    @ResponseBody
+    @PostMapping("/recipe/report")
+    public void rcpReportMethod(@RequestParam String rcp_seq,
+                                @RequestParam String user_id){
         ReportRecipeDTO reportRecipeDTO = new ReportRecipeDTO();
         reportRecipeDTO.setUser_id("테스트");
-        reportRecipeDTO.setRcp_seq(rcp_seq);
+        reportRecipeDTO.setRcp_seq(Integer.parseInt(rcp_seq));
         service.reportProcess(reportRecipeDTO);
-
-        return "redirect:/recipe/view/"+rcp_seq+"?currentPage="+currentPage;
     }
 
     // 레시피 작성 페이지 요청 메소드

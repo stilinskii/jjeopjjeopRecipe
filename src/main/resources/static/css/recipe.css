@@ -42,7 +42,7 @@ line-height: 1;
 }
 
 .validationError {
-color: red;
+color: #dc3545;
 margin-bottom: 3px;
 }
 
