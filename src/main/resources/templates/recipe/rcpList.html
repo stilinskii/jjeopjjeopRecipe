@@ -140,10 +140,15 @@
             </p>
           </div>
         </div>
+
+<!--        페이지 출력 -->
         <nav aria-label="Page navigation example" style="margin-top: 30px">
           <ul class="pagination justify-content-center">
             <li class="page-item">
-              <a class="page-link" href="#" aria-label="Previous">
+              <a th:if="${pDto.startPage} > 1" class="page-link" th:href="@{/recipe/list(rcp_sort=${pDto.rcp_sort}, cate_seq=${pDto.cate_seq}, currentPage=${pDto.startPage - pDto.endPage})}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+              <a th:if="${pDto.startPage} == 1" class="page-link" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
@@ -156,7 +161,10 @@
               </li>
             </th:block>
             <li class="page-item">
-              <a class="page-link" href="#" aria-label="Next">
+              <a th:if="${pDto.endPage} < ${pDto.totalPage}" class="page-link" th:href="@{/recipe/list(rcp_sort=${pDto.rcp_sort}, cate_seq=${pDto.cate_seq}, currentPage=${pDto.startPage + pDto.blockPage})}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+              <a th:if="${pDto.endPage} == ${pDto.totalPage}" class="page-link" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>

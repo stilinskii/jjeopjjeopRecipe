@@ -20,6 +20,10 @@ public class RecipeCommentController {
     @PostMapping("/recipe/comment/write")
     public String writeMethod(int rcp_seq, Integer currentPage, int rcp_sort, int cate_seq, String searchKey,
                               HttpSession session, RecipeCommentDTO recipeCommentDTO){
+        if(session.getAttribute("user_id") == null){
+            return "redirect:/login";
+        }
+
         recipeCommentDTO.setRcp_seq(rcp_seq);
         recipeCommentDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
         service.writeProcess(recipeCommentDTO);

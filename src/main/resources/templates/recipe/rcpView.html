@@ -59,6 +59,23 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="needLoginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="needLoginLabel">비회원 접근 불가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p th:text="'로그인이 필요한 기능입니다.'"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" id="needLoginBtn" style="display: none;" data-bs-toggle="modal" data-bs-target="#needLoginModal">로그인 안내</button>
     <!-- Modal// -->
     <span class="fw-bold fs-2 text-start" th:text="${rcp.rcp_name}"></span>
     <span th:if="${user_id} == ${rcp.user_id}" class="upsideBtn text-end">
@@ -153,7 +170,10 @@
     <nav aria-label="Page navigation example" style="margin-top: 30px">
         <ul class="pagination justify-content-center">
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
+                <a th:if="${recipeCommentPageDTO.startPage} > 1" class="page-link" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp_seq}, rcp_sort=${recipeCommentPageDTO.rcp_sort}, cate_seq=${recipeCommentPageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey}, commentCurrentPage=${recipeCommentPageDTO.startPage - recipeCommentPageDTO.endPage})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                <a th:if="${recipeCommentPageDTO.startPage} == 1" class="page-link" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -166,7 +186,10 @@
                 </li>
             </th:block>
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
+                <a th:if="${recipeCommentPageDTO.endPage} < ${recipeCommentPageDTO.totalPage}" class="page-link" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp_seq}, rcp_sort=${recipeCommentPageDTO.rcp_sort}, cate_seq=${recipeCommentPageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey}, commentCurrentPage=${recipeCommentPageDTO.startPage + recipeCommentPageDTO.blockPage})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+                <a th:if="${recipeCommentPageDTO.endPage} == ${recipeCommentPageDTO.totalPage}" class="page-link" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
@@ -192,35 +215,41 @@
     }
 
     scrapBtn.onclick = function(){
-        if($("#scrapOrNot").val() == 1){
-            $("#scraps").attr('value', $("#scraps").val() * 1 - 1);
-            $("#scraps2").text($("#scraps").val());
-            $("#scrapOrNot").attr('value', 0);
-            scrapBtn.setAttribute('style', 'color:gray;');
-        }else{
-            $("#scraps").attr('value', $("#scraps").val() * 1 + 1);
-            $("#scraps2").text($("#scraps").val());
-            $("#scrapOrNot").attr('value', 1);
-            scrapBtn.setAttribute('style', 'color:red;');
-        }
         $.ajax({
             type: 'post',
             url: '/recipe/scrap',
 			data: scrapData,
 			success : function(data) {
 				console.log("변경 성공");
+            if($("#scrapOrNot").val() == 1){
+                $("#scraps").attr('value', $("#scraps").val() * 1 - 1);
+                $("#scraps2").text($("#scraps").val());
+                $("#scrapOrNot").attr('value', 0);
+                scrapBtn.setAttribute('style', 'color:gray;');
+            }else{
+                $("#scraps").attr('value', $("#scraps").val() * 1 + 1);
+                $("#scraps2").text($("#scraps").val());
+                $("#scrapOrNot").attr('value', 1);
+                scrapBtn.setAttribute('style', 'color:red;');
+            }
+			},
+			error : function(data) {
+			    $('#needLoginBtn').click();
 			}
         })
     };
 
     reportBtn.onclick = function(){
-        $("#report1").parent().hide();
         $.ajax({
             type: 'post',
             url: '/recipe/report',
 			data: scrapData,
 			success : function(data) {
 				console.log("신고 성공");
+				$("#report1").parent().hide();
+			},
+			error : function(data) {
+			    $('#needLoginBtn').click();
 			}
         })
     };

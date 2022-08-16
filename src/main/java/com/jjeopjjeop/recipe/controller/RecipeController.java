@@ -132,7 +132,7 @@ public class RecipeController {
         if(totalComment>0){
             commentCurrentPage = Math.max(recipeCommentPageDTO.getCommentCurrentPage(), 1);
             recipeCommentPageDTO = new RecipePageDTO(commentCurrentPage, totalComment, rcp_seq);
-            System.out.println(commentCurrentPage);
+            //System.out.println(commentCurrentPage);
         }
         mav.addObject("totalComment", totalComment);
         mav.addObject("commentList", commentService.listProcess(recipeCommentPageDTO));
@@ -169,16 +169,19 @@ public class RecipeController {
 
     // 레시피 작성 페이지 요청 메소드
     @GetMapping("/recipe/write")
-    public ModelAndView rcpWriteMethod(ModelAndView mav){
+    public String rcpWriteMethod(Model model, HttpSession session){
+        if(session.getAttribute("user_id") == null){
+            return "redirect:/login";
+        }
+
         RecipeDTO recipeDTO = new RecipeDTO();
 
         // 레시피 분류 목록
         List<CategoryDTO> cateList = service.cateListProcess();
 
-        mav.addObject("recipeDTO", recipeDTO);
-        mav.addObject("cateList", cateList);
-        mav.setViewName("/recipe/rcpWrite");
-        return mav;
+        model.addAttribute("recipeDTO", recipeDTO);
+        model.addAttribute("cateList", cateList);
+        return "/recipe/rcpWrite";
     }
 
     // 레시피 작성 메소드
@@ -229,13 +232,6 @@ public class RecipeController {
         }
 
         return "redirect:/recipe/list";
-    }
-
-    // 레시피-카테고리 적용 메소드
-    @ResponseBody
-    @PostMapping("/recipe/category")
-    public void rcpCateWriteMethod(@RequestBody List<String> cateArr){
-        System.out.println(cateArr);
     }
 
     // 레시피 수정 페이지 요청 메소드
