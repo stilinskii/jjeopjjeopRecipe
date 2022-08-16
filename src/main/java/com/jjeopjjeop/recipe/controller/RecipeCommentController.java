@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class RecipeCommentController {
     @Autowired
@@ -17,9 +19,9 @@ public class RecipeCommentController {
 
     @PostMapping("/recipe/comment/write")
     public String writeMethod(int rcp_seq, Integer currentPage, int rcp_sort, int cate_seq, String searchKey,
-                              RecipeCommentDTO recipeCommentDTO){
+                              HttpSession session, RecipeCommentDTO recipeCommentDTO){
         recipeCommentDTO.setRcp_seq(rcp_seq);
-        recipeCommentDTO.setUser_id("테스트");
+        recipeCommentDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
         service.writeProcess(recipeCommentDTO);
 
         return "redirect:/recipe/view/"+rcp_seq+"?rcp_sort="+rcp_sort+"&cate_seq="+cate_seq+"&currentPage="+currentPage+"&searchKey="+searchKey;

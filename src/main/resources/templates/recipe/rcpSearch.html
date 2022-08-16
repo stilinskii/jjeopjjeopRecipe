@@ -40,8 +40,7 @@
             </a>
         </div>
     </form>
-    <p class="fw-bold fs-3 text-start" th:text="${recipePageDTO.searchKey} + ' 검색 결과'"></p>
-    <hr />
+    <p class="fw-bold fs-3 text-start" th:text="'《 ' + ${recipePageDTO.searchKey} + ' 》 검색 결과'"></p>
     <div class="rcp_list">
         * 분류를 선택하여 상세검색을 해보세요!
         <div class="cate_box rounded">
@@ -72,24 +71,6 @@
                 </a>
                 </span>
             </p>
-            <select name="rcp_time" id="rcp_time">
-                <option value="volvo">소요시간</option>
-                <option value="saab">10분</option>
-                <option value="mercedes">1시간</option>
-                <option value="audi">2시간</option>
-            </select>
-            <select name="difficulty" id="difficulty">
-                <option value="volvo">난이도</option>
-                <option value="saab">쉬움</option>
-                <option value="mercedes">보통</option>
-                <option value="audi">어려움</option>
-            </select>
-            <select name="amount" id="amount">
-                <option value="volvo">양</option>
-                <option value="saab">1~2인분</option>
-                <option value="mercedes">3~4인분</option>
-                <option value="audi">5인분 이상</option>
-            </select>
         </div>
         <p class="fs-5 fw-bold" style="margin-bottom: 0;" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
         <hr />
@@ -145,7 +126,7 @@
             </ul>
         </nav>
         <div class="d-grid col-4 mx-auto">
-            <a th:href="@{/recipe/write}" class="btn btn-warning">
+            <a th:href="@{/recipe/write}" class="btn btn-warning" style="color:#fff;">
                 새 레시피 등록하기
             </a>
         </div>

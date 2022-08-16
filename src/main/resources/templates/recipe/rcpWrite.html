@@ -18,6 +18,7 @@
 <main class="custom container">
 <p class="fw-bold fs-2 text-start">새 레시피 등록하기</p>
     <form action="" th:object="${recipeDTO}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
     <div class="row" style="margin-bottom:15px;">
         <div class="col-4 d-grid gap-2 d-md-block img_up">
             <label for="rcp_file" style="cursor:pointer;">

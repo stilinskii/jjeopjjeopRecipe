@@ -104,7 +104,6 @@ public class RecipeServiceImp implements RecipeService{
         dao.deleteCate(rcp_seq);
         dao.deleteManual(rcp_seq);
         dao.delete(rcp_seq);
-
     }
 
     //heyeong

@@ -61,7 +61,7 @@
     </div>
     <!-- Modal// -->
     <span class="fw-bold fs-2 text-start" th:text="${rcp.rcp_name}"></span>
-    <span class="upsideBtn text-end">
+    <span th:if="${user_id} == ${rcp.user_id}" class="upsideBtn text-end">
         <button class="btn btn-primary">글수정</button>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">글삭제</button>
     </span>
@@ -126,10 +126,11 @@
     <form action="#" th:action="@{/recipe/comment/write(rcp_sort=${rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey})}" method="post">
         <div class="row" style="margin-bottom: 20px;">
             <div class="col-10">
+                <input type="hidden" name="user_id" th:value="${user_id}">
                 <textarea class="form-control" name="comment_txt" style="height: 100%;" placeholder="내용을 입력해주세요."></textarea>
             </div>
             <div class="col-2">
-                <button type="submit" class="btn btn-warning" style="width: 100%; height: 100%;">덧글쓰기</button>
+                <button type="submit" class="btn btn-warning" style="width: 100%; height: 100%; color: #fff;">덧글쓰기</button>
             </div>
             <input class="form-control" type="hidden" name="rcp_seq" th:value="${rcp.rcp_seq}" width="500px">
         </div>
@@ -142,9 +143,9 @@
                 <span>&nbsp&nbsp</span>
                 <span th:text="신고" style="color: red;"></span>
                 <span>&nbsp&nbsp</span>
-                <span th:text="수정" style="color: blue;"></span>
+                <span th:if="${user_id} == ${comment.user_id}" th:text="수정" style="color: blue;"></span>
                 <span>&nbsp&nbsp</span>
-                <a th:href="@{/recipe/comment/delete(rcp_sort=${rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey}, rcp_seq=${rcp_seq}, co_rcp_seq=${comment.co_rcp_seq})}"><span th:text="삭제"></span></a>
+                <a th:href="@{/recipe/comment/delete(rcp_sort=${rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey}, rcp_seq=${rcp_seq}, co_rcp_seq=${comment.co_rcp_seq})}"><span th:if="${user_id} == ${comment.user_id}" th:text="삭제"></span></a>
                 <br/>
                 <span th:text="${comment.comment_txt}">덧글 내용</span>
             </p>
@@ -177,10 +178,11 @@
 <script>
     var scraps = $("#scraps").val();
     var scrapBtn = document.getElementById("scrapBtn");
+    var user_id = '<%=(String)session.getAttribute("uid")%>';
 
     var scrapData = {
         "rcp_seq": $("#rcp_seq").val(),
-        "user_id": "테스트"
+        "user_id": user_id
         };
 
     if($("#scrapOrNot").val() > 0){

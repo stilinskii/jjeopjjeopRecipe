@@ -16,6 +16,8 @@
   <body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
+  <input type="hidden" th:value="${pDto.currentPage}">
+  <input type="hidden" th:value="${pDto.cate_seq}">
   <main class="custom container">
     <form action="/recipe/search">
       <div class="input-group mb-3 rounded">
@@ -96,30 +98,6 @@
             </a>
           </span>
           </p>
-          <select name="rcp_time" id="rcp_time">
-            <option value="">소요시간</option>
-            <option value="10분 이내">10분 이내</option>
-            <option value="20분 이내">20분 이내</option>
-            <option value="30분 이내">30분 이내</option>
-            <option value="1시간 이내">1시간 이내</option>
-            <option value="2시간 이내">2시간 이내</option>
-            <option value="2시간 이상">2시간 이상</option>
-          </select>
-          </select>
-          <select name="difficulty" id="difficulty">
-            <option value="">난이도</option>
-            <option value="쉬움">쉬움</option>
-            <option value="보통">보통</option>
-            <option value="어려움">어려움</option>
-          </select>
-          <select name="amount" id="amount">
-            <option value="">양</option>
-            <option value="1인분">1인분</option>
-            <option value="2인분">2인분</option>
-            <option value="3인분">3인분</option>
-            <option value="4인분">4인분</option>
-            <option value="5인분 이상">5인분 이상</option>
-          </select>
         </div>
         <p class="fs-5 fw-bold" style="margin-bottom: 0" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
         <hr />
@@ -181,8 +159,6 @@
           </a>
         </div>
       </div>
-    <input type="text" th:value="${pDto.currentPage}">
-    <input type="text" th:value="${pDto.cate_seq}">
   </main>
   <script>
     $('#rcp_sort').change(function(){

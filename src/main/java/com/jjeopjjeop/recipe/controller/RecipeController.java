@@ -104,22 +104,23 @@ public class RecipeController {
     public ModelAndView rcpViewMethod(@PathVariable("rcp_seq") Integer rcp_seq,
                                       @RequestParam(value="currentPage", required=false, defaultValue = "1") Integer currentPage,
                                       @RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
-                                      RecipePageDTO recipeCommentPageDTO, ModelAndView mav){
+                                      RecipePageDTO recipeCommentPageDTO, HttpSession session, ModelAndView mav){
         // 레시피 본문 내용
         mav.addObject("rcp", service.contentProcess(rcp_seq));
         mav.addObject("currentPage", currentPage);
         mav.addObject("rcp_sort", rcp_sort);
         mav.addObject("cate_seq", recipeCommentPageDTO.getCate_seq());
+        mav.addObject("user_id", String.valueOf(session.getAttribute("user_id")));
 
         // 스크랩 체크
         UserScrapDTO userScrapDTO = new UserScrapDTO();
-        userScrapDTO.setUser_id("테스트");
+        userScrapDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
         userScrapDTO.setRcp_seq(rcp_seq);
         mav.addObject("scrapOrNot", service.chkScrapProcess(userScrapDTO));
 
         // 신고 체크
         ReportRecipeDTO reportRecipeDTO = new ReportRecipeDTO();
-        reportRecipeDTO.setUser_id("테스트");
+        reportRecipeDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
         reportRecipeDTO.setRcp_seq(rcp_seq);
         mav.addObject("reportOrNot", service.chkReportProcess(reportRecipeDTO));
 
@@ -145,9 +146,10 @@ public class RecipeController {
     @ResponseBody
     @PostMapping("/recipe/scrap")
     public void rcpScrapMethod(@RequestParam String rcp_seq,
-                               @RequestParam String user_id){
+                               @RequestParam String user_id,
+                               HttpSession session){
         UserScrapDTO userScrapDTO = new UserScrapDTO();
-        userScrapDTO.setUser_id("테스트");
+        userScrapDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
         userScrapDTO.setRcp_seq(Integer.parseInt(rcp_seq));
         service.scrapProcess(userScrapDTO);
         //mav.addObject("rcp_seq", rcp_seq);
@@ -157,9 +159,10 @@ public class RecipeController {
     @ResponseBody
     @PostMapping("/recipe/report")
     public void rcpReportMethod(@RequestParam String rcp_seq,
-                                @RequestParam String user_id){
+                                @RequestParam String user_id,
+                                HttpSession session){
         ReportRecipeDTO reportRecipeDTO = new ReportRecipeDTO();
-        reportRecipeDTO.setUser_id("테스트");
+        reportRecipeDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
         reportRecipeDTO.setRcp_seq(Integer.parseInt(rcp_seq));
         service.reportProcess(reportRecipeDTO);
     }
@@ -182,7 +185,10 @@ public class RecipeController {
     @PostMapping("/recipe/write")
     public String rcpWriteProMethod(@Validated @ModelAttribute("recipeDTO") RecipeDTO recipeDTO, BindingResult bindingResult, String[] manual_txt,
                                     @RequestParam(value="cateArr", required=false) List<String> cateArr, Model model,
-                                    MultipartFile[] upload_manual, HttpServletRequest request){
+                                    MultipartFile[] upload_manual, HttpServletRequest request, HttpSession session){
+        // user_id 설정
+        recipeDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
+
         // 유효성 검사
         if(bindingResult.hasErrors()){
             // 레시피 분류 목록
@@ -202,7 +208,6 @@ public class RecipeController {
         }
 
         service.writeProcess(recipeDTO);
-        // validation!!
 
         // 요리과정 작성
         for(int i=0; i<manual_txt.length; i++){
@@ -218,7 +223,6 @@ public class RecipeController {
         }
 
         // 카테고리 작성
-        System.out.println(cateArr);
         for(String data : cateArr){
             int num = Integer.parseInt(data);
             service.writeCProcess(num);
@@ -253,35 +257,6 @@ public class RecipeController {
         service.deleteProcess(rcp_seq);
 
         return "redirect:/recipe/list";
-    }
-
-    //////////// 레시피 댓글 관리 ////////////
-    // 레시피 댓글 작성 메소드
-    @PostMapping("/recipe/comment")
-    public String rcpCoWriteMethod(){
-
-        return "redirect:/recipe/view";
-    }
-
-    // 레시피 댓글 수정 메소드
-    @PutMapping("/recipe/comment/update")
-    public String rcpCoUpdateMethod(){
-
-        return "redirect:/recipe/view";
-    }
-
-    // 레시피 댓글 삭제 메소드
-    @DeleteMapping("/recipe/comment/delete")
-    public String rcpCoDeleteMethod(){
-
-        return "redirect:/recipe/view";
-    }
-
-    // 레시피 댓글 신고 메소드
-    @PutMapping("/recipe/comment/report")
-    public String rcpCoReportMethod(){
-
-        return "redirect:/recipe/view";
     }
 
     // 첨부파일 처리를 위한 메소드
