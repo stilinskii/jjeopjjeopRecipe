@@ -1,9 +1,7 @@
 
 package com.jjeopjjeop.recipe.controller;
 
-import com.jjeopjjeop.recipe.dto.PageDTO;
-import com.jjeopjjeop.recipe.dto.ProduceDTO;
-import com.jjeopjjeop.recipe.dto.ReviewDTO;
+import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.service.ProduceService;
 import java.util.List;
 
@@ -20,8 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 @Controller
 public class ProduceController {
-    @Autowired
-    private PageDTO pdto;
 
     @Autowired
     private ProduceService produceService;
@@ -34,11 +30,13 @@ public class ProduceController {
     public ProduceController() {
     }
 
+    //판매글 작성폼 불러오기
     @GetMapping({"/produce/write"})
     public String produceWriteForm() {
         return "/produce/produceWrite";
     }
 
+    //판매글 작성 반영
     @PostMapping({"/produce/write"})
     public String produceWrite(ProduceDTO produceDTO, MultipartFile file) throws Exception{
         log.info("dto={}", produceDTO.getUser_id());
@@ -46,33 +44,32 @@ public class ProduceController {
         produceService.writeProcess(produceDTO, file);
         return "redirect:/produce/list";
     }
-
+    //////////////////////////////////////////////////////////////////////////////////////////
     private int currentPage;
 
-    @GetMapping({"/produce/list"})
-    public ModelAndView produceList(ModelAndView mav, PageDTO pageDTO) {
+    //모든 판매글 조회
+    @GetMapping("/produce/list")
+    public ModelAndView produceList(ModelAndView mav, RecipePageDTO recipePageDTO) {
+        // 전체 레코드 수
+        int totalRecord = produceService.countProcess();
 
-        int totalRecord = produceService.produceCountProcess();
+        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
+            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
+            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
 
-        //현재페이지 가지고 오기.
-        if(totalRecord >= 1) {//게시글이 하나이상있어야 페이지 네비게이션의 의미가 있지.
-            if(pageDTO.getCurrentPage() == 0) {
-                currentPage = 1; //게시판에 들어오자마자 아무것도 안누르고 바로 누르면 파라미터(currentPage)는 0이다. (<a href="list.do">게시판</a>) 그래서 여기서 1로 바꿔줌.
-            }else {
-                currentPage = pageDTO.getCurrentPage(); //게시판의 페이지네비게이션 누르면 currentPage가 정해짐. <a href="list.do"?currentPage=이값을받아옴>게시판</a>
-            }
-            pdto = new PageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
-            List<ProduceDTO> list = produceService.produceListProcess(pageDTO);
-            mav.addObject("list", list);
-
-            mav.addObject("pageDTO", pdto); //startPage, endPage구하기..?
+            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
         }
 
-
+        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
+        List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
+        mav.addObject("list", list);  //판매글 리스트 넘겨주기
+        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
         mav.setViewName("/produce/produceList");
         return mav;
     }
+    //////////////////////////////////////////////////////////////////////////////////////
 
+    //필터링한 판매글 조회
     @GetMapping({"/produce/list/{type}"})
     public ModelAndView produceListType(@PathVariable("type") int type, ModelAndView mav) {
         List<ProduceDTO> list = produceService.produceListTypeProcess(type);
@@ -81,12 +78,14 @@ public class ProduceController {
         return mav;
     }
 
+    //판매글 삭제
     @GetMapping({"/produce/delete/{produceNum}"})
     public String produceDelete(@PathVariable("produceNum") int produce_num) {
         produceService.produceDeleteProcess(produce_num);
         return "redirect:/produce/list";
     }
 
+    //판매글 상세보기
     @GetMapping({"/produce/view/{produceNum}"})
     public ModelAndView produceView(@PathVariable("produceNum") int produce_num, ModelAndView mav) {
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num);
@@ -94,13 +93,14 @@ public class ProduceController {
         mav.addObject("produceDTO", produceDTO);
         mav.setViewName("/produce/produceView");
 
-       //리뷰
+        //리뷰
         List<ReviewDTO> list = reviewService.reviewListProcess(produce_num);
         mav.addObject("list", list);
 
         return mav;
     }
 
+    //판매글 수정폼
     @GetMapping({"/produce/update/{produceNum}"})
     public ModelAndView produceUpdateForm(@PathVariable("produceNum") int produce_num, ModelAndView mav) {
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num);
@@ -109,6 +109,7 @@ public class ProduceController {
         return mav;
     }
 
+    //판매글 수정 반영
     @PostMapping({"/produce/update/{produceNum}"})
     public String produceUpdate(@PathVariable("produceNum") int produce_num, ProduceDTO produceDTO) {
         produceService.produceUpdateProcess(produceDTO);

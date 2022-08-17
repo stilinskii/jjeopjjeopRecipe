@@ -4,27 +4,86 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.jjeopjjeop.recipe.dao.RecipeDAO">
-    <select id="count" resultType="int">
+<!--    <select id="count" resultType="int">-->
+<!--        SELECT count(*) FROM recipe-->
+<!--    </select>-->
+
+<!--    <select id="list" parameterType="RecipePageDTO" resultType="RecipeDTO">-->
+<!--        SELECT rcp_li.* FROM-->
+<!--            (SELECT rcp.*, rownum rm FROM-->
+<!--                (SELECT * FROM recipe ORDER BY-->
+<!--                <choose>-->
+<!--                    <when test="rcp_sort == 0">-->
+<!--                        rcp_seq DESC-->
+<!--                    </when>-->
+<!--                    <when test="rcp_sort == 1">-->
+<!--                        rcp_seq-->
+<!--                    </when>-->
+<!--                    <when test="rcp_sort == 2">-->
+<!--                        scrap DESC-->
+<!--                    </when>-->
+<!--                    <when test="rcp_sort == 3">-->
+<!--                        rcp_viewcnt DESC-->
+<!--                    </when>-->
+<!--                </choose>-->
+<!--                    )rcp)rcp_li-->
+<!--        <![CDATA[-->
+<!--        WHERE rm >= #{startRow} AND rm <= #{endRow}-->
+<!--        ]]>-->
+<!--    </select>-->
+
+    <select id="count" parameterType="int" resultType="int">
         SELECT count(*) FROM recipe
+        <if test="cate_seq != 0">
+            WHERE rcp_seq IN (
+            SELECT rcp_seq FROM cate_rcp
+            WHERE cate_seq IN #{cate_seq}
+            )
+        </if>
     </select>
 
     <select id="list" parameterType="RecipePageDTO" resultType="RecipeDTO">
-        <![CDATA[
         SELECT rcp_li.* FROM
-            (SELECT rcp.*, rownum rm FROM
-                (SELECT * FROM recipe
-                ORDER BY rcp_seq DESC)rcp)rcp_li
+        (SELECT rcp.*, rownum rm FROM
+        (SELECT * FROM recipe
+        <if test="cate_seq != 0">
+        WHERE rcp_seq IN (
+        SELECT rcp_seq FROM cate_rcp
+        WHERE cate_seq IN #{cate_seq}
+        )
+        </if>
+        ORDER BY
+        <choose>
+            <when test="rcp_sort == 0">
+                rcp_seq DESC
+            </when>
+            <when test="rcp_sort == 1">
+                rcp_seq
+            </when>
+            <when test="rcp_sort == 2">
+                scrap DESC
+            </when>
+            <when test="rcp_sort == 3">
+                rcp_viewcnt DESC
+            </when>
+        </choose>
+        )rcp)rcp_li
+        <![CDATA[
         WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
     </select>
 
-    <select id="searchCount" parameterType="String" resultType="int">
+    <select id="searchCount" parameterType="RecipePageDTO" resultType="int">
         SELECT count(*) FROM recipe
-        <if test="searchKey != null">
-            WHERE rcp_name LIKE '%' || #{searchKey} || '%'
-            OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
-            OR summary LIKE '%' || #{searchKey} || '%'
-            OR hash_tag LIKE '%' || #{searchKey} || '%'
+        WHERE (rcp_name LIKE '%' || #{searchKey} || '%'
+        OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
+        OR summary LIKE '%' || #{searchKey} || '%'
+        OR hash_tag LIKE '%' || #{searchKey} || '%')
+        <if test="cate_seq != 0">
+            AND rcp_seq IN (
+            SELECT rcp_seq FROM cate_rcp
+            WHERE cate_seq IN #{cate_seq}
+            )
         </if>
     </select>
 
@@ -32,15 +91,34 @@
         SELECT rcp_li.* FROM
         (SELECT rcp.*, rownum rm FROM
         (SELECT * FROM recipe
-        <if test="searchKey != null">
-            WHERE rcp_name LIKE '%' || #{searchKey} || '%'
+            WHERE (rcp_name LIKE '%' || #{searchKey} || '%'
             OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
             OR summary LIKE '%' || #{searchKey} || '%'
-            OR hash_tag LIKE '%' || #{searchKey} || '%'
+            OR hash_tag LIKE '%' || #{searchKey} || '%')
+        <if test="cate_seq != 0">
+            AND rcp_seq IN (
+            SELECT rcp_seq FROM cate_rcp
+            WHERE cate_seq IN #{cate_seq}
+            )
         </if>
+                ORDER BY
+        <choose>
+            <when test="rcp_sort == 0">
+                rcp_seq DESC
+            </when>
+            <when test="rcp_sort == 1">
+                rcp_seq
+            </when>
+            <when test="rcp_sort == 2">
+                scrap DESC
+            </when>
+            <when test="rcp_sort == 3">
+                rcp_viewcnt DESC
+            </when>
+        </choose>
         <![CDATA[
-                ORDER BY rcp_seq DESC)rcp)rcp_li
-        WHERE rm >= #{startRow} AND rm <= #{endRow}
+            )rcp)rcp_li
+            WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
     </select>
 
@@ -55,6 +133,7 @@
 
     <select id="cateList" resultType="CategoryDTO">
         SELECT * FROM category
+        ORDER BY cate_seq
     </select>
 
     <select id="content" parameterType="int" resultType="RecipeDTO">
@@ -122,6 +201,11 @@
         , #{manual_txt, jdbcType=VARCHAR}, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR})
     </insert>
 
+    <insert id="writeCate" parameterType="int">
+        INSERT INTO cate_rcp(cate_seq, rcp_seq)
+        VALUES(#{cate_seq}, (SELECT max(rcp_seq) FROM recipe))
+    </insert>
+
     <delete id="delete" parameterType="int">
         DELETE FROM recipe
         WHERE rcp_seq=#{num}
@@ -131,4 +215,13 @@
         DELETE FROM manual
         WHERE rcp_seq=#{num}
     </delete>
+
+    <delete id="deleteCate" parameterType="int">
+        DELETE FROM cate_rcp
+        WHERE rcp_seq=#{num}
+    </delete>
+
+    <select id="searchListByKeyword" parameterType="String" resultType="RecipeDTO">
+        SELECT * FROM recipe WHERE rcp_name LIKE '%' || #{searchKey} || '%'
+    </select>
 </mapper>

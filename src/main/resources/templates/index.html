@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/fragments/head('쩝쩝박사')">
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,8 +25,19 @@
       href="/static/css/style.css"
       th:href="@{/css/style.css}"
     />
+    <link
+      rel="stylesheet"
+      href="/static/css/index.css"
+      th:href="@{/css/index.css}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="/static/css/recipe.css"
+      th:href="@{/css/recipe.css}"
+    />
   </head>
-  <body>
+  <body class="bg-light">
     <nav
       class="navbar navbar-expand-lg navbar-dark bg-dark py-3"
       aria-label="Eighth navbar example"
@@ -78,10 +89,234 @@
         </div>
       </div>
     </nav>
+    <div class="hero-image">
+      <div class="hero-text">
+        <h1 class="m-4 pb-3">쩝쩝박사</h1>
+        <form class="row g-3">
+          <div class="col-auto">
+            <label for="inputPassword2" class="visually-hidden">search</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputPassword2"
+              placeholder="레시피를 검색해보세요."
+            />
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">검색</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <main class="container">
+      <!-- ==============레시피 분류=============== -->
+      <div class="recipe-cat bg-white">
+        <h5 class="title">레시피 분류</h5>
+        <div>
+          <ul class="d-flex justify-content-around">
+            <li>밥</li>
+            <li>반 찬</li>
+            <li>디저트</li>
+            <li>1</li>
+            <li>1</li>
+          </ul>
+        </div>
+      </div>
+      <!-- ===============안기레시피================ -->
+      <div class="recipe-popular bg-white">
+        <div class="d-flex title">
+          <h5 class="me-auto">인기레시피</h5>
+          <!-- 스크랩 순으로 정렬된 레시피 페이지로 이동 -->
+          <h6>> 더보기</h6>
+        </div>
+        <div class="row">
+          <div th:each="rcp : ${rcpList}" class="col-3">
+            <a
+              th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, currentPage=${pDto.currentPage})}"
+            >
+              <img
+                th:if="${not #strings.isEmpty(rcp.filename)}"
+                th:src="@{${rcp.filepath}+${rcp.filename}}"
+                width="250px"
+                height="180px"
+                class="rounded float"
+              />
+              <img
+                th:if="${#strings.isEmpty(rcp.filename)}"
+                src="/media/images/rcp_mainimg.png"
+                width="250px"
+                height="180px"
+                class="rounded float"
+              />
+              <p th:text="${rcp.rcp_name}" class="text-start fw-bold">
+                레시피 제목
+              </p>
+            </a>
+            <p class="d-flex justify-content-between">
+              <span th:text="${rcp.user_id}" class="left">닉네임</span
+              ><span th:text="'♥'+${rcp.scrap}" class="right mx-2"
+                >스크랩수</span
+              >
+            </p>
+          </div>
+          <div class="col-3">
+            <img width="190px" height="150px" class="rounded float" />
+            <img
+              src="/media/images/rcp_mainimg.png"
+              width="190px"
+              height="150px"
+              class="rounded float"
+            />
+            <p class="text-start fw-bold">레시피 제목</p>
+
+            <p class="d-flex justify-content-between">
+              <span class="left">닉네임</span
+              ><span class="right mx-2">스크랩수</span>
+            </p>
+          </div>
+          <div class="col-3">
+            <img width="190px" height="150px" class="rounded float" />
+            <img
+              src="/media/images/rcp_mainimg.png"
+              width="190px"
+              height="150px"
+              class="rounded float"
+            />
+            <p class="text-start fw-bold">레시피 제목</p>
+
+            <p class="d-flex justify-content-between">
+              <span class="left">닉네임</span
+              ><span class="right mx-2">스크랩수</span>
+            </p>
+          </div>
+          <div class="col-3">
+            <img width="190px" height="150px" class="rounded float" />
+            <img
+              src="/media/images/rcp_mainimg.png"
+              width="190px"
+              height="150px"
+              class="rounded float"
+            />
+            <p class="text-start fw-bold">레시피 제목</p>
+
+            <p class="d-flex justify-content-between">
+              <span class="left">닉네임</span
+              ><span class="right mx-2">스크랩수</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- ================인기상품==================== -->
+      <div class="shopping-popular bg-white mb-5">
+        <div class="d-flex title">
+          <h5 class="me-auto">인기 상품</h5>
+          <!-- 품절임박한 상품 순으로 정렬된 레시피 페이지로 이동 -->
+          <h6>> 더보기</h6>
+        </div>
+        <div class="row">
+          <div
+            class="col-3 mb-4"
+            data-aos="fade-up"
+            th:each="produce : ${list}"
+          >
+            <div
+              class="block-4 text-center border"
+              th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"
+              style="cursor: pointer"
+            >
+              <figure class="block-4-image">
+                <!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
+                <a
+                  th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}"
+                >
+                  <img
+                    class="img-fluid"
+                    th:src="${produce.produce_image_path}"
+                    alt="상품이미지"
+                  />
+                </a>
+              </figure>
+              <div class="block-4-text p-4">
+                <h3
+                  class="text-dark font-weight-bold"
+                  th:text="${produce.produce_name}"
+                >
+                  상품명
+                </h3>
+                <p class="mb-0 text-secondary" th:text="${produce.user_id}">
+                  판매자
+                </p>
+                <p
+                  class="font-weight-bold"
+                  data-th-text="${#numbers.formatInteger(produce.price, 3, 'COMMA') + '원'}"
+                >
+                  상품가격
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-3 mb-4" data-aos="fade-up">
+            <div class="block-4 text-center border" style="cursor: pointer">
+              <figure class="block-4-image">
+                <!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
+
+                <img class="img-fluid" alt="상품이미지" />
+              </figure>
+              <div class="block-4-text p-4">
+                <h3 class="text-dark font-weight-bold">상품명</h3>
+                <p class="mb-0 text-secondary">판매자</p>
+                <p class="font-weight-bold">상품가격</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-3 mb-4" data-aos="fade-up">
+            <div class="block-4 text-center border" style="cursor: pointer">
+              <figure class="block-4-image">
+                <!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
+
+                <img class="img-fluid" alt="상품이미지" />
+              </figure>
+              <div class="block-4-text p-4">
+                <h3 class="text-dark font-weight-bold">상품명</h3>
+                <p class="mb-0 text-secondary">판매자</p>
+                <p class="font-weight-bold">상품가격</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-3 mb-4" data-aos="fade-up">
+            <div class="block-4 text-center border" style="cursor: pointer">
+              <figure class="block-4-image">
+                <!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
+
+                <img class="img-fluid" alt="상품이미지" />
+              </figure>
+              <div class="block-4-text p-4">
+                <h3 class="text-dark font-weight-bold">상품명</h3>
+                <p class="mb-0 text-secondary">판매자</p>
+                <p class="font-weight-bold">상품가격</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="blog-footer">
+      <hr />
+      <p>
+        Blog template built for
+        <a href="https://getbootstrap.com/">Bootstrap</a> by
+        <a href="https://twitter.com/mdo">@mdo</a>.
+      </p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+    </footer>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </body>
 </html>

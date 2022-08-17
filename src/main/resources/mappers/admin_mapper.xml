@@ -36,15 +36,32 @@
 <!--    </insert>-->
 
 <!--회원 목록 -->
-    <select id="UserList" parameterType="PageDTO" resultType="UserDTO">
+<!-- recipeDTO-->
+<!--    <select id="UserList" parameterType="RecipePageDTO" resultType="UserDTO">-->
+<!--        <![CDATA[-->
+<!--        SELECT rcp_li.* FROM-->
+<!--            (SELECT rcp.*, rownum rm FROM-->
+<!--                (select *-->
+<!--			from User_j)rcp)rcp_li-->
+<!--        WHERE rm >= #{startRow} AND rm <= #{endRow}-->
+<!--        ]]>-->
+<!--    </select>-->
+
+    <select id="UserList" parameterType="A_criteria" resultType="UserDTO">
         <![CDATA[
-		select* from (
-			select rownum rn, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
-			from User_j)
-			where rn >= #{startRow} and rn <= #{endRow}
+			select user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
+			from
+			(
+			   select
+			   rownum R, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
+			   from User_j
+			where rownum <= #{pageNum} * #{amount}
+		)
+		where R > (#{pageNum} -1) * #{amount}
 	]]>
 
     </select>
+
 <!-- 회원 수-->
     <select id="countUser" resultType="int">
         select count(*) from User_j
@@ -66,6 +83,37 @@
         from User_j
         where user_id = #{user_id}
     </select>
+
+<!--    미승인판매자 리스트-->
+    <select id="nSellerList" parameterType="A_criteria" resultType="SellerDTO">
+        <![CDATA[
+        SELECT user_id, business_name, registration_number, seller_phone, seller_address, approval
+        FROM
+        (
+            SELECT
+            ROWNUM R, user_id, business_name, registration_number, seller_phone, seller_address, approval
+            FROM Seller
+            WHERE ROWNUM <= #{pageNum} * #{amount}
+        )
+           WHERE R> (#{pageNum}-1) * #{amount} AND approval = 0
+        ]]>
+    </select>
+
+<!--    승인판매자 리스트-->
+    <select id="ySellerList" parameterType="A_criteria" resultType="SellerDTO">
+        <![CDATA[
+        SELECT user_id, business_name, registration_number, seller_phone, seller_address, approval
+        FROM
+        (
+            SELECT
+            ROWNUM R, user_id, business_name, registration_number, seller_phone, seller_address, approval
+            FROM Seller
+            WHERE ROWNUM <= #{pageNum} * #{amount}
+        )
+           WHERE R> (#{pageNum}-1) * #{amount} AND approval = 1
+        ]]>
+    </select>
+
 
 
 

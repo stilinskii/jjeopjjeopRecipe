@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="fragments/head('게시판')">
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <!-- bootstrap  -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <th:block th:replace="fragments/head :: links">
+      <!-- bootstrap  -->
+      <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+      />
 
-    <link
-      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-    <!-- icons -->
-    <link
-      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="/static/css/style.css"
-      th:href="@{/css/style.css}"
-    />
+      <link
+        href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+      />
+      <!-- icons -->
+      <link
+        href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+      />
+      <link
+        rel="stylesheet"
+        href="/static/css/style.css"
+        th:href="@{/css/style.css}"
+      />
+    </th:block>
     <link
       rel="stylesheet"
       href="/static/css/community.css"
@@ -45,15 +47,68 @@
           enctype="multipart/form-data"
           th:object="${community}"
         >
-
           <select th:field="*{category}" class="form-select mb-3 category">
             <option value="0">자유글</option>
-            <option value="1">레시피후기</option>
+            <option value="1" selected>레시피후기</option>
           </select>
           <div class="recipeSearch mb-3">
-            <button class="btn btn-primary">레시피 조회</button>
-          </div>
+            <hr />
+            <p class="title">레시피 선택</p>
+            <div>
+              <div class="recipeSearch-box">
+                <input type="text" class="form-control mx-3 searchInput" />
+                <button type="button" class="btn btn-primary mx-3 searchBtn">
+                  레시피 조회
+                </button>
+              </div>
+              <!-- ==========레시피 조회 결과 박스========= -->
+              <div
+                class="recipeSearh-results m-3 border border-secondary rounded recipe-box"
+              >
+                <div
+                  th:each="recipe:${recipes}"
+                  class="result d-flex justify-content-between border border-secondary m-1 rounded "
 
+                >
+                  <img
+                    src="/static/media/community/026c960a-0c41-4c2c-9388-212eff749316_ggo.png"
+                    th:src="@{${recipe.filepath}+${recipe.filename}}"
+                    width="130px"
+                    height="130px"
+                    class="m-3"
+                  />
+                  <div class="mt-3" style="width: 60%;">
+                    <p class="d-flex justify-content-between">
+                      <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${recipe.rcp_seq})}" target="_blank">
+                        <span
+                          th:text="|레시피 이름 : ${recipe.rcp_name}|"
+                        >
+                          레시피 이름 : gkdl
+                        </span>
+                      </a>
+                      <span th:text="'♥'+${recipe.scrap}" class="right">스크랩수</span>
+                    </p>
+                <p class="d-flex justify-content-between">
+                  <span th:text="|작성자: ${recipe.user_id}|" class="left">닉네임</span
+                  >
+                </p>
+                <p class="d-flex justify-content-between">
+                  <span th:text="${recipe.time}" class="left">시간</span><span th:text="${recipe.difficulty}">난이도 하</span
+                  ><span th:text="${recipe.amount}" class="right">3인분</span>
+                </p>
+              </div>
+                  <div class="mt-5 mx-3">
+                    <input type="hidden" name="" th:value="${recipe.rcp_seq}" class="recipe-id">
+                  <button type="button" class="btn btn-secondary recipe-select">선택</button>
+                </div>
+                </div>
+              </div>
+            </div>
+            <label for="" class="form-label">선택 레시피 :</label>
+            <input type="text" class="mt-4 select-value" th:field="*{rcp_seq}" readonly></input>
+            <hr />
+          </div>
+<!-- ==================================================================== -->
           <div class="mb-3">
             <input
               type="text"
@@ -61,14 +116,11 @@
               th:errorclass="is-invalid"
               placeholder="제목을 입력해주세요."
               th:field="*{title}"
-
               maxlength="30"
-
             />
             <div class="invalid-feedback" th:errors="*{title}">제목오류</div>
           </div>
           <div class="mb-3">
-
             <label for="formFileSm" class="form-label">사진첨부</label>
             <input
               class="form-control form-control-sm"
@@ -103,7 +155,11 @@
       </div>
     </main>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/static/js/community.js" th:src="@{/js/community.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script
+      src="/static/js/community_form.js"
+      th:src="@{/js/community_form.js}"
+    ></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
   </body>
 </html>

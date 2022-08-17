@@ -31,7 +31,7 @@
           <a
             class="nav-link"
             th:classappend="${title}=='shopping'? 'active'"
-            th:href="@{/shopping}"
+            th:href="@{/produce/list}"
             >쇼핑마당</a
           >
         </li>
@@ -67,7 +67,7 @@
           ></i>
         </a>
 
-        <a href="" class="login"> Login </a>
+        <a th:href="@{/login}" class="login"> Login </a>
       </div>
     </div>
   </div>

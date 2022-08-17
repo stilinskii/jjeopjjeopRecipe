@@ -1,0 +1,31 @@
+li.list-group-item {
+
+	color: black;
+	font-weight: bold;
+	font-size: 15px;
+	padding: 4px;
+	background :  #FFBE33;
+  }
+  a.nav-link {
+	color: black;
+  }
+
+  a.page-link{
+	color: black;
+	background: darkgray;
+	padding: 6px;
+  }
+
+  a.btn{
+	background-color: #FFBE33;
+  }
+
+  div.col-2{
+
+  }
+
+  img{
+  center;
+  weight:80px;
+  height:80px;
+  }

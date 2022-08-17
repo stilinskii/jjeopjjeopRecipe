@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,13 +27,19 @@ public class UserServiceImp implements UserService{
    }
 
    @Override
+   public List<UserDTO> listMyCommunity(String user_id) {
+      return userDAO.showMyCommunity(user_id);
+   }
+
+   @Override
    public int addUser(UserDTO userDTO) {
       return userDAO.insertUser(userDTO);
    }
 
+   @Transactional
    @Override
-   public int removeUser(String user_id) {
-      return 0;
+   public int removeUser(UserDTO userDTO) {
+      return userDAO.deleteUser(userDTO);
    }
 
    @Override
@@ -41,9 +48,8 @@ public class UserServiceImp implements UserService{
    }
 
    @Override
-   public String findId(String username, String email) {
-      String user_id = userDAO.findId(username, email);
-      return user_id;
+   public UserDTO findId(UserDTO userDTO) {
+      return userDAO.findId(userDTO);
    }
 
    @Override
@@ -92,6 +98,25 @@ public class UserServiceImp implements UserService{
       message.setSubject("쩝쩝박사 비밀번호 찾기 안내 메일입니다.");
       message.setText("비밀번호는 "+ str +"입니다.");
       mailSender.send(message);
+   }
+
+   @Override
+   public UserDTO readMypage(String user_id) {
+      return userDAO.readMypage(user_id);
+   }
+
+   @Transactional
+   @Override
+   public void updateMypage(UserDTO userDTO) {
+      userDAO.updateMypage(userDTO);
+   }
+
+   @Override
+   public boolean checkPassword(String user_id, String password) {
+      boolean result = false;
+      int count = userDAO.checkPassword(user_id, password);
+      if(count == 1) result = true;
+      return result;
    }
 
 }

@@ -2,7 +2,16 @@ package com.jjeopjjeop.recipe.mapper;
 
 import com.jjeopjjeop.recipe.dto.*;
 
+
 import org.apache.ibatis.annotations.*;
+
+import com.jjeopjjeop.recipe.dto.CommunityDTO;
+import com.jjeopjjeop.recipe.dto.SellerDTO;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
 
 import java.util.List;
 
@@ -30,9 +39,17 @@ public interface AdminMapper {
     void delUser(String user_id);
 
 
+    //판매자 신청자 카운트
+    @Select("select count(*) from Seller where approval = 0")
+    int countNseller();
+
     //판매자 신청자 목록
-    @Select("select * from Seller where approval = 0")
-    List<SellerDTO> listNSeller();
+//    @Select("select * from Seller where approval = 0")
+//    List<SellerDTO> listNSeller();
+
+    //판매자 승인완료 카운트
+    @Select("select count(*) from Seller where approval = 1")
+    int countYseller();
 
     //판매자 승인완료 목록
     @Select("select * from Seller where approval = 1")
@@ -49,6 +66,13 @@ public interface AdminMapper {
 
     @Update("update User_j set usertype = 2 where user_id=#{user_id}")
     void updateUsertype(String user_id);
+
+    //판매자 승인취소
+    @Update("update Seller set approval = 0 where user_id=#{user_id}")
+    void cancelSeller(String user_id);
+
+    @Update("update User_j set usertype = 1 where user_id = #{user_id}")
+    void cancelUsertype(String user_id);
 
     //게시판 신고순으로 게시판 목록 조회
     @Select("select * from CommunityBoard order by report desc")

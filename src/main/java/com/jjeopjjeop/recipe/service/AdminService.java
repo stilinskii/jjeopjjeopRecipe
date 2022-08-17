@@ -1,8 +1,15 @@
 package com.jjeopjjeop.recipe.service;
 
 
+
 import com.jjeopjjeop.recipe.dao.AdminDAO;
 import com.jjeopjjeop.recipe.dto.*;
+
+import com.jjeopjjeop.recipe.dto.A_userDTO;
+import com.jjeopjjeop.recipe.dto.AdminDTO;
+import com.jjeopjjeop.recipe.dto.CommunityDTO;
+import com.jjeopjjeop.recipe.dto.SellerDTO;
+
 import com.jjeopjjeop.recipe.mapper.AdminMapper;
 import com.jjeopjjeop.recipe.mapper.CommunityMapper;
 import com.jjeopjjeop.recipe.mapper.SellerMapper;
@@ -35,12 +42,14 @@ public class AdminService {
     }
 
     //회원리스트 가져오기
-//    public List<A_userDTO> listUser(A_criteria cri){
-//        return adminMapper.listUser_j(cri);
+//    public List<UserDTO> UserList(A_criteria cri){
+//        return adminDAO.UserList(cri);
 //    }// adminmapper
-    public List<UserDTO> UserList(PageDTO pageDTO){
-        return adminDAO.UserList(pageDTO);
+    public List<UserDTO> UserList(A_criteria cri){
+        return adminDAO.UserList(cri);
     }
+
+
 
     //회원상세
     public UserDTO detailUser(String user_id){
@@ -52,14 +61,32 @@ public class AdminService {
         adminMapper.delUser(user_id);
     }
 
+    //미승인 판매자 카운트
+    public int countNseller(){
+        return adminMapper.countNseller();
+    }
+
     //미승인 판매자리스트
-    public List<SellerDTO> listNSeller(){
-        return adminMapper.listNSeller();
+//    public List<SellerDTO> listNSeller(){
+//        return adminMapper.listNSeller();
+//    }
+
+    public List<SellerDTO> nSellerList(A_criteria cri){
+        return adminDAO.nSellerList(cri);
+    }
+
+    //승인 판매자 카운트
+    public int countYseller(){
+        return adminMapper.countYseller();
     }
 
     //승인 판매자리스트
-    public  List<SellerDTO> listSeller(){
-        return adminMapper.listSeller();
+//    public  List<SellerDTO> listSeller(){
+//        return adminMapper.listSeller();
+//    }
+
+    public List<SellerDTO> ySellerList(A_criteria cri){
+        return adminDAO.ySellerList(cri);
     }
 
 
@@ -67,6 +94,12 @@ public class AdminService {
     public void approSeller(String user_id){
         adminMapper.updateSeller(user_id);
         adminMapper.updateUsertype(user_id);
+    }
+
+    //판매자 승인취소
+    public void cancelSeller(String user_id){
+        adminMapper.cancelSeller(user_id);
+        adminMapper.cancelUsertype(user_id);
     }
 
     //신고순 레시피 리스트

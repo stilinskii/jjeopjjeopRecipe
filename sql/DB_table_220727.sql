@@ -483,3 +483,67 @@ CREATE SEQUENCE pay_num_seq
   INCREMENT BY 1
   NOCACHE
   NOCYCLE;
+
+--20220804 테이블 업데이트---------------------------------------------------
+ALTER TABLE produce_review DROP COLUMN produce_name;
+--레시피 테이블 시간 컬럼 사이즈 변경
+ALTER TABLE recipe MODIFY (time VARCHAR2(20)) ;
+
+--카테고리 테이블 카테고리 분류 컬럼 추가
+ALTER TABLE category ADD cate_cate NUMBER;
+
+--레시피 테이블 조회수 컬럼 추가
+ALTER TABLE recipe ADD rcp_viewcnt NUMBER DEFAULT 0;
+
+--레시피 테이블 재료 컬럼 추가
+ALTER TABLE recipe ADD rcp_parts_dtls VARCHAR2(3000);
+
+--레시피 덧글 테이블 내용 컬럼 추가
+ALTER TABLE comment_rcp ADD comment_txt VARCHAR2(3000);
+
+--레시피 덧글 테이블 참조덧글번호 컬럼 변경
+ALTER TABLE comment_rcp MODIFY re_co_seq null;
+
+--유저 신고수 테이블 추가
+DROP TABLE Report_rcp;
+
+CREATE TABLE Report_rcp (
+   user_id   VARCHAR2(10)      NOT NULL,
+   rcp_seq   NUMBER      NOT NULL,
+   scr_date   DATE      NULL,
+    CONSTRAINT PK_REPORT_RCP PRIMARY KEY (
+   user_id,
+   rcp_seq
+)
+);
+
+ALTER TABLE Report_rcp ADD CONSTRAINT FK_User_j_TO_Report_rcp_1 FOREIGN KEY (
+   user_id
+)
+REFERENCES User_j (
+   user_id
+);
+
+ALTER TABLE Report_rcp ADD CONSTRAINT FK_Recipe_TO_Report_rcp_1 FOREIGN KEY (
+   rcp_seq
+)
+REFERENCES Recipe (
+   rcp_seq
+);
+
+ALTER TABLE communityboard ADD read_count NUMBER DEFAULT 0;
+ALTER TABLE communityboard ADD like_count NUMBER DEFAULT 0;
+
+CREATE SEQUENCE CommunityBoard_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+ALTER TABLE image DROP COLUMN filepath;
+
+CREATE SEQUENCE Image_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;

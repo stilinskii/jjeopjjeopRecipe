@@ -95,7 +95,8 @@
         <div class="form_container">
           <form action="/seller/sellerwrite" method="post" enctype="multipart/form-data" th:object="${sellerDTO}">
             <div>
-<!--              <input type="text" class="form-control" name="user_id" id="user_id" placeholder="회원 아이디" />-->
+              <input type="text" class="form-control" name="user_id" id="user_id" placeholder="회원 아이디" />
+<!--              <P class="form-control" id="userDTO" th:text="${sellerDTO.user_id}"></P>-->
             </div>
             <div>
               <input type="text" class="form-control" name="business_name" id="business_name" placeholder="사업자명" />
