@@ -57,7 +57,10 @@ public class CommunityService {
     }
 
     public CommunityDTO findPostById(Integer id){
-        return communityDAO.findPostById(id);
+        CommunityDTO post = communityDAO.findPostById(id);
+        List<ImageDTO> images = communityDAO.findImageByPostId(id);
+        post.setImages(images);
+        return post;
     }
 
     public CommunityDTO findPostWithLikeInfo(Integer id, String userId){
@@ -135,7 +138,18 @@ public class CommunityService {
         communityCommentDAO.editComment(commentEditInfo);
     }
 
-    public void editPost(CommunityDTO community) {
+    public void editPost(CommunityDTO community, List<MultipartFile> image) {
         communityDAO.updatePost(community);
+        //이미지 있으면 새로 저장.
+        if(image!=null){
+            saveImagesToDB(image,community.getId());
+        }
+    }
+
+    public void deleteCurrentImages(Integer postId) {
+        //이미지 삭제 로직
+        List<ImageDTO> images = communityDAO.findImageByPostId(postId);
+        fileStore.deleteImages(images,COMMUNITY);
+        communityDAO.deleteImageByPostId(postId);
     }
 }

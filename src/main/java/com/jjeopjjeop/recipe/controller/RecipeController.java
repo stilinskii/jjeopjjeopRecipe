@@ -33,7 +33,7 @@ public class RecipeController {
     private String searchKey;
 
     // 오픈 API 테스트
-    @GetMapping("/")
+    //@GetMapping("/")
     public ModelAndView openApiTest(ModelAndView mav){
         List<RecipeDTO> getApiList = new ArrayList<>();
         StringBuilder sb = new StringBuilder();

@@ -15,8 +15,17 @@ function dataSend() {
 
   let postIdVal = $('#postId').val();
   let value = { postId: postIdVal, add: addVal };
-  $.post('/community/like', value).done(function (fragment) {
-    $('#like-btn').replaceWith(fragment);
+  // $.post('/community/like', value).done(function (fragment) {
+  //   $('#like-btn').replaceWith(fragment);
+  // });
+
+  $.ajax({
+    type: 'post',
+    url: '/community/like',
+    data: value,
+    success: function (data) {
+      likeBtn.innerHTML = data;
+    },
   });
   alert('좋아용완료');
 }
@@ -25,7 +34,7 @@ function dataSend() {
 const editBtn = document.querySelector('.edit-btn');
 const editBox =
   editBtn.parentElement.previousElementSibling.previousElementSibling;
-let postIdVal = $('#postId').val();
+// let postIdVal = $('#postId').val();
 console.dir(editBtn);
 
 editBtn.addEventListener('click', editmode);
@@ -38,9 +47,10 @@ function editmode() {
     const commentId = editBox.previousElementSibling.value;
     let editedVal = editBox.value;
     console.log(editedVal);
-    let data = { commentId: commentId, content: editedVal, postId: postIdVal };
-    $.post('/community/post/comment/edit', data).done(function (fragment) {
-      $('.comment-content-box').replaceWith(fragment);
+    let data = { commentId: commentId, content: editedVal };
+    $.post('/community/post/comment/edit', data).done(function () {
+      console.log('edit success');
+      editBox.disabled = true;
     });
   }
   action = !action;

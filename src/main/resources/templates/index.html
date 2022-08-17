@@ -92,13 +92,14 @@
     <div class="hero-image">
       <div class="hero-text">
         <h1 class="m-4 pb-3">쩝쩝박사</h1>
-        <form class="row g-3">
+        <form class="row g-3" th:action="@{/search}" method="post">
           <div class="col-auto">
             <label for="inputPassword2" class="visually-hidden">search</label>
             <input
               type="text"
               class="form-control"
               id="inputPassword2"
+              name="keyword"
               placeholder="레시피를 검색해보세요."
             />
           </div>
@@ -114,12 +115,13 @@
       <div class="recipe-cat bg-white">
         <h5 class="title">레시피 분류</h5>
         <div>
+          <!-- 밥, 반찬, 국, 디저트, 음료 -->
           <ul class="d-flex justify-content-around">
             <li>밥</li>
-            <li>반 찬</li>
+            <li>반찬</li>
+            <li>국</li>
             <li>디저트</li>
-            <li>1</li>
-            <li>1</li>
+            <li>음료</li>
           </ul>
         </div>
       </div>

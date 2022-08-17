@@ -93,21 +93,21 @@
     <div class="row d-flex justify-content-center">
       <div class="col-md-6">
         <div class="form_container">
-          <form action="/seller/sellerwrite" method="post" enctype="multipart/form-data" th:object="${sellerDTO}">
+          <form action="/seller/sellerwrite" method="post"  th:object="${sellerDTO}">
             <div>
-<!--              <input type="text" class="form-control" name="user_id" id="user_id" placeholder="회원 아이디" />-->
+              <input type="text" class="form-control" name="user_id" id="user_id"  th:field="*{user_id}" placeholder="회원 아이디" />
             </div>
             <div>
-              <input type="text" class="form-control" name="business_name" id="business_name" placeholder="사업자명" />
+              <input type="text" class="form-control" name="business_name" id="business_name" th:field="*{business_name}" placeholder="사업자명" />
             </div>
             <div>
-              <input type="text" class="form-control" name="registration_number" placeholder="사업자 등록번호" />
+              <input type="text" class="form-control" name="registration_number" th:field="*{registration_number}" placeholder="사업자 등록번호" />
             </div>
             <div>
-              <input type="text" class="form-control" name="seller_phone" placeholder="판매자 전화번호(010-0000-0000)" />
+              <input type="text" class="form-control" name="seller_phone" th:field="*{seller_phone}" placeholder="판매자 전화번호(010-0000-0000)" />
             </div>
             <div>
-              <input type="text" class="form-control" name="seller_address" placeholder="사업장 주소">
+              <input type="text" class="form-control" name="seller_address" th:field="*{seller_address}" placeholder="사업장 주소">
             </div>
 
             <div class="btn_box d-flex justify-content-center">

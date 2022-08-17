@@ -62,10 +62,10 @@ public class CommunityController {
 
     private PagenationDTO getPagenationDTO(Integer page,int recordCount) {
         PagenationDTO pagenationDTO = new PagenationDTO();
-        int startRow = (page != null) ? page : 0;
-        int count = recordCount;
-        int perPage = 10;
-        int totalPageCnt = (int) Math.ceil((double) count/(double) perPage);
+        int startRow = (page != null) ? page : 0; // page가 입력되지 않았으면 자동으로 1페이지로(0이 1)
+        int count = recordCount;// 전체 글 개수
+        int perPage = 10;//한페이지당 보여질 글 개수
+        int totalPageCnt = (int) Math.ceil((double) count/(double) perPage); // 전체글 / 페이지에 보여질 개수 = 페이지 수
         int startPageNum = page >=totalPageCnt-3 ? totalPageCnt-4:Math.max(1, page -1);
         int endPageNum = page >=totalPageCnt-3 ? totalPageCnt: Math.min(startPageNum + 4, totalPageCnt);
 
@@ -97,7 +97,6 @@ public class CommunityController {
 
 
 
-
     @PostMapping("/form")
     public String forFormSubmit(@Validated @ModelAttribute("community") CommunityDTO community, BindingResult bindingResult, @RequestPart(value = "image",required=false) List<MultipartFile> image,HttpSession session){
         if(bindingResult.hasErrors()){
@@ -110,6 +109,11 @@ public class CommunityController {
         UserDTO user = getUser(session);
         String userId = user.getUser_id();
         community.setUser_id(userId);
+
+        //자유글이면 레시피가 선택됐더라도 선택X
+        if(community.getCategory().equals("0")){
+            community.setRcp_seq(0);
+        }
 
         //로직 매우 맘에안듦.
         //이미지 테이블에 포스트 아이디로 된 이미지가있는지 확인하는 로직을 짜도 되긴되지만
@@ -124,15 +128,11 @@ public class CommunityController {
     }
 
     //ajax
-    //고치기
     @PostMapping("/form/searchRecipe")
     public String searchKeyword(String searchKey, Model model){
-        log.info("searchKey={}",searchKey);
-
         List<RecipeDTO> recipes = recipeService.searchListByKeyword(searchKey);
-        log.info("recipes={}",recipes.size());
         model.addAttribute("recipes",recipes);
-        return "community/form :: .recipe-box";
+       return "community/form :: .recipe-box";
     }
 
     @GetMapping("/post")
@@ -143,7 +143,6 @@ public class CommunityController {
         //로그인한 유저가 해당 포스트 좋아요 했는지도 확인함.
         CommunityDTO post = communityService.findPostWithLikeInfo(id,userId);
         List<CommunityCommentDTO> comments = communityService.findComments(id);
-
 
         //글이 레시피 후기글이면 레시피 정보도 넘기기.
         Integer rep_scq = post.getRcp_seq();
@@ -172,18 +171,23 @@ public class CommunityController {
         List<RecipeDTO> recipes = Collections.emptyList();
         model.addAttribute("community",post);
         model.addAttribute("recipes",recipes);
+
         return "community/edit";
     }
 
     @PostMapping("/edit/{postId}")
-    public String editPostByIdSubmit(@PathVariable Integer postId, CommunityDTO community){
+    public String editPostByIdSubmit(@PathVariable Integer postId, CommunityDTO community, @RequestPart(value = "image",required=false) List<MultipartFile> image){
         //,
         //        IMAGE_EXISTS = #{image_exists} mapper 부분 처리
         log.info("getContent={}",community.getContent());
         log.info("getId={}",community.getId());
         log.info("getTitle={}",community.getRcp_seq());
+        if(!image.isEmpty()){
+            communityService.deleteCurrentImages(postId);
+        }
+
         community.setId(postId);
-        communityService.editPost(community);
+        communityService.editPost(community,image);
         return "redirect:/community/post?id="+postId;
     }
 
@@ -201,8 +205,9 @@ public class CommunityController {
 
     //좋아요
     //ajax
+    @ResponseBody
     @PostMapping("/like")
-    public String updateLikeCnt(Model model, Integer postId, boolean add,HttpSession session){
+    public Integer updateLikeCnt(Integer postId, boolean add,HttpSession session){
 
         UserDTO user = getUser(session);
         String userId = user.getUser_id();
@@ -217,8 +222,8 @@ public class CommunityController {
             communityService.subtractLikeCnt(postId,userId);
             post = communityService.findPostWithLikeInfo(postId, userId);
         }
-        model.addAttribute("community",post);
-        return "community/post :: #like-btn";
+       // model.addAttribute("community",post);
+        return post.getLike_count();
     }
 
     //댓글
@@ -236,17 +241,12 @@ public class CommunityController {
 
     //댓글수정
     //ajax
+    @ResponseBody
     @PostMapping("/post/comment/edit")
-    public String editComment(Integer commentId, String content, Integer postId,  Model model, HttpSession session){
+    public void editComment(Integer commentId, String content){
 
         communityService.editComment(Map.of("commentId",commentId,"content",content));
 
-        UserDTO user = getUser(session);
-        List<CommunityCommentDTO> comments = communityService.findComments(postId);
-
-        model.addAttribute("comments",comments);
-        model.addAttribute("user",user);
-        return "community/post :: .comment-content-box";
     }
 
     @GetMapping("/post/comment/delete")
