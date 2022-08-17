@@ -19,9 +19,9 @@
         <div class="row d-flex justify-content-center">
             <div class="col-md-6">
                 <div class="form_container">
-                    <form name="write" id="write" method="post" enctype="multipart/form-data">
+                    <form name="write" id="write" method="post" enctype="multipart/form-data" th:action="@{/review/write}">
                         <div>
-                            <input type="text" class="form-control" name="user_id" id="user_id" placeholder="아이디" />
+                            <input type="text" class="form-control" placeholder="아이디" th:value="${session.user_id}"/>
                         </div>
                         <div>
 <!--                            이렇게 ☆써도 되는건가? 일단 나오긴함. -->
@@ -42,9 +42,9 @@
                         <div>
                             <textarea class="form-control" name="content" placeholder="리뷰를 작성해주세요(~자 이내로 작성해주세요)"></textarea>
                         </div>
-
+                        <input type="hidden" name="pay_num" th:value="${pay_num}">
+                        <!--어떤 pay_num의 리뷰인지 알기위해, pathVariable로 넘어온 값을 여기에 써서 reviewWrite에 넘겨준다.-->
                         <button>등록</button>
-                        </div>
                     </form>
                 </div>
             </div>

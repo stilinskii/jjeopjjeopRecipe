@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Slf4j
 @Controller
 public class ProduceController {
@@ -86,11 +89,11 @@ public class ProduceController {
     }
 
     //판매글 상세보기
-    @GetMapping({"/produce/view/{produceNum}"})
+    @GetMapping("/produce/view/{produceNum}")
     public ModelAndView produceView(@PathVariable("produceNum") int produce_num, ModelAndView mav) {
-        ProduceDTO produceDTO = produceService.produceViewProcess(produce_num);
-
-        mav.addObject("produceDTO", produceDTO);
+        //판매글 상세내용
+        ProduceDTO produceDTO = produceService.produceViewProcess(produce_num); //produce_num에 해당하는 정보 가져오기
+        mav.addObject("produceDTO", produceDTO);//가져온 정보 보내기
         mav.setViewName("/produce/produceView");
 
         //리뷰

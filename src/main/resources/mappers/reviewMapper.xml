@@ -20,4 +20,17 @@
         DELETE FROM produce_review WHERE pay_num = #{pay_num}
     </delete>
 
+    <insert id="reviewWrite" parameterType="com.jjeopjjeop.recipe.dto.ReviewDTO">
+        INSERT INTO produce_review
+        VALUES(#{pay_num}, #{rating}, #{content}, sysdate)
+    </insert>
+
+<!--구매한 항목 중 리뷰를 했으면 1 리뷰 안했으면 0이 출력됨.-->
+    <select id="reviewCheck" parameterType="int" resultType="int">
+        SELECT count(*)
+        FROM pay_history, produce_review
+        WHERE pay_history.pay_num = produce_review.pay_num
+        AND pay_history.pay_num= #{pay_num}
+    </select>
+
 </mapper>
