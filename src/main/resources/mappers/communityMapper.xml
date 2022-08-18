@@ -110,4 +110,106 @@
         WHERE
         id = #{id}
       </insert>
+
+    <select id="findCommunityBySearch" parameterType="Map" resultType="CommunityDTO">
+
+        SELECT * FROM (SELECT t1.* ,row_number() OVER (order by id DESC) AS seqnum FROM (SELECT * FROM (SELECT * FROM communityboard
+
+            <choose>
+                <when test="form.category == 'all'">
+                    WHERE category BETWEEN 0 AND 1)
+                </when>
+                <when test="form.category == 'free'">
+                    WHERE category = 0)
+                </when>
+                <when test="form.category == 'recipe'">
+                    WHERE category = 1)
+                </when>
+            </choose>
+
+        <choose>
+            <when test="form.option == 'title'">
+                WHERE title LIKE '%' || #{form.keyword} || '%'
+            </when>
+            <when test="form.option == 'writer'">
+                WHERE user_id LIKE '%' || #{form.keyword} || '%'
+            </when>
+            <when test="form.option == 'content'">
+                WHERE content LIKE '%' || #{form.keyword} || '%'
+            </when>
+            <when test="form.option == 'writerAndContent'">
+                WHERE title LIKE '%' || #{form.keyword} || '%'
+                OR content LIKE '%' || #{form.keyword} || '%'
+            </when>
+
+        </choose>)t1
+
+        <choose>
+            <when test="form.period == 'all'">
+                <![CDATA[
+        WHERE created_at <= sysdate
+        ]]>
+            </when>
+            <when test="form.period == 'day'">
+                WHERE created_at >= (select  sysdate - interval '1' day  from dual)
+            </when>
+            <when test="form.period == 'week'">
+                WHERE created_at >= (select  sysdate - interval '7' day  from dual)
+            </when>
+            <when test="form.period == 'Enter Date'">
+                WHERE created_at between #{form.from} AND #{form.to}
+            </when>
+        </choose>
+
+         ) WHERE seqnum BETWEEN #{page.startRow} AND #{page.endRow}
+
+
+    </select>
+    <select id="countCommunityBySearch" parameterType="com.jjeopjjeop.recipe.form.CommunitySearchForm" resultType="int">
+
+        SELECT count(*) FROM (SELECT * FROM (SELECT * FROM communityboard
+        <choose>
+            <when test="category == 'all'">
+                WHERE category BETWEEN 0 AND 1)
+            </when>
+            <when test="category == 'free'">
+                WHERE category = 0)
+            </when>
+            <when test="category == 'recipe'">
+                WHERE category = 1)
+            </when>
+        </choose>
+        <choose>
+            <when test="option == 'title'">
+                WHERE title LIKE '%' || #{keyword} || '%'
+            </when>
+            <when test="option == 'writer'">
+                WHERE user_id LIKE '%' || #{keyword} || '%'
+            </when>
+            <when test="option == 'content'">
+                WHERE content LIKE '%' || #{keyword} || '%'
+            </when>
+            <when test="option == 'writerAndContent'">
+                WHERE title LIKE '%' || #{keyword} || '%'
+                OR content LIKE '%' || #{keyword} || '%'
+            </when>
+        </choose>)
+
+        <choose>
+            <when test="period == 'all'">
+                <![CDATA[
+        WHERE created_at <= sysdate
+        ]]>
+            </when>
+            <when test="period == 'day'">
+                WHERE created_at >= (select  sysdate - interval '1' day  from dual)
+            </when>
+            <when test="period == 'week'">
+                WHERE created_at >= (select  sysdate - interval '7' day  from dual)
+            </when>
+            <when test="period == 'Enter Date'">
+                WHERE created_at between #{from} AND #{to}
+            </when>
+        </choose>
+    </select>
 </mapper>

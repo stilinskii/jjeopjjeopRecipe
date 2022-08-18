@@ -1,8 +1,10 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.form.CommunitySearchForm;
 import com.jjeopjjeop.recipe.service.CommunityService;
 import com.jjeopjjeop.recipe.service.RecipeService;
+import com.sun.tools.jconsole.JConsoleContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -264,6 +267,36 @@ public class CommunityController {
 
         return "redirect:"+refererLink;
     }
+
+
+    //상세검색
+    int totalCnt;
+    CommunitySearchForm form;
+    @GetMapping("/search")
+    public String detailSearch(@ModelAttribute("searchForm") CommunitySearchForm searchForm,
+                               @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                               Model model, HttpServletRequest request){
+
+        String referer = request.getHeader("referer");
+        if(referer.contains("/community/search")){
+            log.info("form={}",form);
+            List<CommunityDTO> communityBySearch = communityService.findCommunityBySearch(form, getPagenationDTO(page, totalCnt));
+            model.addAttribute("board",communityBySearch);
+        }
+
+        PagenationDTO pagenationDTO = getPagenationDTO(page, totalCnt);
+        model.addAttribute("page",pagenationDTO);
+
+        return "community/detailSearch";
+    }
+
+    @PostMapping("/search")
+    public String detailSearchSubmit(CommunitySearchForm searchForm){
+        totalCnt = communityService.countCommunityBySearch(searchForm);
+        form=searchForm;
+        return "redirect:/community/search";
+    }
+
 
 
 }

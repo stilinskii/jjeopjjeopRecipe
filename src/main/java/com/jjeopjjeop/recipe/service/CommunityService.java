@@ -7,6 +7,7 @@ import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.ImageDTO;
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.file.FileStore;
+import com.jjeopjjeop.recipe.form.CommunitySearchForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -151,5 +152,13 @@ public class CommunityService {
         List<ImageDTO> images = communityDAO.findImageByPostId(postId);
         fileStore.deleteImages(images,COMMUNITY);
         communityDAO.deleteImageByPostId(postId);
+    }
+
+    public List<CommunityDTO> findCommunityBySearch(CommunitySearchForm searchForm, PagenationDTO pagenationDTO) {
+        return communityDAO.findCommunityBySearch(Map.of("form",searchForm,"page",pagenationDTO));
+    }
+
+    public Integer countCommunityBySearch(CommunitySearchForm searchForm){
+        return communityDAO.countCommunityBySearch(searchForm);
     }
 }

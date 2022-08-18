@@ -37,6 +37,9 @@
     <nav th:replace="fragments/nav :: front-nav('community')"></nav>
     <main class="container">
       <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
+        <a th:href="@{/community/search}" class="btn btn btn-success ms-auto"
+          >상세검색</a
+        >
         <h1>커뮤니티 게시판</h1>
         <h3>전체글</h3>
 
@@ -91,9 +94,9 @@
                     <th scope="row" th:text="${iterStat.count}">1</th>
                     <td class="d-flex">
                       <a
-                              th:href="@{|/community/post?id=${el.id}|}"
-                              th:text="${el.title}"
-                      >제목</a
+                        th:href="@{|/community/post?id=${el.id}|}"
+                        th:text="${el.title}"
+                        >제목</a
                       >
                       <img
                         th:if="${el.image_exists}==1"

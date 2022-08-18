@@ -3,6 +3,7 @@ package com.jjeopjjeop.recipe.dao;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.ImageDTO;
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
+import com.jjeopjjeop.recipe.form.CommunitySearchForm;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -40,4 +41,8 @@ public interface CommunityDAO {
     Integer checkIfUserLikedPost(Map<String,Object> likeInfo);
 
     void updatePost(CommunityDTO community);
+
+    List<CommunityDTO> findCommunityBySearch(Map<String, Object> form);
+
+    Integer countCommunityBySearch(CommunitySearchForm communitySearchForm);
 }
