@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head('내 게시글')">
+<head>
+    <!-- th:replace="fragments/head('내 게시글')" 일단 빼둠.-->
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
@@ -11,6 +12,8 @@
         <link rel="stylesheet" th:href="@{/css/style.css}" />
 
         <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+        <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
     </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>

@@ -19,6 +19,8 @@ public class RecipePageDTO {
     private int number;
     private int rcp_sort; // 정렬 기준
 
+    private String user_id; // 이거 넣어도되는걸까..? 장바구니랑 구매때문에 일단 넣어둠.
+
     // 덧글용
     private int rcp_seq;
 

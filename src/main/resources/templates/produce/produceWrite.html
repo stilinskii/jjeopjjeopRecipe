@@ -23,7 +23,7 @@
         <div class="form_container">
           <form name="write" id="write" method="post" enctype="multipart/form-data"><!--form에 action이 없는데 어떻게 돌아가는 거...?-->
             <div>
-              <input type="text" class="form-control" name="user_id" id="user_id" th:value="${session.user_id}" placeholder="판매자아이디(나중에 없어지는 input입니다. 일단은 hee로만 입력하기.)" />
+              <input type="hidden" class="form-control" name="user_id" id="user_id" th:value="${session.user_id}" placeholder="판매자아이디(나중에 없어지는 input입니다. 일단은 hee로만 입력하기.)" />
             </div>
             <div>
               <select class="form-control nice-select wide" name='produce_type' size='1'>
@@ -40,9 +40,9 @@
             <div>
               <input type="text" class="form-control" name="price" placeholder="금액(숫자만 입력해주세요)" />
             </div>
-            <div>
-              <input type="file" name="file">
-            </div>
+           <div class="mb-3"><!--margin buttom 3-->
+             <input type="file" name="file" class="form-control-lg">
+           </div>
             <div>
               <textarea class="form-control" name="produce_description" placeholder="상품상세설명"></textarea>
             </div>
