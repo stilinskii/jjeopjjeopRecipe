@@ -95,7 +95,7 @@
                             <div class="d-flex">
                                 <div class="dropdown mr-1 ml-md-auto">
                                     <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        종류
+                                        분류
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
                                         <a class="dropdown-item" th:href="@{/produce/list}">전체</a>
@@ -126,7 +126,7 @@
                             <div class="block-4 text-center border" th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"
                                  style="cursor:pointer;">
                                 <figure class="block-4-image">
-<!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
+                                    <!--이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
                                     <a th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}">
                                         <img class="img-fluid" th:src="${produce.produce_image_path}" alt="상품이미지" />
                                     </a>
@@ -139,6 +139,7 @@
                             </div>
                         </div>
                         <!--  ====================상품 카드 끝======================-->
+
                     <!--  ====================페이지네이션 시작======================-->
 <!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
                     <div class="row fixed-bottom" data-aos="fade-up">
@@ -161,9 +162,12 @@
                             </div>
                         </div>
                         <!--  ====================페이지네이션 끝======================-->
-<!--                        <input type="hidden" th:value="${pDto.currentPage}">-->
                 </div>
+
             </div>
+                 <div class="col-md-3">
+                    확인용
+                </div>
         </div>
 
         </div>

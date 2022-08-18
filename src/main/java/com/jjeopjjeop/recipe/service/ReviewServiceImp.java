@@ -34,5 +34,17 @@ public class ReviewServiceImp implements ReviewService{
         reviewDAO.reviewWrite(reviewDTO);
     }
 
+    //리뷰 보기
+    @Override
+    public ReviewDTO reviewView(int pay_num) {
+        return reviewDAO.reviewView(pay_num);
+    }
+
+    //리뷰작성 반영
+    @Override
+    public void reviewUpdate(ReviewDTO reviewDTO) {
+        reviewDAO.reviewUpdate(reviewDTO);
+    }
+
 
 }

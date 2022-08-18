@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,12 +33,10 @@ public class PayController {
     private ProduceDTO produceDTO2;
 
     //판매글 상세페이지에서 버튼 클릭하여 장바구니에 넣기
-    @GetMapping("/cart/write")
+    @PostMapping("/cart/write")
     public String cartWrite(PayDTO payDTO){
-        log.info("dto={}", payDTO.getProduce_num());
         payService.cartWriteProcess(payDTO);
-        log.info("dto={}", payDTO.getProduce_num());
-        return "redirect:/produce/list";
+        return "redirect:/produce/view/" + payDTO.getProduce_num();
     }
 
     private int currentPage;
@@ -87,15 +86,41 @@ public class PayController {
 
 
     //본인 마이페이지 들어가서 장바구니 항목 삭제
-    @GetMapping("/mypage/cart/delete/{user_id}/{pay_num}")
-    public String cartDelete(@PathVariable("user_id") String user_id, @PathVariable("pay_num") int pay_num){
+    @GetMapping("/mypage/cart/delete/{pay_num}")
+    public String cartDelete(@PathVariable("pay_num") int pay_num){
         payService.cartDelete(pay_num);
-        return "redirect:/mypage/cart/view/" + user_id;
+        return "redirect:/mypage/cart/view";
     }
 ////카카오페이시작///////////////////////////////////////////////////////////////////////////////////////
     //카카오페이 결제
     @Setter(onMethod_ = @Autowired)
     private KakaoPay kakaopay;
+
+    //판매글 상세페이지에서 버튼 클릭하여 장바구니에 넣고 바로 결제하기
+    @PostMapping("/kakaoPayDirect")
+    public String kakaoPayDirect(PayDTO payDTO, HttpServletRequest request){
+        //장바구니에 넣음.
+        payService.cartWriteProcess(payDTO);
+
+        //pay_history에서 결제에 필요한 정보 가져오기.
+        HttpSession session =  request.getSession();
+        int payNum = payService.cartSelect((String) session.getAttribute("user_id"));
+
+        //바로 카카오페이결제시작
+        ProduceDTO produceDTO = payService.payInfo(payNum);
+        produceDTO2.setPayDTO(produceDTO.getPayDTO());
+        produceDTO2.setUser_id(produceDTO.getUser_id());
+        produceDTO2.setProduce_name(produceDTO.getProduce_name());
+        List<PayDTO> payDTOList = new ArrayList<>();
+        for(PayDTO payDTO2 : produceDTO.getPayDTOList()){
+            payDTOList.add(payDTO2);
+        }
+        produceDTO2.setPayDTOList(payDTOList);
+
+
+        return "redirect:" + kakaopay.kakaoPayReady(produceDTO); //큐알코드 화면 나옴.
+    }
+
 
     //결제요청
     @PostMapping("/kakaoPay/{pay_num}")

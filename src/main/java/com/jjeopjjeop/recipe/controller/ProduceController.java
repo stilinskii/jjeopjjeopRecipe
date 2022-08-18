@@ -3,6 +3,8 @@ package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.service.ProduceService;
+
+import java.io.File;
 import java.util.List;
 
 import com.jjeopjjeop.recipe.service.ReviewService;
@@ -70,21 +72,37 @@ public class ProduceController {
         mav.setViewName("/produce/produceList");
         return mav;
     }
-    //////////////////////////////////////////////////////////////////////////////////////
+
 
     //필터링한 판매글 조회
-    @GetMapping({"/produce/list/{type}"})
-    public ModelAndView produceListType(@PathVariable("type") int type, ModelAndView mav) {
+    @GetMapping("/produce/list/{type}")
+    public ModelAndView produceListType(@PathVariable("type") int type, ModelAndView mav, RecipePageDTO recipePageDTO) {
+        // 전체 레코드 수
+        int totalRecord = produceService.countProcess();
+
+        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
+            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
+            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
+
+            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
+        }
+
+
+        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
+        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
+
         List<ProduceDTO> list = produceService.produceListTypeProcess(type);
         mav.addObject("list", list);
         mav.setViewName("/produce/produceList");
         return mav;
     }
+    //////////////////////////////////////////////////////////////////////////////////////
 
     //판매글 삭제
     @GetMapping({"/produce/delete/{produceNum}"})
     public String produceDelete(@PathVariable("produceNum") int produce_num) {
         produceService.produceDeleteProcess(produce_num);
+
         return "redirect:/produce/list";
     }
 

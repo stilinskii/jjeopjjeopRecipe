@@ -26,4 +26,6 @@ public interface PayDAO {
    public int cartCount(String user_id); //페이지 처리를 위해 장바구니 항목 개수 세기. 나중에 id부분변경 ->변경함.
 
    public int payCount(String user_id); //페이지 처리를 위해 구매내역 항목 개수 세기.
+
+   public int cartSelect(String user_id); //판매글에서 바로 결제할 때 쓰는것. 가장 최근에 장바구니에 들어간 항목의 pay_num 부르기
 }

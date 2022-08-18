@@ -83,5 +83,11 @@ public class PayServiceImp implements PayService{
         return 0;
     }
 
+    //판매글에서 바로 결제할 때 쓰는것. 가장 최근에 장바구니에 들어간 항목의 pay_num 부르기
+    @Override
+    public int cartSelect(String user_id) {
+        return payDAO.cartSelect(user_id);
+    }
+
 
 }

@@ -14,6 +14,9 @@ public interface ReviewDAO {
     public void reviewDelete(int produce_num); //리뷰 삭제
     
     public void reviewWrite(ReviewDTO reviewDTO); //리뷰 작성
+
+    public ReviewDTO reviewView(int pay_num); //리뷰 보기
     
-    public int reviewCheck(int pay_num); //리뷰여부
+    public void reviewUpdate(ReviewDTO reviewDTO); //리뷰 작성 반영
+
 }

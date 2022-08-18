@@ -32,9 +32,11 @@ public class ReviewController {
     @PostMapping("/review/write")
     public String reviewWrite(ReviewDTO reviewDTO){
         reviewService.reviewWrite(reviewDTO);
-        return "redirect:/produce/list";
+        return "redirect:/mypage/pay/view";
     }
 
+
+    //리뷰 삭제하기.
     //@PostMapping("/review/delete/{payNum}")  <-이걸로 하면 오류남(There was an unexpected error (type=Method Not Allowed, status=405).
     //Request method 'GET' not supported)
     @GetMapping("/review/delete/{payNum}")
@@ -44,7 +46,25 @@ public class ReviewController {
         redirectAttributes.addFlashAttribute("message","Category deleted");
         redirectAttributes.addFlashAttribute("alertClass","alert-success");
 
-        return "redirect:/produce/list";
+        return "redirect:/mypage/pay/view";
 
+    }
+
+    //리뷰 수정을 위한 작성된 리뷰내용 보기
+    @GetMapping("/review/view/{pay_num}")
+    public ModelAndView reviewView(@PathVariable("pay_num") int pay_num, ModelAndView mav){
+
+        ReviewDTO reviewDTO = reviewService.reviewView(pay_num);
+        mav.addObject("reviewDTO", reviewDTO);
+        mav.setViewName("/produce/reviewUpdate");
+        return mav;
+    }
+
+    //리뷰 수정 반영
+    @PostMapping("/review/update")
+    public String reviewUpdate(ReviewDTO reviewDTO){
+
+        reviewService.reviewUpdate(reviewDTO);
+        return "redirect:/mypage/pay/view";
     }
 }

@@ -11,6 +11,15 @@
         <link rel="stylesheet" th:href="@{/css/style.css}" />
 
         <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" th:inline="javascript">
+        //삭제 확인 알림창 띄우기
+        $(function() {
+             $('a.confirmDeletion').click(function(){
+              if(!confirm('삭제확인')) return false;});
+        });
+    </script>
     </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>
@@ -21,7 +30,7 @@
             <h4 class="row d-flex justify-content-center align-items-center mb-3">구매내역</h4>
             <table class="table table-hover">
                 <thead>
-                <tr>
+                <tr class="table-warning">
                     <th scope="col">일련번호</th>
                     <th scope="col">상품명</th>
                     <th scope="col">수량 </th>
@@ -39,14 +48,14 @@
                                 <td th:text="${payDTO.quantity}">수량</td>
                                 <td data-th-text="${#numbers.formatInteger(payDTO.total_price, 3, 'COMMA') + '원'}">총가격</td>
                                 <td>
-                                    <th:block th:if="${#lists.isEmpty(list)}"> <!-- 리뷰 안남겼으면 얘 보이게-->
+                                    <th:block th:if="${payDTO.review_check == 0}"> <!-- 리뷰 안남겼으면 얘 보이게-->
                                         <form method="get" th:action="@{/review/write/{pay_num}(pay_num=${payDTO.pay_num})}">
                                             <button type="submit" class="btn btn-md btn-warning">리뷰 남기기</button>
                                         </form>
                                     </th:block>
-                                    <th:block th:unless="${#lists.isEmpty(list)}"> <!--만약 리뷰 남겼으면 얘보이게-->
+                                    <th:block th:unless="${payDTO.review_check == 0}"> <!--만약 리뷰 남겼으면 얘보이게-->
+                                        <a th:href="@{/review/view/{pay_num}(pay_num=${payDTO.pay_num})}">리뷰 수정</a>&nbsp&nbsp&nbsp
                                         <a th:href="@{/review/delete/{payNum}(payNum=${payDTO.pay_num})}">리뷰 삭제</a>
-                                        &nbsp&nbsp&nbsp <a href="#">리뷰 수정</a>
                                     </th:block>
                                 </td>
                             </th:block>

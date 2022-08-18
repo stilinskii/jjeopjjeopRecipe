@@ -6,12 +6,24 @@
 
 <mapper namespace="com.jjeopjjeop.recipe.dao.PayDAO">
 
-    <!--구매기능 만들기 전까지는 일단 pay는 다 0으로 해둠. 나중에 바꾸기.-->
+    <!--판매글 상세페이지에서 장바구니에 넣기.-->
     <insert id="cartWrite" parameterType="com.jjeopjjeop.recipe.dto.PayDTO">
         INSERT INTO pay_history
         VALUES(pay_num_seq.nextval, #{user_id}, #{produce_num}, #{quantity}, 0,
-        #{quantity} * (SELECT price FROM produce_board WHERE produce_num = #{produce_num}))
+        #{quantity} * (SELECT price FROM produce_board WHERE produce_num = #{produce_num}), 0)
     </insert>
+
+<!--판매글에서 바로 결제할 때 쓰는것. 가장 최근에 장바구니에 들어간 항목의 pay_num 부르기
+user_id = #{user_id}는 혹시 다른 사람이 결제하는 거랑 겹칠까봐 넣어둠.-->
+    <select id="cartSelect" parameterType="String" resultType="int">
+        SELECT *
+        FROM (SELECT pay_num
+                FROM pay_history
+                WHERE user_id = #{user_id}
+                AND pay = 0
+                ORDER BY pay_num DESC)
+        WHERE ROWNUM = 1
+    </select>
     <!--===========================================================================-->
 
     <!--    <resultMap type="com.jjeopjjeop.recipe.dto.ProduceDTO" id="produce_pay">-->
@@ -60,7 +72,7 @@
         <![CDATA[
         	SELECT rcp_li.* FROM
                 (SELECT rcp.*, rownum rm FROM
-                    ( SELECT produce_board.produce_num, pay_history.pay_num, pay_history.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price
+                    ( SELECT produce_board.produce_num, pay_history.pay_num, pay_history.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price, pay_history.review_check
                         FROM pay_history, produce_board
                         WHERE pay_history.pay = 1
                         AND pay_history.produce_num=produce_board.produce_num
