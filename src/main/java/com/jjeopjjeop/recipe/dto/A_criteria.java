@@ -25,17 +25,18 @@ public class A_criteria {
         this.amount = amount;
     }
 
-    public String getListLink(){
+    public String getListLink() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath("")
                 .queryParam("pageNum", pageNum)
                 .queryParam("amount", amount);
         return builder.toUriString();
     }
 
-    public String[] getTypeArr(){
+    public String[] getTypeArr() {
         return type == null ? new String[]{} : type.split("");
     }
 
-
+//    public String toString() {
+//        return "A_criteria [pageNum=" + pageNum + ", amount=" + amount + ", keyword=" + keyword + "]";
+//    }
 }
-

@@ -13,7 +13,7 @@ import java.util.List;
 public interface AdminDAO {
 
     //회원 카운트
-    public int countUser();
+    public int countUser(A_criteria cri);
 
     //회원 리스트
     public List<UserDTO> UserList(A_criteria cri);

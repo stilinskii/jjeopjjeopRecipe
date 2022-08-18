@@ -35,13 +35,14 @@
 <nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
   <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
-
-    <h1>판매자 관리</h1>
-    <h3>승인 목록</h3></td>
-
-    <div style="text-align: right; margin-bottom: 20px" class="btn-group col-15">
-      <a href="/admin/s_index" class="btn">신청목록</a>
-      <a href="/admin/ss_index" class="btn">승인목록</a>
+    <div class="menu" center>
+    <img src="/media/admin/shopping-cart.png">
+<!--    <h1>판매자 관리</h1>-->
+<!--    <h3>승인 목록</h3></td>-->
+  </div>
+    <div class="s_group">
+      <a href="/admin/s_index" class="btn_s">신청목록</a>
+      <a href="/admin/ss_index" class="btn_s">승인목록</a>
     </div>
 
     <!-- 사이드 nav -->
@@ -93,7 +94,7 @@
               <td th:text="${sellerDTO.registration_number}"></td>
               <td th:text="${sellerDTO.seller_phone}"></td>
               <td th:text="${sellerDTO.seller_address}"></td>
-              <td><a th:href="@{|/admin/cancelSel/${sellerDTO.user_id}|}" class="btn btn-sm">승인 취소</a></td>
+              <td><a th:href="@{|/admin/cancelSel/${sellerDTO.user_id}|}" class="btn btn-sm" onclick="alert('승인이 취소되었습니다.')">승인 취소</a></td>
             </tr>
             </tbody>
           </table>

@@ -37,8 +37,8 @@ public class AdminService {
 
 
     //회원 카운트
-    public int countUser(){
-        return adminDAO.countUser();
+    public int countUser(A_criteria cri){
+        return adminDAO.countUser(cri);
     }
 
     //회원리스트 가져오기

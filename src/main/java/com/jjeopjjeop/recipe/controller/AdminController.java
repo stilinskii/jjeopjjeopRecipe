@@ -102,9 +102,9 @@ public class AdminController {
         //int totalUSer = adminService.countUser();
 //        List<UserDTO> users = adminService.USerList(pv);
 //         model.addAttribute("users", users);
-        model.addAttribute("count", adminService.countUser());
+        model.addAttribute("count", adminService.countUser(cri));
         model.addAttribute("users", adminService.UserList(cri));
-        model.addAttribute("pageMaker", new A_pageDTO(cri, adminService.countUser(), 10));
+        model.addAttribute("pageMaker", new A_pageDTO(cri, adminService.countUser(cri), 10));
         return "admin/u_index";
     }
 

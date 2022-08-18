@@ -28,4 +28,64 @@ li.list-group-item {
   center;
   weight:80px;
   height:80px;
+  margin-bottom:10px;
   }
+
+  div.search_wrap{
+    margin-left: 650px;
+    margin-bottom: 20px;
+     }
+
+     button.s_btn{
+  	color:  rgb(0, 0, 0);
+  	background: #FFBE33;
+  	border: none;
+  	padding: 4px 10px;
+  	text-align: center;
+  	display: inline-block;
+  	font-size: 16px;
+  	border-radius: 5px;
+
+     }
+
+     input.keyword{
+       border: 3px solid #a9a9a9;
+     }
+
+     div.s_group{
+     	margin-bottom: 20px;
+     	margin-left: 500px;
+        }
+
+        a.btn_s{
+     	background-color: white;
+       color: black;
+       border: 2px solid #a9a9a9;
+       border-radius: 5px;
+       padding: 4px 10px;
+
+        }
+
+         div.card{
+        	margin-right: 5px;
+        	margin-top: 20;
+        	text-align: center;
+        	margin: 100px auto;
+            border: 0px
+          }
+
+          div.card-body{
+        	text-align: center;
+          }
+
+          a.btn-primary.btn-dark{
+        	color: black;
+        	border: none;
+          }
+
+            .category{
+          	padding:10px 0px;
+          	text-align: center;
+            }
+
+

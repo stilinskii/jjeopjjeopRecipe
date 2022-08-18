@@ -54,9 +54,13 @@
 			(
 			   select
 			   rownum R, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
-			   from User_j
-			where rownum <= #{pageNum} * #{amount}
-		)
+			   from User_j where rownum <= #{pageNum} * #{amount}
+		]]>
+            <if test="keyword != null">
+                and user_id like '%'||#{keyword}||'%'
+            </if>
+        <![CDATA[
+		     )
 		where R > (#{pageNum} -1) * #{amount}
 	]]>
 
@@ -65,6 +69,9 @@
 <!-- 회원 수-->
     <select id="countUser" resultType="int">
         select count(*) from User_j
+        <if test="keyword != null">
+            where user_id like '%'||#{keyword}||'%'
+        </if>
     </select>
     
     <!-- 회원상세 -->

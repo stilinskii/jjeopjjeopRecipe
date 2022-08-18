@@ -34,7 +34,8 @@
 <nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
     <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
-        <h1>관리자 페이지</h1>
+        <img src="/media/admin/admin.png">
+        <a>관리자 페이지</a>
     </div>
 
     <div class="container-fluid">
@@ -78,7 +79,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">유저타입</label>
-                                <input type="text"  class="form-control" th:value="${duser.usertype}" readonly>
+                                <input type="text"  class="form-control" th:value="${duser.usertype==1} ? '회원' : '판매자'" readonly>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">이름</label>
@@ -110,14 +111,15 @@
                             </div>
                             <div class="col-md-9">
                                 <label class="form-label">주소</label>
-                                <input class="form-control" type="text" th:value="${duser.address}" readonly>
-                            </div>
 
+                                <input class="form-control" type="text" th:value="${duser.address}" readonly>
+
+                            </div>
+                            <div>
+                            <a href="/admin/u_index" class="btn" style="float: right">돌아가기</a>
+                            </div>
                         </form>
 
-                        </hr>
-
-                    <a href="/admin/u_index" class="btn" style="float: right">돌아가기</a>
                 </div>
             </div>
             </div>

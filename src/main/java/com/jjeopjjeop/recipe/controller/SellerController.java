@@ -62,21 +62,22 @@ public class SellerController {
 
     //insert
 
-    @GetMapping("/seller/sellerwrite")
+    @GetMapping("/seller/write")
     public String form(){
-        return "/seller/sellerwrite";
+        return "/seller/write";
     }
 
     private UserDTO getUser(HttpSession session){
-        return (UserDTO) session.getAttribute("user_id");
+        return (UserDTO) session.getAttribute("user");
     }
 
-    @PostMapping("/seller/sellerwrite")
+    @PostMapping("/seller/write")
     public String forFormSubmit(@ModelAttribute SellerDTO sellerDTO, HttpSession session){
 //        sellerDTO.setUser_id(sellerDTO.getUser_id());
 //        sellerDTO.getBusiness_name(sellerDTO.getBusiness_name());
         UserDTO userDTO = getUser(session);
-        String User_id = userDTO.getUser_id();
+        String user_id = userDTO.getUser_id();
+        sellerDTO.setUser_id(user_id);
 
         sellerService.save(sellerDTO);
         return "redirect:/produce/list";

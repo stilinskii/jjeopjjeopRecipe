@@ -8,12 +8,12 @@
     <th:block th:replace="fragments/head :: link">
 
   <!-- bootstrap  -->
-<!--  <link-->
-<!--          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"-->
-<!--          rel="stylesheet"-->
-<!--  />-->
+  <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+  />
 <!--내가 추가-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
 
   <link
           href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -44,19 +44,15 @@
 <main class="container">
   <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
 
-      <!-- 수정해야함 -->
-      <div class="menu" center>
           <img src="/media/admin/shopping-cart.png">
 <!--    <a>판매자 관리</a>-->
 <!--  <h3>미승인 목록</h3>-->
+
+
+      <div class="s_group">
+          <a href="/admin/s_index" class="btn_s">신청목록</a>
+          <a href="/admin/ss_index" class="btn_s">승인목록</a>
       </div>
-
-  <div style="text-align: right; margin-bottom: 20px" class="btn-group col-50">
-    <a href="/admin/s_index" class="btn">신청목록</a>
-    <a href="/admin/ss_index" class="btn">승인목록</a>
-  </div>
-
-
 
 <!-- 사이드 nav -->
     <div class="container-fluid">
@@ -94,7 +90,6 @@
     <th scope="col">사업장 주소</th>
     <th scope="col">승인</th>
   </tr>
-
             </thead>
 <tbody>
   <tr th:each = "sellerDTO : ${nsellers}">
@@ -104,7 +99,7 @@
       <td th:text="${sellerDTO.registration_number}"></td>
       <td th:text="${sellerDTO.seller_phone}"></td>
       <td th:text="${sellerDTO.seller_address}"></td>
-    <td><a th:href="@{|/admin/upSel/${sellerDTO.user_id}|}"  class="btn btn-sm">승인</a></td>
+    <td><a th:href="@{|/admin/upSel/${sellerDTO.user_id}|}"  class="btn btn-sm" onclick="alert('승인되었습니다.')">승인</a></td>
     </tr>
 </tbody>
           </table>
