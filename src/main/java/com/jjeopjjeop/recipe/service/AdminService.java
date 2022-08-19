@@ -30,13 +30,24 @@ public class AdminService {
 
 
 
-
-
-
     //public int countProcess();
 
 
     //회원 카운트
+
+    public int countUser(A_criteria cri){
+        return adminDAO.countUser(cri);
+    }
+
+    //회원리스트 가져오기
+//    public List<UserDTO> UserList(A_criteria cri){
+//        return adminDAO.UserList(cri);
+//    }// adminmapper
+    public List<UserDTO> UserList(A_criteria cri){
+        return adminDAO.UserList(cri);
+    }
+
+
     public int countUser(){
         return adminDAO.countUser();
     }
@@ -49,6 +60,7 @@ public class AdminService {
         return adminDAO.UserList(pageDTO);
     }
 
+
     //회원상세
     public UserDTO detailUser(String user_id){
        return adminMapper.detailUser(user_id);
@@ -59,6 +71,34 @@ public class AdminService {
         adminMapper.delUser(user_id);
     }
 
+
+    //미승인 판매자 카운트
+    public int countNseller(){
+        return adminMapper.countNseller();
+    }
+
+    //미승인 판매자리스트
+//    public List<SellerDTO> listNSeller(){
+//        return adminMapper.listNSeller();
+//    }
+
+    public List<SellerDTO> nSellerList(A_criteria cri){
+        return adminDAO.nSellerList(cri);
+    }
+
+    //승인 판매자 카운트
+    public int countYseller(){
+        return adminMapper.countYseller();
+    }
+
+    //승인 판매자리스트
+//    public  List<SellerDTO> listSeller(){
+//        return adminMapper.listSeller();
+//    }
+
+    public List<SellerDTO> ySellerList(A_criteria cri){
+        return adminDAO.ySellerList(cri);
+
     //미승인 판매자리스트
     public List<SellerDTO> listNSeller(){
         return adminMapper.listNSeller();
@@ -67,6 +107,7 @@ public class AdminService {
     //승인 판매자리스트
     public  List<SellerDTO> listSeller(){
         return adminMapper.listSeller();
+
     }
 
 
@@ -76,10 +117,34 @@ public class AdminService {
         adminMapper.updateUsertype(user_id);
     }
 
+
+    //판매자 승인취소
+    public void cancelSeller(String user_id){
+        adminMapper.cancelSeller(user_id);
+        adminMapper.cancelUsertype(user_id);
+    }
+
+    //신고순 레시피 리스트
+//    public List<RecipeDTO> apprcpList(){
+//        return adminMapper.approRecipe();
+//    }
+
+    public List<RecipeDTO> rcpList(RecipePageDTO recipePageDTO){
+        return adminDAO.rcpList(recipePageDTO);
+    }
+
+    //레시피 카운트
+    public int countrcp(int cate_seq){
+        return adminMapper.countrcp(cate_seq);
+    }
+
+
+
     //신고순 레시피 리스트
     public List<RecipeDTO> apprcpList(){
         return adminMapper.approRecipe();
     }
+
 
     //레시피 삭제
     public void delRcp(String user_id){

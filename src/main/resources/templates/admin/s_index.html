@@ -1,15 +1,29 @@
 <!DOCTYPE html>
+
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head('게시판')">
+
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>admin main</title>
+
+    <th:block th:replace="fragments/head :: link">
+
+
+
   <!-- bootstrap  -->
   <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
   />
+
+<!--내가 추가-->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
+
 
   <link
           href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -22,6 +36,23 @@
   />
   <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
 
+    </th:block>
+<!--  <link-->
+<!--          rel="stylesheet"-->
+<!--          href="/static/css/community.css"-->
+<!--          th:href="@{/css/community.css}"-->
+<!--  />-->
+
+    <link
+            rel="stylesheet"
+            href="/static/css/admin.css"
+            th:href="@{/css/admin.css}"
+    />
+</head>
+
+<body class="">
+
+
   <link
           rel="stylesheet"
           href="/static/css/community.css"
@@ -30,9 +61,21 @@
 </head>
 
 <body class="bg-light">
+
 <nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
   <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
+
+
+          <img src="/media/admin/shopping-cart.png">
+<!--    <a>판매자 관리</a>-->
+<!--  <h3>미승인 목록</h3>-->
+
+
+      <div class="s_group">
+          <a href="/admin/s_index" class="btn_s">신청목록</a>
+          <a href="/admin/ss_index" class="btn_s">승인목록</a>
+      </div>
 
 <tr>
   <td img src="static/media/admin/admin.png"  width="50" height="50">
@@ -70,6 +113,7 @@
 <!--      <li class="breadcrumb-item"><a href="/admin/ss_index">승인목록</a></li>-->
 <!--    </ol>-->
 
+
 <!-- 사이드 nav -->
     <div class="container-fluid">
       <div class="row">
@@ -79,6 +123,18 @@
         >
           <ul class="list-group">
             <li class="list-group-item">
+
+              <a href="/admin/u_index" class="nav-link category">회원 관리</a>
+            </li>
+            <li class="list-group-item">
+              <a href="/recipe/list" class="nav-link category">레시피관리</a>
+            </li>
+            <li class="list-group-item">
+              <a href="/admin/s_index" class="nav-link category">판매자관리</a>
+            </li>
+            <li class="list-group-item">
+              <a href="/admin/c_index" class="nav-link category">게시판 관리</a>
+
               <a href="/admin/u_index" class="nav-link category">회원관리</a>
             </li>
             <li class="list-group-item">
@@ -89,10 +145,10 @@
             </li>
             <li class="list-group-item">
               <a href="/community" class="nav-link category">게시판 관리</a>
+
             </li>
           </ul>
         </div>
-
 
 
         <!-- 사이드 nav end -->
@@ -101,7 +157,9 @@
           <table class="table caption-top">
             <thead class="bg-secondary bg-gradient">
   <tr>
+
     <th scope="col">#</th>
+
     <th scope="col">아이디</th>
     <th scope="col">상호명</th>
     <th scope="col">사업자 등록 번호</th>
@@ -113,12 +171,68 @@
             </thead>
 <tbody>
   <tr th:each = "sellerDTO : ${nsellers}">
+<!--    <th scope="row">1</th>-->
+
+
+            </thead>
+<tbody>
+  <tr th:each = "sellerDTO : ${nsellers}">
     <th scope="row">1</th>
+
       <td th:text="${sellerDTO.user_id}"></td>
       <td th:text="${sellerDTO.business_name}"></td>
       <td th:text="${sellerDTO.registration_number}"></td>
       <td th:text="${sellerDTO.seller_phone}"></td>
       <td th:text="${sellerDTO.seller_address}"></td>
+
+    <td><a th:href="@{|/admin/upSel/${sellerDTO.user_id}|}"  class="btn btn-sm" onclick="alert('승인되었습니다.')">승인</a></td>
+    </tr>
+</tbody>
+          </table>
+          <!--페이징처리-->
+<!--          https://hongs-coding.tistory.com/125-->
+<!--          https://github.com/search?l=Java&q=criteria+perpage&type=Code-->
+<!--            https://github.com/search?l=HTML&p=2&q=pageMaker&type=Code-->
+<!--            <nav aria-label="Page navigation example">-->
+<!--                <ul class="pagination justify-content-center">-->
+
+<!--                    <li class="page-item" th:if="${pageMaker.prev} == true">-->
+<!--                        <a class="page-link" th:href="@{/admin/s_index(pageNum=${pageMaker.startPage}-1,amount=${pageMaker.cri.amount})}">&laquo;</a>-->
+<!--                    </li>-->
+
+<!--                    <li-->
+<!--                            th:each="idx,iterStat : ${#numbers.sequence(pageMaker.startPage,pageMaker.endPage)}"-->
+<!--                            th:classappend="${pageMaker.cri.pageNum} == ${idx} ? active : null">-->
+<!--                        <a th:if="${idx}"-->
+<!--                           th:href="@{/admin/s_index(pageNum=${idx},amount=${pageMaker.cri.amount})}"-->
+<!--                           th:text="${idx}"></a>-->
+<!--                    </li>-->
+
+<!--                    <li class="page-item" th:if="${pageMaker.next} == true and ${pageMaker.endPage > 0}">-->
+<!--                        <a class="page-link"-->
+<!--                                th:href="@{/admin/s_index(pageNum=${pageMaker.endPage}+1,amount=${pageMaker.cri.amount})}">&raquo;</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </nav>-->
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:if="${pageMaker.prev} == true">
+                        <a class="page-link"
+                           th:href="@{/admin/s_index(pageNum=${pageMaker.startPage}-1, amount=${pageMaker.cri.amount})}" tabindex="-1" aria-disabled="true">
+                            Previous</a>
+                    </li>
+
+                    <li class="page-item" th:each="idx,iterStat : ${#numbers.sequence(pageMaker.startPage,pageMaker.endPage)}" th:classappend="${pageMaker.cri.pageNum} == ${idx} ? active : null">
+                        <a class="page-link" th:href="@{/admin/s_index(pageNum=${idx},amount=${pageMaker.cri.amount})}" th:text="${idx}">1</a></li>
+
+                    <li class="page-item" th:if="${pageMaker.next} == true and ${pageMaker.endPage > 0}">
+                        <a class="page-link" th:href="@{/admin/s_index(pageNum=${pageMaker.endPage}+1,amount=${pageMaker.cri.amount})}">
+                            Next</a></li>
+                </ul>
+            </nav>
+            </div>
+
     <td><a th:href="@{|/admin/upSel/${sellerDTO.user_id}|}"  class="btn btn btn-secondary">승인</a></td>
 
 <!--      <td th:text="${sellerDTO.approval}"></td>-->
@@ -130,6 +244,7 @@
 <!--<h1><a  href="#">판매자 글 리스트</a></h1>-->
 </tbody>
           </table>
+
         </div>
       </div>
     </div>
