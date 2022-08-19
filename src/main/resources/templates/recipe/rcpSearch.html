@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head('레시피')">
+<head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>레시피 검색</title>
+    <th:block th:replace="fragments/head :: links">
+    </th:block>
+    <link
+            rel="stylesheet"
+            href="/static/css/recipe.css"
+            th:href="@{/css/recipe.css}"
+    />
 </head>
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
     <form action="/recipe/search">
-        <div class="input-group mb-3">
+        <div class="input-group rounded hero-image">
             <input
                     type="text"
-                    class="form-control"
-                    placeholder="내용을 입력하세요."
+                    class="form-control rounded"
+                    placeholder="검색어를 입력하세요."
                     name="searchKey"
                     th:value="${recipePageDTO.searchKey}"
                     aria-label="searchKey"
@@ -21,65 +30,56 @@
             />
             <a th:href="@{/recipe/search(searchKey=${searchKey})}">
                 <button
-                        class="btn btn-dark"
+                        class="btn btn-warning"
                         type="submit"
                         id="button-addon2"
+                        style="margin-left: 10px; color: #fff;"
                 >
                     레시피 검색
                 </button>
             </a>
         </div>
     </form>
-    <p class="fw-bold fs-3 text-start" th:text="${recipePageDTO.searchKey} + ' 검색 결과'"></p>
-    <hr />
+    <p class="fw-bold fs-3 text-start" th:text="'《 ' + ${recipePageDTO.searchKey} + ' 》 검색 결과'"></p>
     <div class="rcp_list">
         * 분류를 선택하여 상세검색을 해보세요!
-        <div class="cate_box">
+        <div class="cate_box rounded">
             <p>
                 <span>종류별</span>
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
-                &nbsp&nbsp
-                <a th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
-                <span th:text="${cate1.cate_name}" th:attr="style = ${cate1.cate_seq == recipePageDTO.cate_seq ? 'color: black; font-weight:bold;' : 'color: #fff'}">종류별</span>
-                </a>
+                    &nbsp&nbsp
+                    <a th:if="${cate1.cate_seq} == ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey})}" class="category" th:value="${cate1.cate_seq}">
+                    <span th:text="${cate1.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">상황별</span>
+                    </a>
+                    <a th:if="${cate1.cate_seq} != ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
+                    <span th:text="${cate1.cate_name}" th:attr="style = 'color: #fff;'">상황별</span>
+                    </a>
                 </span>
             </p>
             <p>
                 <span>재료별</span>
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
-                &nbsp&nbsp
-                <a th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
-                <span th:text="${cate2.cate_name}" th:attr="style = ${cate2.cate_seq == recipePageDTO.cate_seq ? 'color: black; font-weight:bold;' : 'color: #fff'}">재료별</span>
-                </a>
+                    &nbsp&nbsp
+                    <a th:if="${cate2.cate_seq} == ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey})}" class="category">
+                    <span th:text="${cate2.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">재료별</span>
+                    </a>
+                    <a th:if="${cate2.cate_seq} != ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
+                    <span th:text="${cate2.cate_name}" th:attr="style = 'color: #fff;'">재료별</span>
+                    </a>
                 </span>
             </p>
             <p>
                 <span>상황별</span>
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
-                &nbsp&nbsp
-                <a th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
-                <span th:text="${cate3.cate_name}" th:attr="style = ${cate3.cate_seq == recipePageDTO.cate_seq ? 'color: black; font-weight:bold;' : 'color: #fff'}">상황별</span>
-                </a>
+                    &nbsp&nbsp
+                    <a th:if="${cate3.cate_seq} == ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey})}" class="category">
+                    <span th:text="${cate3.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">상황별</span>
+                    </a>
+                    <a th:if="${cate3.cate_seq} != ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
+                    <span th:text="${cate3.cate_name}" th:attr="style = 'color: #fff;'">상황별</span>
+                    </a>
                 </span>
             </p>
-            <select name="rcp_time" id="rcp_time">
-                <option value="volvo">소요시간</option>
-                <option value="saab">10분</option>
-                <option value="mercedes">1시간</option>
-                <option value="audi">2시간</option>
-            </select>
-            <select name="difficulty" id="difficulty">
-                <option value="volvo">난이도</option>
-                <option value="saab">쉬움</option>
-                <option value="mercedes">보통</option>
-                <option value="audi">어려움</option>
-            </select>
-            <select name="amount" id="amount">
-                <option value="volvo">양</option>
-                <option value="saab">1~2인분</option>
-                <option value="mercedes">3~4인분</option>
-                <option value="audi">5인분 이상</option>
-            </select>
         </div>
         <p class="fs-5 fw-bold" style="margin-bottom: 0;" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
         <hr />
@@ -135,7 +135,7 @@
             </ul>
         </nav>
         <div class="d-grid col-4 mx-auto">
-            <a th:href="@{/recipe/write}" class="btn btn-warning">
+            <a th:href="@{/recipe/write}" class="btn btn-warning" style="color:#fff;">
                 새 레시피 등록하기
             </a>
         </div>

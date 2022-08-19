@@ -6,6 +6,7 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -73,6 +74,11 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
+    public int chkReportProcess(ReportRecipeDTO reportRecipeDTO) {
+        return dao.checkReport(reportRecipeDTO);
+    }
+
+    @Override
     public void reportProcess(ReportRecipeDTO reportRecipeDTO) {
         if(dao.checkReport(reportRecipeDTO) == 0){
             dao.report(reportRecipeDTO);
@@ -95,11 +101,25 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public void deleteProcess(int rcp_seq) {
-        dao.deleteCate(rcp_seq);
-        dao.deleteManual(rcp_seq);
-        dao.delete(rcp_seq);
+    public void deleteProcess(int rcp_seq, String url1, String url2) {
+        // 대표 이미지 있으면 삭제
+        String path = dao.getFile(rcp_seq);
+        if(path != null){
+            File fe = new File(url1, path);
+            fe.delete();
+        }
 
+        // 요리과정 이미지 있으면 삭제
+        List<String> list = dao.getFileM(rcp_seq);
+        for(int i=0; i<list.size(); i++){
+            String pathM = list.get(i);
+            if(pathM != null){
+                File fm = new File(url2, pathM);
+                fm.delete();
+            }
+        }
+
+        dao.delete(rcp_seq);
     }
 
     //heyeong

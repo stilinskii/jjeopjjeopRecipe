@@ -1,13 +1,127 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head('레시피')">
+<head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>레시피 수정 폼</title>
+    <th:block th:replace="fragments/head :: links">
+    </th:block>
+    <link
+            rel="stylesheet"
+            href="/static/css/recipe.css"
+            th:href="@{/css/recipe.css}"
+    />
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
-<h1>레시피 수정 폼입니다.</h1>
+    <p class="fw-bold fs-2 text-start">레시피 수정하기</p>
+    <form action="" th:object="${recipeDTO}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-4 d-grid gap-2 d-md-block img_up">
+                <label for="rcp_file" style="cursor:pointer;">
+                    <img src="/media/images/rcp_mainimg.png" width="100%" height="230px" alt="main image"/>
+                </label>
+                <input type="file" id="rcp_file" th:field="*{upload}" style="display: none;">
+                <button type="button" class="btn btn-dark" style="width: 100%;">
+                    <label for="rcp_file" style="width: 100%; height:100%; cursor:pointer;">대표 이미지 첨부</label>
+                </button>
+            </div>
+            <div class="col-8">
+                <p><input type="text" class="form-control" th:field="*{rcp_name}" width="90%" placeholder="레시피 이름" value="${recipeDTO.rcp_name}"></p>
+                <div class="validationError" th:if="${#fields.hasErrors('rcp_name')}" th:errors="*{rcp_name}"></div>
+                <select class="form-select" th:field="*{time}" id="rcp_time">
+                    <option value="">소요시간</option>
+                    <option value="10분 이내">10분 이내</option>
+                    <option value="20분 이내">20분 이내</option>
+                    <option value="30분 이내">30분 이내</option>
+                    <option value="1시간 이내">1시간 이내</option>
+                    <option value="2시간 이내">2시간 이내</option>
+                    <option value="2시간 이상">2시간 이상</option>
+                </select>
+                <select class="form-select" th:field="*{difficulty}" id="difficulty">
+                    <option value="">난이도</option>
+                    <option value="쉬움">쉬움</option>
+                    <option value="보통">보통</option>
+                    <option value="어려움">어려움</option>
+                </select>
+                <select class="form-select" th:field="*{amount}" id="amount">
+                    <option value="">양</option>
+                    <option value="1인분">1인분</option>
+                    <option value="2인분">2인분</option>
+                    <option value="3인분">3인분</option>
+                    <option value="4인분">4인분</option>
+                    <option value="5인분 이상">5인분 이상</option>
+                </select>
+                <div class="validationError" th:if="${#fields.hasErrors('time')}" th:errors="*{time}"></div>
+                <div class="validationError" th:if="${#fields.hasErrors('difficulty')}" th:errors="*{difficulty}"></div>
+                <div class="validationError" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></div>
+                <textarea class="form-control" th:field="*{summary}" placeholder="레시피를 간단히 소개해 주세요." value="${recipeDTO.summary}"></textarea>
+                <div class="validationError" th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}"></div>
+            </div>
+        </div>
+        <p>*레시피에 어울리는 분류를 선택해 주세요.</p>
+        <div class="cate_box rounded">
+            <input type="hidden" name="cateArr" id="cateArr" value="">
+            <p>
+                <span>종류별</span>
+                <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
+                    &nbsp&nbsp
+                    <a href="#" th:value="${cate1.cate_seq}" style="color: #fff;">
+                        <span th:text="${cate1.cate_name}">종류별</span>
+                    </a>
+                </span>
+            </p>
+            <p>
+                <span>재료별</span>
+                <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
+                    &nbsp&nbsp
+                    <a href="#" th:value="${cate2.cate_seq}" style="color: #fff;">
+                        <span th:text="${cate2.cate_name}">재료별</span>
+                    </a>
+                </span>
+            </p>
+            <p>
+                <span>상황별</span>
+                <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
+                    &nbsp&nbsp
+                    <a href="#" th:value="${cate3.cate_seq}" style="color: #fff;">
+                        <span th:text="${cate3.cate_name}">상황별</span>
+                    </a>
+                </span>
+            </p>
+        </div>
+        <hr/>
+        <p class="fw-bold fs-2 text-start">재료</p>
+        <textarea th:field="*{rcp_parts_dtls}" placeholder="양파 반 쪽, 굴소스 한 숟갈, 베이컨 100g..." value="${recipeDTO.rcp_parts_dtls}"></textarea>
+        <div class="validationError" th:if="${#fields.hasErrors('rcp_parts_dtls')}" th:errors="*{rcp_parts_dtls}"></div>
+        <hr/>
+        <p class="fw-bold fs-2 text-start">요리 순서</p>
+        <div class="manual_container">
+            <div class="rcp_manual">
+                <p class="fw-bold fs-4 text-start manual_step">1</p>
+                <textarea name="manual_txt"></textarea>
+                <p class="d-flex justify-content-between">
+                    <input type="file" id="upload_manual" name="upload_manual" >
+                    <a class="btn btn-danger removeManual">순서 삭제</a>
+                </p>
+            </div>
+        </div>
+        <button type="button" id="addManual" class="btn btn-secondary" style="width: 100%; margin-bottom: 15px;">요리 순서 추가</button>
+        <hr/>
+        <p class="fw-bold fs-2 text-start">해쉬태그</p>
+        <p>*레시피에 어울리는 해쉬태그를 입력해 주세요.</p>
+        <textarea th:field="*{hash_tag}" placeholder="귀찮을 때, 자취요리, 야채듬뿍..." value="${recipeDTO.hash_tag}"></textarea>
+        <hr/>
+        <p class="d-flex justify-content-between">
+            <a th:href="@{/recipe/list}" class="btn btn-danger">
+                &nbsp&nbsp취소&nbsp&nbsp
+            </a>
+            <button type="submit" class="btn btn-primary">&nbsp&nbsp작성&nbsp&nbsp</button>
+        </p>
+    </form>
 </main>
 </body>
 </html>
