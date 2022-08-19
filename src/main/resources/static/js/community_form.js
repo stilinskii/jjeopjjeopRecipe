@@ -44,23 +44,23 @@ function searchRecipe() {
   $.post('/community/form/searchRecipe', data).done(function (fragment) {
     $('.recipe-box').replaceWith(fragment);
   });
-  // $(document).on('pageshow', '.recipe-select', function (event) {
-  //   selectRecipeProcess(); // why you don't just work? :/
-  // });
+
+  $(document).ajaxComplete(function () {
+    console.log('complete ajax');
+    selectRecipeProcess();
+  });
 }
-//문제가 많음
-$(document).ajaxComplete(function () {
-  selectRecipeProcess();
-});
 
+//레시피 선택
 function selectRecipeProcess() {
-  //레시피 선택
-  const selectBtn = document.querySelector('.recipe-select');
+  const selectBtns = document.querySelectorAll('.recipe-select');
   const selectValueInput = document.querySelector('.select-value');
-
-  selectBtn.addEventListener('click', selectRecipe);
+  console.log(selectBtns);
+  selectBtns.forEach((selectbtn) => {
+    selectbtn.addEventListener('click', selectRecipe);
+  });
 
   function selectRecipe() {
-    selectValueInput.value = selectBtn.previousElementSibling.value;
+    selectValueInput.value = this.previousElementSibling.value;
   }
 }

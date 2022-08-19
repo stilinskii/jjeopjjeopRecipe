@@ -130,8 +130,16 @@
               multiple
             />
 
+
+            <div class="slider" th:if="${community.images != null}">
             <label for="">Current image:</label>
-            <!-- <img style="width: 200px;" th:src="@{${community.images(0)}}"> -->
+              <th:block th:each="img : ${community.images}">
+                <img
+                        th:src="@{/media/community/{image}(image=${img.filename})}"
+                        alt=""
+                        class="post-img"
+                />
+              </th:block>
           </div>
 
           

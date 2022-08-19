@@ -1,8 +1,19 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.SellerDTO;
+
+import com.jjeopjjeop.recipe.dto.UserDTO;
 import com.jjeopjjeop.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.catalina.User;
+
+import com.jjeopjjeop.recipe.service.SellerService;
+import lombok.RequiredArgsConstructor;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +24,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 //@RequestMapping("/")
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class SellerController {
@@ -59,15 +74,36 @@ public class SellerController {
 
     //insert
 
-    @GetMapping("/seller/sellerwrite")
+
+    @GetMapping("/seller/write")
     public String form(){
+        return "/seller/write";
+    }
+
+    private UserDTO getUser(HttpSession session){
+        return (UserDTO) session.getAttribute("user");
+    }
+
+    @PostMapping("/seller/write")
+    public String forFormSubmit(@ModelAttribute SellerDTO sellerDTO, HttpSession session){
+//        sellerDTO.setUser_id(sellerDTO.getUser_id());
+//        sellerDTO.getBusiness_name(sellerDTO.getBusiness_name());
+        UserDTO userDTO = getUser(session);
+        String user_id = userDTO.getUser_id();
+        sellerDTO.setUser_id(user_id);
+
+
+    @GetMapping("/seller/sellerwrite")
+    public String form(@ModelAttribute("sellerDTO") SellerDTO sellerDTO){
         return "/seller/sellerwrite";
     }
 
     @PostMapping("/seller/sellerwrite")
-    public String forFormSubmit(@ModelAttribute SellerDTO sellerDTO){
+    public String forFormSubmit(@ModelAttribute("sellerDTO") SellerDTO sellerDTO){
+
 //        sellerDTO.setUser_id(sellerDTO.getUser_id());
 //        sellerDTO.getBusiness_name(sellerDTO.getBusiness_name());
+
         sellerService.save(sellerDTO);
         return "redirect:/produce/list";
 

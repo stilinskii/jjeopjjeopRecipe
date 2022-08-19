@@ -12,6 +12,9 @@ html {
   height: 100%;
 }
 
+body {
+  background-color: #f0f0f0;
+}
 /* body {
   font-family: 'Spoqa Han Sans Neo', 'sans-serif';
 } */
@@ -43,14 +46,30 @@ html {
   font-family: '양진체';
 }
 
-li {
-  list-style: none;
+.hero-text h1 {
+  font-size: 60px;
 }
 
-.recipe-cat li {
-  background-color: aqua;
+.hero-text form input {
+  width: 500px;
+}
+
+li {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recipe-cat {
+  background-color: rgb(255, 237, 227);
   border-radius: 50%;
   padding: 20px 30px;
+}
+
+.recipe-cat-box p {
+  margin: 0;
+  padding-top: 5px;
 }
 
 .recipe-popular img,
@@ -66,10 +85,40 @@ footer {
 main > div {
   margin-top: 40px;
   padding: 50px;
-  border-radius: 10px;
-  border-style: ridge;
+  /* border-radius: 10px; */
+  /* border-style: ridge; */
+
+  border: 1px solid rgb(211, 211, 211);
 }
 
 .title {
   margin-bottom: 20px;
+}
+
+/* main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+} */
+
+.recipe-cat-box,
+.recipe-popular,
+.shopping-popular {
+  width: 100%;
+  max-width: 1200px;
+  align-self: center;
+
+  margin: auto;
+  margin-top: 10px;
+}
+
+footer {
+  width: 100%;
+  align-self: center;
+}
+
+.fa-cog {
+  font-size: 50px;
 }

@@ -36,6 +36,44 @@
 <!--    </insert>-->
 
 <!--회원 목록 -->
+
+<!-- recipeDTO-->
+<!--    <select id="UserList" parameterType="RecipePageDTO" resultType="UserDTO">-->
+<!--        <![CDATA[-->
+<!--        SELECT rcp_li.* FROM-->
+<!--            (SELECT rcp.*, rownum rm FROM-->
+<!--                (select *-->
+<!--			from User_j)rcp)rcp_li-->
+<!--        WHERE rm >= #{startRow} AND rm <= #{endRow}-->
+<!--        ]]>-->
+<!--    </select>-->
+
+    <select id="UserList" parameterType="A_criteria" resultType="UserDTO">
+        <![CDATA[
+			select user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
+			from
+			(
+			   select
+			   rownum R, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
+			   from User_j where rownum <= #{pageNum} * #{amount}
+		]]>
+            <if test="keyword != null">
+                and user_id like '%'||#{keyword}||'%'
+            </if>
+        <![CDATA[
+		     )
+		where R > (#{pageNum} -1) * #{amount}
+	]]>
+
+    </select>
+
+<!-- 회원 수-->
+    <select id="countUser" resultType="int">
+        select count(*) from User_j
+        <if test="keyword != null">
+            where user_id like '%'||#{keyword}||'%'
+        </if>
+
     <select id="UserList" parameterType="PageDTO" resultType="UserDTO">
         <![CDATA[
 		select* from (
@@ -48,6 +86,7 @@
 <!-- 회원 수-->
     <select id="countUser" resultType="int">
         select count(*) from User_j
+
     </select>
     
     <!-- 회원상세 -->
@@ -66,6 +105,58 @@
         from User_j
         where user_id = #{user_id}
     </select>
+
+
+<!--    미승인판매자 리스트-->
+    <select id="nSellerList" parameterType="A_criteria" resultType="SellerDTO">
+        <![CDATA[
+        SELECT user_id, business_name, registration_number, seller_phone, seller_address, approval
+        FROM
+        (
+            SELECT
+            ROWNUM R, user_id, business_name, registration_number, seller_phone, seller_address, approval
+            FROM Seller
+            WHERE ROWNUM <= #{pageNum} * #{amount}
+        )
+           WHERE R> (#{pageNum}-1) * #{amount} AND approval = 0
+        ]]>
+    </select>
+
+<!--    승인판매자 리스트-->
+    <select id="ySellerList" parameterType="A_criteria" resultType="SellerDTO">
+        <![CDATA[
+        SELECT user_id, business_name, registration_number, seller_phone, seller_address, approval
+        FROM
+        (
+            SELECT
+            ROWNUM R, user_id, business_name, registration_number, seller_phone, seller_address, approval
+            FROM Seller
+            WHERE ROWNUM <= #{pageNum} * #{amount}
+        )
+           WHERE R> (#{pageNum}-1) * #{amount} AND approval = 1
+        ]]>
+    </select>
+
+    <!-- 레시피 신고순-->
+    <select id="rcpList" parameterType="RecipePageDTO" resultType="RecipeDTO">
+        SELECT rcp_li.* FROM
+        (SELECT rcp.*, rownum rm FROM
+        (SELECT * FROM recipe
+        <if test="cate_seq != 0">
+            WHERE rcp_seq IN (
+            SELECT rcp_seq FROM cate_rcp
+            WHERE cate_seq IN #{cate_seq}
+            )
+        </if>
+        ORDER BY
+        report desc
+        )rcp)rcp_li
+        <![CDATA[
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
+    </select>
+
+
 
 
 

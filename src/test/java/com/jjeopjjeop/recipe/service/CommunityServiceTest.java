@@ -23,7 +23,7 @@ class CommunityServiceTest {
     @Mock
     FileStore fileStore;
 
-    CommunityService communityService = new CommunityService(communityDAO,fileStore);
+   // CommunityService communityService = new CommunityService(communityDAO,fileStore);
 
 
 
