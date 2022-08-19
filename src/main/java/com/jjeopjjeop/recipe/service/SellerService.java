@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SellerService {
     private final SellerMapper sellerMapper;
-//    public List<SellerDTO> listSeller() throws Exception;
+    //    public List<SellerDTO> listSeller() throws Exception;
 //    public int insertSeller(SellerDTO sellerDTO) throws Exception;
     public List<SellerDTO> getSeller(){
         return sellerMapper.listSeller();
