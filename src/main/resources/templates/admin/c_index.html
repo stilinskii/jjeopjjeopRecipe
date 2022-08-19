@@ -1,11 +1,18 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('게시판')">
+
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Document</title>
+
   <th:block th:replace="fragments/head :: link">
+
   <!-- bootstrap  -->
   <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -26,19 +33,32 @@
           href="/static/css/style.css"
           th:href="@{/css/style.css}"
   />
+
   </th:block>
   <link
           rel="stylesheet"
           href="/static/css/admin.css"
           th:href="@{/css/admin.css}"
+
+  <link
+          rel="stylesheet"
+          href="/static/css/community.css"
+          th:href="@{/css/community.css}"
+
   />
 </head>
 <body class="bg-light">
 <nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
   <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
+
     <img src="/media/admin/board.png">
   </div>
+
+    <h1>커뮤니티 게시판</h1>
+    <h3>전체글</h3>
+
+
 <!--    <div class="caption">-->
 <!--      <p class="p-2 bd-highlight" th:text="|글 수 : ${#lists.size(board)}|">-->
 <!--        글 수:-->
@@ -90,6 +110,7 @@
             <tr th:each="cu:${appboard}">
               <th scope="row">1</th>
 <!--              <a th:href="@{|/community/post?id=${el.id}|}">-->
+
               <td>
                 <a
                       th:href="@{|/community/post?id=${cu.id}|}"
@@ -102,6 +123,9 @@
 <!--                />-->
               </td>
 <!--                <td th:text="${cu.title}"></td></a>-->
+
+                <td th:text="${cu.title}"></td></a>
+
               <td th:text="${cu.user_id}"></td>
               <td th:text="${cu.created_at}"></td>
               <td th:text="${cu.read_count}"></td>
@@ -110,11 +134,32 @@
               <td><a th:href="@{|/admin/delcom/${cu.id}|}"  class="btn btn btn-secondary">삭제</a></td>
 
             </tr>
+
+
+<!--            <tr>-->
+<!--              <th scope="row">2</th>-->
+<!--              <td>Jacob</td>-->
+<!--              <td>Thornton</td>-->
+<!--              <td>@fat</td>-->
+<!--              <td>@fat</td>-->
+<!--              <td>@fat</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--              <th scope="row">3</th>-->
+<!--              <td>Larry</td>-->
+<!--              <td>the Bird</td>-->
+<!--              <td>@twitter</td>-->
+<!--              <td>@twitter</td>-->
+<!--              <td>@twitter</td>-->
+<!--            </tr>-->
+
             </tbody>
           </table>
         </div>
       </div>
+
       </div>
+
     </div>
   </div>
 </main>

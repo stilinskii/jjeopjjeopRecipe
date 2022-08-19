@@ -36,6 +36,7 @@
 <!--    </insert>-->
 
 <!--회원 목록 -->
+
 <!-- recipeDTO-->
 <!--    <select id="UserList" parameterType="RecipePageDTO" resultType="UserDTO">-->
 <!--        <![CDATA[-->
@@ -72,6 +73,20 @@
         <if test="keyword != null">
             where user_id like '%'||#{keyword}||'%'
         </if>
+
+    <select id="UserList" parameterType="PageDTO" resultType="UserDTO">
+        <![CDATA[
+		select* from (
+			select rownum rn, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
+			from User_j)
+			where rn >= #{startRow} and rn <= #{endRow}
+	]]>
+
+    </select>
+<!-- 회원 수-->
+    <select id="countUser" resultType="int">
+        select count(*) from User_j
+
     </select>
     
     <!-- 회원상세 -->
@@ -90,6 +105,7 @@
         from User_j
         where user_id = #{user_id}
     </select>
+
 
 <!--    미승인판매자 리스트-->
     <select id="nSellerList" parameterType="A_criteria" resultType="SellerDTO">
@@ -139,6 +155,7 @@
         WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
     </select>
+
 
 
 
