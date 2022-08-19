@@ -29,10 +29,6 @@ public class AdminService {
     private final AdminDAO adminDAO;
 
 
-
-
-
-
     //public int countProcess();
 
 
@@ -48,7 +44,6 @@ public class AdminService {
     public List<UserDTO> UserList(A_criteria cri){
         return adminDAO.UserList(cri);
     }
-
 
 
     //회원상세
@@ -103,15 +98,24 @@ public class AdminService {
     }
 
     //신고순 레시피 리스트
-    public List<RecipeDTO> apprcpList(){
-        return adminMapper.approRecipe();
+//    public List<RecipeDTO> apprcpList(){
+//        return adminMapper.approRecipe();
+//    }
+
+    public List<RecipeDTO> rcpList(RecipePageDTO recipePageDTO){
+        return adminDAO.rcpList(recipePageDTO);
     }
+
+    //레시피 카운트
+    public int countrcp(int cate_seq){
+        return adminMapper.countrcp(cate_seq);
+    }
+
 
     //레시피 삭제
     public void delRcp(String user_id){
         adminMapper.delRcp(user_id);
     }
-
 
     //게시판 신고순으로 게시판 목록 조회
     public List<CommunityDTO> appcomList(){

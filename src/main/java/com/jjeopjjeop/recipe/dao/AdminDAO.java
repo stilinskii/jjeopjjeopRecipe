@@ -23,6 +23,10 @@ public interface AdminDAO {
 //
 //    public int insertUser (AdminDTO adminDTO) throws DataAccessException;
 
+    //레시피 신고순 리스트
+    public List<RecipeDTO> rcpList(RecipePageDTO recipePageDTO);
+
+
     //미승인 판매자 리스트
     public List<SellerDTO> nSellerList(A_criteria cri);
 

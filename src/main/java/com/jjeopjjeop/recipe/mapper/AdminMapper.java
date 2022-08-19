@@ -84,8 +84,12 @@ public interface AdminMapper {
 
 
     //레시피 신고순으로 목록 조회
-    @Select("select * from Recipe order by report desc")
-    List<RecipeDTO> approRecipe();
+//    @Select("select * from Recipe order by report desc")
+//    List<RecipeDTO> approRecipe();
+
+    //레시피 카운드
+    @Select("select count(*) from Recipe")
+    int countrcp(int cate_seq);
 
     //신고 카운트 ?
 

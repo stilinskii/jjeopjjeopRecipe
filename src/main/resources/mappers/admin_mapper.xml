@@ -121,6 +121,25 @@
         ]]>
     </select>
 
+    <!-- 레시피 신고순-->
+    <select id="rcpList" parameterType="RecipePageDTO" resultType="RecipeDTO">
+        SELECT rcp_li.* FROM
+        (SELECT rcp.*, rownum rm FROM
+        (SELECT * FROM recipe
+        <if test="cate_seq != 0">
+            WHERE rcp_seq IN (
+            SELECT rcp_seq FROM cate_rcp
+            WHERE cate_seq IN #{cate_seq}
+            )
+        </if>
+        ORDER BY
+        report desc
+        )rcp)rcp_li
+        <![CDATA[
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
+    </select>
+
 
 
 

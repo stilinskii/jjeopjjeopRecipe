@@ -189,21 +189,42 @@ public class AdminController {
 
     //레시피 목록
     @GetMapping("/r_index")
-    public String apprcp(Model model){
-        List<RecipeDTO> apprcplist =adminService.apprcpList();
-        model.addAttribute("apprcplist", apprcplist);
-        return "admin/r_index";
-    }
-
-    //레시피글 누르면 상세내용 페이지
-//    @GetMapping("/")
-//    public String rcpdetail(String rcp_name, Model model){
-//        model.addAttribute("RecipeDTO", rcpdetail);
-//        return "admin/";
+//    public String apprcp(Model model){
+//        List<RecipeDTO> apprcplist =adminService.apprcpList();
+//        model.addAttribute("apprcplist", apprcplist);
+//        return "admin/r_index";
 //    }
 
+    public String rcpList(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
+                          @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,Model model,
+                          RecipePageDTO recipePageDTO){
+        int totalRecord = adminService.countrcp(cate_seq);
 
+        if(totalRecord>0){
+            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
+            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);
+            recipePageDTO.setRcp_sort(rcp_sort);
+            recipePageDTO.setCate_seq(cate_seq);
+        }
+        List<RecipeDTO> rcpList = adminService.rcpList(recipePageDTO);
 
+        model.addAttribute("totalRecord", totalRecord);
+        model.addAttribute("rcpList", rcpList);
+        model.addAttribute("pDto", recipePageDTO);
+        return "admin/r_index";
+
+    }
+
+    //레시피글 누르면 상세내용 페이지 ->???????
+    @GetMapping("/recipe/view/{rcp_seq}")
+    public String rcpdetail(String rcp_name, Model model){
+        // model.addAttribute("RecipeDTO", );
+        return "redirect:/recipe/rcpView";
+    }
+
+//    private RecipeDTO getRecipe(){
+//        return
+//    }
 
     //레시피 게시글 삭제
 
@@ -222,6 +243,9 @@ public class AdminController {
         return "admin/c_index";
     }
 
+    //게시판 상세 페이지
+
+
     //게시판 삭제 성공
     @GetMapping("/delcom/{id}")
     public String delcomm(@PathVariable Integer id){
@@ -231,12 +255,6 @@ public class AdminController {
         return "redirect:/admin/c_index";
 
     }
-
-    //레시피 신고목록(recipe/view 페이지를 갖고오고싶은데)
-
-
-
-
 
 
 }
