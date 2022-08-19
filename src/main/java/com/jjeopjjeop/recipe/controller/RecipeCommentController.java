@@ -23,7 +23,7 @@ public class RecipeCommentController {
     private RecipeCommentService service;
     private int currentPage;
 
-    // 덧글 조회
+    // 댓글 조회
     @ResponseBody
     @GetMapping(value = "/recipe/comment/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RecipePageDTO> listMethod(String rcp_seq, String commentCurrentPage){
@@ -45,16 +45,17 @@ public class RecipeCommentController {
         return new ResponseEntity<>(recipeCommentPageDTO, HttpStatus.OK);
     }
 
+    // 댓글 작성
     @ResponseBody
     @PostMapping("/recipe/comment/write")
     public void writeMethod(String rcp_seq, String comment_txt, HttpSession session, RecipeCommentDTO recipeCommentDTO){
-        //System.out.println(comment_txt);
         recipeCommentDTO.setRcp_seq(Integer.parseInt(rcp_seq));
         recipeCommentDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
         recipeCommentDTO.setComment_txt(comment_txt);
         service.writeProcess(recipeCommentDTO);
     }
 
+    // 댓글 수정
     @ResponseBody
     @PostMapping("/recipe/comment/update")
     public void updateMethod(String co_rcp_seq, String comment_txt, RecipeCommentDTO recipeCommentDTO){
@@ -63,6 +64,7 @@ public class RecipeCommentController {
         service.updateProcess(recipeCommentDTO);
     }
 
+    // 댓글 삭제
     @ResponseBody
     @PostMapping("/recipe/comment/delete")
     public void deleteMethod(String co_rcp_seq){

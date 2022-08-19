@@ -241,8 +241,16 @@ public class RecipeController {
 
     // 레시피 수정 페이지 요청 메소드
     @GetMapping("/recipe/update")
-    public String rcpUpdateMethod(){
+    public String rcpUpdateMethod(@RequestParam int rcp_seq, Model model, HttpSession session){
+        RecipeDTO recipeDTO = service.contentProcess(rcp_seq);
+        model.addAttribute("recipeDTO", service.contentProcess(rcp_seq));
+        RecipeDTO updateDTO = new RecipeDTO();
 
+        // 레시피 분류 목록
+        List<CategoryDTO> cateList = service.cateListProcess();
+
+        model.addAttribute("updateDTO", updateDTO);
+        model.addAttribute("cateList", cateList);
         return "/recipe/rcpUpdate";
     }
 
