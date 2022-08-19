@@ -13,32 +13,42 @@
     <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var message = [[${message}]];
+        if(message) {
+            alert(message);
+        }
+        /*]]>*/
+    </script>
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>
 <div class="wrapper d-flex align-items-stretch">
     <div class="col" th:replace="fragments/userSidebar :: userSidebar"></div>
     <div id="content" class="pt-5">
         <div class="container py-5 h-100">
-            <h4 class="row d-flex justify-content-center align-items-center mb-3">회원탈퇴</h4>
-            <div class="row justify-content-center align-items-center pt-4 pb-2">
-                <div class="col-md-2 ps-5">
-                    <h6 class="mb-0">아이디</h6>
+            <form action="/mypage/withdraw" method="post">
+                <h4 class="row d-flex justify-content-center align-items-center mb-3">회원탈퇴</h4>
+                <div class="row justify-content-center align-items-center pt-4 pb-2">
+                    <div class="col-md-2 ps-5">
+                        <h6 class="mb-0">아이디</h6>
+                    </div>
+                    <div class="col-md-3 pe-5">
+                        <input type="text" class="form-control" id="user_id" name="user_id" required />
+                    </div>
                 </div>
-                <div class="col-md-3 pe-5">
-                    <input type="text" class="form-control" id="user_id"/>
+                <div class="row justify-content-center align-items-center py-3">
+                    <div class="col-md-2 ps-5">
+                        <h6 class="mb-0">비밀번호</h6>
+                    </div>
+                    <div class="col-md-3 pe-5">
+                        <input type="password" class="form-control" id="password" name="password" required />
+                    </div>
                 </div>
-            </div>
-            <div class="row justify-content-center align-items-center py-3">
-                <div class="col-md-2 ps-5">
-                    <h6 class="mb-0">비밀번호</h6>
+                <div class="d-flex justify-content-center pt-5">
+                    <button type="reset" class="btn btn-secondary">취소</button>
+                    <button type="submit" class="btn btn-warning ms-3">탈퇴</button>
                 </div>
-                <div class="col-md-3 pe-5">
-                    <input type="password" class="form-control" id="password" />
-                </div>
-            </div>
-            <div class="d-flex justify-content-center pt-5">
-                <button type="reset" class="btn btn-secondary">취소</button>
-                <button type="submit" class="btn btn-warning ms-3" th:onclick="|location.href='@{/mypage/withdraw}'|">탈퇴</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>

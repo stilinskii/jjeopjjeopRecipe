@@ -11,10 +11,6 @@ function kakaopost() {
         }
     }).open();
 }
-<!-- 생년월일 max 처리가 안됨 ==> 확인 후 삭제-->
-<!--document.getElementById('birthday').value = new Date().toISOString().substring(0, 10);;-->
-<!--document.getElementById("birthday").max = new Date().toISOString().split("T")[0];-->
-
 </script>
 <head th:replace="fragments/head('회원가입')">
     <meta charset="UTF-8">
@@ -27,7 +23,7 @@ function kakaopost() {
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 
-    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
@@ -45,26 +41,82 @@ function kakaopost() {
           align-items: center;
           justify-content: center;
         }
+
+        .container{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
     </style>
 </head>
 
 <body>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+            var message = [[${message}]];
+            if(message) {
+                alert(message);
+            }
+        /*]]>*/
+
+        function check_password(password){
+            var password = document.getElementById('password').value;
+            var password2 = document.getElementById('password2').value;
+            if(password != '' && password2 != ''){
+                if(password == password2){
+                    document.getElementById('check').innerHTML='비밀번호가 일치합니다.';
+                    document.getElementById('check').style.color='gray';
+                } else {
+                    document.getElementById('check').innerHTML='비밀번호가 일치하지 않습니다.';
+                    document.getElementById('check').style.color='red';
+                }
+            }
+        }
+
+        function checkUserIdExist(user_id){
+            var user_id = $('#user_id').val();
+            if(user_id.length == 0){
+                alert('아이디를 입력해주세요');
+            }
+            $.ajax({
+                url: '/signup/idCheck',
+                type: 'get',
+                dataType: 'text',
+                data: {user_id : user_id},
+                success: function(data){
+                            if(data != null){
+                                alert('사용할 수 없는 아이디입니다');
+                                $('#user_id').val('');
+                            } else {
+                                alert('사용할 수 있는 아이디입니다');
+                            }
+                        }
+            })
+        }
+    </script>
 <nav th:replace="fragments/nav :: front-nav('회원가입')"></nav>
-<div class="wrapper d-flex align-items-center">
+<div class="container d-flex align-items-center">
     <div id="content justify-content-center" class="p-4 p-md-5 pt-5">
         <form action="/signup" method="post" th:object="${user}">
             <div class="form-group h-100" id="signup">
                 <div class="mb-3 pt-4 px-5">
                     <label for="user_id" class="form-label">아이디</label>
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="user_id"
-                            th:field="*{user_id}"
-                            th:errorclass="is-invalid"
-                            placeholder="아이디를 입력하세요"
-                            maxlength="30"
-                    />
+                    <div class="input-group">
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="user_id"
+                                name="user_id"
+                                th:field="*{user_id}"
+                                th:errorclass="is-invalid"
+                                placeholder="아이디를 입력하세요"
+                                maxlength="30"
+                        />
+                        <input type="button" class="btn btn-outline-warning" value="중복확인" onclick="checkUserIdExist()" />
+                    </div>
                     <div class="invalid-feedback" th:errors="*{user_id}">아이디 오류</div>
                 </div>
                 <div class="mb-3 py-1 px-5">
@@ -86,7 +138,10 @@ function kakaopost() {
                             class="form-control"
                             id="password2"
                             placeholder="비밀번호를 다시 한번 입력하세요"
+                            required
+                            th:onkeyup="check_password([[${user.password}]])"
                     />
+                        <div id="check"></div>
                 </div>
 
 
@@ -110,7 +165,7 @@ function kakaopost() {
                             class="form-control"
                             id="nickname"
                             th:field="*{nickname}"
-                            th:errorclass="field-error"
+                            th:errorclass="is-invalid"
                             placeholder="별명을 입력하세요"
                     />
                     <div class="invalid-feedback" th:errors="*{nickname}">별명 오류</div>
@@ -122,7 +177,7 @@ function kakaopost() {
                             class="form-control"
                             id="email"
                             th:field="*{email}"
-                            th:errorclass="field-error"
+                            th:errorclass="is-invalid"
                             placeholder="ex) abc@test.tt"
                     />
                     <div class="invalid-feedback" th:errors="*{email}">이메일 오류</div>
@@ -134,7 +189,7 @@ function kakaopost() {
                             class="form-control"
                             id="phone"
                             th:field="*{phone}"
-                            th:errorclass="field-error"
+                            th:errorclass="is-invalid"
                             placeholder="ex) 000-0000-0000"
                     />
                     <div class="invalid-feedback" th:errors="*{phone}">전화번호 오류</div>
@@ -146,7 +201,7 @@ function kakaopost() {
                             class="form-control"
                             id="birthday"
                             th:field="*{birthday}"
-                            th:errorclass="field-error"
+                            th:errorclass="is-invalid"
                     />
                     <div class="invalid-feedback" th:errors="*{birthday}">생년월일오류</div>
                 </div>

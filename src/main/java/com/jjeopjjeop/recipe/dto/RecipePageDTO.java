@@ -3,6 +3,8 @@ package com.jjeopjjeop.recipe.dto;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Data
 @Component
 public class RecipePageDTO {
@@ -19,10 +21,11 @@ public class RecipePageDTO {
     private int number;
     private int rcp_sort; // 정렬 기준
 
-    // 덧글용
+    // 레시피 덧글용
     private int rcp_seq;
+    private List<RecipeCommentDTO> recipeCommentDTOList;
 
-    // 검색용
+    // 레시피 검색용
     private String searchKey;
     private String searchWord;
     private int cate_seq;

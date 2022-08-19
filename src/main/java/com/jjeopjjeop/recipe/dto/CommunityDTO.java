@@ -4,7 +4,6 @@ package com.jjeopjjeop.recipe.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;

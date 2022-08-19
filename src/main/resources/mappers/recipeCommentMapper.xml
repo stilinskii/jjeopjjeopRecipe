@@ -25,6 +25,11 @@
         VALUES(co_rcp_seq_seq.nextval, #{rcp_seq}, #{user_id}, sysdate, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR}, #{comment_txt, jdbcType=VARCHAR})
     </insert>
 
+    <update id="update" parameterType="RecipeCommentDTO">
+        UPDATE comment_rcp SET comment_txt = #{comment_txt}
+        WHERE co_rcp_seq = #{co_rcp_seq}
+    </update>
+
     <delete id="delete" parameterType="int">
         DELETE FROM comment_rcp
         WHERE co_rcp_seq = #{co_rcp_seq}

@@ -5,14 +5,18 @@ import com.jjeopjjeop.recipe.dao.ProduceDAO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 class ProduceServiceImp implements ProduceService {
 
@@ -65,6 +69,23 @@ class ProduceServiceImp implements ProduceService {
     @Override
     public int countProcess() {
         return produceDAO.produceCount();
+    }
+
+    //하영 통합검색에 필요.
+    @Override
+    public List<ProduceDTO> findProductsByKeyword(String keyword) {
+        return produceDAO.findProductsByKeyword(keyword);
+    }
+
+    @Override
+    public List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, RecipePageDTO pageDTO) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("keyword",keyword);
+        map.put("startRow",pageDTO.getStartRow());
+        map.put("endRow",pageDTO.getEndRow());
+        log.info("map info={},{},{}",keyword,pageDTO.getStartRow(),pageDTO.getEndRow());
+
+        return produceDAO.findProductsByKeywordWithPaging(map);
     }
 
 
