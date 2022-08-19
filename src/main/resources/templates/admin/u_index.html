@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8" />
@@ -8,22 +7,22 @@
     <title>admin main</title>
     <th:block th:replace="fragments/head :: link">
 
-    <!-- bootstrap  -->
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-    />
+        <!-- bootstrap  -->
+        <link
+                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+                rel="stylesheet"
+        />
 
-    <link
-            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-            rel="stylesheet"
-    />
-    <!-- icons -->
-    <link
-            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-            rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
+        <link
+                href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+                rel="stylesheet"
+        />
+        <!-- icons -->
+        <link
+                href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+                rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
     </th:block>
 
     <link
@@ -38,10 +37,10 @@
 <main class="container">
     <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
         <img src="/media/admin/user.png">
-<!--        <a class="user">회원관리</a>-->
+        <!--        <a class="user">회원관리</a>-->
 
     </div>
-   <!-- 검색기능 -->
+    <!-- 검색기능 -->
     <form action="/admin/u_index" class="search_wrap">
         <div class="search_wrap">
             <input class='keyword' type="text" name="keyword" placeholder="아이디를 검색하세요" th:value="${pageMaker.cri.keyword}">
@@ -95,7 +94,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="au:${users}">
-<!--                        <th scope="row" th:text="${rn}">1</th>-->
+                        <!--                        <th scope="row" th:text="${rn}">1</th>-->
                         <!--                <a th:href="@{|/community/post?id=${el.id}|}"><td th:text="${el.title}">제목</td></a>-->
                         <td><a th:href="@{|/admin/detailU?user_id=${au.user_id}|}" th:text="${au.user_id}"></a></td>
                         <td th:text="${au.password}"></td>
@@ -115,23 +114,23 @@
                 </table>
 
                 <!--  페이징처리  -->
-<!--                <h1 th:text="${pdto.endPage}"></h1>-->
-<!--                <h1 th:text="${#numbers.formatInteger(pdto.endPage, 3)}"></h1>-->
-<!--                <div class="row fixed-bottom" data-aos="fade-up">-->
-<!--                    <div class="col-md-12 text-center">-->
-<!--                        &lt;!&ndash;                            이거 없으면 페이지네이션 왼쪽하단으로 이동됨&ndash;&gt;-->
-<!--                        <div class="site-block-27">-->
-<!--                            <ul>-->
-<!--                            <li><a href="#">&lt;</a></li>-->
-<!--                <th:block th:each="a : ${#numbers.sequence(pdto.startPage, pdto.endPage)}">-->
-<!--                    <li class="page-item active"><a th:if="${a} == ${pdto.currentPage}" th:href="@{/admin/u_index}" th:text="${a}"></a></li>-->
-<!--                    <li class="page-item"><a th:if="${a} != ${pdto.currentPage}" th:href="@{/admin/u_index(currentPage=${a})}" th:text="${a}"></a></li>-->
-<!--                </th:block>-->
-<!--                            <li><a href="#">&gt;</a></li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <h1 th:text="${pdto.endPage}"></h1>-->
+                <!--                <h1 th:text="${#numbers.formatInteger(pdto.endPage, 3)}"></h1>-->
+                <!--                <div class="row fixed-bottom" data-aos="fade-up">-->
+                <!--                    <div class="col-md-12 text-center">-->
+                <!--                        &lt;!&ndash;                            이거 없으면 페이지네이션 왼쪽하단으로 이동됨&ndash;&gt;-->
+                <!--                        <div class="site-block-27">-->
+                <!--                            <ul>-->
+                <!--                            <li><a href="#">&lt;</a></li>-->
+                <!--                <th:block th:each="a : ${#numbers.sequence(pdto.startPage, pdto.endPage)}">-->
+                <!--                    <li class="page-item active"><a th:if="${a} == ${pdto.currentPage}" th:href="@{/admin/u_index}" th:text="${a}"></a></li>-->
+                <!--                    <li class="page-item"><a th:if="${a} != ${pdto.currentPage}" th:href="@{/admin/u_index(currentPage=${a})}" th:text="${a}"></a></li>-->
+                <!--                </th:block>-->
+                <!--                            <li><a href="#">&gt;</a></li>-->
+                <!--                            </ul>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
 
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
@@ -150,162 +149,10 @@
                     </ul>
                 </nav>
             </div>
-            </div>
-            </div>
         </div>
     </div>
-
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head('게시판')">
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>admin main</title>
-  <!-- bootstrap  -->
-  <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-  />
-
-  <link
-          href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          rel="stylesheet"
-  />
-  <!-- icons -->
-  <link
-          href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          rel="stylesheet"
-  />
-  <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
-
-  <link
-          rel="stylesheet"
-          href="/static/css/community.css"
-          th:href="@{/css/community.css}"
-  />
-</head>
-
-<body class="bg-light">
-<nav th:replace="fragments/nav :: front-nav('')">
-
-
-
-</nav>
-<main class="container">
-  <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
-    <h1>관리자 페이지</h1>
-    <!-- <h3>전체글</h3> -->
-
-    <!-- 글쓰기 부분 -->
-    <!-- <div class="caption">
-      <p class="p-2 bd-highlight" th:text="|글 수 : ${#lists.size(board)}|">
-        글 수:
-      </p>
-      <div>
-        <a th:href="@{/community/form}" class="btn btn btn-secondary"
-          >글쓰기</a
-        >
-      </div>      -->
-
     </div>
-
-    <div class="container-fluid">
-      <div class="row">
-        <div
-                class="col-2"
-
-        >
-          <!-- admin은 controller에서? -->
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a href="/admin/u_index" class="nav-link category">회원관리</a>
-            </li>
-            <li class="list-group-item">
-              <a href="/recipe/list" class="nav-link category">레시피관리</a>
-            </li>
-            <li class="list-group-item">
-              <a href="/admin/s_index" class="nav-link category">쇼핑관리</a>
-            </li>
-            <li class="list-group-item">
-              <a href="/community" class="nav-link category">게시판관리</a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- 게시판 부분? -->
-         <div class="col-10">
-          <table class="table caption-top">
-            <thead class="bg-secondary bg-gradient">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">아이디</th>
-                <th scope="col">비밀번호</th>
-                <th scope="col">유저타입</th>
-                <th scope="col">이름</th>
-                <th scope="col">닉네임</th>
-<!--                <th scope="col">이메일</th>-->
-<!--                <th scope="col">폰번호</th>-->
-<!--                <th scope="col">생일</th>-->
-<!--                <th scope="col">성별</th>-->
-
-                <th scope="col">주소</th>
-<!--                <th scope="col">상세보기</th>-->
-                  <th scope="col">탈퇴</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="au:${users}">
-                <th scope="row" th:text="${rn}">1</th>
-<!--                <a th:href="@{|/community/post?id=${el.id}|}"><td th:text="${el.title}">제목</td></a>-->
-                <td><a th:href="@{|/admin/detailU?user_id=${au.user_id}|}" th:text="${au.user_id}"></a></td>
-                <td th:text="${au.password}"></td>
-                <td th:text="${au.usertype}"></td>
-                <td th:text="${au.username}"></td>
-                <td th:text="${au.nickname}"></td>
-<!--                <td th:text="${au.email}"></td>-->
-<!--                <td th:text="${au.phone}"></td>-->
-<!--                <td th:text="${au.birthday}"></td>-->
-<!--                <td th:text="${au.gender}"></td>-->
-<!--                <td th:text="${au.postno}"></td>-->
-                <td th:text="${au.address}"></td>
-
-                <td><a th:href="@{|/admin/delU/${au.user_id}|}" class="btn btn btn-secondary active btn-sm ">탈퇴</a></td>
-              </tr>
-            </tbody>
-          </table>
-
-<!--         페이지처리-->
-<!--           https://github.com/tjdghks1994/DailyCookingPJ/blob/master/src/main/webapp/WEB-INF/views/admin/member/memberList.jsp-->
-<!--           <nav aria-label="Page navigation example" style="...">-->
-<!--             <ul class="pagination justify-content-center">-->
-<!--               <li class="page-item">-->
-<!--                 <a class="page-link" th:href="#" aria-label="Previous">-->
-<!--                   <span aria-hidden="true">&laquo;</span>-->
-<!--                 </a>-->
-<!--               </li>-->
-
-
-<!--               <th:block th:each="pdto : ${#numbers.sequence(pdto.startPage, pdto.endPage)}">-->
-<!--               <li class="page-item active">-->
-<!--                 <a th:if="${pdto} == ${pdto.currentPage}" th:href="@{/admin/u_index}" th:text="${pdto}" class="page-link"></a>-->
-<!--               </li>-->
-<!--                 <li class="page-item">-->
-<!--                   <a th:if="${pdto} != ${pdto.currentPage}" th:href="@{/admin/u_index(currentPage=${pdto})}" th:text="${pdto}" class="page-link"></a>-->
-<!--                 </li>-->
-<!--               </th:block>-->
-
-<!--               <li class="page-item">-->
-<!--                 <a class="page-link"  th:href="#" aria-label="Next">-->
-<!--                   <span aria-hidden="true">&raquo;</span>-->
-<!--                 </a>-->
-<!--               </li>-->
-<!--             </ul>-->
-<!--           </nav>-->
-
-        </div>
-      </div>
     </div>
-  </div>
 </main>
 </body>
 </html>

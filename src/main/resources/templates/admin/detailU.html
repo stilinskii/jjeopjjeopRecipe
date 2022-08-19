@@ -1,80 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-
-<head th:replace="fragments/head('게시판')">
-
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>admin main</title>
-
     <th:block th:replace="fragments/head :: link">
+        <!-- bootstrap  -->
+        <link
+                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+                rel="stylesheet"
+        />
 
-
-    <!-- bootstrap  -->
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-    />
-
-    <link
-            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-            rel="stylesheet"
-    />
-    <!-- icons -->
-    <link
-            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-            rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
-
+        <link
+                href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+                rel="stylesheet"
+        />
+        <!-- icons -->
+        <link
+                href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+                rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
     </th:block>
     <link
             rel="stylesheet"
             href="/static/css/admin.css"
             th:href="@{/css/admin.css}"
-
-
-    <link
-            rel="stylesheet"
-            href="/static/css/community.css"
-            th:href="@{/css/community.css}"
-
     />
 </head>
 
 <body class="bg-light">
-
 <nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
     <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
         <img src="/media/admin/admin.png">
         <a>관리자 페이지</a>
-
-<nav th:replace="fragments/nav :: front-nav('')">
-
-
-
-</nav>
-<main class="container">
-    <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
-        <h1>관리자 페이지</h1>
-        <!-- <h3>전체글</h3> -->
-
-        <!-- 글쓰기 부분 -->
-        <!-- <div class="caption">
-          <p class="p-2 bd-highlight" th:text="|글 수 : ${#lists.size(board)}|">
-            글 수:
-          </p>
-          <div>
-            <a th:href="@{/community/form}" class="btn btn btn-secondary"
-              >글쓰기</a
-            >
-          </div>      -->
-
-
     </div>
 
     <div class="container-fluid">
@@ -95,16 +56,12 @@
                         <a href="/admin/s_index" class="nav-link category">쇼핑관리</a>
                     </li>
                     <li class="list-group-item">
-
                         <a href="/admin/c_index" class="nav-link category">게시판관리</a>
-
-                        <a href="/community" class="nav-link category">게시판관리</a>
-
                     </li>
                 </ul>
             </div>
 
-<!--            https://github.com/progdper/reading_fly_v1/blob/6183df23d997a9ac5e0004411049883374aa65c5/src/main/resources/templates/member/admin/old/adminMemberDetail_old.html-->
+            <!--            https://github.com/progdper/reading_fly_v1/blob/6183df23d997a9ac5e0004411049883374aa65c5/src/main/resources/templates/member/admin/old/adminMemberDetail_old.html-->
             <!-- 상세페이지 -->
             <div class="col-10">
                 <h5 class="card-header">회원 상세</h5>
@@ -122,11 +79,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">유저타입</label>
-
                                 <input type="text"  class="form-control" th:value="${duser.usertype==1} ? '회원' : '판매자'" readonly>
-
-                                <input type="text"  class="form-control" th:value="${duser.usertype}" readonly>
-
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">이름</label>
@@ -159,31 +112,16 @@
                             <div class="col-md-9">
                                 <label class="form-label">주소</label>
 
-
                                 <input class="form-control" type="text" th:value="${duser.address}" readonly>
 
                             </div>
                             <div>
-                            <a href="/admin/u_index" class="btn" style="float: right">돌아가기</a>
+                                <a href="/admin/u_index" class="btn" style="float: right">돌아가기</a>
                             </div>
                         </form>
 
+                    </div>
                 </div>
-            </div>
-
-                                <input class="form-control" type="text" th:value="${duser.address}" readonly>
-                            </div>
-
-                        </form>
-
-                        </hr>
-
-                    <a href="/admin/u_index" class="btn btn-dark btn-sm" style="float: right">돌아가기</a>
-                </div>
-            </div>
-
-
-
             </div>
         </div>
     </div>

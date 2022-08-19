@@ -39,7 +39,6 @@ public interface AdminMapper {
     void delUser(String user_id);
 
 
-
     //판매자 신청자 카운트
     @Select("select count(*) from Seller where approval = 0")
     int countNseller();
@@ -51,11 +50,6 @@ public interface AdminMapper {
     //판매자 승인완료 카운트
     @Select("select count(*) from Seller where approval = 1")
     int countYseller();
-
-    //판매자 신청자 목록
-    @Select("select * from Seller where approval = 0")
-    List<SellerDTO> listNSeller();
-
 
     //판매자 승인완료 목록
     @Select("select * from Seller where approval = 1")
@@ -73,14 +67,12 @@ public interface AdminMapper {
     @Update("update User_j set usertype = 2 where user_id=#{user_id}")
     void updateUsertype(String user_id);
 
-
     //판매자 승인취소
     @Update("update Seller set approval = 0 where user_id=#{user_id}")
     void cancelSeller(String user_id);
 
     @Update("update User_j set usertype = 1 where user_id = #{user_id}")
     void cancelUsertype(String user_id);
-
 
     //게시판 신고순으로 게시판 목록 조회
     @Select("select * from CommunityBoard order by report desc")
@@ -92,17 +84,12 @@ public interface AdminMapper {
 
 
     //레시피 신고순으로 목록 조회
-
 //    @Select("select * from Recipe order by report desc")
 //    List<RecipeDTO> approRecipe();
 
     //레시피 카운드
     @Select("select count(*) from Recipe")
     int countrcp(int cate_seq);
-
-    @Select("select * from Recipe order by report desc")
-    List<RecipeDTO> approRecipe();
-
 
     //신고 카운트 ?
 
