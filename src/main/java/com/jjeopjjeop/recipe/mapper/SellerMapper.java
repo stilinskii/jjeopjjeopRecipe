@@ -20,8 +20,6 @@ public interface SellerMapper {
 
     @Insert("insert into Seller values(#{seller.user_id}, #{seller.business_name}, #{seller.registration_number}, #{seller.seller_phone}, #{seller.seller_address},'0')")
 
-    @Insert("insert into Seller values('hy', #{seller.business_name}, #{seller.registration_number}, #{seller.seller_phone}, #{seller.seller_address},'0')")
-
 
      void insert(@Param("seller") SellerDTO SellerDTO);
 
