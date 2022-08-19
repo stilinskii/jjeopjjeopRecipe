@@ -2,51 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jjeopjjeop.recipe.dao.AdminDAO">
 
-<!--    <resultMap id="userResult" type="com.jjeopjjeop.recipe.dto.AdminDTO">-->
-<!--        <result property="user_id" column="user_id" />-->
-<!--        <result property="password" column="password" />-->
-<!--        <result property="usertype" column="usertype" />-->
-<!--        <result property="username" column="username" />-->
-<!--        <result property="nickname" column="nickname" />-->
-<!--        <result property="email" column="email" />-->
-<!--        <result property="phone" column="phone" />-->
-<!--        <result property="birthday" column="birthday" />-->
-<!--        <result property="gender" column="gender" />-->
-<!--        <result property="postno" column="postno" />-->
-<!--        <result property="address" column="address" />-->
-<!--    </resultMap>-->
+    <!--    <resultMap id="userResult" type="com.jjeopjjeop.recipe.dto.AdminDTO">-->
+    <!--        <result property="user_id" column="user_id" />-->
+    <!--        <result property="password" column="password" />-->
+    <!--        <result property="usertype" column="usertype" />-->
+    <!--        <result property="username" column="username" />-->
+    <!--        <result property="nickname" column="nickname" />-->
+    <!--        <result property="email" column="email" />-->
+    <!--        <result property="phone" column="phone" />-->
+    <!--        <result property="birthday" column="birthday" />-->
+    <!--        <result property="gender" column="gender" />-->
+    <!--        <result property="postno" column="postno" />-->
+    <!--        <result property="address" column="address" />-->
+    <!--    </resultMap>-->
 
-<!--    불러오는지 확인-->
-<!--    <select id="count" resultType="int">-->
-<!--        SELECT count(*) FROM User_j-->
-<!--    </select>-->
+    <!--    불러오는지 확인-->
+    <!--    <select id="count" resultType="int">-->
+    <!--        SELECT count(*) FROM User_j-->
+    <!--    </select>-->
 
-<!--    회원목록-->
-<!--    <select id="userList" resultMap="userResult">-->
-<!--        SELECT * FROM User_j-->
-<!--    </select>-->
+    <!--    회원목록-->
+    <!--    <select id="userList" resultMap="userResult">-->
+    <!--        SELECT * FROM User_j-->
+    <!--    </select>-->
 
     <!--회원등록-->
-<!--    <insert id="insertUser" parameterType="AdminDTO">-->
-<!--        INSERT User_j(user_id, password, usertype, username,-->
-<!--                      nickname, email, phone, birthday, gender, postno, address)-->
-<!--        VALUES(#{user_id}, #{password}, #{usertype}, #{username},-->
-<!--                           #{nickname}, #{email}, #{phone}, #{birthday}, #{gender},-->
-<!--                           #{postno}, #{address})-->
-<!--    </insert>-->
+    <!--    <insert id="insertUser" parameterType="AdminDTO">-->
+    <!--        INSERT User_j(user_id, password, usertype, username,-->
+    <!--                      nickname, email, phone, birthday, gender, postno, address)-->
+    <!--        VALUES(#{user_id}, #{password}, #{usertype}, #{username},-->
+    <!--                           #{nickname}, #{email}, #{phone}, #{birthday}, #{gender},-->
+    <!--                           #{postno}, #{address})-->
+    <!--    </insert>-->
 
-<!--회원 목록 -->
-
-<!-- recipeDTO-->
-<!--    <select id="UserList" parameterType="RecipePageDTO" resultType="UserDTO">-->
-<!--        <![CDATA[-->
-<!--        SELECT rcp_li.* FROM-->
-<!--            (SELECT rcp.*, rownum rm FROM-->
-<!--                (select *-->
-<!--			from User_j)rcp)rcp_li-->
-<!--        WHERE rm >= #{startRow} AND rm <= #{endRow}-->
-<!--        ]]>-->
-<!--    </select>-->
+    <!--회원 목록 -->
+    <!-- recipeDTO-->
+    <!--    <select id="UserList" parameterType="RecipePageDTO" resultType="UserDTO">-->
+    <!--        <![CDATA[-->
+    <!--        SELECT rcp_li.* FROM-->
+    <!--            (SELECT rcp.*, rownum rm FROM-->
+    <!--                (select *-->
+    <!--			from User_j)rcp)rcp_li-->
+    <!--        WHERE rm >= #{startRow} AND rm <= #{endRow}-->
+    <!--        ]]>-->
+    <!--    </select>-->
 
     <select id="UserList" parameterType="A_criteria" resultType="UserDTO">
         <![CDATA[
@@ -57,9 +56,9 @@
 			   rownum R, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
 			   from User_j where rownum <= #{pageNum} * #{amount}
 		]]>
-            <if test="keyword != null">
-                and user_id like '%'||#{keyword}||'%'
-            </if>
+        <if test="keyword != null">
+            and user_id like '%'||#{keyword}||'%'
+        </if>
         <![CDATA[
 		     )
 		where R > (#{pageNum} -1) * #{amount}
@@ -67,28 +66,14 @@
 
     </select>
 
-<!-- 회원 수-->
+    <!-- 회원 수-->
     <select id="countUser" resultType="int">
         select count(*) from User_j
         <if test="keyword != null">
             where user_id like '%'||#{keyword}||'%'
         </if>
-
-    <select id="UserList" parameterType="PageDTO" resultType="UserDTO">
-        <![CDATA[
-		select* from (
-			select rownum rn, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
-			from User_j)
-			where rn >= #{startRow} and rn <= #{endRow}
-	]]>
-
     </select>
-<!-- 회원 수-->
-    <select id="countUser" resultType="int">
-        select count(*) from User_j
 
-    </select>
-    
     <!-- 회원상세 -->
     <select id="detailU" resultType="UserDTO">
         select user_id as user_id,
@@ -106,8 +91,7 @@
         where user_id = #{user_id}
     </select>
 
-
-<!--    미승인판매자 리스트-->
+    <!--    미승인판매자 리스트-->
     <select id="nSellerList" parameterType="A_criteria" resultType="SellerDTO">
         <![CDATA[
         SELECT user_id, business_name, registration_number, seller_phone, seller_address, approval
@@ -122,7 +106,7 @@
         ]]>
     </select>
 
-<!--    승인판매자 리스트-->
+    <!--    승인판매자 리스트-->
     <select id="ySellerList" parameterType="A_criteria" resultType="SellerDTO">
         <![CDATA[
         SELECT user_id, business_name, registration_number, seller_phone, seller_address, approval
@@ -155,7 +139,6 @@
         WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
     </select>
-
 
 
 
