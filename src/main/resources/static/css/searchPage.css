@@ -1,0 +1,33 @@
+body {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url('https://cdn.pixabay.com/photo/2016/12/26/17/28/spaghetti-1932466_960_720.jpg');
+  /* background-repeat: no-repeat; */
+  background-size: cover;
+}
+
+#search-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.search-input {
+  width: 300px;
+}
+
+h1,
+h4 {
+  text-align: center;
+  color: white;
+}
+
+.input-div {
+  width: 100%;
+  max-width: 500px;
+  margin-right: 10px;
+}
+
+.rcpSize {
+  color: green;
+}

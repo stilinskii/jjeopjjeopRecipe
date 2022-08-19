@@ -39,6 +39,11 @@
     />
   </head>
   <body class="bg-light">
+    <script
+      defer
+      src="/static/js/community_post.js"
+      th:src="@{/js/community_post.js}"
+    ></script>
     <nav th:replace="fragments/nav :: front-nav('community')"></nav>
     <main class="container">
       <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
@@ -171,6 +176,7 @@
               <h6 th:text="${comment.user_id}">작성자</h6>
               <input type="hidden" th:value="${comment.id}" />
               <input
+                class="comment-content"
                 type="text"
                 value="testtest"
                 th:value="${comment.content}"
@@ -198,25 +204,6 @@
               </div>
             </div>
 
-            <div>
-              <h6>작성자</h6>
-              <input type="text" value="testtest" disabled />
-              <p>작성일자</p>
-              <div>
-                <button type="button" class="btn btn-secondary btn-sm edit-btn">
-                  수정
-                </button>
-                <a href="#" class="btn btn-secondary btn-sm confirmDeletion">
-                  삭제
-                </a>
-              </div>
-              <div class="d-none">
-                <button type="button" class="btn btn-secondary btn-sm">
-                  신고
-                </button>
-              </div>
-            </div>
-          </div>
           <!-- 댓글 남기기 -->
           <hr class="my-2 line border border-dark" />
           <div class="post_comment">
@@ -250,10 +237,6 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
-    <script
-      src="/static/js/community_post.js"
-      th:src="@{/js/community_post.js}"
-    ></script>
 
     <script>
       $(document).ready(function () {
