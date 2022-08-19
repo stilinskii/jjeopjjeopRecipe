@@ -1,22 +1,67 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>seller write form</title>
-</head>
-<body>
-<h2>판매자 등록</h2>
-<div class="layout">
-    <form action="/seller/write" method="post" enctype="multipart/form-data" th:object="${sellerDTO}">
-<!--        <input th:field="*{user_id}" type="text" placeholder="아이디">-->
-        <input name="business_name" type="text" placeholder="이름">
-        <input name="registration_number" type="text" placeholder="등록번호">
-        <input name="seller_phone" type="text" placeholder="폰번호">
-        <input name="seller_address" type="text" placeholder="판매자 주소">
-<!--        <input name="approval" type="text" placeholder="승인여부">-->
+    <!--  th:replace="fragments/head('쇼핑')"-->
+    <th:block th:replace="fragments/head :: link">
+        <meta charset="UTF-8">
+        <title>판매글 작성</title>
+        <link
+                href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+                rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
 
-        <button type="submit">판매자 등록</button>
-    </form>
-</div>
+    </th:block>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet" />
+    <!-- 서버안돌아갈때도???  -->
+    <link
+            rel="stylesheet"
+            href="/static/css/seller.css"
+            th:href="@{/css/seller.css}"
+    />
+</head>
+<body class="sub_page">
+
+<nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
+<!-- book section -->
+<!--    d-flex justify-content-center" 내부요소들을 가운데 정렬하기-->
+<section class="book_section layout_padding">
+    <div class="container" >
+        <div class="heading_container d-block text-center">
+            <h2>판매자 등록</h2>
+        </div>
+        <!--    d-flex justify-content-center" 내부요소들을 가운데 정렬하기-->
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
+                <div class="form_container">
+                    <form action="/seller/sellerwrite" method="post" enctype="multipart/form-data" th:object="${sellerDTO}">
+                        <!--            <div>-->
+                        <!--              <input type="text" class="form-control" name="user_id" id="user_id" placeholder="회원 아이디" />-->
+                        <!--&lt;!&ndash;              <P class="form-control" id="userDTO" th:text="${sellerDTO.user_id}"></P>&ndash;&gt;-->
+                        <!--            </div>-->
+                        <div>
+                            <input type="text" class="form-control" name="business_name" id="business_name" placeholder="사업자명" />
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" name="registration_number" placeholder="사업자 등록번호" />
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" name="seller_phone" placeholder="판매자 전화번호(010-0000-0000)" />
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" name="seller_address" placeholder="사업장 주소">
+                        </div>
+
+                        <div class="btn_box d-flex justify-content-center">
+                            <button>등록</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
 </body>
 </html>

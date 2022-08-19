@@ -7,6 +7,8 @@ import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.ImageDTO;
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.file.FileStore;
+import com.jjeopjjeop.recipe.form.CommunitySearchForm;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,8 +28,8 @@ public class CommunityService {
     private final CommunityCommentDAO communityCommentDAO;
     private final FileStore fileStore;
 
-    public List<CommunityDTO> getBoard(PagenationDTO pagenationDTO){
-        return communityDAO.list(pagenationDTO);
+    public List<CommunityDTO> getBoard(Pagenation pagenation){
+        return communityDAO.list(pagenation);
     }
     public List<CommunityDTO> getRecipeReviews(PagenationDTO pagenationDTO){
         return communityDAO.recipeReviewList(pagenationDTO);
@@ -57,7 +59,10 @@ public class CommunityService {
     }
 
     public CommunityDTO findPostById(Integer id){
-        return communityDAO.findPostById(id);
+        CommunityDTO post = communityDAO.findPostById(id);
+        List<ImageDTO> images = communityDAO.findImageByPostId(id);
+        post.setImages(images);
+        return post;
     }
 
     public CommunityDTO findPostWithLikeInfo(Integer id, String userId){
@@ -135,7 +140,26 @@ public class CommunityService {
         communityCommentDAO.editComment(commentEditInfo);
     }
 
-    public void editPost(CommunityDTO community) {
+    public void editPost(CommunityDTO community, List<MultipartFile> image) {
         communityDAO.updatePost(community);
+        //이미지 있으면 새로 저장.
+        if(image!=null){
+            saveImagesToDB(image,community.getId());
+        }
+    }
+
+    public void deleteCurrentImages(Integer postId) {
+        //이미지 삭제 로직
+        List<ImageDTO> images = communityDAO.findImageByPostId(postId);
+        fileStore.deleteImages(images,COMMUNITY);
+        communityDAO.deleteImageByPostId(postId);
+    }
+
+    public List<CommunityDTO> findCommunityBySearch(CommunitySearchForm searchForm, PagenationDTO pagenationDTO) {
+        return communityDAO.findCommunityBySearch(Map.of("form",searchForm,"page",pagenationDTO));
+    }
+
+    public Integer countCommunityBySearch(CommunitySearchForm searchForm){
+        return communityDAO.countCommunityBySearch(searchForm);
     }
 }

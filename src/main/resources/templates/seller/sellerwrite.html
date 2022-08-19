@@ -1,8 +1,16 @@
 <!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>one</title>
+    <th:block th:replace="fragments/head :: link">
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>one</title>
+
 
   <!--=========================햄버거 head에서 넣음. 겹치는 두개 생략============================-->
   <!-- Basic -->
@@ -38,6 +46,10 @@
   />
   <!--=====임의 추가 끝=========-->
 
+    </th:block>
+
+
+
 
   <!--owl slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
@@ -54,6 +66,13 @@
 
   <!--=====================================햄버거 끝=====================================================-->
 
+
+
+    <link
+            rel="stylesheet"
+            href="/static/css/admin.css"
+            th:href="@{/css/admin.css}"
+    />
 
 
 </head>
@@ -93,21 +112,22 @@
     <div class="row d-flex justify-content-center">
       <div class="col-md-6">
         <div class="form_container">
-          <form action="/seller/sellerwrite" method="post" enctype="multipart/form-data" th:object="${sellerDTO}">
+
             <div>
-              <input type="text" class="form-control" name="user_id" id="user_id" placeholder="회원 아이디" />
+              <input type="text" class="form-control" name="user_id" id="user_id"  th:field="*{user_id}" placeholder="회원 아이디" />
+            </div>
+
+            <div>
+              <input type="text" class="form-control" name="business_name" id="business_name" th:field="*{business_name}" placeholder="사업자명" />
             </div>
             <div>
-              <input type="text" class="form-control" name="business_name" id="business_name" placeholder="사업자명" />
+              <input type="text" class="form-control" name="registration_number" th:field="*{registration_number}" placeholder="사업자 등록번호" />
             </div>
             <div>
-              <input type="text" class="form-control" name="registration_number" placeholder="사업자 등록번호" />
+              <input type="text" class="form-control" name="seller_phone" th:field="*{seller_phone}" placeholder="판매자 전화번호(010-0000-0000)" />
             </div>
             <div>
-              <input type="text" class="form-control" name="seller_phone" placeholder="판매자 전화번호(010-0000-0000)" />
-            </div>
-            <div>
-              <input type="text" class="form-control" name="seller_address" placeholder="사업장 주소">
+              <input type="text" class="form-control" name="seller_address" th:field="*{seller_address}" placeholder="사업장 주소">
             </div>
 
             <div class="btn_box d-flex justify-content-center">

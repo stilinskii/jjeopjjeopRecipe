@@ -34,7 +34,7 @@
     <resultMap id="myCommunityResult" type="com.jjeopjjeop.recipe.dto.UserDTO" autoMapping="true">
 
         <collection property="communityDTOList" javaType="java.util.List"
-                    ofType="com.jjeopjjeop.recipe.dto.UserDTO" autoMapping="true"/>
+                    ofType="com.jjeopjjeop.recipe.dto.CommunityDTO" autoMapping="true"/>
     </resultMap>
 
 
@@ -82,11 +82,11 @@
         WHERE user_id=#{user_id}
     </update>
 
-    <select id="checkPassword" resultType="int" parameterType="String">
-        SELECT count(*) FROM user_j WHERE user_id = #{user_id} AND password = #{password}
+    <select id="checkId" resultType="String" parameterType="String">
+        SELECT user_id FROM user_j WHERE user_id = #{user_id}
     </select>
 
-    <delete id="deleteUser">
+    <delete id="deleteUser" parameterType="String">
         DELETE FROM user_j WHERE user_id=#{user_id} AND password=#{password}
     </delete>
 
@@ -95,5 +95,16 @@
         FROM user_j a
         LEFT OUTER JOIN communityboard b ON a.user_id = b.user_id
         WHERE a.user_id = #{user_id}
+    </select>
+
+    <select id="viewMyCommunity" parameterType="String" resultType="CommunityDTO">
+        SELECT * FROM communityboard WHERE user_id=#{user_id}
+    </select>
+
+    <select id="viewMyRecipe" parameterType="String" resultType="RecipeDTO">
+        SELECT rcp_li.*
+        FROM(SELECT rcp.*, rownum rm FROM (SELECT * FROM recipe) rcp) rcp_li
+        WHERE user_id=#{user_id}
+        ORDER BY rcp_seq
     </select>
 </mapper>

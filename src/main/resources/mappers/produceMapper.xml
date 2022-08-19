@@ -86,5 +86,19 @@
 		SELECT count(*) FROM produce_board
 	</select>
 
+	<select id="findProductsByKeyword" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+		SELECT * FROM produce_board WHERE produce_name LIKE '%' || #{keyword} || '%' ORDER BY produce_num DESC
+	</select>
+
+	<select id="findProductsByKeywordWithPaging" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+		<![CDATA[
+        SELECT rcp_li.* FROM
+            (SELECT rcp.*, rownum rm FROM
+                (SELECT * FROM produce_board
+                WHERE produce_name LIKE '%' || #{keyword} || '%'
+                ORDER BY produce_num DESC)rcp)rcp_li
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
+	</select>
 
 </mapper>

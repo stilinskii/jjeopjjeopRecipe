@@ -1,6 +1,10 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.config.MyProperties;
+import com.jjeopjjeop.recipe.config.MySecured;
+import com.jjeopjjeop.recipe.dto.CommunityDTO;
+import com.jjeopjjeop.recipe.dto.RecipeDTO;
+import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import com.jjeopjjeop.recipe.dto.UserDTO;
 import com.jjeopjjeop.recipe.service.UserServiceImp;
 import lombok.extern.slf4j.Slf4j;
@@ -47,20 +51,32 @@ public class UserController {
 
    //계정 추가(회원가입)
    @PostMapping("/signup")
-   public String add(@Validated @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult,
+   public String add(@Validated @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult, RedirectAttributes rAttr,
                            Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
       //회원가입 검증
       if (bindingResult.hasErrors()){
          //회원가입 실패 시 기존 데이터 유지
          //model.addAttribute("userDTO", userDTO);
          logger.info("errors={}", bindingResult);
+//         model.addAttribute("message", "형식에 맞지 않는 값이 입력되었습니다.");
          return "users/signup";
       }else {
          int result = 0;
          result = userServiceImp.addUser(userDTO);
          logger.info("post register");
+         rAttr.addFlashAttribute("message", "회원가입이 완료되었습니다.");
          return "redirect:/login";
       }
+   }
+
+   //아이디 중복 확인
+   @ResponseBody
+   @GetMapping("/signup/idCheck")
+   public String userIdExist(String user_id, Model model){
+      user_id = userServiceImp.checkId(user_id);
+      log.info("idCheck result: " + user_id);
+      model.addAttribute("user_id", user_id);
+      return user_id;
    }
 
    //로그인 페이지
@@ -88,18 +104,19 @@ public class UserController {
          session.removeAttribute("action");
          //로그인 실패하면 현재 페이지(로그인)
          if(action != null){
-            session.setAttribute("errorMessage", "LoginFail");
+            session.setAttribute("message", "아이디 또는 비밀번호가 일치하지 않습니다.");
             logger.info("Login Fail: ID or Password Doest Not Match");
             return "redirect:/login";
          //로그인 성공 ==> 마이페이지로 이동(임시)
          }else {
+            rAttr.addFlashAttribute("message", "로그인 되었습니다.");
             logger.info("Login Success");
-            return "redirect:/mypage";
+            return "redirect:/";
          }
          //회원이 아니라면
       }else {
-         rAttr.addAttribute("result", "loginFailed");
-         bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다");
+         rAttr.addFlashAttribute("message", "등록된 아이디가 없습니다.");
+         bindingResult.reject("loginFail", "로그인 실패");
          logger.info("Login Fail: ID or Password Does Not Exist");
          return "redirect:/login";
       }
@@ -127,7 +144,8 @@ public class UserController {
 
    //아이디 찾기
    @PostMapping("/findid")
-   public String findId(@ModelAttribute("userDTO") UserDTO userDTO, Model model, RedirectAttributes rAttr) throws Exception{
+   public String findId(@ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult,
+                        Model model, RedirectAttributes rAttr) throws Exception{
 //      logger.info("username: "+userDTO.getUsername());
 //      logger.info("email: "+userDTO.getEmail());
 //      logger.info("user_id: "+userDTO.getUser_id());
@@ -135,8 +153,17 @@ public class UserController {
 //      logger.info(userServiceImp.findId(userDTO).getUser_id());
       userDTO = userServiceImp.findId(userDTO);
 //      logger.info("user_id: "+userDTO.getUser_id());
-      model.addAttribute("user", userServiceImp.findId(userDTO));
-      return "/users/findidComplete";
+      if(bindingResult.hasErrors()){
+         model.addAttribute("message", "이름이 누락되었습니다.");
+         return "/users/findid";
+      } else if(userDTO == null){
+         rAttr.addFlashAttribute("message", "이름 또는 이메일이 일치하지 않습니다.");
+         return "redirect:/findid";
+      } else{
+         model.addAttribute("user", userServiceImp.findId(userDTO));
+         return "/users/findidComplete";
+      }
+
    }
 
    //비밀번호 찾기 페이지
@@ -147,16 +174,16 @@ public class UserController {
 
    //인증번호 발송
    @PostMapping("/findpw")
-   public String sendEmail(UserDTO userDTO, Model model){
-      UserDTO user = userServiceImp.findPassword(userDTO);
-      logger.info(userDTO.getUser_id());
+   public String sendEmail(@ModelAttribute("user") UserDTO userDTO, Model model, RedirectAttributes rAttr) throws Exception{
+      userDTO = userServiceImp.findPassword(userDTO);
+      logger.info("userDTO={}", userDTO);
 
-      if(user == null){
-         model.addAttribute("message", "아이디나 이메일이 일치하는 사용자가 없습니다");
-         return "users/findpw";
+      if(userDTO == null){
+         rAttr.addFlashAttribute("message", "아이디와 이메일이 일치하지 않습니다.");
+         return "redirect:/findpw";
       }else {
 
-         String email = user.getEmail();
+         String email = userDTO.getEmail();
 
          userServiceImp.updatePassword(userDTO);
          userServiceImp.sendMail(email);
@@ -167,6 +194,7 @@ public class UserController {
    }
 
    //마이페이지
+   @MySecured(role = MySecured.Role.USER)
    @GetMapping("/mypage")
    public String viewMypage(String user_id, HttpSession session, Model model){
       user_id = (String) session.getAttribute("user_id");
@@ -179,6 +207,7 @@ public class UserController {
    }
 
    //마이페이지 수정
+   @MySecured
    @GetMapping("/mypage/edit")
    public String editMypageView(String user_id, HttpSession session, Model model){
       logger.info("update Mypage");
@@ -190,14 +219,23 @@ public class UserController {
    }
 
    @PostMapping("/mypage/edit")
-   public String updateMypage(@ModelAttribute("user") UserDTO userDTO, Model model){
-      userServiceImp.updateMypage(userDTO);
-      model.addAttribute("user", userDTO);
-      return "redirect:/mypage";
+   public String updateMypage(@Validated @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult,
+                              RedirectAttributes rAttr, Model model){
+      if(bindingResult.hasErrors()){
+         logger.info("errors={}", bindingResult);
+         model.addAttribute("message", "형식에 맞지 않는 값이 입력되었습니다.");
+         return "users/mypageEdit";
+      }else{
+         userServiceImp.updateMypage(userDTO);
+         model.addAttribute("user", userDTO);
+         rAttr.addFlashAttribute("message", "내 정보가 수정되었습니다.");
+         return "redirect:/mypage";
+      }
    }
 
 
    //회원탈퇴
+   @MySecured
    @GetMapping("/mypage/withdraw")
    public String deleteAccount() {
       logger.info("get withdraw");
@@ -205,51 +243,58 @@ public class UserController {
    }
 
    @PostMapping("/mypage/withdraw")
-   public String deleteAccount(String user_id, String password, @ModelAttribute UserDTO userDTO, HttpSession session,
+   public String deleteAccount(String user_id, String password, HttpSession session,
                                RedirectAttributes rAttr, Model model) throws Exception{
-      UserDTO user = (UserDTO) session.getAttribute("user");
-      String sessionPassword = user.getPassword();
-      String userPassword = userDTO.getPassword();
-      System.out.println("session: "+sessionPassword);
-      System.out.println("DTO: "+userPassword);
 
-      if(!(sessionPassword.equals(userPassword))){
-         rAttr.addFlashAttribute("message", false);
+      UserDTO user = (UserDTO) session.getAttribute("user");
+      String sessionId = user.getUser_id();
+      String sessionPassword = user.getPassword();
+
+      System.out.println("session: "+sessionPassword);
+      System.out.println("Input: "+password);
+
+      if(!(sessionId.equals(user_id))){
+         rAttr.addFlashAttribute("message", "아이디가 일치하지 않습니다.");
          return "redirect:/mypage/withdraw";
-      }else {
+      } else if (!(sessionPassword.equals(password))) {
+         rAttr.addFlashAttribute("message", "비밀번호가 일치하지 않습니다.");
+         return "redirect:/mypage/withdraw";
+      } else {
          logger.info("post withdraw");
-         userServiceImp.removeUser(userDTO);
-         System.out.println(userServiceImp.removeUser(userDTO));
+         userServiceImp.removeUser(user_id, password);
+         System.out.println(userServiceImp.removeUser(user_id, password));
          session.invalidate();
          return "users/withdrawComplete";
       }
-//      boolean result = userServiceImp.checkPassword(user_id, password);
-//      System.out.println(result);
-//      if(result){
-//         userServiceImp.removeUser(userDTO);
-//         return "users/withdrawComplete";
-//      }else {
-//         model.addAttribute("message", "비밀번호 불일치");
-//         return "redirect:/mypage/withdraw";
-//      }
    }
 
    //내 게시글 보기
+   @MySecured
    @GetMapping("/mypage/board")
-   public String showMyCommunity(String user_id, HttpSession session){
-      logger.info("Get myboard");
-
-      return "users/myCommunity";
-   }
-
-   @PostMapping("/mypage/board")
-   public String postMyCommunity(String user_id, HttpSession session, Model model){
-      logger.info("Post myboard");
+   public String showMyCommunity(String user_id, HttpSession session, Model model){
+      logger.info("Get myBoard");
       user_id = (String) session.getAttribute("user_id");
-      System.out.println("user_id: " + user_id);
-      List<UserDTO> myCommunityList = userServiceImp.listMyCommunity(user_id);
-      System.out.println(myCommunityList);
-      model.addAttribute("myCommunityList", myCommunityList);
+//      System.out.println("user_id: " + user_id);
+      List<CommunityDTO> communityDTOList = userServiceImp.listMyCommunity(user_id);
+//      log.info("communityDTOList={}",communityDTOList.get(0).getUser_id());
+//      System.out.println(communityDTOList);
+      model.addAttribute("myCommunityList", communityDTOList);
       return "users/myCommunity";
    }
+
+   //내 레시피 보기
+   @MySecured
+   @GetMapping("/mypage/recipe")
+   public String showMyRecipe(RecipePageDTO recipePageDTO, HttpSession session, Model model){
+      logger.info("Get myRecipe");
+      String user_id = (String) session.getAttribute("user_id");
+      List<RecipeDTO> recipeDTOList = userServiceImp.listMyRecipe(user_id);
+      model.addAttribute("myRecipeList", recipeDTOList);
+      model.addAttribute("recipePageDTO", recipePageDTO);
+      System.out.println(recipeDTOList);
+      System.out.println(recipePageDTO);
+      return "users/myRecipe";
+   }
+
+
 }

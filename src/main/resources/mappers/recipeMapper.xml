@@ -4,37 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.jjeopjjeop.recipe.dao.RecipeDAO">
-<!--    <select id="count" resultType="int">-->
-<!--        SELECT count(*) FROM recipe-->
-<!--    </select>-->
-
-<!--    <select id="list" parameterType="RecipePageDTO" resultType="RecipeDTO">-->
-<!--        SELECT rcp_li.* FROM-->
-<!--            (SELECT rcp.*, rownum rm FROM-->
-<!--                (SELECT * FROM recipe ORDER BY-->
-<!--                <choose>-->
-<!--                    <when test="rcp_sort == 0">-->
-<!--                        rcp_seq DESC-->
-<!--                    </when>-->
-<!--                    <when test="rcp_sort == 1">-->
-<!--                        rcp_seq-->
-<!--                    </when>-->
-<!--                    <when test="rcp_sort == 2">-->
-<!--                        scrap DESC-->
-<!--                    </when>-->
-<!--                    <when test="rcp_sort == 3">-->
-<!--                        rcp_viewcnt DESC-->
-<!--                    </when>-->
-<!--                </choose>-->
-<!--                    )rcp)rcp_li-->
-<!--        <![CDATA[-->
-<!--        WHERE rm >= #{startRow} AND rm <= #{endRow}-->
-<!--        ]]>-->
-<!--    </select>-->
-
     <select id="count" parameterType="int" resultType="int">
         SELECT count(*) FROM recipe
-        <if test="cate_seq != 0">
+        <if test="cate_seq > 0">
             WHERE rcp_seq IN (
             SELECT rcp_seq FROM cate_rcp
             WHERE cate_seq IN #{cate_seq}
@@ -46,7 +18,7 @@
         SELECT rcp_li.* FROM
         (SELECT rcp.*, rownum rm FROM
         (SELECT * FROM recipe
-        <if test="cate_seq != 0">
+        <if test="cate_seq > 0">
         WHERE rcp_seq IN (
         SELECT rcp_seq FROM cate_rcp
         WHERE cate_seq IN #{cate_seq}
@@ -79,7 +51,7 @@
         OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
         OR summary LIKE '%' || #{searchKey} || '%'
         OR hash_tag LIKE '%' || #{searchKey} || '%')
-        <if test="cate_seq != 0">
+        <if test="cate_seq > 0">
             AND rcp_seq IN (
             SELECT rcp_seq FROM cate_rcp
             WHERE cate_seq IN #{cate_seq}
@@ -95,7 +67,7 @@
             OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
             OR summary LIKE '%' || #{searchKey} || '%'
             OR hash_tag LIKE '%' || #{searchKey} || '%')
-        <if test="cate_seq != 0">
+        <if test="cate_seq > 0">
             AND rcp_seq IN (
             SELECT rcp_seq FROM cate_rcp
             WHERE cate_seq IN #{cate_seq}
@@ -221,7 +193,19 @@
         WHERE rcp_seq=#{num}
     </delete>
 
+    <select id="getFile" parameterType="int" resultType="String">
+        SELECT filename FROM recipe WHERE rcp_seq=#{rcp_seq}
+    </select>
+
+    <select id="getFileM" parameterType="int" resultType="String">
+        SELECT filename FROM manual WHERE rcp_seq=#{rcp_seq}
+    </select>
+
     <select id="searchListByKeyword" parameterType="String" resultType="RecipeDTO">
         SELECT * FROM recipe WHERE rcp_name LIKE '%' || #{searchKey} || '%'
+        OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
+        OR summary LIKE '%' || #{searchKey} || '%'
+        OR hash_tag LIKE '%' || #{searchKey} || '%'
+
     </select>
 </mapper>

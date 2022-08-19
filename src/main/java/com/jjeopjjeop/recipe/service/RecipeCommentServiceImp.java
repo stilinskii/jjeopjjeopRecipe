@@ -36,6 +36,11 @@ public class RecipeCommentServiceImp implements RecipeCommentService{
     }
 
     @Override
+    public void updateProcess(RecipeCommentDTO recipeCommentDTO){
+        dao.update(recipeCommentDTO);
+    }
+
+    @Override
     public void deleteProcess(int co_rcp_seq) {
         dao.delete(co_rcp_seq);
     }

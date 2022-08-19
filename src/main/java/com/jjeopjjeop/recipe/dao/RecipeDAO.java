@@ -44,7 +44,8 @@ public interface RecipeDAO {
     public void delete(int num);
     public void deleteManual(int num);
     public void deleteCate(int num);
-    public String getFile(int num); // 파일 다운에 사용
+    public String getFile(int rcp_seq); // 레시피 대표 첨부파일
+    public List<String> getFileM(int rcp_seq); // 요리과정 첨부파일
 
     //hayeong
     List<RecipeDTO> searchListByKeyword(String searchKey);

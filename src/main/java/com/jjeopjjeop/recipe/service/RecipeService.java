@@ -15,11 +15,12 @@ public interface RecipeService {
     public List<ManualDTO> contentMnlProcess(int rcp_seq);
     public int chkScrapProcess(UserScrapDTO userScrapDTO);
     public void scrapProcess(UserScrapDTO userScrapDTO);
+    public int chkReportProcess(ReportRecipeDTO reportRecipeDTO);
     public void reportProcess(ReportRecipeDTO reportRecipeDTO);
     public void writeProcess(RecipeDTO recipeDTO);
     public void writeMProcess(ManualDTO manualDTO);
     public void writeCProcess(int cate_seq);
-    public void deleteProcess(int rcp_seq);
+    public void deleteProcess(int rcp_seq, String url1, String url2);
 
     //hayeong
     List<RecipeDTO> searchListByKeyword(String searchKey);
