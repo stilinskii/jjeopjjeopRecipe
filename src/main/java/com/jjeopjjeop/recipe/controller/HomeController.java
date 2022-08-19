@@ -30,11 +30,14 @@ public class HomeController {
     public String index(Model model){
         //임의로 해놓음. 원래 인기순 불러와야함.
         RecipePageDTO recipePageDTO = new RecipePageDTO();
-        recipePageDTO.setStartPage(0);
-        recipePageDTO.setEndPage(3);
-
+        recipePageDTO.setStartRow(1);
+        recipePageDTO.setEndRow(4);
+        recipePageDTO.setRcp_sort(2);//스크랩많은순
+        recipePageDTO.setCate_seq(0);//카테고리 선택안함.
         List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
+
         List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
+        log.info("reclist={}",rcpList.size());
         model.addAttribute("rcpList",rcpList);
         model.addAttribute("list",list);
 

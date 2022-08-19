@@ -2,9 +2,9 @@ package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.form.CommunitySearchForm;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.CommunityService;
 import com.jjeopjjeop.recipe.service.RecipeService;
-import com.sun.tools.jconsole.JConsoleContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,13 +29,15 @@ public class CommunityController {
     private final CommunityService communityService;
     private final RecipeService recipeService;
 
+
     @GetMapping
     public String all(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model){
-        PagenationDTO pagenationDTO = getPagenationDTO(page, communityService.count());
-        List<CommunityDTO> board = communityService.getBoard(pagenationDTO);
+        Pagenation pagenation = new Pagenation(page,10,communityService.count());
+//        PagenationDTO pagenationDTO = pagenation.getPagenationDTO(page, communityService.count(),10);
+        List<CommunityDTO> board = communityService.getBoard(pagenation);
 
         model.addAttribute("board",board);
-        model.addAttribute("page",pagenationDTO);
+        model.addAttribute("page",pagenation);
         //model.addAttribute("localDateTime", LocalDateTime.now());
         return "community/index";
     }
@@ -63,14 +64,50 @@ public class CommunityController {
         return "community/freeForum";
     }
 
+//    private PagenationDTO getPagenationDTO(Integer page,int recordCount) {
+//        PagenationDTO pagenationDTO = new PagenationDTO();
+//        int startRow = (page != null) ? page : 1; // page가 입력되지 않았으면 자동으로 1페이지로(0이 1)
+//        int count = recordCount;// 전체 글 개수
+//        int perPage = 10;//한페이지당 보여질 글 개수
+//        int totalPageCnt = (int) Math.ceil((double) count/(double) perPage); // 전체글 / 페이지에 보여질 개수 = 페이지 수
+//        int startPageNum = page >=totalPageCnt-3 ? totalPageCnt-4:Math.max(1, page -1);
+//        int endPageNum = page >=totalPageCnt-3 ? totalPageCnt: Math.min(startPageNum + 4, totalPageCnt);
+//
+//        pagenationDTO.setPage(startRow);
+//        pagenationDTO.setCount(count);
+//        pagenationDTO.setTotalPageCnt(totalPageCnt);
+//        pagenationDTO.setPerPage(perPage);
+//
+//        // 1 - 1~10
+//        // 2 - 11~20
+//        // 3 - 21~30
+//        // 4 - 31~40
+//        // 5 - 41~50
+//
+//        //db에 넘길 row num
+//        pagenationDTO.setStartRow(page==1? page:);
+//        pagenationDTO.setEndRow(perPage*page);
+//        //front에 넘길 페이지 번호
+//        pagenationDTO.setStartPageNum(startPageNum);
+//        pagenationDTO.setEndPageNum(endPageNum);
+//
+//        log.info("start and end={},{}",startPageNum,endPageNum);
+//
+//        return pagenationDTO;
+//    }
+
+    //원본
     private PagenationDTO getPagenationDTO(Integer page,int recordCount) {
         PagenationDTO pagenationDTO = new PagenationDTO();
         int startRow = (page != null) ? page : 0; // page가 입력되지 않았으면 자동으로 1페이지로(0이 1)
         int count = recordCount;// 전체 글 개수
-        int perPage = 10;//한페이지당 보여질 글 개수
+        int perPage = 5;//한페이지당 보여질 글 개수
         int totalPageCnt = (int) Math.ceil((double) count/(double) perPage); // 전체글 / 페이지에 보여질 개수 = 페이지 수
-        int startPageNum = page >=totalPageCnt-3 ? totalPageCnt-4:Math.max(1, page -1);
+        int startPageNum1 = page >=totalPageCnt-3 ? totalPageCnt-4:Math.max(1, page -1);
+        int startPageNum = startPageNum1 <= 0 ? 1:startPageNum1;
         int endPageNum = page >=totalPageCnt-3 ? totalPageCnt: Math.min(startPageNum + 4, totalPageCnt);
+
+        log.info("page and totalPageCnt={},{}",page,totalPageCnt);
 
         pagenationDTO.setPage(startRow);
         pagenationDTO.setCount(count);
@@ -121,8 +158,11 @@ public class CommunityController {
         //로직 매우 맘에안듦.
         //이미지 테이블에 포스트 아이디로 된 이미지가있는지 확인하는 로직을 짜도 되긴되지만
         //그게 더 속도가 느릴껏같음.
-        if(image!=null){
+        log.info("image={}",image);
+        if(image.isEmpty()){
             community.setImage_exists(1);
+        }else{
+            community.setImage_exists(0);
         }
         communityService.save(community,image);
 
@@ -187,6 +227,12 @@ public class CommunityController {
         log.info("getTitle={}",community.getRcp_seq());
         if(!image.isEmpty()){
             communityService.deleteCurrentImages(postId);
+            //원래 사진 없는데 사진 넣었으면 사진 있다고 바꾸기.
+            CommunityDTO postById = communityService.findPostById(postId);
+            log.info("postById.getImage_exists()==0={}",postById.getImage_exists()==0);
+            if(postById.getImage_exists()==0){
+                postById.setImage_exists(1);
+            }
         }
 
         community.setId(postId);
@@ -225,7 +271,6 @@ public class CommunityController {
             communityService.subtractLikeCnt(postId,userId);
             post = communityService.findPostWithLikeInfo(postId, userId);
         }
-       // model.addAttribute("community",post);
         return post.getLike_count();
     }
 
@@ -247,9 +292,7 @@ public class CommunityController {
     @ResponseBody
     @PostMapping("/post/comment/edit")
     public void editComment(Integer commentId, String content){
-
         communityService.editComment(Map.of("commentId",commentId,"content",content));
-
     }
 
     @GetMapping("/post/comment/delete")
@@ -277,9 +320,9 @@ public class CommunityController {
                                @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                Model model, HttpServletRequest request){
 
+        //검색을 통해서 들어온거면 검색 값 넘기기. 아니면 안넘김.
         String referer = request.getHeader("referer");
         if(referer.contains("/community/search")){
-            log.info("form={}",form);
             List<CommunityDTO> communityBySearch = communityService.findCommunityBySearch(form, getPagenationDTO(page, totalCnt));
             model.addAttribute("board",communityBySearch);
         }

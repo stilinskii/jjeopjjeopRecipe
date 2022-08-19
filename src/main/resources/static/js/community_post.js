@@ -31,27 +31,33 @@ function dataSend() {
 }
 
 //댓글 수정 구현
-const editBtn = document.querySelector('.edit-btn');
-const editBox =
-  editBtn.parentElement.previousElementSibling.previousElementSibling;
-// let postIdVal = $('#postId').val();
-console.dir(editBtn);
-
-editBtn.addEventListener('click', editmode);
-
+const editBtns = document.querySelectorAll('.edit-btn');
+const commentBox = document.querySelectorAll('input.comment-content');
 let action = true;
-function editmode() {
+let editBox;
+let index = 0;
+
+editBtns.forEach((editBtn) => {
+  console.log(commentBox[index]);
+  editBtn.addEventListener('click', function () {
+    console.log('index=' + index);
+    editmode(commentBox[index]);
+  });
+});
+
+function editmode(editBox) {
+  console.log(editBox);
   if (action) {
     editBox.disabled = false;
   } else {
     const commentId = editBox.previousElementSibling.value;
     let editedVal = editBox.value;
-    console.log(editedVal);
     let data = { commentId: commentId, content: editedVal };
     $.post('/community/post/comment/edit', data).done(function () {
       console.log('edit success');
       editBox.disabled = true;
     });
+    index++;
   }
   action = !action;
 }

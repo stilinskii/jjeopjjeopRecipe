@@ -8,6 +8,7 @@ import com.jjeopjjeop.recipe.dto.ImageDTO;
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.file.FileStore;
 import com.jjeopjjeop.recipe.form.CommunitySearchForm;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,8 @@ public class CommunityService {
     private final CommunityCommentDAO communityCommentDAO;
     private final FileStore fileStore;
 
-    public List<CommunityDTO> getBoard(PagenationDTO pagenationDTO){
-        return communityDAO.list(pagenationDTO);
+    public List<CommunityDTO> getBoard(Pagenation pagenation){
+        return communityDAO.list(pagenation);
     }
     public List<CommunityDTO> getRecipeReviews(PagenationDTO pagenationDTO){
         return communityDAO.recipeReviewList(pagenationDTO);

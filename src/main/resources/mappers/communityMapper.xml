@@ -16,7 +16,7 @@
         SELECT count(*) FROM communityboard WHERE category = 0
     </select>
 
-    <select id="list" parameterType="PagenationDTO" resultType="CommunityDTO">
+    <select id="list" parameterType="com.jjeopjjeop.recipe.pagenation.Pagenation" resultType="CommunityDTO">
         SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
         FROM CommunityBoard t1) t1
         WHERE seqnum BETWEEN #{startRow} AND #{endRow}
@@ -106,6 +106,7 @@
         TITLE = #{title,jdbcType=VARCHAR},
         CONTENT = #{content,jdbcType=VARCHAR},
         rcp_seq = #{rcp_seq, jdbcType=VARCHAR},
+        IMAGE_EXISTS = #{image_exists,jdbcType=VARCHAR},
         UPDATED_AT = sysdate
         WHERE
         id = #{id}
