@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('레시피')">
+    <meta charset="UTF-8" />
+    <title>레시피 조회</title>
+  </head>
+  <body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
+  <main class="custom container">
+    <form action="/recipe/search">
+      <div class="input-group mb-3 rounded">
+        <input
+          type="text"
+          class="form-control rounded"
+          placeholder="내용을 입력하세요."
+          name="searchKey"
+          aria-label="searchKey"
+          aria-describedby="button-addon2"
+        />
+        <a th:href="@{/recipe/search(searchKey=${searchKey})}">
+        <button
+          class="btn btn-warning"
+          type="submit"
+          id="button-addon2"
+          style="margin-left: 10px; color: #fff;"
+        >
+          레시피 검색
+        </button>
+        </a>
+      </div>
+    </form>
+      <div class="rcp_best">
+        <p class="fw-bold fs-2 text-start">오늘의 인기 레시피</p>
+        <div class="row align-items-center">
+          <div class="col">
+            <span class="fs-1"> ◀ </span>
+          </div>
+          <div th:each="favorite : ${favoriteRcpList}" class="col">
+            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${favorite.rcp_seq}, rcp_sort=${pDto.rcp_sort}, cate_seq=${pDto.cate_seq}, currentPage=${pDto.currentPage})}">
+            <img th:if="${not #strings.isEmpty(favorite.filename)}" th:src="@{${favorite.filepath}+${favorite.filename}}" width="200px" height="150px" class="rounded float" />
+              <img th:if="${#strings.isEmpty(favorite.filename)}" src="/media/images/rcp_mainimg.png" width="200px" height="150px" class="rounded float" />
+              <p th:text="${favorite.rcp_name}" class="text-start fw-bold">레시피 제목</p>
+            </a>
+            <p class="d-flex justify-content-between">
+              <span th:text="${favorite.user_id}" class="left">닉네임</span
+              ><span th:text="'♥'+${favorite.scrap}" class="right">스크랩수</span>
+            </p>
+            <p class="d-flex justify-content-between">
+              <span th:text="${favorite.time}" class="left">시간</span><span th:text="${favorite.difficulty}">난이도 하</span
+            ><span th:text="${favorite.amount}" class="right">3인분</span>
+            </p>
+          </div>
+          <div class="col">
+            <span class="fs-1"> ▶ </span>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="rcp_list">
+        <p class="fw-bold fs-2 text-start">분류별 레시피</p>
+        <div class="cate_box rounded">
+          <p>
+            <span>종류별</span>
+          <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
+            &nbsp&nbsp
+             <a th:href="@{/recipe/list(cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
+            <span th:text="${cate1.cate_name}" th:attr="style = ${cate1.cate_seq == pDto.cate_seq ? 'color: black; font-weight:bold;' : 'color: #fff'}">종류별</span>
+             </a>
+          </span>
+          </p>
+          <p>
+            <span>재료별</span>
+          <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
+            &nbsp&nbsp
+            <a th:href="@{/recipe/list(cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
+            <span th:text="${cate2.cate_name}" th:attr="style = ${cate2.cate_seq == pDto.cate_seq ? 'color: black;' : 'color: #fff'}">재료별</span>
+            </a>
+          </span>
+          </p>
+          <p>
+            <span>상황별</span>
+          <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
+            &nbsp&nbsp
+            <a th:href="@{/recipe/list(cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
+            <span th:text="${cate3.cate_name}" th:attr="style = ${cate3.cate_seq == pDto.cate_seq ? 'color: black;' : 'color: #fff'}">상황별</span>
+            </a>
+          </span>
+          </p>
+          <select name="rcp_time" id="rcp_time">
+            <option value="">소요시간</option>
+            <option value="10분 이내">10분 이내</option>
+            <option value="20분 이내">20분 이내</option>
+            <option value="30분 이내">30분 이내</option>
+            <option value="1시간 이내">1시간 이내</option>
+            <option value="2시간 이내">2시간 이내</option>
+            <option value="2시간 이상">2시간 이상</option>
+          </select>
+          </select>
+          <select name="difficulty" id="difficulty">
+            <option value="">난이도</option>
+            <option value="쉬움">쉬움</option>
+            <option value="보통">보통</option>
+            <option value="어려움">어려움</option>
+          </select>
+          <select name="amount" id="amount">
+            <option value="">양</option>
+            <option value="1인분">1인분</option>
+            <option value="2인분">2인분</option>
+            <option value="3인분">3인분</option>
+            <option value="4인분">4인분</option>
+            <option value="5인분 이상">5인분 이상</option>
+          </select>
+        </div>
+        <p class="fs-5 fw-bold" style="margin-bottom: 0" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
+        <hr />
+        <div style="text-align: right; margin-bottom: 20px">
+          <form role="form" id="rcp_sort_form" th:action="@{/recipe/list(rcp_sort=${pDto.rcp_sort})}">
+          <select th:name="rcp_sort" id="rcp_sort" style="margin-right: 0%">
+            <option th:value="0" th:attr="selected = ${pDto.rcp_sort == 0 ? 'true' : 'false'}">최신순</option>
+            <option th:value="1" th:attr="selected = ${pDto.rcp_sort == 1 ? 'true' : 'false'}">오래된순</option>
+            <option th:value="2" th:attr="selected = ${pDto.rcp_sort == 2 ? 'true' : 'false'}">스크랩 많은 순</option>
+            <option th:value="3" th:attr="selected = ${pDto.rcp_sort == 3 ? 'true' : 'false'}">조회수 많은 순</option>
+          </select>
+            <th:block th:each="cate_seq : ${pDto.cate_seq}">
+              <input type="hidden" name="cate_seq" th:value="${cate_seq}">
+            </th:block>
+          </form>
+        </div>
+        <div class="row align-items-center">
+          <div th:each="rcp : ${rcpList}" class="col-4">
+            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${pDto.rcp_sort}, cate_seq=${pDto.cate_seq}, currentPage=${pDto.currentPage})}">
+            <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
+              <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
+            <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>
+            </a>
+            <p class="d-flex justify-content-between">
+              <span th:text="${rcp.user_id}" class="left">닉네임</span
+              ><span th:text="'♥'+${rcp.scrap}" class="right">스크랩수</span>
+            </p>
+            <p class="d-flex justify-content-between">
+              <span th:text="${rcp.time}" class="left">시간</span><span th:text="${rcp.difficulty}">난이도 하</span
+              ><span th:text="${rcp.amount}" class="right">3인분</span>
+            </p>
+          </div>
+        </div>
+        <nav aria-label="Page navigation example" style="margin-top: 30px">
+          <ul class="pagination justify-content-center">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
+            <li class="page-item active">
+              <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/recipe/list(rcp_sort=${pDto.rcp_sort}, cate_seq=${pDto.cate_seq}, currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+            </li>
+              <li class="page-item">
+                <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/recipe/list(rcp_sort=${pDto.rcp_sort}, cate_seq=${pDto.cate_seq}, currentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+              </li>
+            </th:block>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="d-grid col-4 mx-auto">
+          <a th:href="@{/recipe/write}" class="btn btn-warning" style="color:#fff;">
+            새 레시피 등록하기
+          </a>
+        </div>
+      </div>
+    <input type="text" th:value="${pDto.currentPage}">
+    <input type="text" th:value="${pDto.cate_seq}">
+  </main>
+  <script>
+    $('#rcp_sort').change(function(){
+      $('#rcp_sort_form').submit();
+    });
+
+  </script>
+  </body>
+</html>

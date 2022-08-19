@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjeopjjeop.recipe.dao.CommunityDAO">
+    <select id="count" resultType="int">
+        SELECT count(*) FROM communityboard
+    </select>
+
+    <select id="recipeReviewCount" resultType="int">
+        SELECT count(*) FROM communityboard WHERE category = 1
+    </select>
+
+    <select id="freeForumCount" resultType="int">
+        SELECT count(*) FROM communityboard WHERE category = 0
+    </select>
+
+    <select id="list" parameterType="PagenationDTO" resultType="CommunityDTO">
+        SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
+        FROM CommunityBoard t1) t1
+        WHERE seqnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <select id="recipeReviewList" parameterType="PagenationDTO" resultType="CommunityDTO">
+        SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
+        from CommunityBoard t1
+        WHERE category = 1) t1
+        WHERE seqnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <select id="freeForumList" parameterType="PagenationDTO" resultType="CommunityDTO">
+        SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
+        FROM CommunityBoard t1
+        WHERE category = 0) t1
+        WHERE seqnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <insert id="insert" parameterType="CommunityDTO">
+        INSERT INTO CommunityBoard
+        VALUES(CommunityBoard_SEQ.nextval,#{user_id,jdbcType=VARCHAR},#{rep_seq},#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0,#{image_exists})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT CommunityBoard_SEQ.CURRVAL FROM DUAL
+        </selectKey>
+    </insert>
+
+    <select id="findPostById" parameterType="int" resultType="CommunityDTO">
+        SELECT * FROM CommunityBoard WHERE id=#{id}
+    </select>
+
+    <insert id="storeImage" parameterType="ImageDTO">
+        INSERT INTO Image
+        VALUES(Image_SEQ.nextval,#{filename,jdbcType=VARCHAR},#{board_id})
+    </insert>
+
+    <select id="findImageByPostId" parameterType="int" resultType="ImageDTO">
+        SELECT * FROM Image WHERE board_id=#{id}
+    </select>
+
+    <update id="addReadCnt" parameterType="int">
+        UPDATE CommunityBoard SET read_count = read_count+1
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deletePostById" parameterType="int">
+        DELETE FROM CommunityBoard WHERE id=#{id}
+    </delete>
+
+    <delete id="deleteImageByPostId" parameterType="int">
+        DELETE FROM Image WHERE board_id=#{id}
+    </delete>
+
+    <update id="reportPostById" parameterType="int">
+        UPDATE CommunityBoard SET report = report+1
+        WHERE id=#{id}
+    </update>
+
+    <update id="addLikeCntByPostId" parameterType="int">
+        UPDATE CommunityBoard SET like_count = like_count+1
+        WHERE id=#{id}
+    </update>
+
+    <update id="subtractLikeCntByPostId" parameterType="int">
+        UPDATE CommunityBoard SET like_count = like_count-1
+        WHERE id=#{id}
+    </update>
+
+    <insert id="insertLikeInfo" parameterType="Map">
+        INSERT INTO COMMUNITYLIKETABLE
+        VALUES(#{userId},#{postId})
+    </insert>
+
+    <delete id="deleteLikeInfo" parameterType="Map">
+        DELETE FROM COMMUNITYLIKETABLE WHERE COMMUNITY_BOARD_ID=#{postId} AND User_id=#{userId}
+    </delete>
+
+    <select id="checkIfUserLikedPost" parameterType="Map" resultType="int">
+        select COMMUNITY_BOARD_ID from COMMUNITYLIKETABLE
+        where USER_ID =#{userId} and COMMUNITY_BOARD_ID=#{postId}
+    </select>
+
+    <insert id="updatePost" parameterType="CommunityDTO">
+        UPDATE communityboard
+        SET
+        CATEGORY = #{category},
+        TITLE = #{title,jdbcType=VARCHAR},
+        CONTENT = #{content,jdbcType=VARCHAR},
+        rcp_seq = #{rcp_seq, jdbcType=VARCHAR},
+        UPDATED_AT = sysdate
+        WHERE
+        id = #{id}
+      </insert>
+</mapper>

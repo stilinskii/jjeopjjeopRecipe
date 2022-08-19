@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjeopjjeop.recipe.dao.RecipeCommentDAO">
+    <select id="count" parameterType="int" resultType="int">
+        SELECT count(*) FROM comment_rcp
+        WHERE rcp_seq = #{rcp_seq}
+    </select>
+
+    <select id="list" parameterType="RecipePageDTO" resultType="RecipeCommentDTO">
+        <![CDATA[
+        SELECT rcp_co.* FROM
+            (SELECT co.*, rownum rm FROM
+                (SELECT * FROM comment_rcp
+                WHERE rcp_seq = #{rcp_seq}
+                ORDER BY co_rcp_seq DESC)co)rcp_co
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
+    </select>
+
+    <insert id="write" parameterType="RecipeCommentDTO">
+        INSERT INTO comment_rcp(co_rcp_seq, rcp_seq, user_id, co_date, filename, filepath, comment_txt)
+        VALUES(co_rcp_seq_seq.nextval, #{rcp_seq}, #{user_id}, sysdate, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR}, #{comment_txt, jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM comment_rcp
+        WHERE co_rcp_seq = #{co_rcp_seq}
+    </delete>
+</mapper>

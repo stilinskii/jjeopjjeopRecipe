@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--    th:replace="fragments/head('쇼핑')" 일단 빼둠.-->
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--==========================임의추가 시작==========================-->
+<!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"-->
+<!--          th:href="@{/css/bootstrap.css}"/>-->
+
+    <!--아래 4줄은 드롭다운이 안돼서 임의로 넣음.https://coding-dahee.tistory.com/50-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <!--==========================임의 추가 끝==========================-->
+
+    <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
+    <link href="/static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+
+    <!--============================nav스타일 적용위해 넣음 시작(나중에 삭제할것.)=============================-->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+
+    <link
+            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            rel="stylesheet"
+    />
+    <link
+            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--============================nav스타일 적용위해 넣음 끝=============================-->
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
+<div class="site-wrap">
+    <div class="site-section">
+        <div class="container">
+
+            <button class="btn btn-warning mb-3"><a th:href="@{/produce/write}" class="a-to-black">판매글 쓰기</a></button>
+            <div class="row mb-5">
+                <div class="col-md-10 order-2"><!-- 얘가 우측통째로 -->
+                    <!--================드롭다운 시작=================-->
+                    <div class="row">
+                        <div class="col-md-12 mb-5">
+                            <div class="float-md-left mb-4"><h1>농산물 직거래 마당</h1></div>
+                            <div class="d-flex">
+                                <div class="dropdown mr-1 ml-md-auto">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        분류
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+                                        <a class="dropdown-item" th:href="@{/produce/list}">전체</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/1}">채소</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/2}">과일</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/3}">곡물</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/4}">기타</a>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                                        <a class="dropdown-item" href="#">Relevance</a>
+                                        <a class="dropdown-item" href="#">Name, A to Z</a>
+                                        <a class="dropdown-item" href="#">Name, Z to A</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Price, low to high</a>
+                                        <a class="dropdown-item" href="#">Price, high to low</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--================드롭다운 끝=================-->
+                    <div class="row mb-5" >
+                        <!--  ====================상품 카드 시작======================-->
+                        <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up" th:each="produce : ${list}">
+                            <div class="block-4 text-center border" th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"
+                                 style="cursor:pointer;">
+                                <figure class="block-4-image">
+                                    <!--이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
+                                    <a th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}">
+                                        <img class="img-fluid" th:src="${produce.produce_image_path}" alt="상품이미지" />
+                                    </a>
+                                </figure>
+                                <div class="block-4-text p-4">
+                                    <h3 class="text-dark font-weight-bold" th:text="${produce.produce_name}">상품명</h3>
+                                    <p class="mb-0 text-secondary" th:text="${produce.user_id}">판매자</p>
+                                    <p class="font-weight-bold" data-th-text="${#numbers.formatInteger(produce.price, 3, 'COMMA') + '원'}" >상품가격</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  ====================상품 카드 끝======================-->
+
+                    <!--  ====================페이지네이션 시작======================-->
+<!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
+                    <div class="row fixed-bottom" data-aos="fade-up">
+                        <div class="col-md-12 text-center">
+<!--                            이거 없으면 페이지네이션 왼쪽하단으로 이동됨-->
+                            <div class="site-block-27">
+                                <!--이거없으면 스타일 적용안됨.-->
+                                <ul>
+                                    <li><a href="#">&lt;</a></li>
+                                    <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
+                                        <li class="page-item active">
+                                            <a class="a-to-black" th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/produce/list}" th:text="${pDtos}"></a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="a-to-black" th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/produce/list(currentPage=${pDtos})}" th:text="${pDtos}"></a>
+                                        </li>
+                                    </th:block>
+                                    <li><a href="#">&gt;</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--  ====================페이지네이션 끝======================-->
+                </div>
+            </div>
+        </div>
+<!--  =======================================좌측 ===========================================-->
+         <div class="col-md-2 order-1 mb-5 mb-md-0" style="border: 1px solid black;">광고? 인기 상품? 보통은 여기는 필터링or광고부분. 아니면 아예 상품을 4x4로 하든가 </div>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- **********************************-->
+
+<!-- **********************************-->
+</body>
+</html>

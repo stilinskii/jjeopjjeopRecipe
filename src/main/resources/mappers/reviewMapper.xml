@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://mybatis.org/mybatis-3/configuration.html#mappers에서 세줄만 복붙 -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjeopjjeop.recipe.dao.ReviewDAO">
+<!--    <select id="reviewList" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ReviewDTO">-->
+<!--        SELECT * FROM produce_review WHERE produce_name = #{produce_name}-->
+<!--    </select>-->
+
+<!--판매글 상세보기에서 해당 판매글에 대한 리뷰 목록 보여주기-->
+    <select id="reviewList" parameterType="int" resultType="com.jjeopjjeop.recipe.dto.ReviewDTO">
+        SELECT produce_review.pay_num, produce_review.rating, produce_review.content, produce_review.created_date
+        FROM produce_review, pay_history
+        WHERE produce_review.pay_num = pay_history.pay_num
+        AND pay_history.produce_num = #{produce_num}
+    </select>
+
+<!--리뷰 삭제-->
+    <delete id="reviewDelete" parameterType="int">
+        DELETE FROM produce_review WHERE pay_num = #{pay_num}
+    </delete>
+
+<!-- 리뷰 작성-->
+    <insert id="reviewWrite" parameterType="com.jjeopjjeop.recipe.dto.ReviewDTO">
+        INSERT INTO produce_review
+        VALUES(#{pay_num}, #{rating}, #{content}, sysdate)
+    </insert>
+
+<!--리뷰 수정을 위한 작성된 리뷰내용 보기-->
+    <select id="reviewView" resultType="com.jjeopjjeop.recipe.dto.ReviewDTO" parameterType="int">
+        SELECT * FROM produce_review WHERE pay_num = #{pay_num}
+    </select>
+
+<!--리뷰 수정 반영-->
+    <update id="reviewUpdate" parameterType="com.jjeopjjeop.recipe.dto.ReviewDTO">
+        UPDATE produce_review
+        SET rating = #{rating}, content=#{content}
+        WHERE pay_num = #{pay_num}
+    </update>
+</mapper>

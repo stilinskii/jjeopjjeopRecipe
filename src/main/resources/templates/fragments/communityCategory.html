@@ -1,0 +1,22 @@
+<div class="col-2" th:fragment="category(title)">
+  <ul class="list-group categories">
+    <li
+      class="list-group-item p-0"
+      th:classappend="${title}=='전체글'? 'bg-secondary'"
+    >
+      <a href="/community" class="nav-link category">전체글</a>
+    </li>
+    <li
+      class="list-group-item p-0"
+      th:classappend="${title}=='레시피후기'? 'bg-secondary'"
+    >
+      <a href="/community/recipeReview" class="nav-link category">레시피후기</a>
+    </li>
+    <li
+      class="list-group-item p-0"
+      th:classappend="${title}=='자유게시판'? 'bg-secondary'"
+    >
+      <a href="/community/freeForum" class="nav-link category">자유게시판</a>
+    </li>
+  </ul>
+</div>
