@@ -3,27 +3,13 @@ package com.jjeopjjeop.recipe.controller;
 
 
 import com.jjeopjjeop.recipe.dto.*;
-
-import com.jjeopjjeop.recipe.dto.A_userDTO;
-import com.jjeopjjeop.recipe.dto.AdminDTO;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
-import com.jjeopjjeop.recipe.dto.SellerDTO;
-
 import com.jjeopjjeop.recipe.service.AdminService;
-import com.jjeopjjeop.recipe.service.CommunityService;
-import com.jjeopjjeop.recipe.service.RecipeService;
-import com.jjeopjjeop.recipe.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Slf4j
@@ -34,13 +20,13 @@ public class AdminController {
 
     private final AdminService adminService;
 
-
-
-
    private int currentPage;
 
 //    @Autowired
 //   private int currentPage;
+
+
+
 
 
     //db 확인
@@ -51,7 +37,6 @@ public class AdminController {
 //
 //        return "practice";
 //    }
-
 
     //회원목록 불러오기(recipepageDTO)
 //    @RequestMapping(value= "/u_index", method = RequestMethod.GET)
@@ -107,38 +92,6 @@ public class AdminController {
         return "admin/u_index";
     }
 
-
-
-//    @RequestMapping(value= "/admin/userlist", method = RequestMethod.GET)
-//    public ModelAndView listUser(ModelAndView mav, HttpServletRequest request) throws Exception {
-//        String viewName = (String)request.getAttribute("viewName");
-//        System.out.println("list viewName :" + viewName);
-//        mav.addObject("listUser", adminService.listUser());
-//        mav.setViewName("/admin/userlist");
-//        return mav;
-//    }
-/*
-    //회원목록
-    @GetMapping("/u_index")
-      public String UserList(Model model, PageDTO pageDTO) {
-        log.info("회원 리스트");
-        int totalUSer = adminService.countUser();
-
-        if(totalUSer>0){
-            currentPage = Math.max(pageDTO.getCurrentPage(),1);
-            pageDTO = new PageDTO(currentPage, totalUSer);
-        }
-
-//        List<UserDTO> users = adminService.USerList(pv);
-//         model.addAttribute("users", users);
-        model.addAttribute("count", totalUSer);
-        model.addAttribute("users", adminService.UserList(pageDTO));
-        model.addAttribute("pdto", pageDTO);
-
-          return "admin/u_index";
-    }
-*/
-
     //회원상세
     @GetMapping("/detailU")
     public String detailU(String user_id, Model model){
@@ -147,18 +100,6 @@ public class AdminController {
         return "admin/detailU";
     }
 
-
-
-    //회원 인서트(문제)
-//    @RequestMapping(value = "/admin/view")
-//    public ModelAndView addUser(@ModelAttribute("adminDTO") AdminDTO adminDTO,
-//                                HttpServletRequest request, HttpServletResponse response) throws Exception {
-//        int result = 0;
-//        result = adminService.addUser(adminDTO);
-//        ModelAndView mav = new ModelAndView("redirect:/admin/userlist");
-//        return mav;
-//
-//    }
 
     //회원 삭제하기
     @GetMapping("delU/{user_id}")
@@ -170,7 +111,6 @@ public class AdminController {
 
 
     //미승인 판매자 목록 불러오기(=0)
-
 //    @GetMapping("/s_index")
 //    public String allNSell(Model model){
 //        List<SellerDTO> nsellers = adminService.listNSeller();
@@ -184,17 +124,10 @@ public class AdminController {
         model.addAttribute("nsellers", adminService.nSellerList(cri));
         model.addAttribute("ncount", adminService.countNseller());
         model.addAttribute("pageMaker", new A_pageDTO(cri, adminService.countNseller(), 10));
-
-    @GetMapping("/s_index")
-    public String allNSell(Model model){
-        List<SellerDTO> nsellers = adminService.listNSeller();
-        model.addAttribute("nsellers",nsellers);
-
         return "admin/s_index";
     }
 
     //승인 판매자 목록
-
 //    @GetMapping("/ss_index")
 //    public String allSell(Model model){
 //        List<SellerDTO> sellers = adminService.listSeller();
@@ -207,12 +140,6 @@ public class AdminController {
         model.addAttribute("sellers", adminService.ySellerList(cri));
         model.addAttribute("ycount", adminService.countYseller());
         model.addAttribute("pageMaker", new A_pageDTO(cri, adminService.countYseller(), 10));
-
-    @GetMapping("/ss_index")
-    public String allSell(Model model){
-        List<SellerDTO> sellers = adminService.listSeller();
-        model.addAttribute("sellers", sellers);
-
         return "admin/ss_index";
     }
 
@@ -223,7 +150,6 @@ public class AdminController {
        adminService.approSeller(user_id);
        return "redirect:/admin/ss_index";
     }
-
 
     //판매자 승인 취소
     @GetMapping("cancelSel/{user_id}")
@@ -272,26 +198,6 @@ public class AdminController {
 //        return
 //    }
 
-
-    //레시피 목록
-    @GetMapping("/r_index")
-    public String apprcp(Model model){
-        List<RecipeDTO> apprcplist =adminService.apprcpList();
-        model.addAttribute("apprcplist", apprcplist);
-        return "admin/r_index";
-    }
-
-    //레시피글 누르면 상세내용 페이지
-//    @GetMapping("/")
-//    public String rcpdetail(String rcp_name, Model model){
-//        model.addAttribute("RecipeDTO", rcpdetail);
-//        return "admin/";
-//    }
-
-
-
-
-
     //레시피 게시글 삭제
 
     //레시피 삭제
@@ -309,7 +215,6 @@ public class AdminController {
         return "admin/c_index";
     }
 
-
     //게시판 상세 페이지
 
 
@@ -322,7 +227,6 @@ public class AdminController {
         return "redirect:/admin/c_index";
 
     }
-
 
 
 }

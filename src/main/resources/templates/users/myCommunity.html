@@ -33,9 +33,11 @@
                 <tbody>
                 <tr th:each="myCommunity :${myCommunityList}">
                     <th scope="row" th:text="${myCommunity.id}">1</th>
-                    <td th:text="${myCommunity.title}" th:href="@{community/post?id=${myCommunity.user_id}">Title</td>
+                    <td>
+                        <a th:text="${myCommunity.title}" th:href="@{/community/post(id = ${myCommunity.id})}">Title</a>
+                    </td>
                     <td th:text="${myCommunity.user_id}">Writer</td>
-                    <td th:text="${myCommunity.created_at}">WriteDate</td>
+                    <td th:text="${myCommunity.formatted_created_at}">WriteDate</td>
                     <td th:text="${myCommunity.read_count}">ViewCount</td>
                     <td th:text="${myCommunity.like_count}">LikeCount</td>
                 </tr>

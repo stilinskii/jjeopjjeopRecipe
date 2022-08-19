@@ -3,6 +3,8 @@ package com.jjeopjjeop.recipe.dao;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.ImageDTO;
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
+import com.jjeopjjeop.recipe.form.CommunitySearchForm;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +18,7 @@ public interface CommunityDAO {
     int count(); // 목록 숫자 세기
     int recipeReviewCount();
     int freeForumCount();
-    List<CommunityDTO> list(PagenationDTO pagenationDTO);
+    List<CommunityDTO> list(Pagenation pagenation);
     List<CommunityDTO> recipeReviewList(PagenationDTO pagenationDTO);
     List<CommunityDTO> freeForumList(PagenationDTO pagenationDTO);
     void insert(CommunityDTO communityDTO);
@@ -40,4 +42,8 @@ public interface CommunityDAO {
     Integer checkIfUserLikedPost(Map<String,Object> likeInfo);
 
     void updatePost(CommunityDTO community);
+
+    List<CommunityDTO> findCommunityBySearch(Map<String, Object> form);
+
+    Integer countCommunityBySearch(CommunitySearchForm communitySearchForm);
 }

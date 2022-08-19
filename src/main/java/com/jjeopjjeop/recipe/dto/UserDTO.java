@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class UserDTO {
    @NotBlank(message = "필수 입력 항목입니다.")
-   @Pattern(regexp = "[a-z0-9].{4,10}", message = "아이디는 영어 소문자와 숫자 4~10자리여야 합니다.")
+   @Pattern(regexp = "[a-z0-9]{4,10}", message = "아이디는 영어 소문자와 숫자 4~10자리여야 합니다.")
    private String user_id;
 
    @NotBlank(message = "필수 입력 항목입니다.")
@@ -28,7 +28,7 @@ public class UserDTO {
    private String username;
 
    @NotBlank(message = "필수 입력 항목입니다.")
-   @Pattern(regexp = "[ㄱ-ㅎ가-힣a-z0-9-_]{3,8}", message = "별명은 특수문자를 제외한 3~8자리여야 합니다.")
+   @Pattern(regexp = "[ㄱ-ㅎ가-힣a-z0-9]{2,5}", message = "별명은 특수문자를 제외한 2~5자리여야 합니다.")
    private String nickname;
 
    @NotBlank(message = "필수 입력 항목입니다.")
@@ -36,6 +36,7 @@ public class UserDTO {
    private String email;
 
    @NotBlank(message = "필수 입력 항목입니다.")
+   @Pattern(regexp = "\\d{3}-\\d{3,4}-\\d{4}", message = "")
    private String phone;
 
    @Past(message = "미래 날짜로 입력할 수 없습니다.")
@@ -50,5 +51,5 @@ public class UserDTO {
    };
    
    //조인한 게시판 객체 가져오기
-   private List<CommunityDTO> communityDTOList;
+//   private List<CommunityDTO> communityDTOList;
 }

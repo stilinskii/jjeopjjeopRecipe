@@ -1,6 +1,8 @@
 package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dao.UserDAO;
+import com.jjeopjjeop.recipe.dto.CommunityDTO;
+import com.jjeopjjeop.recipe.dto.RecipeDTO;
 import com.jjeopjjeop.recipe.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -27,8 +29,13 @@ public class UserServiceImp implements UserService{
    }
 
    @Override
-   public List<UserDTO> listMyCommunity(String user_id) {
-      return userDAO.showMyCommunity(user_id);
+   public List<CommunityDTO> listMyCommunity(String user_id) {
+      return userDAO.viewMyCommunity(user_id);
+   }
+
+   @Override
+   public List<RecipeDTO> listMyRecipe(String user_id) {
+      return userDAO.viewMyRecipe(user_id);
    }
 
    @Override
@@ -38,8 +45,8 @@ public class UserServiceImp implements UserService{
 
    @Transactional
    @Override
-   public int removeUser(UserDTO userDTO) {
-      return userDAO.deleteUser(userDTO);
+   public int removeUser(String user_id, String password) {
+      return userDAO.deleteUser(user_id, password);
    }
 
    @Override
@@ -112,11 +119,8 @@ public class UserServiceImp implements UserService{
    }
 
    @Override
-   public boolean checkPassword(String user_id, String password) {
-      boolean result = false;
-      int count = userDAO.checkPassword(user_id, password);
-      if(count == 1) result = true;
-      return result;
+   public String checkId(String user_id) {
+      return userDAO.checkId(user_id);
    }
 
 }

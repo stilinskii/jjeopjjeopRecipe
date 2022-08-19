@@ -20,7 +20,7 @@ public class RecipeDTO {
     @NotBlank(message = "* 레시피 이름은 필수 입력 항목입니다.")
     @Size(max=16, message = "* 최대 16자까지 입력할 수 있습니다.")
     private String rcp_name;
-    private String user_id = "테스트";
+    private String user_id = "abc";
     private String filename;
     private String filepath;
     @NotBlank(message = "* 소요시간은 필수 입력 항목입니다.")
