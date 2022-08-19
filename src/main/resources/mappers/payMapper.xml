@@ -53,8 +53,9 @@ user_id = #{user_id}는 혹시 다른 사람이 결제하는 거랑 겹칠까봐
         AND pay_history.produce_num=produce_board.produce_num
         ORDER BY pay_history.pay_num DESC-->
 
+<!-- MAP으로? 아님 CONTROLLER에서 거르기?-->
     <!--장바구니 버튼 누르면 나오는 장바구니 목록. pay=0인(즉 구매하지 않은) 컬럼을 불러온다. -->
-    <select id="cartView" parameterType="RecipePageDTO" resultMap="produce_pay">
+    <select id="cartView" parameterType="PagenationDTO" resultMap="produce_pay">
         <![CDATA[
         	SELECT rcp_li.* FROM
                 (SELECT rcp.*, rownum rm FROM

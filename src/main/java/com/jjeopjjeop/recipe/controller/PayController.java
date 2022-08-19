@@ -1,8 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
-import com.jjeopjjeop.recipe.dto.PayDTO;
-import com.jjeopjjeop.recipe.dto.ProduceDTO;
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.service.KakaoPay;
 import com.jjeopjjeop.recipe.service.PayService;
 
@@ -32,6 +30,8 @@ public class PayController {
     @Autowired
     private ProduceDTO produceDTO2;
 
+
+
     //판매글 상세페이지에서 버튼 클릭하여 장바구니에 넣기
     @PostMapping("/cart/write")
     public String cartWrite(PayDTO payDTO){
@@ -39,28 +39,93 @@ public class PayController {
         return "redirect:/produce/view/" + payDTO.getProduce_num();
     }
 
-    private int currentPage;
+   private int currentPage;
+//
+//    @GetMapping("/mypage/cart/view")
+//    public ModelAndView cartView(ModelAndView mav, RecipePageDTO recipePageDTO, HttpServletRequest request){
+//        // 전체 레코드 수
+//        int totalRecord = payService.cartCount(request);
+//
+//        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
+//            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
+//            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
+//            //recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
+//            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);
+//        }
+//
+//        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
+//        List<ProduceDTO> list = payService.cartView(recipePageDTO);
+//        mav.addObject("list", list);
+//        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
+//        mav.setViewName("/users/cart");
+//
+//        return mav;
+//    }
+
+//
+//    @GetMapping
+//    public String all(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model){
+//        PagenationDTO pagenationDTO = getPagenationDTO(page, communityService.count());
+//        List<CommunityDTO> board = communityService.getBoard(pagenationDTO);
+//
+//        model.addAttribute("board",board);
+//        model.addAttribute("page",pagenationDTO);
+//        //model.addAttribute("localDateTime", LocalDateTime.now());
+//        return "community/index";
+//    }
 
     @GetMapping("/mypage/cart/view")
-    public ModelAndView cartView(ModelAndView mav, RecipePageDTO recipePageDTO, HttpServletRequest request){
+    public ModelAndView cartView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,ModelAndView mav, RecipePageDTO recipePageDTO, HttpServletRequest request){
         // 전체 레코드 수
         int totalRecord = payService.cartCount(request);
-
-        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
-            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
-            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
-
-            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
-        }
+        PagenationDTO pagenationDTO = getPagenationDTO(page,totalRecord,5);
 
         mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
-        List<ProduceDTO> list = payService.cartView(recipePageDTO);
+        List<ProduceDTO> list = payService.cartView(pagenationDTO);
         mav.addObject("list", list);
-        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
+        mav.addObject("page", pagenationDTO); //페이지 정보 넘겨주기
         mav.setViewName("/users/cart");
 
         return mav;
     }
+
+    private PagenationDTO getPagenationDTO(Integer page, int recordCount, int perPage) {
+        PagenationDTO pagenationDTO = new PagenationDTO();
+        int startRow = (page != null) ? page : 0; // page가 입력되지 않았으면 자동으로 1페이지로(0이 1)
+        int count = recordCount;// 전체 글 개수
+        //int perPage = 10;//한페이지당 보여질 글 개수
+        int totalPageCnt = (int) Math.ceil((double) count/(double) perPage); // 전체글 / 페이지에 보여질 개수 = 페이지 수
+
+        log.info("****************************startRow={}",startRow);
+        log.info("****************************count={}",count); //얘가 11이 나옴. 총 row 개수
+        log.info("****************************perPage={}",perPage); //얘는 5. 위에서 설정했지.
+        log.info("****************************totalPageCnt={}",totalPageCnt);  //얘가 3이나옴. 11개를 5개씩이니까 맞음.
+
+//5개만보이게, 6페이지면 23456
+        int startPageNum = (page >=totalPageCnt-3)&&(totalPageCnt>= 4) ? totalPageCnt-4:Math.max(1, page -1); //현재페이지가 총
+        //현재페이지가 총페이지 수-3이하면
+        //총페이지 -4를 시작 페이지Num으로 잡아라.
+        //그런데 문제는 총페이지가 4이하면 시작페이지가 0으로된다.
+        //그래서 &&(totalPageCnt>= 4) 이거넣었더니 됐다!
+        int endPageNum = page >=totalPageCnt-3 ? totalPageCnt: Math.min(startPageNum + 4, totalPageCnt);
+
+        log.info("********start and end={},{}*********",startPageNum,endPageNum);
+        pagenationDTO.setPage(startRow);
+        pagenationDTO.setCount(count);
+        pagenationDTO.setTotalPageCnt(totalPageCnt);
+        pagenationDTO.setPerPage(perPage);
+        //db에 넘길 row num
+        pagenationDTO.setStartRow(1 + (perPage * page));
+        pagenationDTO.setEndRow(perPage*(page +1));
+        //front에 넘길 페이지 번호
+        pagenationDTO.setStartPageNum(startPageNum);
+        pagenationDTO.setEndPageNum(endPageNum);
+
+        log.info("start and end={},{}",startPageNum,endPageNum);
+
+        return pagenationDTO;
+    }
+/////////////////////////////////////////////////////////////////////////////
 
     //구매내역 보기
     @GetMapping("/mypage/pay/view")

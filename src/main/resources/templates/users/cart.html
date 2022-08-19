@@ -16,12 +16,18 @@
         <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
     </head>
 <body>
+<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script defer type="text/javascript" th:src="@{/js/common.js}" src="/static/js/common.js"></script>
+
+
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>
 <div class="wrapper d-flex align-items-stretch">
     <div class="col" th:replace="fragments/userSidebar :: userSidebar"></div>
     <div id="content" class="pt-5">
         <div class="container py-5 h-100">
             <h4 class="row d-flex justify-content-center align-items-center mb-3">장바구니</h4>
+            <h5>여러분 여기가 이상하게 나올거예요. 타임리프로 user_id를 필터링해서 그렇습니다... 나중에 고칠게요!
+                보이는 것만 불편하지 쓰는데는 기능상에는 큰문제 없을거예요!</h5>
             <table class="table table-hover">
                 <thead>
                     <tr class="table-warning">
@@ -49,7 +55,7 @@
                                         </form>
                                     </td>
                                     <td><a th:href="@{/mypage/cart/delete/{pay_num}(pay_num=${payDTO.pay_num})}">
-                                        <button type="button" class="btn btn-md btn-warning">삭제</button></a>
+                                        <button type="button" class="btn btn-md btn-warning confirmDeletion">삭제</button></a>
                                     </td>
                                 </th:block>
                             </th:block>
@@ -59,24 +65,65 @@
             </table>
 
             <!--  ====================페이지네이션 시작======================-->
-            <div class="row fixed-bottom" data-aos="fade-up">
-                <div class="col-md-12 text-center">
-                    <div class="site-block-27">
-                        <ul>
-                            <li><a href="#">&lt;</a></li>
-                            <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
-                                <li class="page-item active">
-                                    <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/mypage/cart/view/a}" th:text="${pDtos}"></a>
-                                </li>
-                                <li class="page-item">
-                                    <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/mypage/cart/view/a(currentPage=${pDtos})}" th:text="${pDtos}"></a>
-                                </li>
-                            </th:block>
-                            <li><a href="#">&gt;</a></li>
-                        </ul>
-                    </div>
-                </div>
+<!--            <div class="row fixed-bottom" data-aos="fade-up">-->
+<!--                <div class="col-md-12 text-center">-->
+<!--                    <div class="site-block-27">-->
+<!--                        <ul>-->
+<!--                            <li><a href="#">&lt;</a></li>-->
+<!--                            <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">-->
+<!--                                <li class="page-item active">-->
+<!--                                    <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/mypage/cart/view}" th:text="${pDtos}"></a>-->
+<!--                                </li>-->
+<!--                                <li class="page-item">-->
+<!--                                    <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/mypage/cart/view(currentPage=${pDtos})}" th:text="${pDtos}"></a>-->
+<!--                                </li>-->
+<!--                            </th:block>-->
+<!--                            <li><a href="#">&gt;</a></li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <!--  ====================페이지네이션 끝======================-->
+
+
+            <h1 th:text="${page.startPageNum}"></h1>
+            <h1 th:text="${page.endPageNum}"></h1>
+
+
+            <nav class="mt-3" th:if="${page.count>page.perPage}">
+                <ul class="pagination">
+                    <li
+                            class="page-item"
+                            th:classappend="${page.page == 0} ? 'disabled'"
+                    >
+                        <a
+                                th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}"
+                                class="page-link"
+                        >Previous</a
+                        >
+                    </li>
+                    <li
+                            class="page-item"
+                            th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
+                            th:classappend="${page.page==number-1} ? 'active'"
+                    >
+                        <a
+                                th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
+                                class="page-link"
+                                th:text="${number}"
+                        ></a>
+                    </li>
+                    <li
+                            class="page-item"
+                            th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'"
+                    >
+                        <a
+                                th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}"
+                                class="page-link"
+                        >Next</a
+                        >
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

@@ -1,5 +1,6 @@
 package com.jjeopjjeop.recipe.service;
 
+import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.dto.PayDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface PayService {
     public void cartWriteProcess(PayDTO payDTO);
 
-    public List<ProduceDTO> cartView(RecipePageDTO recipePageDTO);//마이페이지 들어가서 장바구니 보기
+    public List<ProduceDTO> cartView(PagenationDTO recipePageDTO);//마이페이지 들어가서 장바구니 보기
 
     public List<ProduceDTO> payView(RecipePageDTO recipePageDTO);//마이페이지 들어가서 구매내역 보기
 

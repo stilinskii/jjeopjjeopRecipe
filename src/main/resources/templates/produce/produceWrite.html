@@ -8,11 +8,12 @@
   <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet" />
   <!-- 서버안돌아갈때도???  -->
 </head>
-<body class="sub_page">
+<body>
+  <!-- 0819 sub_page 지워봄. 잘될까?-->
 
 <nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
 <!-- book section -->
-<section class="book_section layout_padding">
+<section class="book_section layout_padding mt-5"><!--mt-5: margin top을 5만큼 줘라-->
   <div class="container" >
     <div class="heading_container d-block text-center">
       <h2>판매게시글 등록</h2>

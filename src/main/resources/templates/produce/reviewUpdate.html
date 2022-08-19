@@ -6,13 +6,12 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
-
-
 </head>
-<body class="sub_page">
+<body>
+    <!-- 0819 sub_page 지워봄. 잘될까? -->
 
 <!-- book section -->
-<section class="book_section layout_padding">
+<section class="book_section layout_padding mt-5">
     <div class="container" >
         <div class="heading_container d-block text-center">
             <h2>리뷰 등록</h2>
@@ -22,7 +21,6 @@
             <div class="col-md-6">
                 <div class="form_container">
                     <form name="reviewUpdate" method="post" th:action="@{/review/update}">
-<!--                        name="write" id="write" -->
                         <div>
                             <input type="text" class="form-control" placeholder="아이디" th:value="${session.user_id}"/>
                         </div>

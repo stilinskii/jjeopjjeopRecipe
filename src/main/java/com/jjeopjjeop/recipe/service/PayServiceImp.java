@@ -1,6 +1,7 @@
 package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dao.PayDAO;
+import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.dto.PayDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
@@ -30,7 +31,7 @@ public class PayServiceImp implements PayService{
 
     //마이페이지 들어가서 장바구니 보기
     @Override
-    public List<ProduceDTO> cartView(RecipePageDTO recipePageDTO) {
+    public List<ProduceDTO> cartView(PagenationDTO recipePageDTO) {
         return payDAO.cartView(recipePageDTO);
     }
 
@@ -59,7 +60,7 @@ public class PayServiceImp implements PayService{
         payDAO.cartUpdate(pay_num);
     }
 
-    //페이지 처리를 위해 장바구니 항목 개수 세기. 나중에 id부분변경 ->0816 변경함.
+    //페이지 처리를 위해 각 회원의 장바구니 항목 개수 세기. 나중에 id부분변경 ->0816 변경함.
     @Override
     public int cartCount(HttpServletRequest request) {
 
@@ -73,12 +74,12 @@ public class PayServiceImp implements PayService{
 
     }
 
-    //페이지 처리를 위해 구매내역 항목 개수 세기.
+    //페이지 처리를 위해 각 회원의 구매내역 항목 개수 세기.
     @Override
     public int payCount(HttpServletRequest request) {
         HttpSession session = request.getSession();
         if(session != null){
-            return payDAO.cartCount((String) session.getAttribute("user_id"));
+            return payDAO.payCount((String) session.getAttribute("user_id"));
         }
         return 0;
     }

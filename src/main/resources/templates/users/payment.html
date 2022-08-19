@@ -10,19 +10,13 @@
         <!-- icons -->
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
         <link rel="stylesheet" th:href="@{/css/style.css}" href="/static/css/produce.css" />
-        <script type="text/javascript" th:src="@{/js/community_post.js}" src="/static/js/community_post.js"></script> <!--삭제 확인용으로 넣음. 근데 안먹힘.-->
         <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script type="text/javascript" th:inline="javascript">
-        //삭제 확인 알림창 띄우기
-        $(function() {
-             $('a.confirmDeletion').click(function(){
-              if(!confirm('삭제확인')) return false;});
-        });
-        </script>
     </head>
 <body>
+<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script defer type="text/javascript" th:src="@{/js/common.js}" src="/static/js/common.js"></script>
+
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>
 <div class="wrapper d-flex align-items-stretch">
     <div class="col" th:replace="fragments/userSidebar :: userSidebar"></div>
@@ -66,23 +60,20 @@
                 </tbody>
             </table>
 <!-- ======================================pagination시작====================================== -->
-            <h3 th:text="${pDto.startPage}"></h3>
-            <h3 th:text="${pDto.endPage}"></h3>
-
-            <!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
+            <!--fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
             <div class="row fixed-bottom" data-aos="fade-up">
                 <div class="col-md-12 text-center">
-                    <!--                            이거 없으면 페이지네이션 왼쪽하단으로 이동됨-->
+                    <!-- 이거 없으면 페이지네이션 왼쪽하단으로 이동됨-->
                     <div class="site-block-27">
                         <!--이거없으면 스타일 적용안됨.-->
                         <ul>
                             <li><a href="#">&lt;</a></li>
                             <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
                                 <li class="page-item active">
-                                    <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/produce/list}" th:text="${pDtos}"></a>
+                                    <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/mypage/pay/view}" th:text="${pDtos}"></a>
                                 </li>
                                 <li class="page-item">
-                                    <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/produce/list(currentPage=${pDtos})}" th:text="${pDtos}"></a>
+                                    <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/mypage/pay/view(currentPage=${pDtos})}" th:text="${pDtos}"></a>
                                 </li>
                             </th:block>
                             <li><a href="#">&gt;</a></li>
