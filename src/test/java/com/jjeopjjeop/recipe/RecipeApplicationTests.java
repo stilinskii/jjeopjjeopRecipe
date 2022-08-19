@@ -1,4 +1,4 @@
-package com.jjeopjjeop.produce;
+package com.jjeopjjeop.recipe;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

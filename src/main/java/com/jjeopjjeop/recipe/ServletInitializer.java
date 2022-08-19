@@ -1,4 +1,4 @@
-package com.jjeopjjeop.produce;
+package com.jjeopjjeop.recipe;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
