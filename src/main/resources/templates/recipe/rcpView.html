@@ -120,15 +120,15 @@
             <br/>
             <p class="d-flex justify-content-between">
                 <span th:text="'조회수 '+${rcp.rcp_viewcnt}" class="left">조회수</span>
-                <a id="scrapBtn" href="#">
+                <span id="scrapBtn" class="viewBtn">
                     <span>♥ 스크랩 </span>
                     <span th:text="${rcp.scrap}" id="scraps2"></span>
-                </a>
-                <a id="shareBtn" href="#" data-bs-toggle="modal" data-bs-target="#shareModal">
+                </span>
+                <span id="shareBtn" class="viewBtn" data-bs-toggle="modal" data-bs-target="#shareModal">
                 <span th:text="'★ 공유하기'">공유</span>
-                </a>
-                <a th:if="${reportOrNot} == 0" href="#" data-bs-toggle="modal" data-bs-target="#reportModal">
-                <span th:text="'신고하기'" id="report1" class="right" style="color: red;">신고</span></a>
+                </span>
+                <span th:if="${reportOrNot} == 0" class="viewBtn" data-bs-toggle="modal" data-bs-target="#reportModal">
+                <span th:text="'신고하기'" id="report1" class="right" style="color: red;">신고</span></span>
             </p>
         </div>
     </div>
@@ -145,7 +145,7 @@
     </p>
     <hr/>
     <h2 th:text="'#'"></h2>
-    <p th::text="${rcp.hash_tag}"></p>
+    <p th:text="${rcp.hash_tag}"></p>
     <div class="d-grid d-md-block gap-3 viewBtn" style="text-align: center;">
         <a th:if="${recipePageDTO.searchKey != null}" th:href="@{/recipe/search(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey})}" class="btn btn-secondary me-md-5">
             레시피 검색 목록으로 돌아가기
@@ -165,7 +165,7 @@
                 <textarea class="form-control" name="comment_txt" id="comment_txt" style="height: 100%;" placeholder="내용을 입력해주세요."></textarea>
             </div>
             <div class="col-2">
-                <span class="btn btn-warning" id="coWriteBtn" style="width: 100%; height: 100%; color: #fff; line-height: 70px;">덧글쓰기</span>
+                <span class="btn btn-warning" id="coWriteBtn" style="width: 100%; height: 100%; color: #fff; line-height: 70px;">댓글쓰기</span>
             </div>
         </div>
     </form>
@@ -224,12 +224,15 @@
                 comment_list += '<b><span>답글</span></b>&nbsp&nbsp';
                 comment_list += '<span style="color: red;">신고</span>&nbsp&nbsp&nbsp';
                 if(user_id == obj.user_id){
-                    comment_list += '<span style="color: blue;">수정</span>&nbsp&nbsp';
-                    comment_list += '<a href="#"><span>삭제</span></a>&nbsp&nbsp&nbsp';
+                    comment_list += '<span class="coUpdateBtn viewBtn" style="color: blue;">수정</span>&nbsp&nbsp&nbsp';
+                    comment_list += '<span class="coDeleteBtn viewBtn">삭제</span>&nbsp&nbsp&nbsp';
                 }
                 comment_list += '<br/>';
                 comment_list += '<span>' + obj.comment_txt + '</span>';
+                comment_list += '<span style="display: none;">' + obj.co_rcp_seq + '</span>';
                 comment_list += '</p>';
+
+                console.log(obj.co_rcp_seq);
             });
 
             $(".comment_area").html(comment_list);
@@ -238,6 +241,7 @@
             let page_list = '';
             startPage = obj.startPage;
             endPage = obj.endPage;
+            totalPage = obj.totalPage;
 
             $('.page-area').empty();
 
@@ -259,15 +263,13 @@
     }
 
 
-    // 덧글 출력 관리
+    // 댓글 출력 관리
     $(document).on("click", ".page-link", function(){
         commentCurrentPage = $(this).text().trim();
         if(commentCurrentPage=="»"){
             commentCurrentPage = Math.min(startPage + blockPage, totalPage) * 1;
-            console.log(commentCurrentPage);
         }else if(commentCurrentPage=="«"){
             commentCurrentPage = Math.max(startPage - blockPage, 1) * 1;
-            console.log(commentCurrentPage);
         }
 
         $('.active').removeClass('active');
@@ -276,7 +278,7 @@
 
     });
 
-    // 덧글 작성 관리
+    // 댓글 작성 관리
     coWriteBtn.onclick = function(){
         var commentData = {
         "rcp_seq": $("#rcp_seq").val(),
@@ -289,7 +291,6 @@
             url: '/recipe/comment/write',
 			data: commentData,
 			success : function(data) {
-			    console.log("댓글 작성 성공");
 			    getCommentList();
 			    $("#comment_txt").val('');
                 totalCount = totalCount + 1;
@@ -301,9 +302,71 @@
         });
     };
 
-    // 덧글 수정 관리
+    // 댓글 수정 관리
+    $(document).on("click", ".coUpdateBtn", function(){
+        $(this).css("display", "none");
+        var coUpdateConfirmBtn = '<span id="coUpdateConfirmBtn" class="viewBtn" style="color: blue;">수정 완료</span>';
+        $(this).after(coUpdateConfirmBtn);
 
-    // 덧글 삭제 관리
+        var updateInput = '';
+        updateInput += '<p><textarea class="form-control" id="update_txt" style="width: 100%; height: 69px;">'+$(this).next().next().next().next().text()+'</textarea>';
+        updateInput += '</p>';
+        $(this).parent().append(updateInput);
+    });
+
+    $(document).on("click", "#coUpdateConfirmBtn", function(){
+        var updateData = {
+        "co_rcp_seq": $(this).next().next().next().next().text(),
+        "comment_txt": $("#update_txt").val()
+        };
+
+        $.ajax({
+            type: 'post',
+            url: '/recipe/comment/update',
+			data: updateData,
+			success : function(data) {
+			    getCommentList();
+			    $("#coUpdateConfirmBtn").css("display", "none");
+                var coUpdateBtn = '<span class="coUpdateBtn viewBtn" style="color: blue;">수정</span>';
+                $("#coUpdateConfirmBtn").after(coUpdateBtn);
+			},
+			error : function(data) {
+			    $('#needLoginBtn').click();
+			}
+        });
+    });
+
+    // 댓글 삭제 관리
+    $(document).on("click", ".coDeleteBtn", function(){
+        $(this).css("display", "none");
+        var coDeleteConfirmBtn = '<span id="coDeleteConfirmBtn" class="viewBtn">삭제 확인</span>';
+        $(this).after(coDeleteConfirmBtn);
+    });
+
+    $(document).on("click", "#coDeleteConfirmBtn", function(){
+        console.log($(this).next().next().next().text());
+        var deleteData = {
+            "co_rcp_seq": $(this).next().next().next().text()
+        };
+
+        $.ajax({
+            type: 'post',
+            url: '/recipe/comment/delete',
+			data: deleteData,
+			success : function(data) {
+			    getCommentList();
+			    $("#coDeleteConfirmBtn").css("display", "none");
+                var coDeleteBtn = '<span class="coUpdateConfirmBtn viewBtn">삭제</span>';
+                $("#coDeleteConfirmBtn").after(coDeleteBtn);
+
+                totalCount = totalCount - 1;
+			    $("#totalCount").text('댓글 ' + totalCount);
+			},
+			error : function(data) {
+			    $('#needLoginBtn').click();
+			}
+        });
+    });
 
     // 스크랩 관리
     var scraps = $("#scraps").val();
@@ -321,7 +384,6 @@
             url: '/recipe/scrap',
 			data: userData,
 			success : function(data) {
-				console.log("변경 성공");
             if($("#scrapOrNot").val() == 1){
                 $("#scraps").attr('value', $("#scraps").val() * 1 - 1);
                 $("#scraps2").text($("#scraps").val());
@@ -347,7 +409,6 @@
             url: '/recipe/report',
 			data: userData,
 			success : function(data) {
-				console.log("신고 성공");
 				$("#report1").parent().hide();
 			},
 			error : function(data) {
@@ -356,8 +417,8 @@
         })
     };
 
-    // 공유 관리리
-    shareBtn.onclik = function(){
+    // 공유 관리
+    shareBtn.onclick = function(){
       var copyText = "http://localhost:8081/recipe/view/" + $('#rcp_seq').val();
       var textArea = document.createElement("textarea");//textarea 생성
 

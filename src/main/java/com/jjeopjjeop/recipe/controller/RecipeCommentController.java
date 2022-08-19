@@ -55,11 +55,17 @@ public class RecipeCommentController {
         service.writeProcess(recipeCommentDTO);
     }
 
-    @GetMapping("/recipe/comment/delete")
-    public String deleteMethod(int rcp_seq, Integer currentPage, int rcp_sort, int cate_seq, String searchKey,
-                               Integer co_rcp_seq){
+    @ResponseBody
+    @PostMapping("/recipe/comment/update")
+    public void updateMethod(String co_rcp_seq, String comment_txt, RecipeCommentDTO recipeCommentDTO){
+        recipeCommentDTO.setCo_rcp_seq(Integer.parseInt(co_rcp_seq));
+        recipeCommentDTO.setComment_txt(comment_txt);
+        service.updateProcess(recipeCommentDTO);
+    }
 
-        service.deleteProcess(co_rcp_seq);
-        return "redirect:/recipe/view/"+rcp_seq+"?rcp_sort="+rcp_sort+"&cate_seq="+cate_seq+"&currentPage="+currentPage+"&searchKey="+searchKey;
+    @ResponseBody
+    @PostMapping("/recipe/comment/delete")
+    public void deleteMethod(String co_rcp_seq){
+        service.deleteProcess(Integer.parseInt(co_rcp_seq));
     }
 }

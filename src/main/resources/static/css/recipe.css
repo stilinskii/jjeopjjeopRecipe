@@ -118,6 +118,11 @@ width: 250px;
   border-color: #ccc;
 }
 
+.viewBtn:hover{
+    cursor: pointer;
+    font-weight: bold;
+}
+
 /* The hero image */
 .hero-image {
   /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
