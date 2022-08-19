@@ -96,8 +96,9 @@ public class AdminService {
 //        return adminMapper.listSeller();
 //    }
 
-    public List<SellerDTO> ySellerList(A_criteria cri){
+    public List<SellerDTO> ySellerList(A_criteria cri) {
         return adminDAO.ySellerList(cri);
+    }
 
     //미승인 판매자리스트
     public List<SellerDTO> listNSeller(){
