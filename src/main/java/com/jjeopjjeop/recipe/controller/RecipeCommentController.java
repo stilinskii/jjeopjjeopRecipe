@@ -45,18 +45,14 @@ public class RecipeCommentController {
         return new ResponseEntity<>(recipeCommentPageDTO, HttpStatus.OK);
     }
 
+    @ResponseBody
     @PostMapping("/recipe/comment/write")
-    public String writeMethod(int rcp_seq, Integer currentPage, int rcp_sort, int cate_seq, String searchKey,
-                              HttpSession session, RecipeCommentDTO recipeCommentDTO){
-        if(session.getAttribute("user_id") == null){
-            return "redirect:/login";
-        }
-
-        recipeCommentDTO.setRcp_seq(rcp_seq);
+    public void writeMethod(String rcp_seq, String comment_txt, HttpSession session, RecipeCommentDTO recipeCommentDTO){
+        //System.out.println(comment_txt);
+        recipeCommentDTO.setRcp_seq(Integer.parseInt(rcp_seq));
         recipeCommentDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
+        recipeCommentDTO.setComment_txt(comment_txt);
         service.writeProcess(recipeCommentDTO);
-
-        return "redirect:/recipe/view/"+rcp_seq+"?rcp_sort="+rcp_sort+"&cate_seq="+cate_seq+"&currentPage="+currentPage+"&searchKey="+searchKey;
     }
 
     @GetMapping("/recipe/comment/delete")
