@@ -20,4 +20,5 @@ public class PayDTO {
     private Integer quantity;
     private Integer pay;
     private Integer total_price;
+    private Integer review_check;
 }

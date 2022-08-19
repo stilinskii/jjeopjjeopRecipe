@@ -41,22 +41,22 @@
                 <a
                     class="nav-link"
                     th:classappend="${title}=='내 장바구니'? 'active'"
-                    th:href="@{/mypage/cart}"
+                    th:href="@{/mypage/cart/view}"
                     th:aria-current="${title}=='내 장바구니' ? 'page' : false"
                 >
                     <i class="fa fa-shopping-basket"></i>
-                    My Shopping
+                    My Cart
                 </a>
             </li>
             <li class="nav-item">
                 <a
                         class="nav-link"
                         th:classappend="${title}=='내 결제내역'? 'active'"
-                        th:href="@{/mypage/pay}"
+                        th:href="@{/mypage/pay/view}"
                         th:aria-current="${title}=='내 결제내역' ? 'page' : false"
                 >
                     <i class="fa fa-money"></i>
-                    My PayHistory
+                    My Payment
                 </a>
             </li>
             <li class="nav-item">

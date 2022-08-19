@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<!--    th:replace="fragments/head('쇼핑')"-->
+<!--    th:replace="fragments/head('쇼핑')" 일단 빼둠.-->
     <meta charset="UTF-8">
     <title>Title</title>
     <!--==========================임의추가 시작==========================-->
 <!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"-->
 <!--          th:href="@{/css/bootstrap.css}"/>-->
-
-
 
     <!--아래 4줄은 드롭다운이 안돼서 임의로 넣음.https://coding-dahee.tistory.com/50-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -39,56 +37,16 @@
 
     <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!--============================nav스타일 적용위해 넣음 끝=============================-->
-
-
-    <style>
-        a{color:black;}
-        /*모든 a의 글씨색 검정색으로 */
-
-
-        /*페이지처리 원래색꺌 #7971ea*/
-        .site-block-27 ul, .site-block-27 ul li {
-          padding: 0;
-          margin: 0; }
-
-        .site-block-27 ul li {
-          display: inline-block;
-          margin-bottom: 4px; }
-          .site-block-27 ul li a, .site-block-27 ul li span {
-            text-align: center;
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
-            border-radius: 50%;
-            border: 1px solid #ccc; }
-          .site-block-27 ul li.active a, .site-block-27 ul li.active span {
-            background: #FFC947;
-            color: #fff;
-            border: 1px solid transparent; }
-          /*아마 판매글 글씨체?*/
-        .block-4 {
-          -webkit-box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.1);
-          box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.1);
-          background: #fff; }
-        .block-4 .block-4-text h3 {
-            font-size: 20px;
-            margin-bottom: 0; }
-        .block-4 .block-4-text h3 a {
-              text-decoration: none; }
-
-    </style>
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
 <div class="site-wrap">
     <div class="site-section">
         <div class="container">
-            <button class="btn btn-warning"><a th:href="@{/produce/write}">판매글 쓰기</a></button>
-            <button class="btn btn-warning"><a th:href="@{/review/write}">임시 마이페이지 리뷰</a></button>
-            <button class="btn btn-warning"><a th:href="@{/produce/temp}">임시 업데이트</a></button>
+
+            <button class="btn btn-warning mb-3"><a th:href="@{/produce/write}" class="a-to-black">판매글 쓰기</a></button>
             <div class="row mb-5">
-                <div class="col-md-9 order-2">
+                <div class="col-md-10 order-2"><!-- 얘가 우측통째로 -->
                     <!--================드롭다운 시작=================-->
                     <div class="row">
                         <div class="col-md-12 mb-5">
@@ -96,7 +54,7 @@
                             <div class="d-flex">
                                 <div class="dropdown mr-1 ml-md-auto">
                                     <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        종류
+                                        분류
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
                                         <a class="dropdown-item" th:href="@{/produce/list}">전체</a>
@@ -127,7 +85,7 @@
                             <div class="block-4 text-center border" th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"
                                  style="cursor:pointer;">
                                 <figure class="block-4-image">
-<!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
+                                    <!--이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
                                     <a th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}">
                                         <img class="img-fluid" th:src="${produce.produce_image_path}" alt="상품이미지" />
                                     </a>
@@ -140,21 +98,22 @@
                             </div>
                         </div>
                         <!--  ====================상품 카드 끝======================-->
+
                     <!--  ====================페이지네이션 시작======================-->
 <!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
                     <div class="row fixed-bottom" data-aos="fade-up">
                         <div class="col-md-12 text-center">
 <!--                            이거 없으면 페이지네이션 왼쪽하단으로 이동됨-->
                             <div class="site-block-27">
-<!--                                이거없으면 스타일 적용안됨.-->
+                                <!--이거없으면 스타일 적용안됨.-->
                                 <ul>
                                     <li><a href="#">&lt;</a></li>
                                     <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
                                         <li class="page-item active">
-                                            <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/produce/list}" th:text="${pDtos}"></a>
+                                            <a class="a-to-black" th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/produce/list}" th:text="${pDtos}"></a>
                                         </li>
                                         <li class="page-item">
-                                            <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/produce/list(currentPage=${pDtos})}" th:text="${pDtos}"></a>
+                                            <a class="a-to-black" th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/produce/list(currentPage=${pDtos})}" th:text="${pDtos}"></a>
                                         </li>
                                     </th:block>
                                     <li><a href="#">&gt;</a></li>
@@ -162,11 +121,11 @@
                             </div>
                         </div>
                         <!--  ====================페이지네이션 끝======================-->
-<!--                        <input type="hidden" th:value="${pDto.currentPage}">-->
                 </div>
             </div>
         </div>
-
+<!--  =======================================좌측 ===========================================-->
+         <div class="col-md-2 order-1 mb-5 mb-md-0" style="border: 1px solid black;">광고? 인기 상품? 보통은 여기는 필터링or광고부분. 아니면 아예 상품을 4x4로 하든가 </div>
         </div>
     </div>
     </div>

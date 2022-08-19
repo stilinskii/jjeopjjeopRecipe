@@ -28,5 +28,23 @@ public class ReviewServiceImp implements ReviewService{
         reviewDAO.reviewDelete(produce_num);
     }
 
+    //리뷰 작성
+    @Override
+    public void reviewWrite(ReviewDTO reviewDTO) {
+        reviewDAO.reviewWrite(reviewDTO);
+    }
+
+    //리뷰 보기
+    @Override
+    public ReviewDTO reviewView(int pay_num) {
+        return reviewDAO.reviewView(pay_num);
+    }
+
+    //리뷰작성 반영
+    @Override
+    public void reviewUpdate(ReviewDTO reviewDTO) {
+        reviewDAO.reviewUpdate(reviewDTO);
+    }
+
 
 }

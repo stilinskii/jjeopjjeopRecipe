@@ -52,6 +52,20 @@ class ProduceServiceImp implements ProduceService {
 
     @Override
     public void produceDeleteProcess(int produce_num) {
+
+        ////media폴더에 있는 이미지파일도 같이 삭제
+        //이미지 파일 경로
+        String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\media\\produce\\"
+                + produceDAO.produceView(produce_num).getProduce_image();
+        File deleteFile = new File(filePath);
+
+        // 파일이 존재하는지 체크 존재할경우 true, 존재하지않을경우 false <-이렇게 꼭해야하나?
+        if(deleteFile.exists()) {
+            deleteFile.delete(); //삭제
+            System.out.println("파일을 삭제하였습니다.");
+        } else {
+            System.out.println("파일이 존재하지 않습니다.");
+        }
         produceDAO.produceDelete(produce_num);
     }
 

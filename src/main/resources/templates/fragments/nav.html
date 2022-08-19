@@ -52,7 +52,7 @@
             th:classappend="${title}=='mypage'? 'active'"
           ></i>
         </a>
-        <a class="cart_link" href="#">
+        <a class="cart_link" th:href="@{/mypage/cart/view}">
           <i
             class="fa fa-shopping-cart"
             th:classappend="${title}=='shoppingCart'? 'active'"

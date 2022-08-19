@@ -20,7 +20,7 @@ created_date	DATE		NOT NULL
 
     private Integer pay_num;
     private String produce_name;
-    private Integer rating;
+    private Float rating;
     private String content;
     private Date created_date;
     //sql.date로 import하기.
