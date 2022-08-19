@@ -133,6 +133,11 @@ public class RecipeController {
             commentCurrentPage = Math.max(recipeCommentPageDTO.getCommentCurrentPage(), 1);
             recipeCommentPageDTO = new RecipePageDTO(commentCurrentPage, totalComment, rcp_seq);
             //System.out.println(commentCurrentPage);
+        }else{
+            recipeCommentPageDTO = new RecipePageDTO(1, 0, rcp_seq);
+            recipeCommentPageDTO.setStartPage(1);
+            recipeCommentPageDTO.setEndPage(1);
+            recipeCommentPageDTO.setTotalPage(1);
         }
         mav.addObject("totalComment", totalComment);
         mav.addObject("commentList", commentService.listProcess(recipeCommentPageDTO));

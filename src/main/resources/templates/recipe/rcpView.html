@@ -18,6 +18,7 @@
 <main class="custom container">
     <input type="hidden" th:value="${currentPage}">
     <input type="hidden" name="rcp_seq" th:value="${rcp.rcp_seq}" id="rcp_seq">
+    <input type="hidden" th:value="${rcp.user_id}" id="user_id">
     <input type="hidden" th:value="${rcp_sort}">
     <input type="hidden" th:value="${scrapOrNot}" id="scrapOrNot">
     <input type="hidden" th:value="${reportOrNot}" id="reportOrNot">
@@ -170,45 +171,23 @@
             <input class="form-control" type="hidden" name="rcp_seq" th:value="${rcp.rcp_seq}" width="500px">
         </div>
     </form>
-        <div th:if="${totalComment != 0}" th:each="comment : ${commentList}">
-            <p>
-              <b><span th:text="${comment.user_id} + '&nbsp&nbsp'" class="left" style="font-size: 15px;">닉네임</span></b>
-                <span th:text="${comment.co_date} + '&nbsp&nbsp'" style="color: gray;">작성일자</span>
-                <b><span th:text="답글"></span></b>
-                <span>&nbsp&nbsp</span>
-                <span th:text="신고" style="color: red;"></span>
-                <span>&nbsp&nbsp</span>
-                <span th:if="${user_id} == ${comment.user_id}" th:text="수정" style="color: blue;"></span>
-                <span>&nbsp&nbsp</span>
-                <a th:href="@{/recipe/comment/delete(rcp_sort=${rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey}, rcp_seq=${rcp_seq}, co_rcp_seq=${comment.co_rcp_seq})}"><span th:if="${user_id} == ${comment.user_id}" th:text="삭제"></span></a>
-                <br/>
-                <span th:text="${comment.comment_txt}">덧글 내용</span>
-            </p>
-        </div>
+    <div class="comment_area"></div>
     <nav aria-label="Page navigation example" style="margin-top: 30px">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination page-area justify-content-center">
+            <!-- 첫 로딩 후 페이지 출력시 필요 -->
             <li class="page-item">
-                <a th:if="${recipeCommentPageDTO.startPage} > 1" class="page-link" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp_seq}, rcp_sort=${recipeCommentPageDTO.rcp_sort}, cate_seq=${recipeCommentPageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey}, commentCurrentPage=${recipeCommentPageDTO.startPage - recipeCommentPageDTO.endPage})}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
                 <a th:if="${recipeCommentPageDTO.startPage} == 1" class="page-link" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <th:block th:each="pDtos : ${#numbers.sequence(recipeCommentPageDTO.startPage, recipeCommentPageDTO.endPage)}">
-                <li class="page-item active">
-                    <a th:if="${pDtos} == ${recipeCommentPageDTO.commentCurrentPage}" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp_seq}, rcp_sort=${rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey}, commentCurrentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
-                </li>
                 <li class="page-item">
-                    <a th:if="${pDtos} != ${recipeCommentPageDTO.commentCurrentPage}" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp_seq}, rcp_sort=${rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey}, commentCurrentPage=${pDtos})}" th:text="${pDtos}" class="page-link"></a>
+                    <a th:text="${pDtos}" value="${pDtos}" class="page-link page-num"></a>
                 </li>
             </th:block>
             <li class="page-item">
-                <a th:if="${recipeCommentPageDTO.endPage} < ${recipeCommentPageDTO.totalPage}" class="page-link" th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp_seq}, rcp_sort=${recipeCommentPageDTO.rcp_sort}, cate_seq=${recipeCommentPageDTO.cate_seq}, currentPage=${currentPage}, searchKey=${recipePageDTO.searchKey}, commentCurrentPage=${recipeCommentPageDTO.startPage + recipeCommentPageDTO.blockPage})}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-                <a th:if="${recipeCommentPageDTO.endPage} == ${recipeCommentPageDTO.totalPage}" class="page-link" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
+                <a class="page-link" aria-label="Next">
+                    <span th:text="'&raquo;'" aria-hidden="true"></span>
                 </a>
             </li>
         </ul>
@@ -217,13 +196,84 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
+    var rcp_seq = $('#rcp_seq').val();
+    var co_page_seq = $('.page-link');
+    var user_id = "[[${user_id}]]";
+    var startPage = "[[${recipeCommentPageDTO.startPage}]]" * 1;
+    var endPage = "[[${recipeCommentPageDTO.endPage}]]" * 1;
+    var blockPage = "[[${recipeCommentPageDTO.blockPage}]]" * 1;
+    var totalPage = "[[${recipeCommentPageDTO.totalPage}]]" * 1;
+
+    $(function(){
+        $('.page-num').first().click();
+    });
+
+    $(document).on("click", ".page-link", function(){
+        var commentCurrentPage = $(this).text().trim();
+        if(commentCurrentPage=="»"){
+            commentCurrentPage = Math.min(startPage + blockPage, totalPage) * 1;
+            console.log(commentCurrentPage);
+        }else if(commentCurrentPage=="«"){
+            commentCurrentPage = Math.max(startPage - blockPage, 1) * 1;
+            console.log(commentCurrentPage);
+        }
+
+        $('.active').removeClass('active');
+        $(this).parent().addClass('active');
+
+        $.getJSON("/recipe/comment/list", {rcp_seq : rcp_seq, commentCurrentPage : commentCurrentPage}, function(obj){
+            let comment_list = '';
+
+            // 댓글 내용 출력
+            $(obj.recipeCommentDTOList).each(function(i, obj){
+                comment_list += '<p>';
+                comment_list += '<b><span class="left" style="font-size: 15px;">'+ obj.user_id +'</span></b>&nbsp&nbsp&nbsp';
+                comment_list += '<span style="color: gray;">' + obj.co_date + '</span>&nbsp&nbsp&nbsp';
+                comment_list += '<b><span>답글</span></b>&nbsp&nbsp';
+                comment_list += '<span style="color: red;">신고</span>&nbsp&nbsp&nbsp';
+                if(user_id == obj.user_id){
+                    comment_list += '<span style="color: blue;">수정</span>&nbsp&nbsp';
+                    comment_list += '<a href="#"><span>삭제</span></a>&nbsp&nbsp&nbsp';
+                }
+                comment_list += '<br/>';
+                comment_list += '<span>' + obj.comment_txt + '</span>';
+                comment_list += '</p>';
+            });
+
+            $(".comment_area").html(comment_list);
+
+
+            // 댓글 페이징 처리
+            let page_list = '';
+            startPage = obj.startPage;
+            endPage = obj.endPage;
+
+            $('.page-area').empty();
+
+            page_list += '<li class="page-item"><a class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+
+            for(i=startPage; i<=endPage; i++){
+                if(i == commentCurrentPage){
+                    page_list += '<li class="page-item active">';
+                }else{
+                    page_list += '<li class="page-item">';
+                }
+                page_list += '<a class="page-link page-num">' + i + '</a>';
+                page_list += '</li>';
+               };
+
+            page_list += '<li class="page-item"><a class="page-link" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>';
+            $(".page-area").append(page_list);
+            console.log(page_list);
+        });
+    });
+
     var scraps = $("#scraps").val();
     var scrapBtn = document.getElementById("scrapBtn");
-    var user_id = '<%=(String)session.getAttribute("uid")%>';
 
     var scrapData = {
         "rcp_seq": $("#rcp_seq").val(),
-        "user_id": user_id
+        "user_id": '<%=(String)session.getAttribute("uid")%>'
         };
 
     if($("#scrapOrNot").val() > 0){
