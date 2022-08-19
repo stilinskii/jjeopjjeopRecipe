@@ -16,7 +16,7 @@ public class RecipeDTO {
     private int report;
     private int rcp_viewcnt;
     private String rcp_name;
-    private String user_id = "테스트";
+    private String user_id = "abc";
     private String filename;
     private String filepath;
     private String time;
