@@ -73,21 +73,22 @@
         <if test="keyword != null">
             where user_id like '%'||#{keyword}||'%'
         </if>
-
-    <select id="UserList" parameterType="PageDTO" resultType="UserDTO">
-        <![CDATA[
-		select* from (
-			select rownum rn, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
-			from User_j)
-			where rn >= #{startRow} and rn <= #{endRow}
-	]]>
-
     </select>
+
+<!--    <select id="UserList" parameterType="PageDTO" resultType="UserDTO">-->
+<!--        <![CDATA[-->
+<!--		select* from (-->
+<!--			select rownum rn, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address-->
+<!--			from User_j)-->
+<!--			where rn >= #{startRow} and rn <= #{endRow}-->
+<!--	]]>-->
+
+<!--    </select>-->
 <!-- 회원 수-->
-    <select id="countUser" resultType="int">
-        select count(*) from User_j
+<!--    <select id="countUser" resultType="int">-->
+<!--        select count(*) from User_j-->
 
-    </select>
+<!--    </select>-->
     
     <!-- 회원상세 -->
     <select id="detailU" resultType="UserDTO">
