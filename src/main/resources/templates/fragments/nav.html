@@ -45,7 +45,7 @@
         </li>
       </ul>
       <div class="user_option d-flex">
-        <a class="user_link" href="">
+        <a class="user_link" href="/mypage">
           <i
             class="fa fa-user"
             aria-hidden="true"
@@ -66,8 +66,8 @@
             th:classappend="${title}=='search'? 'active'"
           ></i>
         </a>
-
-        <a th:href="@{/login}" class="login"> Login </a>
+          <a th:if="${session.isLogOn == null}" th:href="@{/login}" class="login"> Login </a>
+          <a th:if="${session.isLogOn == true}" th:href="@{/logout}" class="login"> Logout </a>
       </div>
     </div>
   </div>

@@ -14,44 +14,57 @@
     <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
+<script th:inline="javascript">
+    var message = [[${message}]];
+    if(message){
+        alert(message);
+    }
+</script>
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>
-<h4>비밀번호 찾기</h4>
-<h5>이름과 아이디, 이메일 주소를 입력하세요.</h5>
-<form action="/findpw" method="post">
-    <div class="form-group mt-3">
-        <p>
-            <label for="username" class="form-label">이름</label>
-            <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    required
-                    placeholder="이름을 입력하세요"
-            />
-        </p>
-        <p>
-            <label for="user_id" class="form-label">아이디</label>
-            <input
-                    type="text"
-                    class="form-control"
-                    id="user_id"
-                    required
-                    placeholder="아이디를 입력하세요"
-            />
-        </p>
-        <p>
-            <label for="email" class="form-label">이메일 주소</label>
-            <input
-                    type="text"
-                    class="form-control"
-                    id="email"
-                    required
-                    placeholder="ex) abc@test.tt"
-            />
-        </p>
-    </div>
-    <input type="submit" class="btn btn-warning mt-3" value="확인" />
-    <button type="button" class="btn btn-secondary mt-3" th:onclick="|location.href='@{/login}'|">취소</button>
-</form>
+<div class="container position-absolute top-50 end-0 translate-middle-y">
+    <h4>비밀번호 찾기</h4>
+    <h6 class="text-muted">이름과 아이디, 이메일 주소를 입력하세요.</h6>
+    <form action="/findpw" method="post">
+        <div class="form-group p-2 w-25">
+            <div class="row mb-3 align-items-center">
+                <label for="username" class="form-label"><small>이름</small></label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="username"
+                        name="username"
+                        required
+                        placeholder="이름을 입력하세요"
+                />
+            </div>
+            <div class="row mt-2 mb-3 align-items-center">
+                <label for="user_id" class="form-label"><small>아이디</small></label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="user_id"
+                        name="user_id"
+                        required
+                        placeholder="아이디를 입력하세요"
+                />
+            </div>
+            <div class="row mt-2 mb-3 align-items-center">
+                <label for="email" class="form-label"><small>이메일 주소</small></label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        required
+                        placeholder="ex) abc@test.tt"
+                />
+            </div>
+        </div>
+        <div class="justify-content-center pt-4">
+            <input type="submit" class="btn btn-warning ms-3" value="확인" />
+            <button type="button" class="btn btn-secondary mx-2 my-3" th:onclick="|location.href='@{/login}'|">취소</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>
