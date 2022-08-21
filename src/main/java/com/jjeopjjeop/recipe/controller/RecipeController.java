@@ -33,7 +33,6 @@ public class RecipeController {
     private int currentPage;
     private int commentCurrentPage;
     private String searchKey;
-    
 
     // 레시피 목록 조회 메소드
     @GetMapping("/recipe/list")
