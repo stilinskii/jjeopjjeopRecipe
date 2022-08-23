@@ -1,6 +1,7 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
 import com.jjeopjjeop.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model){
-        //임의로 해놓음. 원래 인기순 불러와야함.
         RecipePageDTO recipePageDTO = new RecipePageDTO();
         recipePageDTO.setStartRow(1);
         recipePageDTO.setEndRow(4);
@@ -36,10 +36,12 @@ public class HomeController {
         recipePageDTO.setCate_seq(0);//카테고리 선택안함.
         List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
 
-        List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
+//        int count = produceService.countProcess();
+//        Pagenation pagenation = new Pagenation(1,4,count);
+        List<ProduceDTO> popularProduceList = produceService.getPopularProduceList();
         log.info("reclist={}",rcpList.size());
         model.addAttribute("rcpList",rcpList);
-        model.addAttribute("list",list);
+        model.addAttribute("list",popularProduceList);
 
         return "index";
     }
@@ -52,7 +54,7 @@ public class HomeController {
 
     @PostMapping("/search")
     public String searchResult(String keyword, RedirectAttributes redirectAttributes, HttpSession session){
-        //맨처음 들어왔을때 키워드 없음 알림이 안떠야함.
+        //맨처음 들어왔을때 검색결과 X / 키워드 없음 알림이 안떠야함.
         if(StringUtils.isEmpty(keyword)){
             redirectAttributes.addFlashAttribute("NoKeyword",true);
             return "redirect:/search";
@@ -62,9 +64,11 @@ public class HomeController {
         List<RecipeDTO> rcpListAll = recipeService.searchListByKeyword(keyword);
         List<RecipeDTO> rcpList = rcpListAll.size()>8 ?getSmallListOfRecipe(rcpListAll):rcpListAll;
         //shopping
+        log.info("keyword={}",keyword);
         List<ProduceDTO> productListAll = produceService.findProductsByKeyword(keyword);
+        log.info("searchproducesize={}",productListAll.size());
         List<ProduceDTO> productList = productListAll.size()>4 ? getSmallProductList(productListAll):productListAll;
-        log.info("list={}",productListAll.size());
+        log.info("resultlist={}",productList.size());
 
         //뭔가 더 좋은 방법이 있을 거 같은디...
         if(rcpList.size()==0){
@@ -75,7 +79,7 @@ public class HomeController {
             session.setAttribute("rcpListAll",rcpListAll);
         }
 
-        if(rcpList.size()==0){
+        if(productList.size()==0){
             redirectAttributes.addFlashAttribute("NoProductList",true);
         }else{
             redirectAttributes.addFlashAttribute("productList",productList);//상품은 4개
@@ -126,7 +130,7 @@ public class HomeController {
         return mav;
     }
 
-    // 레시피 목록 검색 메소드
+
     @GetMapping("/moreRecipe")
     public ModelAndView rcpSearchMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
                                         @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,

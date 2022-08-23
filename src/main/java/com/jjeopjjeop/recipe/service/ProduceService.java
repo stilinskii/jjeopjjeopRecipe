@@ -2,6 +2,7 @@ package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface ProduceService {
     //하영
     List<ProduceDTO> findProductsByKeyword(String keyword);
     List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, RecipePageDTO pageDTO);
+
+    List<ProduceDTO> getPopularProduceList();
 }

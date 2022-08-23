@@ -5,12 +5,10 @@ import com.jjeopjjeop.recipe.dao.ProduceDAO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,6 +99,18 @@ class ProduceServiceImp implements ProduceService {
 
         return produceDAO.findProductsByKeywordWithPaging(map);
     }
+
+    @Override
+    public List<ProduceDTO> getPopularProduceList() {
+        List<Integer> produceNum = produceDAO.getFourProduceNumOrderBySoldCount();
+        List<ProduceDTO> products = new ArrayList<>();
+
+        for (Integer produceId : produceNum) {
+            products.add(produceDAO.produceView(produceId));
+        }
+        return products;
+    }
+
 
 
 }
