@@ -24,7 +24,7 @@ li.list-group-item {
 
   }
 
-  img{
+  img.oneimg{
   center;
   weight:80px;
   height:80px;
@@ -86,6 +86,13 @@ li.list-group-item {
             .category{
           	padding:10px 0px;
           	text-align: center;
+            }
+
+            /* mainpage */
+
+            img.card-img-top{
+            weight:90px;
+            height90px;
             }
 
 

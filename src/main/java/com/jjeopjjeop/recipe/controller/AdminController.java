@@ -2,6 +2,7 @@ package com.jjeopjjeop.recipe.controller;
 
 
 
+import com.jjeopjjeop.recipe.config.MySecured;
 import com.jjeopjjeop.recipe.dto.*;
 
 import com.jjeopjjeop.recipe.dto.A_userDTO;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Slf4j
@@ -38,11 +40,12 @@ public class AdminController {
 
     private int currentPage;
 
-//    @Autowired
-//   private int currentPage;
-
-
-
+    //관리자 페이지 실행
+    @MySecured(role = MySecured.Role.ADMIN)
+    @GetMapping("/main")
+    public String admin(){
+        return "admin/main";
+    }
 
 
     //db 확인

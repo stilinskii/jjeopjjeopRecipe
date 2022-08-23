@@ -33,22 +33,13 @@
           th:href="@{/css/admin.css}"
   />
 </head>
-<body class="bg-light">
+<body class="">
 <nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
   <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
-    <img src="/media/admin/board.png">
-  </div>
-  <!--    <div class="caption">-->
-  <!--      <p class="p-2 bd-highlight" th:text="|글 수 : ${#lists.size(board)}|">-->
-  <!--        글 수:-->
-  <!--      </p>-->
-  <!--      <div>-->
-  <!--        <a th:href="@{/community/form}" class="btn btn btn-secondary"-->
-  <!--        >글쓰기</a-->
-  <!--        >-->
-  <!--      </div>-->
-  <!--    </div>-->
+    <div class="menu" center>
+    <img src="/media/admin/board.png" class="oneimg">
+    </div>
 
   <div class="container-fluid">
     <div class="row">
@@ -114,7 +105,6 @@
         </table>
       </div>
     </div>
-  </div>
   </div>
   </div>
 </main>

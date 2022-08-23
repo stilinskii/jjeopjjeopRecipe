@@ -35,7 +35,7 @@
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="container">
     <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
-        <h1>관리자 페이지</h1>
+        <img src="/media/admin/cooking.png" class="oneimg">
 
     </div>
 
@@ -48,16 +48,16 @@
                 <!-- admin은 controller에서? -->
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <a href="/admin" class="nav-link category">회원관리</a>
+                        <a href="/admin/u_index" class="nav-link category">회원관리</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/recipe/rcpList" class="nav-link category">레시피관리</a>
+                        <a href="/admin/r_index" class="nav-link category">레시피관리</a>
                     </li>
                     <li class="list-group-item">
                         <a href="/admin/s_index" class="nav-link category">쇼핑관리</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/community" class="nav-link category">게시판 관리</a>
+                        <a href="/admin/c_index" class="nav-link category">게시판 관리</a>
                     </li>
                 </ul>
             </div>
