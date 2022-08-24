@@ -48,7 +48,7 @@
 	<!--		SELECT * FROM produce_board ORDER BY produce_num DESC-->
 	<!--	</select>-->
 
-	<select id="produceList" parameterType="RecipePageDTO" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+	<select id="produceList" parameterType="PagenationDTO" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		<![CDATA[
         SELECT rcp_li.* FROM
             (SELECT rcp.*, rownum rm FROM

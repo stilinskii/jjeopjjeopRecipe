@@ -45,7 +45,8 @@
                         <tr>
                             <th:block th:each="payDTO : ${produceDTO.payDTOList}">
                                 <th:block th:if="${session.user_id == payDTO.user_id}"><!--로그인한 회원의 아이디와 pay_history의 회원아이디와 일치하는것만 보이도록.-->
-                                    <td th:text="${produceDTOStat.count}">일련번호</td>
+                                    <td th:text="${page.perPage * page.page + produceDTOStat.count}">일련번호</td>
+                                    <!--페이지당 보이는 게시글 수 * 현재페이지번호 + 한페이지당 일련번호로 계산해서 페이지 넘어가도 일련번호 이어지게 만듧.-->
                                     <td><a th:href="@{/produce/view/{produceNum}(produceNum=${produceDTO.produce_num})}" th:text="${produceDTO.produce_name}"></a></td>
                                     <td th:text="${payDTO.quantity}">수량</td>
                                     <td data-th-text="${#numbers.formatInteger(payDTO.total_price, 3, 'COMMA') + '원'}">총가격</td>
@@ -83,12 +84,6 @@
 <!--                    </div>-->
 <!--                </div>-->
                 <!--  ====================페이지네이션 끝======================-->
-
-
-            <h1 th:text="${page.startPageNum}"></h1>
-            <h1 th:text="${page.endPageNum}"></h1>
-
-
             <nav class="mt-3" th:if="${page.count>page.perPage}">
                 <ul class="pagination">
                     <li

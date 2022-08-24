@@ -1,6 +1,7 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
 import com.jjeopjjeop.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;

@@ -4,6 +4,7 @@ import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.dto.PayDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -14,9 +15,9 @@ import java.util.List;
 public interface PayDAO {
    public void cartWrite(PayDTO payDTO); //장바구니에 넣기
 
-   public List<ProduceDTO> cartView(PagenationDTO recipePageDTO);  //마이페이지 들어가서 장바구니 보기
+   public List<ProduceDTO> cartView(Pagenation pagenation);  //마이페이지 들어가서 장바구니 보기
 
-   public List<ProduceDTO> payView(RecipePageDTO recipePageDTO);  //마이페이지 들어가서 구매내역 보기
+   public List<ProduceDTO> payView(Pagenation pagenation);  //마이페이지 들어가서 구매내역 보기
 
    public void cartDelete(int pay_num); //장바구니 삭제
 
