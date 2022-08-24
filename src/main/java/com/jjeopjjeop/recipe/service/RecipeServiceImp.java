@@ -2,12 +2,14 @@ package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dao.RecipeDAO;
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RecipeServiceImp implements RecipeService{
@@ -24,18 +26,18 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public List<RecipeDTO> listProcess(RecipePageDTO recipePageDTO) {
-        return dao.list(recipePageDTO);
+    public List<RecipeDTO> listProcess(Pagenation pagenation, int rcp_sort, int cate_seq) {
+        return dao.list(Map.of("page",pagenation,"rcp_sort",rcp_sort,"cate_seq",cate_seq));
     }
 
     @Override
-    public int searchCountProcess(RecipePageDTO recipePageDTO) {
-        return dao.searchCount(recipePageDTO);
+    public int searchCountProcess(String searchKey, int cate_seq) {
+        return dao.searchCount(Map.of("searchKey", searchKey, "cate_seq", cate_seq));
     }
 
     @Override
-    public List<RecipeDTO> searchListProcess(RecipePageDTO recipePageDTO) {
-        return dao.searchList(recipePageDTO);
+    public List<RecipeDTO> searchListProcess(Pagenation pagenation, int rcp_sort, int cate_seq, String searchKey) {
+        return dao.searchList(Map.of("page",pagenation,"rcp_sort",rcp_sort,"cate_seq",cate_seq, "searchKey", searchKey));
     }
 
     @Override
@@ -98,6 +100,32 @@ public class RecipeServiceImp implements RecipeService{
     @Override
     public void writeCProcess(int cate_seq) {
         dao.writeCate(cate_seq);
+    }
+
+    @Override
+    public List<Integer> updatePageProcess(int rcp_seq) {
+        return dao.callUpdateCate(rcp_seq);
+    }
+
+    @Override
+    public void updateProcess(RecipeDTO recipeDTO){
+        dao.update(recipeDTO);
+    }
+
+    @Override
+    public void updateMProcess(ManualDTO manualDTO){
+        if(manualDTO.getManual_no() == 1)
+            dao.deleteManual(manualDTO.getRcp_seq());
+        dao.updateManual(manualDTO);
+    }
+
+    @Override
+    public void updateCProcess(int cate_seq, int rcp_seq){
+        dao.updateCate(cate_seq, rcp_seq);
+    }
+
+    public void deleteCProcess(int rcp_seq){
+        dao.deleteCate(rcp_seq);
     }
 
     @Override

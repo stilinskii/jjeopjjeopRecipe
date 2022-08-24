@@ -34,11 +34,11 @@ public class HomeController {
         recipePageDTO.setEndRow(4);
         recipePageDTO.setRcp_sort(2);//스크랩많은순
         recipePageDTO.setCate_seq(0);//카테고리 선택안함.
-        List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
+        //List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
 
         List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
-        log.info("reclist={}",rcpList.size());
-        model.addAttribute("rcpList",rcpList);
+        //log.info("reclist={}",rcpList.size());
+        //model.addAttribute("rcpList",rcpList);
         model.addAttribute("list",list);
 
         return "index";
@@ -146,12 +146,12 @@ public class HomeController {
         List<CategoryDTO> cateList = recipeService.cateListProcess();
 
         // 검색 레시피 목록
-        List<RecipeDTO> rcpList = recipeService.searchListProcess(recipePageDTO);
+        //List<RecipeDTO> rcpList = recipeService.searchListProcess(recipePageDTO);
         //System.out.println(rcpList);
 
         mav.addObject("totalRecord", totalRecord);
         mav.addObject("cateList", cateList);
-        mav.addObject("rcpList", rcpList);
+        //mav.addObject("rcpList", rcpList);
         mav.addObject("recipePageDTO", recipePageDTO);
         mav.setViewName("/recipe/rcpSearch");
         return mav;

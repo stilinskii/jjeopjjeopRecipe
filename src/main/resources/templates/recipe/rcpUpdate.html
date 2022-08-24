@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
@@ -19,12 +20,16 @@
     <p class="fw-bold fs-2 text-start">레시피 수정하기</p>
     <form action="" th:object="${recipeDTO}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
+        <input type="hidden" th:field="*{rcp_seq}" th:value="${recipeDTO.rcp_seq}">
+        <input type="hidden" th:field="*{filename}" th:value="${recipeDTO.filename}">
+        <input type="hidden" th:field="*{filepath}" th:value="${recipeDTO.filepath}">
         <div class="row" style="margin-bottom:15px;">
             <div class="col-4 d-grid gap-2 d-md-block img_up">
                 <label for="rcp_file" style="cursor:pointer;">
-                    <img src="/media/images/rcp_mainimg.png" width="100%" height="230px" alt="main image"/>
+                    <img th:if="${not #strings.isEmpty(recipeDTO.filename)}" th:src="@{${recipeDTO.filepath}+${recipeDTO.filename}}" width="100%" height="230px" alt="main image"/>
+                    <img th:if="${#strings.isEmpty(recipeDTO.filename)}" src="/media/images/rcp_mainimg.png" width="100%" height="230px" alt="main image"/>
                 </label>
-                <input type="file" id="rcp_file" th:field="*{upload}" style="display: none;">
+                <input type="file" id="rcp_file" th:value="${recipeDTO.upload}" th:field="*{upload}" style="display: none;">
                 <button type="button" class="btn btn-dark" style="width: 100%;">
                     <label for="rcp_file" style="width: 100%; height:100%; cursor:pointer;">대표 이미지 첨부</label>
                 </button>
@@ -69,8 +74,8 @@
                 <span>종류별</span>
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
                     &nbsp&nbsp
-                    <a href="#" th:value="${cate1.cate_seq}" style="color: #fff;">
-                        <span th:text="${cate1.cate_name}">종류별</span>
+                    <a href="#" th:value="${cate1.cate_seq}" th:attr="style = ${cate1.rcp_chk == true ? 'color: black; font-weight: bold;' : 'color: #fff;'}">
+                        <span th:text="${cate1.cate_name}" >종류별</span>
                     </a>
                 </span>
             </p>
@@ -78,7 +83,7 @@
                 <span>재료별</span>
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
                     &nbsp&nbsp
-                    <a href="#" th:value="${cate2.cate_seq}" style="color: #fff;">
+                    <a href="#" th:value="${cate2.cate_seq}" th:attr="style = ${cate2.rcp_chk == true ? 'color: black; font-weight: bold;' : 'color: #fff;'}">
                         <span th:text="${cate2.cate_name}">재료별</span>
                     </a>
                 </span>
@@ -87,7 +92,7 @@
                 <span>상황별</span>
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
                     &nbsp&nbsp
-                    <a href="#" th:value="${cate3.cate_seq}" style="color: #fff;">
+                    <a href="#" th:value="${cate3.cate_seq}" th:attr="style = ${cate3.rcp_chk == true ? 'color: black; font-weight: bold;' : 'color: #fff;'}">
                         <span th:text="${cate3.cate_name}">상황별</span>
                     </a>
                 </span>
@@ -100,11 +105,11 @@
         <hr/>
         <p class="fw-bold fs-2 text-start">요리 순서</p>
         <div class="manual_container">
-            <div class="rcp_manual">
-                <p class="fw-bold fs-4 text-start manual_step">1</p>
-                <textarea name="manual_txt"></textarea>
+            <div class="rcp_manual" th:each="manual : ${manualList}">
+                <p class="fw-bold fs-4 text-start manual_step" th:text="${manual.manual_no}"></p>
+                <textarea name="manual_txt" th:value="${manual.manual_txt}" th:text="${manual.manual_txt}"></textarea>
                 <p class="d-flex justify-content-between">
-                    <input type="file" id="upload_manual" name="upload_manual" >
+                    <input type="file" name="upload_manual">
                     <a class="btn btn-danger removeManual">순서 삭제</a>
                 </p>
             </div>
@@ -123,5 +128,69 @@
         </p>
     </form>
 </main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    var manualNo = $('.rcp_manual').last().children(":first").text() * 1;
+    console.log(manualNo);
+    var inputContainer = document.querySelector(".manual_container");
+    var inputNode = $('.rcp_manual').last();
+    var n1 = inputNode.clone();
+
+    $('#addManual').on("click", function(e){
+        e.preventDefault();
+        manualNo++;
+        n1.attr("style", "");
+        n1.children(".manual_step").text(manualNo);
+        n1.children("textarea").text('');
+        n1.clone().appendTo($('.manual_container'));
+    });
+
+    $(document).on('click', '.removeManual', function(){
+        if(manualNo > 1){
+            manualNo--;
+            var manualIndex = $(this).parent().parent().children(":first").html();
+            $(this).parent().parent().remove();
+
+            $('.rcp_manual').each(function(index, item){
+                var manualIndex2 = item.firstChild.nextSibling.innerHTML;
+                if(manualIndex < manualIndex2){
+                    item.firstChild.nextSibling.innerHTML = manualIndex2 - 1;
+                };
+            });
+        }
+    });
+
+    var imgUp = document.querySelector(".img_up");
+    var imgSrc = imgUp.querySelector("img");
+    var fileInput = imgUp.querySelector(`input[type="file"]`);
+    fileInput.addEventListener('input', () => {
+        const reader = new FileReader();
+		reader.addEventListener('load', () => {
+		    imgSrc.setAttribute('src', reader.result);
+		});
+		reader.readAsDataURL(fileInput.files[0]);
+    });
+
+    var cateArr = [];
+
+    $(".cate_box a[style='color: black; font-weight: bold;']").each(function(index, item){
+        cateArr.push($(item).attr('value'));
+    });
+
+    $(".cate_box a").on("click", function(e){
+        e.preventDefault();
+        if(cateArr.indexOf($(this).attr("value")) == -1){
+            cateArr.push($(this).attr("value"));
+            $(this).attr("style", "color: black; font-weight: bold;");
+            console.log($(this) + '추가');
+        }else{
+            cateArr.splice(cateArr.indexOf($(this).attr("value")), 1);
+            $(this).attr("style", "color: #fff;");
+            console.log($(this) + '해제');
+        }
+        $('#cateArr').attr('value', cateArr);
+    });
+
+</script>
 </body>
 </html>
