@@ -115,6 +115,7 @@ public class HomeController {
         List<ProduceDTO> productListAll = (List<ProduceDTO>) session.getAttribute("productListAll");
         int totalRecord = productListAll.size();
 
+        /////////////////////////이부분 수정 필요///////////////////////TODO
         RecipePageDTO recipePageDTO = new RecipePageDTO();
         if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
             //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
