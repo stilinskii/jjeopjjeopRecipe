@@ -1,7 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.*;
-import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
 import com.jjeopjjeop.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
@@ -29,19 +28,18 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model){
+        //임의로 해놓음. 원래 인기순 불러와야함.
         RecipePageDTO recipePageDTO = new RecipePageDTO();
         recipePageDTO.setStartRow(1);
         recipePageDTO.setEndRow(4);
         recipePageDTO.setRcp_sort(2);//스크랩많은순
         recipePageDTO.setCate_seq(0);//카테고리 선택안함.
-        List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
+        //List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
 
-//        int count = produceService.countProcess();
-//        Pagenation pagenation = new Pagenation(1,4,count);
-        List<ProduceDTO> popularProduceList = produceService.getPopularProduceList();
-        log.info("reclist={}",rcpList.size());
-        model.addAttribute("rcpList",rcpList);
-        model.addAttribute("list",popularProduceList);
+        List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
+        //log.info("reclist={}",rcpList.size());
+        //model.addAttribute("rcpList",rcpList);
+        model.addAttribute("list",list);
 
         return "index";
     }
@@ -54,7 +52,7 @@ public class HomeController {
 
     @PostMapping("/search")
     public String searchResult(String keyword, RedirectAttributes redirectAttributes, HttpSession session){
-        //맨처음 들어왔을때 검색결과 X / 키워드 없음 알림이 안떠야함.
+        //맨처음 들어왔을때 키워드 없음 알림이 안떠야함.
         if(StringUtils.isEmpty(keyword)){
             redirectAttributes.addFlashAttribute("NoKeyword",true);
             return "redirect:/search";
@@ -64,11 +62,9 @@ public class HomeController {
         List<RecipeDTO> rcpListAll = recipeService.searchListByKeyword(keyword);
         List<RecipeDTO> rcpList = rcpListAll.size()>8 ?getSmallListOfRecipe(rcpListAll):rcpListAll;
         //shopping
-        log.info("keyword={}",keyword);
         List<ProduceDTO> productListAll = produceService.findProductsByKeyword(keyword);
-        log.info("searchproducesize={}",productListAll.size());
         List<ProduceDTO> productList = productListAll.size()>4 ? getSmallProductList(productListAll):productListAll;
-        log.info("resultlist={}",productList.size());
+        log.info("list={}",productListAll.size());
 
         //뭔가 더 좋은 방법이 있을 거 같은디...
         if(rcpList.size()==0){
@@ -79,7 +75,7 @@ public class HomeController {
             session.setAttribute("rcpListAll",rcpListAll);
         }
 
-        if(productList.size()==0){
+        if(rcpList.size()==0){
             redirectAttributes.addFlashAttribute("NoProductList",true);
         }else{
             redirectAttributes.addFlashAttribute("productList",productList);//상품은 4개
@@ -115,7 +111,6 @@ public class HomeController {
         List<ProduceDTO> productListAll = (List<ProduceDTO>) session.getAttribute("productListAll");
         int totalRecord = productListAll.size();
 
-        /////////////////////////이부분 수정 필요///////////////////////TODO
         RecipePageDTO recipePageDTO = new RecipePageDTO();
         if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
             //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
@@ -131,7 +126,7 @@ public class HomeController {
         return mav;
     }
 
-
+    // 레시피 목록 검색 메소드
     @GetMapping("/moreRecipe")
     public ModelAndView rcpSearchMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
                                         @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
@@ -151,12 +146,12 @@ public class HomeController {
         List<CategoryDTO> cateList = recipeService.cateListProcess();
 
         // 검색 레시피 목록
-        List<RecipeDTO> rcpList = recipeService.searchListProcess(recipePageDTO);
+        //List<RecipeDTO> rcpList = recipeService.searchListProcess(recipePageDTO);
         //System.out.println(rcpList);
 
         mav.addObject("totalRecord", totalRecord);
         mav.addObject("cateList", cateList);
-        mav.addObject("rcpList", rcpList);
+        //mav.addObject("rcpList", rcpList);
         mav.addObject("recipePageDTO", recipePageDTO);
         mav.setViewName("/recipe/rcpSearch");
         return mav;
