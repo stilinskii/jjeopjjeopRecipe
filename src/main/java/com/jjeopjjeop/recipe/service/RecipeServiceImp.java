@@ -108,12 +108,33 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public void updateProcess(RecipeDTO recipeDTO){
+    public void updateProcess(RecipeDTO recipeDTO, String url, boolean isChange){
+        // 이미지 변경되었으면 이전 이미지 파일 삭제
+        if(isChange){
+            String path = dao.getFile(recipeDTO.getRcp_seq());
+            if(path != null){
+                File fe = new File(url, path);
+                fe.delete();
+            }
+        }
+
         dao.update(recipeDTO);
     }
 
     @Override
-    public void updateMProcess(ManualDTO manualDTO){
+    public void updateMProcess(ManualDTO manualDTO, String url){
+        // 요리과정 이미지 변경되었으면 이전 이미지 파일 삭제
+        if(manualDTO.getManual_no() == 1){
+            List<String> list = dao.getFileM(manualDTO.getRcp_seq());
+            for(int i=0; i<list.size(); i++){
+                String pathM = list.get(i);
+                if(pathM != null){
+                    File fm = new File(url, pathM);
+                    fm.delete();
+                }
+            }
+        }
+
         if(manualDTO.getManual_no() == 1)
             dao.deleteManual(manualDTO.getRcp_seq());
         dao.updateManual(manualDTO);

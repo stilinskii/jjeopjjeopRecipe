@@ -22,8 +22,8 @@ public interface RecipeService {
     public void writeMProcess(ManualDTO manualDTO);
     public void writeCProcess(int cate_seq);
     public List<Integer> updatePageProcess(int rcp_seq);
-    public void updateProcess(RecipeDTO recipeDTO);
-    public void updateMProcess(ManualDTO manualDTO);
+    public void updateProcess(RecipeDTO recipeDTO, String url, boolean isChange);
+    public void updateMProcess(ManualDTO manualDTO, String url);
     public void updateCProcess(int cate_seq, int rcp_seq);
     public void deleteCProcess(int rcp_seq);
     public void deleteProcess(int rcp_seq, String url1, String url2);

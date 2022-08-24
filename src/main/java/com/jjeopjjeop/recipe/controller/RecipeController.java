@@ -231,14 +231,17 @@ public class RecipeController {
         RecipeDTO updateDTO = new RecipeDTO();
 
         // 레시피 분류 목록
-        List<CategoryDTO> cateList = service.cateListProcess();
-        List<Integer> cate = service.updatePageProcess(rcp_seq);
-        for(int i=0; i<cate.size(); i++){
-            System.out.println();
-            cateList.get(cate.get(i)).setRcp_chk(true);
-        }
-        model.addAttribute("cateList", cateList); // 전체 분류 목록
+        List<CategoryDTO> cateList = service.cateListProcess(); //전체 분류 목록
+        List<Integer> cate = service.updatePageProcess(rcp_seq); //레시피에 등록된 분류 목록
 
+        for(int i=0; i<cate.size(); i++){
+            for(int j=0; j<cateList.size(); j++){
+                if(cate.get(i) == cateList.get(j).getCate_seq())
+                    cateList.get(j).setRcp_chk(true);
+            }
+        }
+
+        model.addAttribute("cateList", cateList); // 전체 분류 목록
         model.addAttribute("updateDTO", updateDTO);
         model.addAttribute("manualList", service.contentMnlProcess(rcp_seq));
         return "/recipe/rcpUpdate";
@@ -259,15 +262,17 @@ public class RecipeController {
             return "recipe/rcpUpdate";
         }
 
-        // 본문 작성
+        // 본문 수정
+        boolean isChange = false;
         MultipartFile mainFile = recipeDTO.getUpload();
         if(!mainFile.isEmpty()){
+            isChange = true;
             UUID random = saveCopyFile(mainFile, request, 0);
             recipeDTO.setFilename(random+"_"+mainFile.getOriginalFilename());
             recipeDTO.setFilepath("/media/recipe/");
         }
 
-        service.updateProcess(recipeDTO);
+        service.updateProcess(recipeDTO, urlPath(request, 0), isChange);
 
         // 요리과정 작성
         for(int i=0; i<manual_txt.length; i++){
@@ -276,12 +281,14 @@ public class RecipeController {
             manualDTO.setManual_txt(manual_txt[i]);
             manualDTO.setRcp_seq(recipeDTO.getRcp_seq());
 
+            boolean isChangeM = false;
             if(!upload_manual[i].isEmpty()){
+                isChangeM = true;
                 UUID random = saveCopyFile(upload_manual[i], request, 1);
                 manualDTO.setFilename(random+"_"+upload_manual[i].getOriginalFilename());
                 manualDTO.setFilepath("/media/recipe/manual/");
             }
-            service.updateMProcess(manualDTO);
+            service.updateMProcess(manualDTO, urlPath(request, 1));
         }
 
         // 카테고리 작성

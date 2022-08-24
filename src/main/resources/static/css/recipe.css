@@ -78,6 +78,11 @@ line-height: 0.5;
 margin-bottom: 10px;
 }
 
+.colimg{
+margin-left: 15px;
+margin-right: 15px;
+}
+
 .col-4 {
 text-align: center;
 }

@@ -42,10 +42,9 @@
       </div>
     </form>
       <div class="rcp_best">
-        <p class="fw-bold fs-2 text-start" style="margin-bottom: 30px;">오늘의 인기 레시피</p>
+        <p class="fw-bold fs-2 text-start" style="margin-bottom: 30px;">인기 레시피 TOP3</p>
         <div class="row align-items-center">
           <div class="col">
-            <span class="fs-1"> ◀ </span>
           </div>
           <div th:each="favorite : ${favoriteRcpList}" class="col colimg">
             <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${favorite.rcp_seq}, rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.page})}">
@@ -63,7 +62,6 @@
             </p>
           </div>
           <div class="col">
-            <span class="fs-1"> ▶ </span>
           </div>
         </div>
       </div>
