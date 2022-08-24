@@ -247,9 +247,14 @@ public class RecipeController {
 
         // 레시피 분류 목록
         List<CategoryDTO> cateList = service.cateListProcess();
+        List<Integer> cate = service.updatePageProcess(rcp_seq);
+        for(int i=0; i<cate.size(); i++){
+            cateList.get(cate.get(i)).setRcp_chk(true);
+        }
+        model.addAttribute("cateList", cateList); // 전체 분류 목록
 
         model.addAttribute("updateDTO", updateDTO);
-        model.addAttribute("cateList", cateList);
+        model.addAttribute("manualList", service.contentMnlProcess(rcp_seq));
         return "/recipe/rcpUpdate";
     }
 

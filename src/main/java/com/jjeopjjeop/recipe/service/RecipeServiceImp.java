@@ -101,6 +101,11 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
+    public List<Integer> updatePageProcess(int rcp_seq) {
+        return dao.updateCate(rcp_seq);
+    }
+
+    @Override
     public void deleteProcess(int rcp_seq, String url1, String url2) {
         // 대표 이미지 있으면 삭제
         String path = dao.getFile(rcp_seq);
