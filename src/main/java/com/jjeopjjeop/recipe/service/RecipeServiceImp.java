@@ -118,8 +118,12 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public void updateCProcess(int num){
+    public void updateCProcess(int cate_seq, int rcp_seq){
+        dao.updateCate(cate_seq, rcp_seq);
+    }
 
+    public void deleteCProcess(int rcp_seq){
+        dao.deleteCate(rcp_seq);
     }
 
     @Override

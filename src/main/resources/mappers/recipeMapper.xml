@@ -214,7 +214,7 @@
 
     <delete id="deleteCate" parameterType="int">
         DELETE FROM cate_rcp
-        WHERE rcp_seq=#{num}
+        WHERE rcp_seq=#{rcp_seq}
     </delete>
 
     <select id="getFile" parameterType="int" resultType="String">

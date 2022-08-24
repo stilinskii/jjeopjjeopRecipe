@@ -21,6 +21,8 @@
     <form action="" th:object="${recipeDTO}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
         <input type="hidden" th:field="*{rcp_seq}" th:value="${recipeDTO.rcp_seq}">
+        <input type="hidden" th:field="*{filename}" th:value="${recipeDTO.filename}">
+        <input type="hidden" th:field="*{filepath}" th:value="${recipeDTO.filepath}">
         <div class="row" style="margin-bottom:15px;">
             <div class="col-4 d-grid gap-2 d-md-block img_up">
                 <label for="rcp_file" style="cursor:pointer;">

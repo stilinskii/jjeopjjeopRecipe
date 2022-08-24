@@ -289,19 +289,20 @@ public class RecipeController {
             manualDTO.setManual_no(i+1);
             manualDTO.setManual_txt(manual_txt[i]);
             manualDTO.setRcp_seq(recipeDTO.getRcp_seq());
+
             if(!upload_manual[i].isEmpty()){
                 UUID random = saveCopyFile(upload_manual[i], request, 1);
                 manualDTO.setFilename(random+"_"+upload_manual[i].getOriginalFilename());
                 manualDTO.setFilepath("/media/recipe/manual/");
             }
             service.updateMProcess(manualDTO);
-            System.out.println(i + manualDTO.getManual_txt());
         }
 
         // 카테고리 작성
+        service.deleteCProcess(recipeDTO.getRcp_seq());
         for(String data : cateArr){
             int num = Integer.parseInt(data);
-            service.updateCProcess(num);
+            service.updateCProcess(num, recipeDTO.getRcp_seq());
         }
 
         return "redirect:/recipe/list";

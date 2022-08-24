@@ -2,6 +2,7 @@ package com.jjeopjjeop.recipe.dao;
 
 import com.jjeopjjeop.recipe.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -44,11 +45,11 @@ public interface RecipeDAO {
     // update 처리
     public void update(RecipeDTO recipeDTO);
     public void updateManual(ManualDTO manualDTO);
-    public void updateCate(int cate_seq);
+    public void updateCate(@Param("cate_seq") int cate_seq, @Param("rcp_seq") int rcp_seq);
     public List<Integer> callUpdateCate(int rcp_seq);
     public void delete(int num);
     public void deleteManual(int num);
-    public void deleteCate(int num);
+    public void deleteCate(int rcp_seq);
     public String getFile(int rcp_seq); // 레시피 대표 첨부파일
     public List<String> getFileM(int rcp_seq); // 요리과정 첨부파일
 
