@@ -102,7 +102,24 @@ public class RecipeServiceImp implements RecipeService{
 
     @Override
     public List<Integer> updatePageProcess(int rcp_seq) {
-        return dao.updateCate(rcp_seq);
+        return dao.callUpdateCate(rcp_seq);
+    }
+
+    @Override
+    public void updateProcess(RecipeDTO recipeDTO){
+        dao.update(recipeDTO);
+    }
+
+    @Override
+    public void updateMProcess(ManualDTO manualDTO){
+        if(manualDTO.getManual_no() == 1)
+            dao.deleteManual(manualDTO.getRcp_seq());
+        dao.updateManual(manualDTO);
+    }
+
+    @Override
+    public void updateCProcess(int num){
+
     }
 
     @Override

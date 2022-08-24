@@ -43,10 +43,12 @@ public interface RecipeDAO {
 
     // update 처리
     public void update(RecipeDTO recipeDTO);
-    public List<Integer> updateCate(int rcp_seq);
+    public void updateManual(ManualDTO manualDTO);
+    public void updateCate(int cate_seq);
+    public List<Integer> callUpdateCate(int rcp_seq);
     public void delete(int num);
-    //public void deleteManual(int num);
-    //public void deleteCate(int num);
+    public void deleteManual(int num);
+    public void deleteCate(int num);
     public String getFile(int rcp_seq); // 레시피 대표 첨부파일
     public List<String> getFileM(int rcp_seq); // 요리과정 첨부파일
 

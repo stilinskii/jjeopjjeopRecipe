@@ -178,10 +178,29 @@
         VALUES(#{cate_seq}, (SELECT max(rcp_seq) FROM recipe))
     </insert>
 
-    <select id="updateCate" parameterType="int" resultType="Integer">
+    <select id="callUpdateCate" parameterType="int" resultType="Integer">
         SELECT cate_seq FROM cate_rcp
         WHERE rcp_seq = #{rcp_seq}
     </select>
+
+    <update id="update" parameterType="RecipeDTO">
+        UPDATE recipe
+        SET rcp_name = #{rcp_name}, filename = #{filename, jdbcType=VARCHAR}, filepath = #{filepath, jdbcType=VARCHAR},
+        time = #{time, jdbcType=VARCHAR}, difficulty = #{difficulty, jdbcType=VARCHAR}, amount = #{amount, jdbcType=VARCHAR},
+        summary = #{summary, jdbcType=VARCHAR}, hash_tag = #{hash_tag, jdbcType=VARCHAR}, rcp_parts_dtls = #{rcp_parts_dtls, jdbcType=VARCHAR}
+        WHERE rcp_seq = #{rcp_seq}
+    </update>
+
+    <insert id="updateManual" parameterType="ManualDTO">
+        INSERT INTO manual(manual_no, rcp_seq, manual_txt, filename, filepath)
+        VALUES(#{manual_no, jdbcType=VARCHAR}, #{rcp_seq},
+        #{manual_txt, jdbcType=VARCHAR}, #{filename, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="updateCate" parameterType="int">
+        INSERT INTO cate_rcp(cate_seq, rcp_seq)
+        VALUES(#{cate_seq}, #{rcp_seq})
+    </insert>
 
     <delete id="delete" parameterType="int">
         DELETE FROM recipe

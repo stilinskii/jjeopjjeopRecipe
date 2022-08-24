@@ -20,6 +20,7 @@
     <p class="fw-bold fs-2 text-start">레시피 수정하기</p>
     <form action="" th:object="${recipeDTO}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
+        <input type="hidden" th:field="*{rcp_seq}" th:value="${recipeDTO.rcp_seq}">
         <div class="row" style="margin-bottom:15px;">
             <div class="col-4 d-grid gap-2 d-md-block img_up">
                 <label for="rcp_file" style="cursor:pointer;">
@@ -102,14 +103,6 @@
         <hr/>
         <p class="fw-bold fs-2 text-start">요리 순서</p>
         <div class="manual_container">
-            <div class="rcp_manual" style="">
-                <p class="fw-bold fs-4 text-start manual_step"></p>
-                <textarea name="manual_txt"></textarea>
-                <p class="d-flex justify-content-between">
-                    <input type="file" name="upload_manual">
-                    <a class="btn btn-danger removeManual">순서 삭제</a>
-                </p>
-            </div>
             <div class="rcp_manual" th:each="manual : ${manualList}">
                 <p class="fw-bold fs-4 text-start manual_step" th:text="${manual.manual_no}"></p>
                 <textarea name="manual_txt" th:value="${manual.manual_txt}" th:text="${manual.manual_txt}"></textarea>
@@ -138,7 +131,7 @@
     var manualNo = $('.rcp_manual').last().children(":first").text() * 1;
     console.log(manualNo);
     var inputContainer = document.querySelector(".manual_container");
-    var inputNode = $('.rcp_manual').first();
+    var inputNode = $('.rcp_manual').last();
     var n1 = inputNode.clone();
 
     $('#addManual').on("click", function(e){
@@ -147,7 +140,7 @@
         n1.attr("style", "");
         n1.children(".manual_step").text(manualNo);
         n1.children("textarea").text('');
-        n1.clone().appendTo($('.rcp_manual').last());
+        n1.clone().appendTo($('.manual_container'));
     });
 
     $(document).on('click', '.removeManual', function(){

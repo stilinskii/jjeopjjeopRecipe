@@ -259,10 +259,53 @@ public class RecipeController {
     }
 
     // 레시피 수정 메소드
-//    public String rcpUpdateMethod(){
-//
-//        return null;
-//    }
+    @PostMapping("/recipe/update")
+    public String rcpUpdateMethod(@Validated @ModelAttribute("updateDTO") RecipeDTO recipeDTO, BindingResult bindingResult, String[] manual_txt,
+                                  @RequestParam(value="cateArr", required=false) List<String> cateArr, Model model,
+                                  MultipartFile[] upload_manual, HttpServletRequest request, HttpSession session){
+
+        // 유효성 검사
+        if(bindingResult.hasErrors()){
+            // 레시피 분류 목록
+            List<CategoryDTO> cateList = service.cateListProcess();
+            model.addAttribute("cateList", cateList);
+
+            return "recipe/rcpUpdate";
+        }
+
+        // 본문 작성
+        MultipartFile mainFile = recipeDTO.getUpload();
+        if(!mainFile.isEmpty()){
+            UUID random = saveCopyFile(mainFile, request, 0);
+            recipeDTO.setFilename(random+"_"+mainFile.getOriginalFilename());
+            recipeDTO.setFilepath("/media/recipe/");
+        }
+
+        service.updateProcess(recipeDTO);
+
+        // 요리과정 작성
+        for(int i=0; i<manual_txt.length; i++){
+            ManualDTO manualDTO = new ManualDTO();
+            manualDTO.setManual_no(i+1);
+            manualDTO.setManual_txt(manual_txt[i]);
+            manualDTO.setRcp_seq(recipeDTO.getRcp_seq());
+            if(!upload_manual[i].isEmpty()){
+                UUID random = saveCopyFile(upload_manual[i], request, 1);
+                manualDTO.setFilename(random+"_"+upload_manual[i].getOriginalFilename());
+                manualDTO.setFilepath("/media/recipe/manual/");
+            }
+            service.updateMProcess(manualDTO);
+            System.out.println(i + manualDTO.getManual_txt());
+        }
+
+        // 카테고리 작성
+        for(String data : cateArr){
+            int num = Integer.parseInt(data);
+            service.updateCProcess(num);
+        }
+
+        return "redirect:/recipe/list";
+    }
 
     // 레시피 삭제 메소드
     @GetMapping("/recipe/delete/{rcp_seq}")
