@@ -2,12 +2,14 @@ package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dao.RecipeDAO;
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RecipeServiceImp implements RecipeService{
@@ -24,18 +26,18 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public List<RecipeDTO> listProcess(RecipePageDTO recipePageDTO) {
-        return dao.list(recipePageDTO);
+    public List<RecipeDTO> listProcess(Pagenation pagenation, int rcp_sort, int cate_seq) {
+        return dao.list(Map.of("page",pagenation,"rcp_sort",rcp_sort,"cate_seq",cate_seq));
     }
 
     @Override
-    public int searchCountProcess(RecipePageDTO recipePageDTO) {
-        return dao.searchCount(recipePageDTO);
+    public int searchCountProcess(String searchKey, int cate_seq) {
+        return dao.searchCount(Map.of("searchKey", searchKey, "cate_seq", cate_seq));
     }
 
     @Override
-    public List<RecipeDTO> searchListProcess(RecipePageDTO recipePageDTO) {
-        return dao.searchList(recipePageDTO);
+    public List<RecipeDTO> searchListProcess(Pagenation pagenation, int rcp_sort, int cate_seq, String searchKey) {
+        return dao.searchList(Map.of("page",pagenation,"rcp_sort",rcp_sort,"cate_seq",cate_seq, "searchKey", searchKey));
     }
 
     @Override

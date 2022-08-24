@@ -1,7 +1,7 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.dto.RecipeCommentDTO;
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.RecipeCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,33 +13,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class RecipeCommentController {
     @Autowired
     private RecipeCommentService service;
-    private int currentPage;
 
     // 댓글 조회
     @ResponseBody
     @GetMapping(value = "/recipe/comment/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RecipePageDTO> listMethod(String rcp_seq, String commentCurrentPage){
+    public ResponseEntity<Map> listMethod(String rcp_seq, String commentCurrentPage){
         // 덧글 처리
-        int totalComment = service.countProcess(Integer.parseInt(rcp_seq));
-        RecipePageDTO recipeCommentPageDTO = new RecipePageDTO();
+        Pagenation pagenation = new Pagenation(Integer.parseInt(commentCurrentPage), service.countProcess(Integer.parseInt(rcp_seq)), false);
 
-        if(totalComment>0){
-            int currentPage = Math.max(Integer.parseInt(commentCurrentPage), 1);
-            recipeCommentPageDTO = new RecipePageDTO(currentPage, totalComment, Integer.parseInt(rcp_seq));
-        }else{
-            recipeCommentPageDTO = new RecipePageDTO(1, 0, Integer.parseInt(rcp_seq));
-            recipeCommentPageDTO.setStartPage(1);
-            recipeCommentPageDTO.setEndPage(1);
-            recipeCommentPageDTO.setTotalPage(1);
-        }
-        recipeCommentPageDTO.setRecipeCommentDTOList(service.listProcess(recipeCommentPageDTO));
+        //recipeCommentPageDTO.setRecipeCommentDTOList(service.listProcess(recipeCommentPageDTO));
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", service.listProcess(pagenation, Integer.parseInt(rcp_seq)));
+        map.put("page", pagenation);
 
-        return new ResponseEntity<>(recipeCommentPageDTO, HttpStatus.OK);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     // 댓글 작성

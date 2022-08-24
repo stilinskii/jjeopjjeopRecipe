@@ -1,14 +1,15 @@
 package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 
 import java.util.List;
 
 public interface RecipeService {
     public int countProcess(int cate_seq);
-    public List<RecipeDTO> listProcess(RecipePageDTO recipePageDTO);
-    public int searchCountProcess(RecipePageDTO recipePageDTO);
-    public List<RecipeDTO> searchListProcess(RecipePageDTO recipePageDTO);
+    public List<RecipeDTO> listProcess(Pagenation pagenation, int rcp_sort, int cate_seq);
+    public int searchCountProcess(String searchKey, int cate_seq);
+    public List<RecipeDTO> searchListProcess(Pagenation pagenation, int rcp_sort, int cate_seq, String searchKey);
     public List<RecipeDTO> favoriteListProcess();
     public List<CategoryDTO> cateListProcess();
     public RecipeDTO contentProcess(int rcp_seq);

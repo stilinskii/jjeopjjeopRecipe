@@ -3,10 +3,12 @@ package com.jjeopjjeop.recipe.service;
 import com.jjeopjjeop.recipe.dao.RecipeCommentDAO;
 import com.jjeopjjeop.recipe.dto.RecipeCommentDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RecipeCommentServiceImp implements RecipeCommentService{
@@ -24,9 +26,9 @@ public class RecipeCommentServiceImp implements RecipeCommentService{
     }
 
     @Override
-    public List<RecipeCommentDTO> listProcess(RecipePageDTO recipePageDTO) {
+    public List<RecipeCommentDTO> listProcess(Pagenation pagenation, int rcp_seq) {
 
-        return dao.list(recipePageDTO);
+        return dao.list(Map.of("page", pagenation, "rcp_seq", rcp_seq));
     }
 
     @Override

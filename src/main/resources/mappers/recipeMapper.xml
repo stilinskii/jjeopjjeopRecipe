@@ -14,7 +14,7 @@
         </if>
     </select>
 
-    <select id="list" parameterType="RecipePageDTO" resultType="RecipeDTO">
+    <select id="list" parameterType="Map" resultType="RecipeDTO">
         SELECT rcp_li.* FROM
         (SELECT rcp.*, rownum rm FROM
         (SELECT * FROM recipe
@@ -41,11 +41,11 @@
         </choose>
         )rcp)rcp_li
         <![CDATA[
-        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        WHERE rm >= #{page.startRow} AND rm <= #{page.endRow}
         ]]>
     </select>
 
-    <select id="searchCount" parameterType="RecipePageDTO" resultType="int">
+    <select id="searchCount" parameterType="Map" resultType="int">
         SELECT count(*) FROM recipe
         WHERE (rcp_name LIKE '%' || #{searchKey} || '%'
         OR rcp_parts_dtls LIKE '%' || #{searchKey} || '%'
@@ -59,7 +59,7 @@
         </if>
     </select>
 
-    <select id="searchList" parameterType="RecipePageDTO" resultType="RecipeDTO">
+    <select id="searchList" parameterType="Map" resultType="RecipeDTO">
         SELECT rcp_li.* FROM
         (SELECT rcp.*, rownum rm FROM
         (SELECT * FROM recipe
@@ -90,7 +90,7 @@
         </choose>
         <![CDATA[
             )rcp)rcp_li
-            WHERE rm >= #{startRow} AND rm <= #{endRow}
+            WHERE rm >= #{page.startRow} AND rm <= #{page.endRow}
         ]]>
     </select>
 
