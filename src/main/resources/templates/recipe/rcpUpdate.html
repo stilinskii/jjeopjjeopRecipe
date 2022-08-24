@@ -18,10 +18,10 @@
 <main class="custom container">
     <p class="fw-bold fs-2 text-start">레시피 수정하기</p>
     <form action="" th:object="${recipeDTO}" method="post" enctype="multipart/form-data">
-        <input type="hidden" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
-        <input type="hidden" th:field="*{rcp_seq}" th:value="${recipeDTO.rcp_seq}">
-        <input type="hidden" th:field="*{filename}" th:value="${recipeDTO.filename}">
-        <input type="hidden" th:field="*{filepath}" th:value="${recipeDTO.filepath}">
+        <input type="text" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
+        <input type="text" th:field="*{rcp_seq}" th:value="${recipeDTO.rcp_seq}">
+        <input type="text" th:field="*{filename}" th:value="${recipeDTO.filename}">
+        <input type="text" th:field="*{filepath}" th:value="${recipeDTO.filepath}">
         <div class="row" style="margin-bottom:15px;">
             <div class="col-4 d-grid gap-2 d-md-block img_up">
                 <label for="rcp_file" style="cursor:pointer;">
@@ -123,7 +123,7 @@
             <a th:href="@{/recipe/list}" class="btn btn-danger">
                 &nbsp&nbsp취소&nbsp&nbsp
             </a>
-            <button type="submit" class="btn btn-primary">&nbsp&nbsp작성&nbsp&nbsp</button>
+            <button type="submit" class="btn btn-primary">&nbsp&nbsp수정&nbsp&nbsp</button>
         </p>
     </form>
 </main>
