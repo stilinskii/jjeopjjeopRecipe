@@ -7,7 +7,9 @@ import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.jjeopjjeop.recipe.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.standard.expression.Each;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -49,49 +52,48 @@ public class ProduceController {
     @MySecured
     @PostMapping({"/produce/write"})
     public String produceWrite(ProduceDTO produceDTO, MultipartFile file) throws Exception{
-        log.info("dto={}", produceDTO.getUser_id());
-        log.info("dto={}", produceDTO.getProduce_image());
         produceService.writeProcess(produceDTO, file);
         return "redirect:/produce/list";
     }
     //////////////////////////////////////////////////////////////////////////////////////////
-    private int currentPage;
 
-    //모든 판매글 조회
-    @GetMapping("/produce/list")
-    public ModelAndView produceList(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav) {
+    //판매글 조회(필터링)
+    @GetMapping("/produce/list/{type}")
+    public ModelAndView produceList(@PathVariable("type") int type, @RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav) {
 
-        int totalRecord = produceService.countProcess();// 전체 레코드 수
+        int totalRecord = produceService.produceFilterCount(type);// 전체 레코드 수
 
         Pagenation pagenation = new Pagenation(page,9, totalRecord); //페이지 처리를 위한 계산
 
-        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기 <-얘는 왜한거였지?
+        //mapper에 보낼 값들.
+        Map<String, Object> map = new HashMap<>();
+        map.put("startRow", pagenation.getStartRow());
+        map.put("endRow", pagenation.getEndRow());
+        map.put("produce_type", type);
+
+        //produceList.html에 보낼 값들.
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
-        mav.addObject("list", produceService.produceList(pagenation));  //판매글 리스트 넘겨주기
+        mav.addObject("list", produceService.produceList(map));  //판매글 리스트 넘겨주기
         mav.setViewName("/produce/produceList");
         return mav;
     }
 
+    //판매글 조회(정렬)
+    @GetMapping("/produce/list/sort/{sort}")
+    public ModelAndView produceListSort(@PathVariable("sort") int sort, @RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav) {
 
-    //필터링한 판매글 조회
-    @GetMapping("/produce/list/{type}")
-    public ModelAndView produceListType(@PathVariable("type") int type, ModelAndView mav, RecipePageDTO recipePageDTO) {
-        // 전체 레코드 수
-        int totalRecord = produceService.countProcess();
+        int totalRecord = produceService.produceSortCount(sort);
+        Pagenation pagenation = new Pagenation(page,9, totalRecord); //페이지 처리를 위한 계산
 
-        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
-            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
-            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
+        //mapper에 보낼 값들.
+        Map<String, Object> map = new HashMap<>();
+        map.put("startRow", pagenation.getStartRow());
+        map.put("endRow", pagenation.getEndRow());
+        map.put("sort", sort);
 
-            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
-        }
-
-
-        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
-        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
-
-        List<ProduceDTO> list = produceService.produceListType(type);
-        mav.addObject("list", list);
+        //produceList.html에 보낼 값들.
+        mav.addObject("page", pagenation); //페이지 정보 넘겨주기
+        mav.addObject("list", produceService.produceListSort(map));  //판매글 리스트 넘겨주기
         mav.setViewName("/produce/produceList");
         return mav;
     }

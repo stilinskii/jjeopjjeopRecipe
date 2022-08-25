@@ -37,24 +37,22 @@
                     <input type="hidden" th:value="${produceDTO.produce_num}">
                     <tr>
                         <th:block th:each="payDTO : ${produceDTO.payDTOList}">
-                            <th:block th:if="${session.user_id == payDTO.user_id}"><!--로그인한 회원의 아이디와 pay_history의 회원아이디와 일치하는것만 보이도록.-->
-                                <td th:text="${page.perPage * page.page + produceDTOStat.count}">일련번호</td>
-                                <!--페이지당 보이는 게시글 수 * 현재페이지번호 + 한페이지당 일련번호로 계산해서 페이지 넘어가도 일련번호 이어지게 만듧.-->
-                                <td><a th:href="@{/produce/view/{produceNum}(produceNum=${produceDTO.produce_num})}" th:text="${produceDTO.produce_name}"></a></td>
-                                <td th:text="${payDTO.quantity}">수량</td>
-                                <td data-th-text="${#numbers.formatInteger(payDTO.total_price, 3, 'COMMA') + '원'}">총가격</td>
-                                <td>
-                                    <th:block th:if="${payDTO.review_check == 0}"> <!-- 리뷰 안남겼으면 얘 보이게-->
-                                        <form method="get" th:action="@{/review/write/{pay_num}(pay_num=${payDTO.pay_num})}">
-                                            <button type="submit" class="btn btn-md btn-warning">리뷰 남기기</button>
-                                        </form>
-                                    </th:block>
-                                    <th:block th:unless="${payDTO.review_check == 0}"> <!--만약 리뷰 남겼으면 얘보이게-->
-                                        <a th:href="@{/review/view/{pay_num}(pay_num=${payDTO.pay_num})}">리뷰 수정</a>&nbsp&nbsp&nbsp
-                                        <a class="confirmDeletion" th:href="@{/review/delete/{payNum}(payNum=${payDTO.pay_num})}">리뷰 삭제</a>
-                                    </th:block>
-                                </td>
-                            </th:block>
+                            <td th:text="${page.perPage * page.page + produceDTOStat.count}">일련번호</td>
+                            <!--페이지당 보이는 게시글 수 * 현재페이지번호 + 한페이지당 일련번호로 계산해서 페이지 넘어가도 일련번호 이어지게 만듧.-->
+                            <td><a th:href="@{/produce/view/{produceNum}(produceNum=${produceDTO.produce_num})}" th:text="${produceDTO.produce_name}"></a></td>
+                            <td th:text="${payDTO.quantity}">수량</td>
+                            <td data-th-text="${#numbers.formatInteger(payDTO.total_price, 3, 'COMMA') + '원'}">총가격</td>
+                            <td>
+                                <th:block th:if="${payDTO.review_check == 0}"> <!-- 리뷰 안남겼으면 얘 보이게-->
+                                    <form method="get" th:action="@{/review/write/{pay_num}(pay_num=${payDTO.pay_num})}">
+                                        <button type="submit" class="btn btn-md btn-warning">리뷰 남기기</button>
+                                    </form>
+                                </th:block>
+                                <th:block th:unless="${payDTO.review_check == 0}"> <!--만약 리뷰 남겼으면 얘보이게-->
+                                    <a th:href="@{/review/view/{pay_num}(pay_num=${payDTO.pay_num})}">리뷰 수정</a>&nbsp&nbsp&nbsp
+                                    <a class="confirmDeletion" th:href="@{/review/delete/{payNum}(payNum=${payDTO.pay_num})}">리뷰 삭제</a>
+                                </th:block>
+                            </td>
                         </th:block>
                     </tr>
                 </div>

@@ -42,14 +42,16 @@ class ProduceServiceImp implements ProduceService {
         produceDAO.write(produceDTO);
     }
     @Override
-    public List<ProduceDTO> produceList(Pagenation pagenation) {
-        return produceDAO.produceList(pagenation);
+    public List<ProduceDTO> produceList(Map<String, Object> map) {
+        return produceDAO.produceList(map);
     }
 
     @Override
-    public List<ProduceDTO> produceListType(int type) {
-        return produceDAO.produceListType(type);
+    public List<ProduceDTO> produceListSort(Map<String, Object> map) {
+
+        return produceDAO.produceListSort(map);
     }
+
 
     @Override
     public void produceDeleteProcess(int produce_num) {
@@ -80,10 +82,16 @@ class ProduceServiceImp implements ProduceService {
         produceDAO.produceUpdate(produceDTO);
     }
 
-    //페이지 처리를 위해 판매글 개수 세기
+    //페이지 처리를 위해 판매글(필터링) 개수 세기
     @Override
-    public int countProcess() {
-        return produceDAO.produceCount();
+    public int produceFilterCount(int produce_type) {
+        return produceDAO.produceFilterCount(produce_type);
+    }
+
+    //페이지처리를 위한 판매글(정렬) 개수세기
+    @Override
+    public int produceSortCount(int sort) {
+        return produceDAO.produceSortCount(sort);
     }
 
     //하영 통합검색에 필요.

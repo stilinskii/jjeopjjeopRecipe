@@ -1,3 +1,8 @@
+textarea{
+  resize: none;  /*  사용자가 드래그로 크기조절하는 거 막기. */
+  height: 100px; /*근데 이게 안먹힌다. 직접 style=~해야됨.*/
+}
+
 /* ==============pagination 시작========================== */
 /*.pages의 모든 a의 글씨색 검정색으로 */
 .pages a{color:black;}
@@ -42,16 +47,12 @@
 /* =================판매글 카드 끝======================= */
 
 
-/*========book_section===========*/
-.book_section {
+/*========inner_content===========*/
+.inner_content {
   position: relative;
 }
 
-.book_section .heading_container {
-  margin-bottom: 25px;
-}
-
-.book_section .form_container .form-control {
+.inner_content .form_container .form-control {
   width: 100%;
   border: none;
   height: 50px;
@@ -66,27 +67,27 @@
           box-shadow: none;
 }
 
-.book_section .form_container .form-control::-webkit-input-placeholder {
+/* .inner_content .form_container .form-control::-webkit-input-placeholder {
   color: #222222;
 }
 
-.book_section .form_container .form-control:-ms-input-placeholder {
+.inner_content .form_container .form-control:-ms-input-placeholder {
   color: #222222;
 }
 
-.book_section .form_container .form-control::-ms-input-placeholder {
+.inner_content .form_container .form-control::-ms-input-placeholder {
   color: #222222;
 }
 
-.book_section .form_container .form-control::placeholder {
+.inner_content .form_container .form-control::placeholder {
   color: #222222;
-}
+} */
 
-.book_section .form_container .nice-select .current {
+.inner_content .form_container .nice-select .current {
   font-size: 16px;
 }
 
-.book_section .form_container button {
+.inner_content .form_container button {
   margin-top: 15px;
   border: none;
   text-transform: uppercase;
@@ -100,18 +101,17 @@
   border: none;
 }
 
-.book_section .form_container button:hover {
+.inner_content .form_container button:hover {
   background-color: #e69c00;
 }
 /*========subpage 필요없어서 안가져옴.===========*/
-#try{
-  background-color: skyblue;
-  text-align: center;
+/*=====.heading_container=========*/
+/* 제목 */
+.inner_content .heading_container {
+  margin-bottom: 25px;
 }
 
-/*=====.heading_container=========*/
-
-.heading_container {
+/* .heading_container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -122,7 +122,7 @@
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
-}
+} */
 
 .heading_container h2 {
   position: relative;
@@ -131,21 +131,21 @@
   font-weight: bold;
 }
 
-.heading_container h2 span {
+/* .heading_container h2 span {
   color: #ffbe33;
-}
+} */
 
-.heading_container p {
+/* .heading_container p {
   margin-top: 10px;
   margin-bottom: 0;
-}
+} */
 
-.heading_container.heading_center {
+/* .heading_container.heading_center {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   text-align: center;
-}
+} */
 /*
 =======================produceView, produceList css====================================
 */

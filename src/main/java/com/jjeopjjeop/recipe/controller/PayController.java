@@ -17,7 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -44,12 +46,27 @@ public class PayController {
 
     @MySecured
     @GetMapping("/mypage/cart/view")
-    public ModelAndView cartView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,ModelAndView mav, HttpServletRequest request){
+    public ModelAndView cartView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String user_id = (String) session.getAttribute("user_id");
 
-        int totalRecord = payService.cartCount(request);// 전체 레코드 수
+        int totalRecord = payService.cartCount(user_id);// 전체 레코드 수
         Pagenation pagenation = new Pagenation(page,5, totalRecord); //페이지 처리를 위한 계산
 
-        mav.addObject("list", payService.cartView(pagenation));
+        //mapper에 보낼 값들.
+        Map<String, Object> map = new HashMap<>();
+        map.put("startRow", pagenation.getStartRow());
+        map.put("endRow", pagenation.getEndRow());
+        map.put("user_id", user_id);
+
+        System.out.println("========================");
+        System.out.println(totalRecord);
+        System.out.println(pagenation.getStartRow());
+        System.out.println(pagenation.getEndRow());
+        System.out.println(user_id);
+        System.out.println("========================");
+
+        mav.addObject("list", payService.cartView(map));
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
         mav.setViewName("/users/cart");
 
@@ -60,11 +77,27 @@ public class PayController {
     @MySecured
     @GetMapping("/mypage/pay/view")
     public ModelAndView payView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav, HttpServletRequest request){
-        // 전체 레코드 수
-        int totalRecord = payService.payCount(request);
+        HttpSession session = request.getSession();
+        String user_id = (String) session.getAttribute("user_id");
+        int totalRecord = payService.payCount(user_id);// 전체 레코드 수
+
         Pagenation pagenation = new Pagenation(page,5, totalRecord); //페이지 처리를 위한 계산
 
-        mav.addObject("list", payService.payView(pagenation));
+        //mapper에 보낼 값들.
+        Map<String, Object> map = new HashMap<>();
+        map.put("startRow", pagenation.getStartRow());
+        map.put("endRow", pagenation.getEndRow());
+        map.put("user_id", user_id);
+
+        System.out.println("+++++++++++++++++++++++");
+        System.out.println(payService.payCount(user_id));
+        System.out.println(totalRecord);
+        System.out.println(pagenation.getStartRow());
+        System.out.println(pagenation.getEndRow());
+        System.out.println(user_id);
+        System.out.println("++++++++++++++++++++++++");
+
+        mav.addObject("list", payService.payView(map));
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
         mav.setViewName("/users/payment");
 

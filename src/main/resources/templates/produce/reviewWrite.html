@@ -8,11 +8,8 @@
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
 </head>
 <body>
-    <!-- 0819 sub_page 지워봄. 잘될까? -->
-
-<!-- book section -->
-<section class="book_section layout_padding mt-5">
-    <div class="container" >
+<section class="inner_content layout_padding mt-5">
+    <div class="container">
         <div class="heading_container d-block text-center">
             <h2>리뷰 등록</h2>
         </div>
@@ -42,10 +39,9 @@
                             </select>
                         </div>
                         <div>
-<!--                            resize: none 사용자가 드래그로 크기조절하는 거 막기.-->
                             <textarea class="form-control" name="content" rows="5" placeholder="리뷰를 작성해주세요(~자 이내로 작성해주세요)"
-                                      style="resize: none;"
-                                      th:field="*{content}" th:classappend="${#fields.hasErrors('content')} ? 'is-invalid'">
+                                      th:field="*{content}" th:classappend="${#fields.hasErrors('content')} ? 'is-invalid'"
+                                      >
                             </textarea>
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
                                 에러메시지

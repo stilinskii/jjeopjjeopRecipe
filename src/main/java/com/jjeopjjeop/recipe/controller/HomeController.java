@@ -37,10 +37,15 @@ public class HomeController {
         recipePageDTO.setCate_seq(0);//카테고리 선택안함.
         //List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
 
-        List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
+        //-----------여기부터
+        //    List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
+       // Pagenation pagenation = new Pagenation(1,5, produceService.countProcess()); #$#$
+       // List<ProduceDTO> list = produceService.produceList(pagenation); #$#$#$
+        //------------여기까지
+
         //log.info("reclist={}",rcpList.size());
         //model.addAttribute("rcpList",rcpList);
-        model.addAttribute("list",list);
+       // model.addAttribute("list",list);  #$#$#$
 
         return "index";
     }
