@@ -108,6 +108,11 @@
         ORDER BY cate_seq
     </select>
 
+    <select id="getRcpCate" parameterType="int" resultType="CategoryDTO">
+        SELECT * FROM category
+        WHERE cate_seq IN (SELECT cate_seq FROM cate_rcp WHERE rcp_seq = #{rcp_seq})
+    </select>
+
     <select id="content" parameterType="int" resultType="RecipeDTO">
         SELECT * FROM recipe WHERE rcp_seq = #{num}
     </select>
@@ -177,11 +182,6 @@
         INSERT INTO cate_rcp(cate_seq, rcp_seq)
         VALUES(#{cate_seq}, (SELECT max(rcp_seq) FROM recipe))
     </insert>
-
-    <select id="callUpdateCate" parameterType="int" resultType="Integer">
-        SELECT cate_seq FROM cate_rcp
-        WHERE rcp_seq = #{rcp_seq}
-    </select>
 
     <update id="update" parameterType="RecipeDTO">
         UPDATE recipe

@@ -94,9 +94,8 @@
     <button type="button" id="needLoginBtn" style="display: none;" data-bs-toggle="modal" data-bs-target="#needLoginModal">로그인 안내</button>
     <!-- Modal// -->
     <span class="fw-bold fs-2 text-start" th:text="${rcp.rcp_name}"></span>
-    <a th:href="@{/recipe/update(rcp_seq=${rcp_seq})}" class="btn btn-primary">글수정</a>
     <span th:if="${user_id} == ${rcp.user_id}" class="upsideBtn text-end">
-
+        <a th:href="@{/recipe/update(rcp_seq=${rcp_seq})}" class="btn btn-primary">글수정</a>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">글삭제</button>
     </span>
     <hr/>
@@ -115,7 +114,12 @@
                 <span th:text="'난이도 | '+${rcp.difficulty}">난이도</span>
                 <span th:text="'양 | '+${rcp.amount}" class="right">양</span>
             </p>
-            <p th:text="'분류 | '"></p>
+            <p th:text="'분류 | '" style="display: inline;">
+                <p th:each="cates, i: ${cate_list}" style="display: inline;">
+                    <span th:if="${i.index} == 0" th:text="${cates}"></span>
+                    <span th:if="${i.index} != 0" th:text="', ' + ${cates}"></span>
+                </p>
+            </p>
             <p th:text="'소개 | '+${rcp.summary}"></p>
             <br/>
             <p class="d-flex justify-content-between">

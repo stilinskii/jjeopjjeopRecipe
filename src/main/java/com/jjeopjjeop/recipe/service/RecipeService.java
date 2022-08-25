@@ -12,6 +12,7 @@ public interface RecipeService {
     public List<RecipeDTO> searchListProcess(Pagenation pagenation, int rcp_sort, int cate_seq, String searchKey);
     public List<RecipeDTO> favoriteListProcess();
     public List<CategoryDTO> cateListProcess();
+    public List<CategoryDTO> getRcpCateProcess(int rcp_seq);
     public RecipeDTO contentProcess(int rcp_seq);
     public List<ManualDTO> contentMnlProcess(int rcp_seq);
     public int chkScrapProcess(UserScrapDTO userScrapDTO);
@@ -21,10 +22,9 @@ public interface RecipeService {
     public void writeProcess(RecipeDTO recipeDTO);
     public void writeMProcess(ManualDTO manualDTO);
     public void writeCProcess(int cate_seq);
-    public List<Integer> updatePageProcess(int rcp_seq);
     public void updateProcess(RecipeDTO recipeDTO, String url, boolean isChange);
     public void updateMProcess(ManualDTO manualDTO, String url);
-    public void updateCProcess(int cate_seq, int rcp_seq);
+    public void updateCateProcess(int cate_seq, int rcp_seq);
     public void deleteCProcess(int rcp_seq);
     public void deleteProcess(int rcp_seq, String url1, String url2);
 

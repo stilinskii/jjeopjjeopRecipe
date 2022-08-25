@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,8 +101,22 @@ public class RecipeController {
         mav.addObject("rcp", service.contentProcess(rcp_seq));
         mav.addObject("page", page);
         mav.addObject("rcp_sort", rcp_sort);
-        mav.addObject("cate_seq", cate_seq);
         mav.addObject("user_id", String.valueOf(session.getAttribute("user_id")));
+
+
+        // 레시피 카테고리 정보
+        List<CategoryDTO> list = service.getRcpCateProcess(rcp_seq);
+        List<String> cate_list = new ArrayList<>();
+
+        for(int i=0; i<list.size(); i++){
+            cate_list.add(list.get(i).getCate_name());
+        }
+
+        for(String data : cate_list){
+            System.out.println(data);
+        }
+
+        mav.addObject("cate_list", cate_list);
 
         // 스크랩 체크
         UserScrapDTO userScrapDTO = new UserScrapDTO();
@@ -231,11 +246,11 @@ public class RecipeController {
 
         // 레시피 분류 목록
         List<CategoryDTO> cateList = service.cateListProcess(); //전체 분류 목록
-        List<Integer> cate = service.updatePageProcess(rcp_seq); //레시피에 등록된 분류 목록
+        List<CategoryDTO> cate = service.getRcpCateProcess(rcp_seq); //레시피에 등록된 분류 목록
 
         for(int i=0; i<cate.size(); i++){
             for(int j=0; j<cateList.size(); j++){
-                if(cate.get(i) == cateList.get(j).getCate_seq())
+                if(cate.get(i).getCate_seq() == cateList.get(j).getCate_seq())
                     cateList.get(j).setRcp_chk(true);
             }
         }
@@ -267,7 +282,7 @@ public class RecipeController {
 
         service.updateProcess(recipeDTO, urlPath(request, 0), isChange);
 
-        // 요리과정 수정
+        // 요리과정 수정 (전체 삭제 후 재등록)
         for(int i=0; i<manual_txt.length; i++){
             ManualDTO manualDTO = new ManualDTO();
             manualDTO.setManual_no(i+1);
@@ -284,11 +299,11 @@ public class RecipeController {
             service.updateMProcess(manualDTO, urlPath(request, 1));
         }
 
-        // 카테고리 수정
+        // 카테고리 수정 (전체 삭제 후 재등록)
         service.deleteCProcess(recipeDTO.getRcp_seq());
         for(String data : cateArr){
             int num = Integer.parseInt(data);
-            service.updateCProcess(num, recipeDTO.getRcp_seq());
+            service.updateCateProcess(num, recipeDTO.getRcp_seq());
         }
 
         return "redirect:/recipe/view/"+recipeDTO.getRcp_seq();
