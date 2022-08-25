@@ -1,6 +1,8 @@
 package com.jjeopjjeop.recipe.controller;
 
+import ch.qos.logback.core.joran.spi.ElementSelector;
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
 import com.jjeopjjeop.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
@@ -28,17 +30,21 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model){
-        //임의로 해놓음. 원래 인기순 불러와야함.
         RecipePageDTO recipePageDTO = new RecipePageDTO();
         recipePageDTO.setStartRow(1);
         recipePageDTO.setEndRow(4);
         recipePageDTO.setRcp_sort(2);//스크랩많은순
         recipePageDTO.setCate_seq(0);//카테고리 선택안함.
-        //List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
-
         List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
-        //log.info("reclist={}",rcpList.size());
-        //model.addAttribute("rcpList",rcpList);
+
+
+        Pagenation pagenation = new Pagenation(1, recipeService.countProcess(2), true);
+        pagenation.setStartRow(1);
+        pagenation.setEndRow(4);
+        List<RecipeDTO> rcpList = recipeService.listProcess(pagenation, 2, 0);
+
+
+        model.addAttribute("rcpList",rcpList);
         model.addAttribute("list",list);
 
         return "index";
@@ -59,23 +65,32 @@ public class HomeController {
         }
 
         //recipe
-        List<RecipeDTO> rcpListAll = recipeService.searchListByKeyword(keyword);
-        List<RecipeDTO> rcpList = rcpListAll.size()>8 ?getSmallListOfRecipe(rcpListAll):rcpListAll;
+        List<RecipeDTO> rcpList;
+        int recipeByKeywordCnt = recipeService.searchCountProcess(keyword, 0);
+        if(recipeByKeywordCnt!=0){
+            Pagenation pagenation = new Pagenation(1, recipeByKeywordCnt, true);
+            //검색결과 8개보다 많을때 8개만 출력
+            if(recipeByKeywordCnt>8){
+                pagenation.setStartRow(1);
+                pagenation.setEndRow(8);
+            }
+            rcpList = recipeService.searchListProcess(pagenation, 0, 0, keyword);
+            redirectAttributes.addFlashAttribute("rcpList",rcpList);
+            redirectAttributes.addFlashAttribute("rcpListSize",recipeByKeywordCnt);//검색결과 전체개수
+        }else{
+            //검색결과가 0개이면
+            redirectAttributes.addFlashAttribute("NoRcpList",true);
+        }
+
+
+        //뭔가 더 좋은 방법이 있을 거 같은디...
         //shopping
         List<ProduceDTO> productListAll = produceService.findProductsByKeyword(keyword);
         List<ProduceDTO> productList = productListAll.size()>4 ? getSmallProductList(productListAll):productListAll;
         log.info("list={}",productListAll.size());
 
-        //뭔가 더 좋은 방법이 있을 거 같은디...
-        if(rcpList.size()==0){
-            redirectAttributes.addFlashAttribute("NoRcpList",true);
-        }else{
-            redirectAttributes.addFlashAttribute("rcpList",rcpList);//레시피는 8개만... 키워드 관련 전체 레시피 개수도 필요함
-            redirectAttributes.addFlashAttribute("rcpListSize",rcpListAll.size());
-            session.setAttribute("rcpListAll",rcpListAll);
-        }
 
-        if(rcpList.size()==0){
+        if(productList.size()==0){
             redirectAttributes.addFlashAttribute("NoProductList",true);
         }else{
             redirectAttributes.addFlashAttribute("productList",productList);//상품은 4개
@@ -88,13 +103,6 @@ public class HomeController {
         return "redirect:/search";
     }
 
-    private List<RecipeDTO> getSmallListOfRecipe(List<RecipeDTO> rcpListAll) {
-        List<RecipeDTO> rcpList=new ArrayList<>();
-        for (int i=0;i<8;i++) {
-            rcpList.add(rcpListAll.get(i));
-        }
-        return rcpList;
-    }
 
     private List<ProduceDTO> getSmallProductList(List<ProduceDTO> productListAll) {
         List<ProduceDTO> list=new ArrayList<>();
@@ -126,33 +134,30 @@ public class HomeController {
         return mav;
     }
 
-    // 레시피 목록 검색 메소드
     @GetMapping("/moreRecipe")
     public ModelAndView rcpSearchMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
                                         @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
-                                        String keyword,
-                                        ModelAndView mav, RecipePageDTO recipePageDTO, HttpSession session){
-        List<RecipeDTO> productListAll = (List<RecipeDTO>) session.getAttribute("rcpListAll");
-        int totalRecord = productListAll.size();
+                                        @RequestParam(value="keyword", required=false) String keyword,
+                                        @RequestParam(value="page", required=false, defaultValue = "1") int page,
+                                        ModelAndView mav){
 
-        if(totalRecord>0){
-            int currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
-            recipePageDTO = new RecipePageDTO(currentPage, totalRecord, keyword);
-            recipePageDTO.setRcp_sort(rcp_sort);
-            recipePageDTO.setCate_seq(cate_seq);
-        }
+        // 전체 페이지 수
+        Pagenation pagenation = new Pagenation(page, recipeService.searchCountProcess(keyword, 0), true);
+        log.info("keyword={}",keyword);
 
         // 레시피 분류 목록
         List<CategoryDTO> cateList = recipeService.cateListProcess();
 
         // 검색 레시피 목록
-        //List<RecipeDTO> rcpList = recipeService.searchListProcess(recipePageDTO);
+        List<RecipeDTO> rcpList = recipeService.searchListProcess(pagenation, rcp_sort, cate_seq, keyword);
         //System.out.println(rcpList);
 
-        mav.addObject("totalRecord", totalRecord);
+        mav.addObject("rcp_sort", rcp_sort);
+        mav.addObject("cate_seq", cate_seq);
+        mav.addObject("searchKey", keyword);
         mav.addObject("cateList", cateList);
-        //mav.addObject("rcpList", rcpList);
-        mav.addObject("recipePageDTO", recipePageDTO);
+        mav.addObject("rcpList", rcpList);
+        mav.addObject("pagenation", pagenation);
         mav.setViewName("/recipe/rcpSearch");
         return mav;
     }
