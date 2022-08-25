@@ -72,7 +72,6 @@ public class RecipeController {
 
         // 검색 레시피 목록
         List<RecipeDTO> rcpList = service.searchListProcess(pagenation, rcp_sort, cate_seq, searchKey);
-        //System.out.println(rcpList);
 
         mav.addObject("rcp_sort", rcp_sort);
         mav.addObject("cate_seq", cate_seq);
@@ -141,7 +140,6 @@ public class RecipeController {
         userScrapDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
         userScrapDTO.setRcp_seq(Integer.parseInt(rcp_seq));
         service.scrapProcess(userScrapDTO);
-        //mav.addObject("rcp_seq", rcp_seq);
     }
 
     // 레시피 신고 메소드
@@ -249,10 +247,9 @@ public class RecipeController {
 
     // 레시피 수정 메소드
     @PostMapping("/recipe/update")
-    public String rcpUpdateMethod(@Validated @ModelAttribute("updateDTO") RecipeDTO updateDTO, BindingResult bindingResult, String[] manual_txt,
+    public String rcpUpdateMethod(@Validated @ModelAttribute("recipeDTO") RecipeDTO recipeDTO, BindingResult bindingResult, String[] manual_txt,
                                   @RequestParam(value="cateArr", required=false) List<String> cateArr, Model model,
                                   MultipartFile[] upload_manual, HttpServletRequest request, HttpSession session){
-        RecipeDTO recipeDTO = service.contentProcess(updateDTO.getRcp_seq());
 
         // 유효성 검사
         if(bindingResult.hasErrors()){
@@ -266,22 +263,22 @@ public class RecipeController {
 
         // 본문 수정
         boolean isChange = false;
-        MultipartFile mainFile = updateDTO.getUpload();
+        MultipartFile mainFile = recipeDTO.getUpload();
         if(!mainFile.isEmpty()){
             isChange = true;
             UUID random = saveCopyFile(mainFile, request, 0);
-            updateDTO.setFilename(random+"_"+mainFile.getOriginalFilename());
-            updateDTO.setFilepath("/media/recipe/");
+            recipeDTO.setFilename(random+"_"+mainFile.getOriginalFilename());
+            recipeDTO.setFilepath("/media/recipe/");
         }
 
-        service.updateProcess(updateDTO, urlPath(request, 0), isChange);
+        service.updateProcess(recipeDTO, urlPath(request, 0), isChange);
 
         // 요리과정 수정
         for(int i=0; i<manual_txt.length; i++){
             ManualDTO manualDTO = new ManualDTO();
             manualDTO.setManual_no(i+1);
             manualDTO.setManual_txt(manual_txt[i]);
-            manualDTO.setRcp_seq(updateDTO.getRcp_seq());
+            manualDTO.setRcp_seq(recipeDTO.getRcp_seq());
 
             boolean isChangeM = false;
             if(!upload_manual[i].isEmpty()){
@@ -294,10 +291,10 @@ public class RecipeController {
         }
 
         // 카테고리 수정
-        service.deleteCProcess(updateDTO.getRcp_seq());
+        service.deleteCProcess(recipeDTO.getRcp_seq());
         for(String data : cateArr){
             int num = Integer.parseInt(data);
-            service.updateCProcess(num, updateDTO.getRcp_seq());
+            service.updateCProcess(num, recipeDTO.getRcp_seq());
         }
 
         return "redirect:/recipe/list";
