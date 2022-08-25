@@ -11,4 +11,7 @@ import java.util.List;
 public interface CommunityApiDAO {
 
     List<CommunityDTO> findAll();
+    CommunityDTO findCommunityPostById(Integer id);
+
+    void insert(CommunityDTO communityDTO);
 }

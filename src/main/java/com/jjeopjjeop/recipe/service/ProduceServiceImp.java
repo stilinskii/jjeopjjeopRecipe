@@ -5,10 +5,7 @@ import com.jjeopjjeop.recipe.dao.ProduceDAO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
@@ -93,15 +90,27 @@ class ProduceServiceImp implements ProduceService {
     }
 
     @Override
-    public List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, RecipePageDTO pageDTO) {
+    public List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, Pagenation pagenation) {
         Map<String, Object> map = new HashMap<>();
         map.put("keyword",keyword);
-        map.put("startRow",pageDTO.getStartRow());
-        map.put("endRow",pageDTO.getEndRow());
-        log.info("map info={},{},{}",keyword,pageDTO.getStartRow(),pageDTO.getEndRow());
+        map.put("startRow",pagenation.getStartRow());
+        map.put("endRow",pagenation.getEndRow());
+        log.info("map info={},{},{}",keyword,pagenation.getStartRow(),pagenation.getEndRow());
 
         return produceDAO.findProductsByKeywordWithPaging(map);
     }
+
+    @Override
+    public List<ProduceDTO> getPopularProduceList() {
+        List<Integer> produceNum = produceDAO.getFourProduceNumOrderBySoldCount();
+        List<ProduceDTO> products = new ArrayList<>();
+
+        for (Integer produceId : produceNum) {
+            products.add(produceDAO.produceView(produceId));
+        }
+        return products;
+    }
+
 
 
 }

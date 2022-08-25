@@ -1,16 +1,14 @@
 package com.jjeopjjeop.recipe.pagenation;
 
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class Pagenation {
     private Integer page;//해당페이지
     private Integer totalPageCnt;//총 페이지 개수
