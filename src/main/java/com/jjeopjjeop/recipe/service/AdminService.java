@@ -13,6 +13,7 @@ import com.jjeopjjeop.recipe.dto.SellerDTO;
 import com.jjeopjjeop.recipe.mapper.AdminMapper;
 import com.jjeopjjeop.recipe.mapper.CommunityMapper;
 import com.jjeopjjeop.recipe.mapper.SellerMapper;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +34,16 @@ public class AdminService {
 
 
     //회원 카운트
-    public int countUser(A_criteria cri){
-        return adminDAO.countUser(cri);
+    public int countUser(){
+        return adminDAO.countUser();
     }
 
     //회원리스트 가져오기
 //    public List<UserDTO> UserList(A_criteria cri){
 //        return adminDAO.UserList(cri);
 //    }// adminmapper
-    public List<UserDTO> UserList(A_criteria cri){
-        return adminDAO.UserList(cri);
+    public List<UserDTO> userList(Pagenation pagenation){
+        return adminDAO.userList(pagenation);
     }
 
 
@@ -66,8 +67,8 @@ public class AdminService {
 //        return adminMapper.listNSeller();
 //    }
 
-    public List<SellerDTO> nSellerList(A_criteria cri){
-        return adminDAO.nSellerList(cri);
+    public List<SellerDTO> nSellerList(Pagenation pagenation){
+        return adminDAO.nSellerList(pagenation);
     }
 
     //승인 판매자 카운트
@@ -80,8 +81,8 @@ public class AdminService {
 //        return adminMapper.listSeller();
 //    }
 
-    public List<SellerDTO> ySellerList(A_criteria cri){
-        return adminDAO.ySellerList(cri);
+    public List<SellerDTO> ySellerList(Pagenation pagenation){
+        return adminDAO.ySellerList(pagenation);
     }
 
 
@@ -102,8 +103,9 @@ public class AdminService {
 //        return adminMapper.approRecipe();
 //    }
 
-    public List<RecipeDTO> rcpList(RecipePageDTO recipePageDTO){
-        return adminDAO.rcpList(recipePageDTO);
+    //레시피 리스트
+    public List<RecipeDTO> rcpList(Pagenation pagenation){
+        return adminDAO.rcpList(pagenation);
     }
 
     //레시피 카운트
@@ -118,8 +120,8 @@ public class AdminService {
     }
 
     //게시판 신고순으로 게시판 목록 조회
-    public List<CommunityDTO> appcomList(){
-        return adminMapper.approCommunity();
+    public List<CommunityDTO> reportCom(Pagenation pagenation){
+        return adminDAO.reportCom(pagenation);
     }
 
     //게시판 삭제

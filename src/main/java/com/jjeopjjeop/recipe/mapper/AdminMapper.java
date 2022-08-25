@@ -52,8 +52,8 @@ public interface AdminMapper {
     int countYseller();
 
     //판매자 승인완료 목록
-    @Select("select * from Seller where approval = 1")
-    List<SellerDTO> listSeller();
+//    @Select("select * from Seller where approval = 1")
+//    List<SellerDTO> listSeller();
 
     //판매자 삭제 판매자 등록 취소?
 //    @Update("update Seller set approval = 0 where user_id=#{user_id}")
@@ -75,8 +75,8 @@ public interface AdminMapper {
     void cancelUsertype(String user_id);
 
     //게시판 신고순으로 게시판 목록 조회
-    @Select("select * from CommunityBoard order by report desc")
-    List<CommunityDTO> approCommunity();
+//    @Select("select * from CommunityBoard order by report desc")
+//    List<CommunityDTO> approCommunity();
 
     //게시판 삭제구현
     @Delete("delete from CommunityBoard where id=#{id}")

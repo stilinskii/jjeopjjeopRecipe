@@ -48,13 +48,13 @@
                 <!-- admin은 controller에서? -->
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <a href="/admin/u_index" class="nav-link category">회원관리</a>
+                        <a href="/admin/u_index" class="nav-link category">회원 관리</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/admin/r_index" class="nav-link category">레시피관리</a>
+                        <a href="/admin/r_index" class="nav-link category">레시피 관리</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/admin/s_index" class="nav-link category">쇼핑관리</a>
+                        <a href="/admin/s_index" class="nav-link category">판매자 관리</a>
                     </li>
                     <li class="list-group-item">
                         <a href="/admin/c_index" class="nav-link category">게시판 관리</a>
@@ -121,6 +121,7 @@
                             </p>
                         </div>
                     </div>
+                    <!--페이징-->
                     <!--                  <nav aria-label="Page navigation example" style="margin-top: 30px">-->
                     <!--                      <ul class="pagination justify-content-center">-->
                     <!--                          <li class="page-item">-->
@@ -145,6 +146,35 @@
                     <!--                  </nav>-->
 
                     <!--              </tr>-->
+
+                    <nav aria-label="Page navigation example" style="margin-top: 30px">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a th:if="${pagenation.startPageNum} > 1" class="page-link" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.startPageNum - pagenation.blockPageCnt})}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                                <a th:if="${pagenation.startPageNum} == 1" class="page-link" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <th:block th:each="pagenations : ${#numbers.sequence(pagenation.startPageNum, pagenation.endPageNum)}">
+                                <li class="page-item active">
+                                    <a th:if="${pagenations} == ${pagenation.page}" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenations})}" th:text="${pagenations}" class="page-link"></a>
+                                </li>
+                                <li class="page-item">
+                                    <a th:if="${pagenations} != ${pagenation.page}" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenations})}" th:text="${pagenations}" class="page-link"></a>
+                                </li>
+                            </th:block>
+                            <li class="page-item">
+                                <a th:if="${pagenation.endPageNum} < ${pagenation.totalPageCnt}" class="page-link" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.startPageNum + pagenation.blockPageCnt})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                                <a th:if="${pagenation.endPageNum} == ${pagenation.totalPageCnt}" class="page-link" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
 
 
                     </tbody>

@@ -1,10 +1,7 @@
 package com.jjeopjjeop.recipe.pagenation;
 
 import com.jjeopjjeop.recipe.dto.PagenationDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 
@@ -41,6 +38,7 @@ public class Pagenation {
         this.endRow = perPage*(page +1);
         this.startPageNum = startPageNum;
         this.endPageNum = endPageNum;
+
     }
 
 
