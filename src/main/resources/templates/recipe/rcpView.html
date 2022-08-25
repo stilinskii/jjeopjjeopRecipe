@@ -37,7 +37,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <a th:href="@{/recipe/delete/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${rcp_sort}, page=${page})}" class="btn btn-danger">삭제</a>
+                    <a th:href="@{/recipe/delete(rcp_seq=${rcp.rcp_seq}, rcp_sort=${rcp_sort}, page=${page})}" class="btn btn-danger">삭제</a>
                 </div>
             </div>
         </div>

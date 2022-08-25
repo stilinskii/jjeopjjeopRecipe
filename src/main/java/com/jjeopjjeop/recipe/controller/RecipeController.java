@@ -310,8 +310,8 @@ public class RecipeController {
     }
 
     // 레시피 삭제 메소드
-    @GetMapping("/recipe/delete/{rcp_seq}")
-    public String rcpDeleteMethod(@PathVariable("rcp_seq") int rcp_seq, HttpServletRequest request, HttpSession session){
+    @GetMapping("/recipe/delete")
+    public String rcpDeleteMethod(@RequestParam int rcp_seq, HttpServletRequest request, HttpSession session){
         RecipeDTO recipeDTO = service.contentProcess(rcp_seq);
         if(session.getAttribute("user_id") == null || !session.getAttribute("user_id").equals(recipeDTO.getUser_id())){
             return "error/500";
