@@ -30,17 +30,11 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model){
-        RecipePageDTO recipePageDTO = new RecipePageDTO();
-        recipePageDTO.setStartRow(1);
-        recipePageDTO.setEndRow(4);
-        recipePageDTO.setRcp_sort(2);//스크랩많은순
-        recipePageDTO.setCate_seq(0);//카테고리 선택안함.
-        List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
-
+        List<ProduceDTO> list = produceService.getPopularProduceList();//4개만 가져옴
 
         Pagenation pagenation = new Pagenation(1, recipeService.countProcess(2), true);
         pagenation.setStartRow(1);
-        pagenation.setEndRow(4);
+        pagenation.setEndRow(4);//4개만 가져옴
         List<RecipeDTO> rcpList = recipeService.listProcess(pagenation, 2, 0);
 
 
@@ -83,19 +77,20 @@ public class HomeController {
         }
 
 
-        //뭔가 더 좋은 방법이 있을 거 같은디...
         //shopping
         List<ProduceDTO> productListAll = produceService.findProductsByKeyword(keyword);
-        List<ProduceDTO> productList = productListAll.size()>4 ? getSmallProductList(productListAll):productListAll;
-        log.info("list={}",productListAll.size());
+        int totalCnt = productListAll.size();
 
-
-        if(productList.size()==0){
+        if(totalCnt==0){
             redirectAttributes.addFlashAttribute("NoProductList",true);
         }else{
-            redirectAttributes.addFlashAttribute("productList",productList);//상품은 4개
+            List<ProduceDTO> productList = productListAll.size()>4 ? getSmallProductList(productListAll):productListAll;
+            redirectAttributes.addFlashAttribute("productList",productList);//상품 4개
             redirectAttributes.addFlashAttribute("productListSize",productListAll.size());
-            session.setAttribute("productListAll",productListAll);
+
+            //더보기 결과 페이지네이션을 위해
+            session.setAttribute("productListAllTotalCnt",totalCnt);
+            session.setAttribute("keyword",keyword);
         }
 
         redirectAttributes.addFlashAttribute("keyword",keyword);
@@ -114,22 +109,21 @@ public class HomeController {
 
 
     @GetMapping("/moreProduct")
-    public ModelAndView produceList(String keyword, HttpSession session, ModelAndView mav) {
-        // 전체 레코드 수
-        List<ProduceDTO> productListAll = (List<ProduceDTO>) session.getAttribute("productListAll");
-        int totalRecord = productListAll.size();
-
-        RecipePageDTO recipePageDTO = new RecipePageDTO();
-        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
-            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
-           int currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
-            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
+    public ModelAndView produceList(@RequestParam(value="page", required=false, defaultValue = "0") int page, String keyword, HttpSession session, ModelAndView mav) {
+       //1페이지 이상으로갈때 keyword파라미터 없어지는걸 대비.
+        if(StringUtils.isEmpty(keyword)){
+            keyword= (String) session.getAttribute("keyword");
         }
 
+        // 검색결과 전체 레코드 수
+        int totalRecord = (int) session.getAttribute("productListAllTotalCnt");
+
+        Pagenation pagenation = new Pagenation(page,9, totalRecord);
+        List<ProduceDTO> list = produceService.findProductsByKeywordWithPaging(keyword,pagenation);
+
         mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
-        List<ProduceDTO> list = produceService.findProductsByKeywordWithPaging(keyword,recipePageDTO);
         mav.addObject("list", list);  //판매글 리스트 넘겨주기
-        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
+        mav.addObject("page", pagenation); //페이지 정보 넘겨주기
         mav.setViewName("/produce/produceList");
         return mav;
     }

@@ -90,12 +90,12 @@ class ProduceServiceImp implements ProduceService {
     }
 
     @Override
-    public List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, RecipePageDTO pageDTO) {
+    public List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, Pagenation pagenation) {
         Map<String, Object> map = new HashMap<>();
         map.put("keyword",keyword);
-        map.put("startRow",pageDTO.getStartRow());
-        map.put("endRow",pageDTO.getEndRow());
-        log.info("map info={},{},{}",keyword,pageDTO.getStartRow(),pageDTO.getEndRow());
+        map.put("startRow",pagenation.getStartRow());
+        map.put("endRow",pagenation.getEndRow());
+        log.info("map info={},{},{}",keyword,pagenation.getStartRow(),pagenation.getEndRow());
 
         return produceDAO.findProductsByKeywordWithPaging(map);
     }
