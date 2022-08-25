@@ -134,7 +134,6 @@ public class RecipeController {
     @ResponseBody
     @PostMapping("/recipe/scrap")
     public void rcpScrapMethod(@RequestParam String rcp_seq,
-                               @RequestParam String user_id,
                                HttpSession session){
         UserScrapDTO userScrapDTO = new UserScrapDTO();
         userScrapDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
@@ -146,7 +145,6 @@ public class RecipeController {
     @ResponseBody
     @PostMapping("/recipe/report")
     public void rcpReportMethod(@RequestParam String rcp_seq,
-                                @RequestParam String user_id,
                                 HttpSession session){
         ReportRecipeDTO reportRecipeDTO = new ReportRecipeDTO();
         reportRecipeDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
@@ -225,8 +223,11 @@ public class RecipeController {
     @GetMapping("/recipe/update")
     public String rcpUpdateMethod(@RequestParam int rcp_seq, Model model, HttpSession session){
         RecipeDTO recipeDTO = service.contentProcess(rcp_seq);
-        model.addAttribute("recipeDTO", service.contentProcess(rcp_seq));
-        RecipeDTO updateDTO = new RecipeDTO();
+        if(session.getAttribute("user_id") == null || !session.getAttribute("user_id").equals(recipeDTO.getUser_id())){
+            return "error/500";
+        }
+
+        model.addAttribute("recipeDTO", recipeDTO);
 
         // 레시피 분류 목록
         List<CategoryDTO> cateList = service.cateListProcess(); //전체 분류 목록
@@ -240,26 +241,19 @@ public class RecipeController {
         }
 
         model.addAttribute("cateList", cateList); // 전체 분류 목록
-        model.addAttribute("updateDTO", updateDTO);
         model.addAttribute("manualList", service.contentMnlProcess(rcp_seq));
         return "/recipe/rcpUpdate";
     }
 
     // 레시피 수정 메소드
     @PostMapping("/recipe/update")
-    public String rcpUpdateMethod(@Validated @ModelAttribute("recipeDTO") RecipeDTO recipeDTO, BindingResult bindingResult, String[] manual_txt,
+    public String rcpUpdateMethod(@ModelAttribute("recipeDTO") RecipeDTO recipeDTO, String[] manual_txt,
                                   @RequestParam(value="cateArr", required=false) List<String> cateArr, Model model,
                                   MultipartFile[] upload_manual, HttpServletRequest request, HttpSession session){
 
-        // 유효성 검사
-        if(bindingResult.hasErrors()){
-            // 레시피 분류 목록
-            List<CategoryDTO> cateList = service.cateListProcess();
-            model.addAttribute("cateList", cateList);
-            model.addAttribute("recipeDTO", recipeDTO);
-
-            return "recipe/rcpUpdate";
-        }
+        // 레시피 분류 목록
+        List<CategoryDTO> cateList = service.cateListProcess();
+        model.addAttribute("cateList", cateList);
 
         // 본문 수정
         boolean isChange = false;
@@ -297,14 +291,18 @@ public class RecipeController {
             service.updateCProcess(num, recipeDTO.getRcp_seq());
         }
 
-        return "redirect:/recipe/list";
+        return "redirect:/recipe/view/"+recipeDTO.getRcp_seq();
     }
 
     // 레시피 삭제 메소드
     @GetMapping("/recipe/delete/{rcp_seq}")
-    public String rcpDeleteMethod(@PathVariable("rcp_seq") int rcp_seq, HttpServletRequest request){
-        service.deleteProcess(rcp_seq, urlPath(request, 0), urlPath(request, 1));
+    public String rcpDeleteMethod(@PathVariable("rcp_seq") int rcp_seq, HttpServletRequest request, HttpSession session){
+        RecipeDTO recipeDTO = service.contentProcess(rcp_seq);
+        if(session.getAttribute("user_id") == null || !session.getAttribute("user_id").equals(recipeDTO.getUser_id())){
+            return "error/500";
+        }
 
+        service.deleteProcess(rcp_seq, urlPath(request, 0), urlPath(request, 1));
         return "redirect:/recipe/list";
     }
 

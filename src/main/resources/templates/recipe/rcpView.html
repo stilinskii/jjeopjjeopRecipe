@@ -135,7 +135,7 @@
     <hr/>
     <h1 th:text="${rcp.rcp_seq}+'번 레시피 본문입니다. 이부분 나중에 삭제'"></h1>
     <h2 th:text="'재료'"></h2>
-    <p th::text="${rcp.rcp_parts_dtls}"></p>
+    <p th:text="${rcp.rcp_parts_dtls}"></p>
     <hr/>
     <h2 th:text="'요리 순서'"></h2>
     <p th:each="manual: ${manualList}" class="manual_step">
@@ -342,7 +342,6 @@
     });
 
     $(document).on("click", "#coDeleteConfirmBtn", function(){
-        console.log($(this).next().next().next().text());
         var deleteData = {
             "co_rcp_seq": $(this).next().next().next().text()
         };
@@ -419,8 +418,6 @@
     shareBtn.onclick = function(){
       var copyText = "http://localhost:8081/recipe/view/" + $('#rcp_seq').val();
       var textArea = document.createElement("textarea");//textarea 생성
-
-      console.log(copyText);
 
       textArea.value = copyText;//textarea에 텍스트 입력
       document.body.appendChild(textArea);//body에 textarea 추가
