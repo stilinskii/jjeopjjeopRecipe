@@ -1,7 +1,9 @@
 
 package com.jjeopjjeop.recipe.controller;
 
+import com.jjeopjjeop.recipe.config.MySecured;
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,12 +39,14 @@ public class ProduceController {
     }
 
     //판매글 작성폼 불러오기
+    @MySecured
     @GetMapping({"/produce/write"})
     public String produceWriteForm() {
         return "/produce/produceWrite";
     }
 
     //판매글 작성 반영
+    @MySecured
     @PostMapping({"/produce/write"})
     public String produceWrite(ProduceDTO produceDTO, MultipartFile file) throws Exception{
         log.info("dto={}", produceDTO.getUser_id());
@@ -54,21 +59,15 @@ public class ProduceController {
 
     //모든 판매글 조회
     @GetMapping("/produce/list")
-    public ModelAndView produceList(ModelAndView mav, RecipePageDTO recipePageDTO) {
-        // 전체 레코드 수
-        int totalRecord = produceService.countProcess();
+    public ModelAndView produceList(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav) {
 
-        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
-            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
-            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
+        int totalRecord = produceService.countProcess();// 전체 레코드 수
 
-            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
-        }
+        Pagenation pagenation = new Pagenation(page,9, totalRecord); //페이지 처리를 위한 계산
 
-        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
-        List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
-        mav.addObject("list", list);  //판매글 리스트 넘겨주기
-        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
+        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기 <-얘는 왜한거였지?
+        mav.addObject("page", pagenation); //페이지 정보 넘겨주기
+        mav.addObject("list", produceService.produceList(pagenation));  //판매글 리스트 넘겨주기
         mav.setViewName("/produce/produceList");
         return mav;
     }
@@ -91,7 +90,7 @@ public class ProduceController {
         mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
         mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
 
-        List<ProduceDTO> list = produceService.produceListTypeProcess(type);
+        List<ProduceDTO> list = produceService.produceListType(type);
         mav.addObject("list", list);
         mav.setViewName("/produce/produceList");
         return mav;
@@ -99,6 +98,7 @@ public class ProduceController {
     //////////////////////////////////////////////////////////////////////////////////////
 
     //판매글 삭제
+    @MySecured
     @GetMapping({"/produce/delete/{produceNum}"})
     public String produceDelete(@PathVariable("produceNum") int produce_num) {
         produceService.produceDeleteProcess(produce_num);
@@ -122,6 +122,7 @@ public class ProduceController {
     }
 
     //판매글 수정폼
+    @MySecured
     @GetMapping({"/produce/update/{produceNum}"})
     public ModelAndView produceUpdateForm(@PathVariable("produceNum") int produce_num, ModelAndView mav) {
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num);
@@ -131,6 +132,7 @@ public class ProduceController {
     }
 
     //판매글 수정 반영
+    @MySecured
     @PostMapping({"/produce/update/{produceNum}"})
     public String produceUpdate(@PathVariable("produceNum") int produce_num, ProduceDTO produceDTO) {
         produceService.produceUpdateProcess(produceDTO);

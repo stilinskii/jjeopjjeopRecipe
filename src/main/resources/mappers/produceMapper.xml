@@ -48,7 +48,7 @@
 	<!--		SELECT * FROM produce_board ORDER BY produce_num DESC-->
 	<!--	</select>-->
 
-	<select id="produceList" parameterType="RecipePageDTO" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+	<select id="produceList" parameterType="PagenationDTO" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		<![CDATA[
         SELECT rcp_li.* FROM
             (SELECT rcp.*, rownum rm FROM
@@ -86,8 +86,9 @@
 		SELECT count(*) FROM produce_board
 	</select>
 
-	<select id="findProductsByKeyword" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
-		SELECT * FROM produce_board WHERE produce_name LIKE '%' || #{keyword} || '%' ORDER BY produce_num DESC
+	<select id="findProductsByKeyword" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+		SELECT * FROM produce_board WHERE produce_name LIKE '%' || #{keyword, jdbcType=VARCHAR} || '%'
+
 	</select>
 
 	<select id="findProductsByKeywordWithPaging" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
@@ -100,5 +101,19 @@
         WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
 	</select>
+
+
+	<select id="getFourProduceNumOrderBySoldCount" resultType="int">
+		SELECT * FROM  (select t1.*, rownum rm FROM
+		(select produce_num from(
+		SELECT count(*), produce_num
+		FROM pay_history
+		WHERE pay = 1
+		GROUP BY produce_num
+		ORDER BY count(*) DESC) )t1)
+		WHERE rm BETWEEN 1 AND 4
+	</select>
+
+
 
 </mapper>

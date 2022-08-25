@@ -2,6 +2,7 @@ package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -10,9 +11,9 @@ import java.util.Map;
 public interface ProduceService {
     void writeProcess(ProduceDTO produceDTO, MultipartFile file) throws Exception;
 
-    List<ProduceDTO> produceListProcess(RecipePageDTO recipePageDTO);
+    List<ProduceDTO> produceList(Pagenation pagenation);
 
-    List<ProduceDTO> produceListTypeProcess(int type);
+    List<ProduceDTO> produceListType(int type);
 
     void produceDeleteProcess(int produce_num);
 
@@ -24,5 +25,7 @@ public interface ProduceService {
 
     //하영
     List<ProduceDTO> findProductsByKeyword(String keyword);
-    List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, RecipePageDTO pageDTO);
+    List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, Pagenation pagenation);
+
+    List<ProduceDTO> getPopularProduceList();
 }
