@@ -11,9 +11,9 @@ import java.util.Map;
 public interface ProduceService {
     void writeProcess(ProduceDTO produceDTO, MultipartFile file) throws Exception;
 
-    List<ProduceDTO> produceListProcess(RecipePageDTO recipePageDTO);
+    List<ProduceDTO> produceList(Pagenation pagenation);
 
-    List<ProduceDTO> produceListTypeProcess(int type);
+    List<ProduceDTO> produceListType(int type);
 
     void produceDeleteProcess(int produce_num);
 

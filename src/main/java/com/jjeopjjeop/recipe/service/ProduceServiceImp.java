@@ -39,12 +39,12 @@ class ProduceServiceImp implements ProduceService {
         produceDAO.write(produceDTO);
     }
     @Override
-    public List<ProduceDTO> produceListProcess(RecipePageDTO recipePageDTO) {
-        return produceDAO.produceList(recipePageDTO);
+    public List<ProduceDTO> produceList(Pagenation pagenation) {
+        return produceDAO.produceList(pagenation);
     }
 
     @Override
-    public List<ProduceDTO> produceListTypeProcess(int type) {
+    public List<ProduceDTO> produceListType(int type) {
         return produceDAO.produceListType(type);
     }
 

@@ -5,6 +5,7 @@ import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.dto.PayDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.apache.catalina.session.StandardSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,14 @@ public class PayServiceImp implements PayService{
 
     //마이페이지 들어가서 장바구니 보기
     @Override
-    public List<ProduceDTO> cartView(PagenationDTO recipePageDTO) {
-        return payDAO.cartView(recipePageDTO);
+    public List<ProduceDTO> cartView(Pagenation pagenation) {
+        return payDAO.cartView(pagenation);
     }
 
     //마이페이지 들어가서 구매내역 보기
     @Override
-    public List<ProduceDTO> payView(RecipePageDTO recipePageDTO) {
-        return payDAO.payView(recipePageDTO);
+    public List<ProduceDTO> payView(Pagenation pagenation) {
+        return payDAO.payView(pagenation);
     }
 
     //장바구니 항목 삭제

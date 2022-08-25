@@ -31,7 +31,7 @@ public class Pagenation {
 
         int totalPageCnt = (int) Math.ceil((double) count/(double) perPage); // 전체글 / 페이지에 보여질 개수 = 페이지 수
         int startPageNum1 = page >=totalPageCnt-3 ? totalPageCnt-4:Math.max(1, page -1);
-        int startPageNum = startPageNum1 <= 0 ? 1:startPageNum1;
+        int startPageNum = startPageNum1 <= 0 ? 1:startPageNum1;  //totalPageCnt가 4이하면 startPageNum1이 0이하로 나오니까 1로 고쳐주기.
         int endPageNum = page >=totalPageCnt-3 ? totalPageCnt: Math.min(startPageNum + 4, totalPageCnt);
 
         this.perPage = perPage;

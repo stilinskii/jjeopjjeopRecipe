@@ -1,27 +1,34 @@
 /* ==============pagination 시작========================== */
-/*a의 글씨색 검정색으로 */
-.a-to-black{color:black;}
+/*.pages의 모든 a의 글씨색 검정색으로 */
+.pages a{color:black;}
 
-/*페이지처리 원래색꺌 #7971ea*/
-.site-block-27 ul, .site-block-27 ul li {
-  padding: 0;
-  margin: 0; }
+  /* 페이지 표시하는 글자들 가운데, 옆으로나열, 크기 조절 등 */
+.pages ul li a {
+  /* text-align: center; */
+  /* display: inline-block; */
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  border: 1px solid #ccc; }
 
-.site-block-27 ul li {
-  display: inline-block;
-  margin-bottom: 4px; }
-  .site-block-27 ul li a, .site-block-27 ul li span {
-    text-align: center;
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    border-radius: 50%;
-    border: 1px solid #ccc; }
-  .site-block-27 ul li.active a, .site-block-27 ul li.active span {
-    background: #FFC947;
+  /* active인 li의 a만 배경을 노랗게 */
+.pages ul li.active a {
+  background: #FFC947;
+  color: rgb(0, 0, 0);
+  border: 1px solid transparent; }
+
+  .page-item.active .page-link {
+    z-index: 1;
     color: #fff;
-    border: 1px solid transparent; }
+    background-color: #ffbe33;
+    border-color: #ccc;
+   }
+   
+
+/* ==============pagination 끝========================= */
+
+/* =================판매글 카드 시작======================= */
   /*아마 판매글 글씨체?*/
 .block-4 {
   -webkit-box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.1);
@@ -32,8 +39,8 @@
     margin-bottom: 0; }
 .block-4 .block-4-text h3 a {
       text-decoration: none; }
+/* =================판매글 카드 끝======================= */
 
-/* ==============pagination 끝========================= */
 
 /*========book_section===========*/
 .book_section {
