@@ -38,15 +38,6 @@ public class RecipeController {
                                       @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
                                       @RequestParam(value="page", required=false, defaultValue = "1") int page, ModelAndView mav,
                                       HttpSession session){
-        Enumeration<String> enum_session = session.getAttributeNames();
-
-        while(enum_session.hasMoreElements()) {
-
-            String key = enum_session.nextElement();
-            System.out.println(key);
-
-        }
-
 
         // 전체 레코드 수
         Pagenation pagenation = new Pagenation(page, service.countProcess(cate_seq), true);
@@ -323,7 +314,10 @@ public class RecipeController {
     @GetMapping("/recipe/delete")
     public String rcpDeleteMethod(@RequestParam int rcp_seq, HttpServletRequest request, HttpSession session){
         RecipeDTO recipeDTO = service.contentProcess(rcp_seq);
-        if(session.getAttribute("user_id") == null || (!session.getAttribute("user_id").equals("admin") && !session.getAttribute("user_id").equals(recipeDTO.getUser_id()))){
+        int userType = ((UserDTO) session.getAttribute("user")).getUsertype();
+        boolean isAdmin = userType == 3 ? true : false;
+
+        if(session.getAttribute("user_id") == null || (!isAdmin && !session.getAttribute("user_id").equals(recipeDTO.getUser_id()))){
             return "error/500";
         }
 
