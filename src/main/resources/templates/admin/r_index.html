@@ -170,7 +170,7 @@
                     <nav aria-label="Page navigation example" style="margin-top: 30px">
                         <ul class="pagination justify-content-center">
                             <li class="page-item">
-                                <a th:if="${pagenation.startPageNum} > 1" class="page-link" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.startPageNum - pagenation.blockPageCnt})}" aria-label="Previous">
+                                <a th:if="${pagenation.startPageNum} > 1" class="page-link" th:href="@{/admin/r_index(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.startPageNum - pagenation.blockPageCnt})}" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                                 <a th:if="${pagenation.startPageNum} == 1" class="page-link" aria-label="Previous">
@@ -179,14 +179,14 @@
                             </li>
                             <th:block th:each="pagenations : ${#numbers.sequence(pagenation.startPageNum, pagenation.endPageNum)}">
                                 <li class="page-item active">
-                                    <a th:if="${pagenations} == ${pagenation.page}" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenations})}" th:text="${pagenations}" class="page-link"></a>
+                                    <a th:if="${pagenations} == ${pagenation.page}" th:href="@{/admin/r_index(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenations})}" th:text="${pagenations}" class="page-link"></a>
                                 </li>
                                 <li class="page-item">
-                                    <a th:if="${pagenations} != ${pagenation.page}" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenations})}" th:text="${pagenations}" class="page-link"></a>
+                                    <a th:if="${pagenations} != ${pagenation.page}" th:href="@{/admin/r_index(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenations})}" th:text="${pagenations}" class="page-link"></a>
                                 </li>
                             </th:block>
                             <li class="page-item">
-                                <a th:if="${pagenation.endPageNum} < ${pagenation.totalPageCnt}" class="page-link" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.startPageNum + pagenation.blockPageCnt})}" aria-label="Next">
+                                <a th:if="${pagenation.endPageNum} < ${pagenation.totalPageCnt}" class="page-link" th:href="@{/admin/r_index(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.startPageNum + pagenation.blockPageCnt})}" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                                 <a th:if="${pagenation.endPageNum} == ${pagenation.totalPageCnt}" class="page-link" aria-label="Next">
