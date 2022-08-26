@@ -70,6 +70,13 @@ public class AdminController {
         return "redirect:/admin/u_index";
     }
 
+    //회원 업데이트
+    @GetMapping("upU/{user_id}")
+    public String updateUser (@PathVariable String user_id){
+        adminService.updateUser(user_id);
+        return "redirect:/admin/u_index";
+    }
+
     //미승인 판매자 리스트
 
     @GetMapping("/s_index")

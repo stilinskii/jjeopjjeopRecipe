@@ -45,6 +45,11 @@ public class AdminService {
         adminMapper.delUser(user_id);
     }
 
+    //회원 업데이트
+    public void updateUser(String user_id){
+        adminMapper.updateUser(user_id);
+    }
+
     //미승인 판매자 카운트
     public int countNseller(){
         return adminMapper.countNseller();

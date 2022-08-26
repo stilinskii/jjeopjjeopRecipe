@@ -50,7 +50,7 @@
 
     <insert id="storeImage" parameterType="ImageDTO">
         INSERT INTO Image
-        VALUES(Image_SEQ.nextval,#{board_id},#{filename,jdbcType=VARCHAR})
+        VALUES(Image_SEQ.nextval,#{filename,jdbcType=VARCHAR}#{board_id})
     </insert>
 
     <select id="findImageByPostId" parameterType="int" resultType="ImageDTO">
