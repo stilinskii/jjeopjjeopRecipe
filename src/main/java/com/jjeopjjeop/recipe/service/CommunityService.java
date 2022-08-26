@@ -132,6 +132,10 @@ public class CommunityService {
         communityCommentDAO.deleteCommentById(commentId);
     }
 
+    public CommunityCommentDTO findCommentByUserId(String user_id){
+       return communityCommentDAO.findCommentByUserId(user_id);
+    }
+
     public void reportComment(Integer commentId){
         communityCommentDAO.reportCommentById(commentId);
     }

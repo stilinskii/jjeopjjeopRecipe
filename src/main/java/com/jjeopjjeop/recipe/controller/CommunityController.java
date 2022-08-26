@@ -155,20 +155,29 @@ public class CommunityController {
 
     @MySecured
     @PostMapping("/edit/{postId}")
-    public String editPostByIdSubmit(@PathVariable Integer postId, CommunityDTO community, @RequestPart(value = "image",required=false) List<MultipartFile> image){
-        if(!image.isEmpty()){
-            communityService.deleteCurrentImages(postId);
-            community.setImage_exists(1);
+    public String editPostByIdSubmit(@PathVariable Integer postId, CommunityDTO community, @RequestPart(value = "image",required=false) List<MultipartFile> image,HttpSession session){
+        String user_id = getUser(session).getUser_id();
+        //글을 쓴 회원이거나 관리자이면 가능
+        if (user_id.equals(communityService.findPostById(postId).getUser_id()) || user_id.equals("admin")) {
+
+            if (!image.isEmpty()) {
+                communityService.deleteCurrentImages(postId);
+                community.setImage_exists(1);
+            }
+            community.setId(postId);
+            communityService.editPost(community, image);
         }
-        community.setId(postId);
-        communityService.editPost(community,image);
         return "redirect:/community/post?id="+postId;
     }
 
     @MySecured
     @GetMapping("/delete/{postId}")
-    public String deletePostById(@PathVariable Integer postId){
-        communityService.deletePost(postId);
+    public String deletePostById(@PathVariable Integer postId, HttpSession session){
+        String user_id = getUser(session).getUser_id();
+        //글을 쓴 회원이거나 관리자이면 가능
+        if (user_id.equals(communityService.findPostById(postId).getUser_id()) || user_id.equals("admin")){
+            communityService.deletePost(postId);
+        }
         return "redirect:/community";
     }
 
@@ -222,12 +231,14 @@ public class CommunityController {
     @ResponseBody
     @PostMapping("/post/comment/edit")
     public void editComment(Integer commentId, String content){
+        //사용자 관리자만 되게끔 수정
         communityService.editComment(Map.of("commentId",commentId,"content",content));
     }
 
     @MySecured
     @GetMapping("/post/comment/delete")
     public String deleteComment(Integer commentId, HttpServletRequest request){
+        //사용자 관리자만 되게끔 수정
         communityService.deleteComment(commentId);
         String refererLink = request.getHeader("referer");
 

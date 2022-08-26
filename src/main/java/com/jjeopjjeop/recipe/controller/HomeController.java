@@ -37,7 +37,6 @@ public class HomeController {
         pagenation.setEndRow(4);//4개만 가져옴
         List<RecipeDTO> rcpList = recipeService.listProcess(pagenation, 2, 0);
 
-
         model.addAttribute("rcpList",rcpList);
         model.addAttribute("list",list);
 
