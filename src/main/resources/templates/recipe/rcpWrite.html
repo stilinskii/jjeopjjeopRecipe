@@ -16,6 +16,25 @@
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
+    <!-- 모달 start -->
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">필수 항목 입력</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" id="alertBtn" style="display: none;" data-bs-toggle="modal" data-bs-target="#alertModal">레시피 수정</button>
+    <!-- 모달 end -->
 <p class="fw-bold fs-2 text-start">새 레시피 등록하기</p>
     <form action="" th:object="${recipeDTO}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
@@ -119,10 +138,11 @@
         <a th:href="@{/recipe/list}" class="btn btn-danger">
             &nbsp&nbsp취소&nbsp&nbsp
         </a>
-        <button type="submit" class="btn btn-primary">&nbsp&nbsp작성&nbsp&nbsp</button>
+        <a id="submitBtn" class="btn btn-primary">&nbsp&nbsp작성&nbsp&nbsp</a>
     </p>
 </form>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
     var manualNo = 1;
@@ -175,6 +195,17 @@
             $(this).attr("style", "color: #fff;");
         }
         $('#cateArr').attr('value', cateArr);
+    });
+
+    $("#submitBtn").on("click", function(){
+        console.log($("textarea[name=manual_txt]").val());
+        if($("textarea[name=manual_txt]").val() == ""){
+            alertMsg = "<p>요리 순서별 요리 방법을 입력하세요.</p>";
+            $(".modal-body p").html(alertMsg);
+            $("#alertBtn").click();
+        }else{
+            $("form").submit();
+        }
     });
 
 </script>
