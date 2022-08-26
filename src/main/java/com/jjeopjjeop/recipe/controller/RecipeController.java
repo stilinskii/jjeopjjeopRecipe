@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,9 +38,14 @@ public class RecipeController {
                                       @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
                                       @RequestParam(value="page", required=false, defaultValue = "1") int page, ModelAndView mav,
                                       HttpSession session){
-//        while(session.getAttributeNames().asIterator().hasNext()){
-//            System.out.println(session.getAttributeNames().asIterator().next());
-//        }
+        Enumeration<String> enum_session = session.getAttributeNames();
+
+        while(enum_session.hasMoreElements()) {
+
+            String key = enum_session.nextElement();
+            System.out.println(key);
+
+        }
 
 
         // 전체 레코드 수
@@ -317,12 +323,12 @@ public class RecipeController {
     @GetMapping("/recipe/delete")
     public String rcpDeleteMethod(@RequestParam int rcp_seq, HttpServletRequest request, HttpSession session){
         RecipeDTO recipeDTO = service.contentProcess(rcp_seq);
-        if(session.getAttribute("user_id") == null || !session.getAttribute("user_id").equals(recipeDTO.getUser_id())){
+        if(session.getAttribute("user_id") == null || (!session.getAttribute("user_id").equals("admin") && !session.getAttribute("user_id").equals(recipeDTO.getUser_id()))){
             return "error/500";
         }
 
         service.deleteProcess(rcp_seq, urlPath(request, 0), urlPath(request, 1));
-        return "redirect:/recipe/list";
+        return session.getAttribute("user_id").equals("admin") ? "redirect:/admin/c_index" : "redirect:/recipe/list";
     }
 
     // 첨부파일 처리를 위한 메소드
