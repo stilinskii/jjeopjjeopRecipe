@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
-@Builder
 @Getter @Setter
 public class CommunityCommentDTO {
 
