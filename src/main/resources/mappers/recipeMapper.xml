@@ -108,6 +108,11 @@
         ORDER BY cate_seq
     </select>
 
+    <select id="getRcpCate" parameterType="int" resultType="CategoryDTO">
+        SELECT * FROM category
+        WHERE cate_seq IN (SELECT cate_seq FROM cate_rcp WHERE rcp_seq = #{rcp_seq})
+    </select>
+
     <select id="content" parameterType="int" resultType="RecipeDTO">
         SELECT * FROM recipe WHERE rcp_seq = #{num}
     </select>
@@ -178,11 +183,6 @@
         VALUES(#{cate_seq}, (SELECT max(rcp_seq) FROM recipe))
     </insert>
 
-    <select id="callUpdateCate" parameterType="int" resultType="Integer">
-        SELECT cate_seq FROM cate_rcp
-        WHERE rcp_seq = #{rcp_seq}
-    </select>
-
     <update id="update" parameterType="RecipeDTO">
         UPDATE recipe
         SET rcp_name = #{rcp_name}, filename = #{filename, jdbcType=VARCHAR}, filepath = #{filepath, jdbcType=VARCHAR},
@@ -216,6 +216,11 @@
         DELETE FROM cate_rcp
         WHERE rcp_seq=#{rcp_seq}
     </delete>
+
+    <update id="changeDeletedRcp" parameterType="int">
+        UPDATE communityboard SET rcp_seq = null, category = 2
+        WHERE rcp_seq = #{rcp_seq}
+    </update>
 
     <select id="getFile" parameterType="int" resultType="String">
         SELECT filename FROM recipe WHERE rcp_seq=#{rcp_seq}

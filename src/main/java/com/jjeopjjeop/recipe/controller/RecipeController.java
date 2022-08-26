@@ -1,5 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
+import com.jjeopjjeop.recipe.config.MySecured;
 import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.RecipeCommentService;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +35,12 @@ public class RecipeController {
     @GetMapping("/recipe/list")
     public ModelAndView rcpListMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
                                       @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
-                                      @RequestParam(value="page", required=false, defaultValue = "1") int page, ModelAndView mav){
+                                      @RequestParam(value="page", required=false, defaultValue = "1") int page, ModelAndView mav,
+                                      HttpSession session){
+//        while(session.getAttributeNames().asIterator().hasNext()){
+//            System.out.println(session.getAttributeNames().asIterator().next());
+//        }
+
 
         // 전체 레코드 수
         Pagenation pagenation = new Pagenation(page, service.countProcess(cate_seq), true);
@@ -72,7 +79,6 @@ public class RecipeController {
 
         // 검색 레시피 목록
         List<RecipeDTO> rcpList = service.searchListProcess(pagenation, rcp_sort, cate_seq, searchKey);
-        //System.out.println(rcpList);
 
         mav.addObject("rcp_sort", rcp_sort);
         mav.addObject("cate_seq", cate_seq);
@@ -101,8 +107,19 @@ public class RecipeController {
         mav.addObject("rcp", service.contentProcess(rcp_seq));
         mav.addObject("page", page);
         mav.addObject("rcp_sort", rcp_sort);
-        mav.addObject("cate_seq", cate_seq);
         mav.addObject("user_id", String.valueOf(session.getAttribute("user_id")));
+
+
+        // 레시피 카테고리 정보
+        List<CategoryDTO> list = service.getRcpCateProcess(rcp_seq);
+        List<String> cate_list = new ArrayList<>();
+
+        for(int i=0; i<list.size(); i++){
+            cate_list.add(list.get(i).getCate_name());
+            System.out.println(list.get(i).getCate_name());
+        }
+
+        mav.addObject("cate_list", service.getRcpCateProcess(rcp_seq));
 
         // 스크랩 체크
         UserScrapDTO userScrapDTO = new UserScrapDTO();
@@ -135,20 +152,17 @@ public class RecipeController {
     @ResponseBody
     @PostMapping("/recipe/scrap")
     public void rcpScrapMethod(@RequestParam String rcp_seq,
-                               @RequestParam String user_id,
                                HttpSession session){
         UserScrapDTO userScrapDTO = new UserScrapDTO();
         userScrapDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
         userScrapDTO.setRcp_seq(Integer.parseInt(rcp_seq));
         service.scrapProcess(userScrapDTO);
-        //mav.addObject("rcp_seq", rcp_seq);
     }
 
     // 레시피 신고 메소드
     @ResponseBody
     @PostMapping("/recipe/report")
     public void rcpReportMethod(@RequestParam String rcp_seq,
-                                @RequestParam String user_id,
                                 HttpSession session){
         ReportRecipeDTO reportRecipeDTO = new ReportRecipeDTO();
         reportRecipeDTO.setUser_id(String.valueOf(session.getAttribute("user_id")));
@@ -157,11 +171,12 @@ public class RecipeController {
     }
 
     // 레시피 작성 페이지 요청 메소드
+    @MySecured(role = MySecured.Role.USER)
     @GetMapping("/recipe/write")
     public String rcpWriteMethod(Model model, HttpSession session){
-        if(session.getAttribute("user_id") == null){
-            return "redirect:/login";
-        }
+//        if(session.getAttribute("user_id") == null){
+//            return "redirect:/login";
+//        }
 
         RecipeDTO recipeDTO = new RecipeDTO();
 
@@ -227,78 +242,86 @@ public class RecipeController {
     @GetMapping("/recipe/update")
     public String rcpUpdateMethod(@RequestParam int rcp_seq, Model model, HttpSession session){
         RecipeDTO recipeDTO = service.contentProcess(rcp_seq);
-        model.addAttribute("recipeDTO", service.contentProcess(rcp_seq));
-        RecipeDTO updateDTO = new RecipeDTO();
+        if(session.getAttribute("user_id") == null || !session.getAttribute("user_id").equals(recipeDTO.getUser_id())){
+            return "error/500";
+        }
+
+        model.addAttribute("recipeDTO", recipeDTO);
 
         // 레시피 분류 목록
-        List<CategoryDTO> cateList = service.cateListProcess();
-        List<Integer> cate = service.updatePageProcess(rcp_seq);
-        for(int i=0; i<cate.size(); i++){
-            System.out.println();
-            cateList.get(cate.get(i)).setRcp_chk(true);
-        }
-        model.addAttribute("cateList", cateList); // 전체 분류 목록
+        List<CategoryDTO> cateList = service.cateListProcess(); //전체 분류 목록
+        List<CategoryDTO> cate = service.getRcpCateProcess(rcp_seq); //레시피에 등록된 분류 목록
 
-        model.addAttribute("updateDTO", updateDTO);
+        for(int i=0; i<cate.size(); i++){
+            for(int j=0; j<cateList.size(); j++){
+                if(cate.get(i).getCate_seq() == cateList.get(j).getCate_seq())
+                    cateList.get(j).setRcp_chk(true);
+            }
+        }
+
+        model.addAttribute("cateList", cateList); // 전체 분류 목록
         model.addAttribute("manualList", service.contentMnlProcess(rcp_seq));
         return "/recipe/rcpUpdate";
     }
 
     // 레시피 수정 메소드
     @PostMapping("/recipe/update")
-    public String rcpUpdateMethod(@Validated @ModelAttribute("updateDTO") RecipeDTO recipeDTO, BindingResult bindingResult, String[] manual_txt,
+    public String rcpUpdateMethod(@ModelAttribute("recipeDTO") RecipeDTO recipeDTO, String[] manual_txt,
                                   @RequestParam(value="cateArr", required=false) List<String> cateArr, Model model,
                                   MultipartFile[] upload_manual, HttpServletRequest request, HttpSession session){
 
-        // 유효성 검사
-        if(bindingResult.hasErrors()){
-            // 레시피 분류 목록
-            List<CategoryDTO> cateList = service.cateListProcess();
-            model.addAttribute("cateList", cateList);
+        // 레시피 분류 목록
+        List<CategoryDTO> cateList = service.cateListProcess();
+        model.addAttribute("cateList", cateList);
 
-            return "recipe/rcpUpdate";
-        }
-
-        // 본문 작성
+        // 본문 수정
+        boolean isChange = false;
         MultipartFile mainFile = recipeDTO.getUpload();
         if(!mainFile.isEmpty()){
+            isChange = true;
             UUID random = saveCopyFile(mainFile, request, 0);
             recipeDTO.setFilename(random+"_"+mainFile.getOriginalFilename());
             recipeDTO.setFilepath("/media/recipe/");
         }
 
-        service.updateProcess(recipeDTO);
+        service.updateProcess(recipeDTO, urlPath(request, 0), isChange);
 
-        // 요리과정 작성
+        // 요리과정 수정 (전체 삭제 후 재등록)
         for(int i=0; i<manual_txt.length; i++){
             ManualDTO manualDTO = new ManualDTO();
             manualDTO.setManual_no(i+1);
             manualDTO.setManual_txt(manual_txt[i]);
             manualDTO.setRcp_seq(recipeDTO.getRcp_seq());
 
+            boolean isChangeM = false;
             if(!upload_manual[i].isEmpty()){
+                isChangeM = true;
                 UUID random = saveCopyFile(upload_manual[i], request, 1);
                 manualDTO.setFilename(random+"_"+upload_manual[i].getOriginalFilename());
                 manualDTO.setFilepath("/media/recipe/manual/");
             }
-            service.updateMProcess(manualDTO);
+            service.updateMProcess(manualDTO, urlPath(request, 1));
         }
 
-        // 카테고리 작성
+        // 카테고리 수정 (전체 삭제 후 재등록)
         service.deleteCProcess(recipeDTO.getRcp_seq());
         for(String data : cateArr){
             int num = Integer.parseInt(data);
-            service.updateCProcess(num, recipeDTO.getRcp_seq());
+            service.updateCateProcess(num, recipeDTO.getRcp_seq());
         }
 
-        return "redirect:/recipe/list";
+        return "redirect:/recipe/view/"+recipeDTO.getRcp_seq();
     }
 
     // 레시피 삭제 메소드
-    @GetMapping("/recipe/delete/{rcp_seq}")
-    public String rcpDeleteMethod(@PathVariable("rcp_seq") int rcp_seq, HttpServletRequest request){
-        service.deleteProcess(rcp_seq, urlPath(request, 0), urlPath(request, 1));
+    @GetMapping("/recipe/delete")
+    public String rcpDeleteMethod(@RequestParam int rcp_seq, HttpServletRequest request, HttpSession session){
+        RecipeDTO recipeDTO = service.contentProcess(rcp_seq);
+        if(session.getAttribute("user_id") == null || !session.getAttribute("user_id").equals(recipeDTO.getUser_id())){
+            return "error/500";
+        }
 
+        service.deleteProcess(rcp_seq, urlPath(request, 0), urlPath(request, 1));
         return "redirect:/recipe/list";
     }
 

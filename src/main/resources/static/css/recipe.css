@@ -41,6 +41,20 @@ font-size: 15px;
 line-height: 1;
 }
 
+.category span{
+color: #fff;
+}
+
+.category .selected{
+color: black;
+font-weight: bold;
+}
+
+.category span:hover{
+color: gray;
+font-weight: bold;
+}
+
 .validationError {
 color: #dc3545;
 margin-bottom: 3px;
@@ -76,6 +90,11 @@ line-height: 0.5;
 
 .rcp_best img{
 margin-bottom: 10px;
+}
+
+.colimg{
+margin-left: 15px;
+margin-right: 15px;
 }
 
 .col-4 {

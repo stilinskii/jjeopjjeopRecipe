@@ -11,13 +11,18 @@ import java.util.Map;
 @Repository
 @Mapper
 public interface RecipeDAO {
+    // 리스트
     public int count(int cate_seq);
-    //public int count();
     public List<RecipeDTO> list(Map<String, Object> map);
-    public int searchCount(Map<String, Object> map);
-    public List<RecipeDTO> searchList(Map<String, Object> map);
     public List<RecipeDTO> favoriteList();
     public List<CategoryDTO> cateList();
+
+    // 검색 리스트
+    public int searchCount(Map<String, Object> map);
+    public List<RecipeDTO> searchList(Map<String, Object> map);
+
+    // 본문
+    public List<CategoryDTO> getRcpCate(int rcp_seq);
     public RecipeDTO content(int num);
     public List<ManualDTO> contentMnl(int num);
     public void viewCnt(int num);
@@ -34,23 +39,23 @@ public interface RecipeDAO {
     public void report(ReportRecipeDTO reportRecipeDTO); //신고
     public void updateReport(int num); //레시피 신고수 증가
 
-//    public void reStepCount(RecipeDTO model);
-
     // write 처리
     public void write(RecipeDTO recipeDTO);
     public void writeManual(ManualDTO manualDTO);
     public void writeCate(int cate_seq);
 
-    public RecipeDTO updateNum(int num);
-
     // update 처리
     public void update(RecipeDTO recipeDTO);
     public void updateManual(ManualDTO manualDTO);
     public void updateCate(@Param("cate_seq") int cate_seq, @Param("rcp_seq") int rcp_seq);
-    public List<Integer> callUpdateCate(int rcp_seq);
+
+    // 삭제
     public void delete(int num);
     public void deleteManual(int num);
     public void deleteCate(int rcp_seq);
+    public void changeDeletedRcp(int rcp_seq);
+
+    // 첨부파일 처리
     public String getFile(int rcp_seq); // 레시피 대표 첨부파일
     public List<String> getFileM(int rcp_seq); // 요리과정 첨부파일
 

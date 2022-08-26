@@ -16,6 +16,25 @@
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
+    <!-- 모달 start -->
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">필수 항목 입력</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" id="alertBtn" style="display: none;" data-bs-toggle="modal" data-bs-target="#alertModal">레시피 수정</button>
+    <!-- 모달 end -->
 <p class="fw-bold fs-2 text-start">새 레시피 등록하기</p>
     <form action="" th:object="${recipeDTO}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
@@ -75,20 +94,20 @@
                 </span>
             </p>
             <p>
-                <span>재료별</span>
+                <span>상황별</span>
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
                     &nbsp&nbsp
                     <a href="#" th:value="${cate2.cate_seq}" style="color: #fff;">
-                        <span th:text="${cate2.cate_name}">재료별</span>
+                        <span th:text="${cate2.cate_name}">상황별</span>
                     </a>
                 </span>
             </p>
             <p>
-                <span>상황별</span>
+                <span>재료별</span>
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
                     &nbsp&nbsp
                     <a href="#" th:value="${cate3.cate_seq}" style="color: #fff;">
-                        <span th:text="${cate3.cate_name}">상황별</span>
+                        <span th:text="${cate3.cate_name}">재료별</span>
                     </a>
                 </span>
             </p>
@@ -115,70 +134,16 @@
         <p>*레시피에 어울리는 해쉬태그를 입력해 주세요.</p>
         <textarea th:field="*{hash_tag}" placeholder="귀찮을 때, 자취요리, 야채듬뿍..."></textarea>
         <hr/>
-    <p class="d-flex justify-content-between">
-        <a th:href="@{/recipe/list}" class="btn btn-danger">
-            &nbsp&nbsp취소&nbsp&nbsp
-        </a>
-        <button type="submit" class="btn btn-primary">&nbsp&nbsp작성&nbsp&nbsp</button>
-    </p>
+        <p class="d-flex justify-content-between">
+            <a th:href="@{/recipe/list}" class="btn btn-danger">
+                &nbsp&nbsp취소&nbsp&nbsp
+            </a>
+            <a id="submitBtn" class="btn btn-primary">&nbsp&nbsp작성&nbsp&nbsp</a>
+        </p>
 </form>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
-    var manualNo = 1;
-    var inputContainer = document.querySelector(".manual_container");
-    var inputNode = document.querySelector(".rcp_manual");
-    var n1 = inputNode.cloneNode(true);
-
-    $('#addManual').on("click", function(e){
-        e.preventDefault();
-        manualNo++;
-        n1.querySelector(".manual_step").innerHTML = manualNo;
-        inputContainer.appendChild(n1.cloneNode(true));
-    });
-
-    $(document).on('click', '.removeManual', function(){
-        if(manualNo > 1){
-            manualNo--;
-            var manualIndex = $(this).parent().parent().children(":first").html();
-            $(this).parent().parent().remove();
-
-            $('.rcp_manual').each(function(index, item){
-                var manualIndex2 = item.firstChild.nextSibling.innerHTML;
-                if(manualIndex < manualIndex2){
-                    item.firstChild.nextSibling.innerHTML = manualIndex2 - 1;
-                };
-            });
-        }
-    });
-
-    var imgUp = document.querySelector(".img_up");
-    var imgSrc = imgUp.querySelector("img");
-    var fileInput = imgUp.querySelector(`input[type="file"]`);
-    fileInput.addEventListener('input', () => {
-        const reader = new FileReader();
-		reader.addEventListener('load', () => {
-		    imgSrc.setAttribute('src', reader.result);
-		});
-		reader.readAsDataURL(fileInput.files[0]);
-    });
-
-    var cateArr = [];
-
-    $(".cate_box a").on("click", function(e){
-        e.preventDefault();
-        if(cateArr.indexOf($(this).attr("value")) == -1){
-            cateArr.push($(this).attr("value"));
-            $(this).attr("style", "color: black; font-weight: bold;");
-        }else{
-            cateArr.splice(cateArr.indexOf($(this).attr("value")), 1);
-            $(this).attr("style", "color: #fff;");
-            console.log($(this));
-        }
-        console.log($(this).attr("value"));
-        $('#cateArr').attr('value', cateArr);
-    });
-
-</script>
+<script src="/static/js/rcpWrite.js" th:src="@{/js/rcpWrite.js}"></script>
 </body>
 </html>

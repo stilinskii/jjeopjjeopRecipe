@@ -49,6 +49,10 @@ public class RecipeServiceImp implements RecipeService{
         return dao.cateList();
     }
 
+    public List<CategoryDTO> getRcpCateProcess(int rcp_seq){
+        return dao.getRcpCate(rcp_seq);
+    }
+
     @Override
     public RecipeDTO contentProcess(int rcp_seq) {
         dao.viewCnt(rcp_seq);
@@ -103,24 +107,41 @@ public class RecipeServiceImp implements RecipeService{
     }
 
     @Override
-    public List<Integer> updatePageProcess(int rcp_seq) {
-        return dao.callUpdateCate(rcp_seq);
-    }
+    public void updateProcess(RecipeDTO recipeDTO, String url, boolean isChange){
+        // 이미지 변경되었으면 이전 이미지 파일 삭제
+        if(isChange){
+            String path = dao.getFile(recipeDTO.getRcp_seq());
+            if(path != null){
+                File fe = new File(url, path);
+                fe.delete();
+            }
+        }
 
-    @Override
-    public void updateProcess(RecipeDTO recipeDTO){
         dao.update(recipeDTO);
     }
 
     @Override
-    public void updateMProcess(ManualDTO manualDTO){
+    public void updateMProcess(ManualDTO manualDTO, String url){
+        // 서버에 저장된 요리과정 이미지 삭제
+        if(manualDTO.getManual_no() == 1){
+            List<String> list = dao.getFileM(manualDTO.getRcp_seq());
+            for(int i=0; i<list.size(); i++){
+                String pathM = list.get(i);
+                if(pathM != null){
+                    File fm = new File(url, pathM);
+                    fm.delete();
+                }
+            }
+        }
+
+        // 요리과정 전체 삭제 후 재등록
         if(manualDTO.getManual_no() == 1)
             dao.deleteManual(manualDTO.getRcp_seq());
         dao.updateManual(manualDTO);
     }
 
     @Override
-    public void updateCProcess(int cate_seq, int rcp_seq){
+    public void updateCateProcess(int cate_seq, int rcp_seq){
         dao.updateCate(cate_seq, rcp_seq);
     }
 
@@ -147,6 +168,8 @@ public class RecipeServiceImp implements RecipeService{
             }
         }
 
+        // 후기글 있으면 후기글 분류 변경
+        dao.changeDeletedRcp(rcp_seq);
         dao.delete(rcp_seq);
     }
 
