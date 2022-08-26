@@ -24,6 +24,8 @@ public class Pagenation {
     // ↓레시피용으로 추가↓
     private Integer blockPageCnt;//한 블록에 보여줄 페이지수
 
+
+    //파라미터 : 현재페이지, 한 페이지에 보여질 데이터 수, 전체개수.
     public Pagenation(Integer page, Integer perPage, Integer recordCount) {
 
         int startRow = (page != null) ? page : 0; // page가 입력되지 않았으면 자동으로 1페이지로(0이 1)

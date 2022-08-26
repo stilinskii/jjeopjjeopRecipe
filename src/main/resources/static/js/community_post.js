@@ -15,9 +15,6 @@ function dataSend() {
 
   let postIdVal = $('#postId').val();
   let value = { postId: postIdVal, add: addVal };
-  // $.post('/community/like', value).done(function (fragment) {
-  //   $('#like-btn').replaceWith(fragment);
-  // });
 
   $.ajax({
     type: 'post',
@@ -27,7 +24,6 @@ function dataSend() {
       likeBtn.innerHTML = data;
     },
   });
-  alert('좋아용완료');
 }
 
 /**

@@ -15,7 +15,7 @@ import java.util.UUID;
 public class FileStore {
 
     @Value("${fileStore.dir}")
-    private String imageDir; //??????????????????
+    private String imageDir;
 
 
     public List<ImageDTO> storeImages(List<MultipartFile> multipartFiles,String dirName) {
