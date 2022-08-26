@@ -8,7 +8,6 @@
 
 	<!--   dto경로: com.jjeopjjeop.recipe.dto.ProduceDTO
                      com.jjeopjjeop.recipe.dto.ProduceDTO-->
-
 	<!--판매글 작성 반영-->
 	<insert id="write" parameterType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		INSERT INTO produce_board
@@ -118,13 +117,19 @@
 
 
 	<select id="getFourProduceNumOrderBySoldCount" resultType="int">
-		SELECT * FROM  (select t1.*, rownum rm FROM
-		(select produce_num from(
-		SELECT count(*), produce_num
-		FROM pay_history
+		SELECT rcp_li.*
+		FROM (SELECT rcp.*, rownum rm FROM
+		(SELECT produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
+		FROM produce_board, pay_history
 		WHERE pay = 1
-		GROUP BY produce_num
-		ORDER BY count(*) DESC) )t1)
-		WHERE rm BETWEEN 1 AND 4
+		AND produce_board.produce_num = pay_history.produce_num
+		GROUP BY produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
+		ORDER BY sum(quantity) DESC
+		)rcp)rcp_li
+
+		WHERE rm between 1 AND 4
 	</select>
+
+
+
 </mapper>
