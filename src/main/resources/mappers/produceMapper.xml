@@ -7,7 +7,7 @@
 <mapper namespace="com.jjeopjjeop.recipe.dao.ProduceDAO">
 
 	<!--   dto경로: com.jjeopjjeop.recipe.dto.ProduceDTO
-                         com.jjeopjjeop.recipe.dto.ProduceDTO-->
+                        com.jjeopjjeop.recipe.dto.ProduceDTO-->
 	<!--판매글 작성 반영-->
 	<insert id="write" parameterType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		INSERT INTO produce_board
@@ -126,6 +126,7 @@
 		ORDER BY count(*) DESC) )t1)
 		WHERE rm BETWEEN 1 AND 4
 	</select>
+
 
 
 </mapper>

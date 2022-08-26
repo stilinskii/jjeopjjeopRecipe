@@ -39,7 +39,7 @@
 
 
     <select id="selectAllUserList" resultMap="userResult">
-        SELECT * FROM user_j
+        SELECT * FROM user_j WHERE usertype!=4
     </select>
 
     <insert id="insertUser" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
@@ -50,15 +50,15 @@
     </insert>
 
     <select id="loginById" resultType="userDTO" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
-		SELECT * FROM user_j WHERE user_id=#{user_id} AND password=#{password}
+		SELECT * FROM user_j WHERE user_id=#{user_id} AND password=#{password} and usertype!=4
     </select>
 
     <select id="findId" resultType="userDTO" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
-        SELECT * FROM user_j WHERE username=#{username} AND email=#{email}
+        SELECT * FROM user_j WHERE username=#{username} AND email=#{email} and usertype!=4
     </select>
 
     <select id="findPassword" resultType="userDTO" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
-        SELECT * FROM user_j WHERE user_id=#{user_id} AND email=#{email}
+        SELECT * FROM user_j WHERE user_id=#{user_id} AND email=#{email} and usertype!=4
     </select>
 
     <update id="updatePassword" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
@@ -77,12 +77,16 @@
     </update>
 
     <select id="checkId" resultType="int" parameterType="String">
-        SELECT count(*) FROM user_j WHERE user_id = #{user_id}
+        SELECT count(*) FROM user_j WHERE user_id = #{user_id} and usertype!=4
     </select>
 
-    <delete id="deleteUser" parameterType="String">
-        DELETE FROM user_j WHERE user_id=#{user_id} AND password=#{password}
-    </delete>
+<!--    <delete id="deleteUser" parameterType="String">-->
+<!--        DELETE FROM user_j WHERE user_id=#{user_id} AND password=#{password}-->
+<!--    </delete>-->
+
+    <update id="deleteUser" parameterType="String">
+        UPDATE user_j SET usertype=4 WHERE user_id=#{user_id} AND password=#{password}
+    </update>
 
     <select id="showMyCommunity" resultMap="myCommunityResult">
         SELECT b.id, a.user_id, b.category, b.title, b.content, b.created_at, b.updated_at, b.report, b.read_count, b.like_count
@@ -94,7 +98,7 @@
     <select id="viewMyCommunity" parameterType="Map" resultType="CommunityDTO">
         SELECT * FROM
         (SELECT *
-        FROM (select t1.*, row_number() OVER (PARTITION BY user_id ORDER BY id DESC) AS seqnum FROM CommunityBoard t1) t1
+        FROM (select t1.*, row_number() OVER (PARTITION BY user_id, category ORDER BY id DESC) AS seqnum FROM CommunityBoard t1) t1
         WHERE user_id=#{user_id} and category=0) t1
         WHERE seqnum BETWEEN #{page.startRow} AND #{page.endRow}
     </select>
@@ -106,7 +110,7 @@
     <select id="viewMyReview" parameterType="Map" resultType="CommunityDTO">
         SELECT * FROM
         (SELECT *
-        FROM (select t1.*, row_number() OVER (PARTITION BY user_id ORDER BY id DESC) AS seqnum FROM CommunityBoard t1) t1
+        FROM (select t1.*, row_number() OVER (PARTITION BY user_id, category ORDER BY id DESC) AS seqnum FROM CommunityBoard t1) t1
         WHERE user_id=#{user_id} and category=1) t1
         WHERE seqnum BETWEEN #{page.startRow} AND #{page.endRow}
     </select>
