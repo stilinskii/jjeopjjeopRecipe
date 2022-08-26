@@ -34,6 +34,5 @@ public interface ProduceDAO {
 
     List<ProduceDTO> findProductsByKeywordWithPaging(Map<String, Object> map);
 
-
     List<Integer> getFourProduceNumOrderBySoldCount();
 }

@@ -64,10 +64,9 @@ public class ProduceController {
     //판매글 조회(필터링)
     @GetMapping("/produce/list/{type}")
     public ModelAndView produceList(@PathVariable("type") int type, @RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav) {
-
         int totalRecord = produceService.produceFilterCount(type);// 전체 레코드 수
 
-        Pagenation pagenation = new Pagenation(page,9, totalRecord); //페이지 처리를 위한 계산
+        Pagenation pagenation = new Pagenation(page,9, 17); //페이지 처리를 위한 계산
 
         //mapper에 보낼 값들.
         Map<String, Object> map = new HashMap<>();
