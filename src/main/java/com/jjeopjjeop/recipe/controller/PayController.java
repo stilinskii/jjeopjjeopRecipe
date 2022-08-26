@@ -1,6 +1,7 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.config.MySecured;
+import com.jjeopjjeop.recipe.dao.PayDAO;
 import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.KakaoPay;
@@ -17,7 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -40,16 +43,23 @@ public class PayController {
         return "redirect:/produce/view/" + payDTO.getProduce_num();
     }
 
-   private int currentPage;
 
     @MySecured
     @GetMapping("/mypage/cart/view")
-    public ModelAndView cartView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,ModelAndView mav, HttpServletRequest request){
+    public ModelAndView cartView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String user_id = (String) session.getAttribute("user_id");
 
-        int totalRecord = payService.cartCount(request);// 전체 레코드 수
+        int totalRecord = payService.cartCount(user_id);
         Pagenation pagenation = new Pagenation(page,5, totalRecord); //페이지 처리를 위한 계산
 
-        mav.addObject("list", payService.cartView(pagenation));
+        //mapper에 보낼 값들.
+        Map<String, Object> map = new HashMap<>();
+        map.put("startRow", pagenation.getStartRow());
+        map.put("endRow", pagenation.getEndRow());
+        map.put("user_id", user_id);
+
+        mav.addObject("list", payService.cartView(map));
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
         mav.setViewName("/users/cart");
 
@@ -60,11 +70,19 @@ public class PayController {
     @MySecured
     @GetMapping("/mypage/pay/view")
     public ModelAndView payView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav, HttpServletRequest request){
-        // 전체 레코드 수
-        int totalRecord = payService.payCount(request);
+        HttpSession session = request.getSession();
+        String user_id = (String) session.getAttribute("user_id");
+        int totalRecord = payService.payCount(user_id);// 전체 레코드 수
+
         Pagenation pagenation = new Pagenation(page,5, totalRecord); //페이지 처리를 위한 계산
 
-        mav.addObject("list", payService.payView(pagenation));
+        //mapper에 보낼 값들.
+        Map<String, Object> map = new HashMap<>();
+        map.put("startRow", pagenation.getStartRow());
+        map.put("endRow", pagenation.getEndRow());
+        map.put("user_id", user_id);
+
+        mav.addObject("list", payService.payView(map));
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
         mav.setViewName("/users/payment");
 
@@ -81,7 +99,8 @@ public class PayController {
     }
 ////카카오페이시작///////////////////////////////////////////////////////////////////////////////////////
     //카카오페이 결제
-    @Setter(onMethod_ = @Autowired)
+  //  @Setter(onMethod_ = @Autowired) 갑자기 빨간줄생김??? 그래서 지우고 아래처럼했는데 되네? 이유를 모르겠음.
+    @Autowired
     private KakaoPay kakaopay;
 
     //판매글 상세페이지에서 버튼 클릭하여 장바구니에 넣고 바로 결제하기
@@ -149,7 +168,7 @@ public class PayController {
     @PostMapping("/mypage/cart/update/{pay_num}")
     public String cartUpdate(@PathVariable("pay_num") int pay_num){
         payService.cartUpdate(pay_num);
-        return "redirect:/produce/list";
+        return "redirect:/produce/list/0";
     }
 
 

@@ -35,7 +35,7 @@
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="container">
     <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
-        <h1>관리자 페이지</h1>
+        <img src="/media/admin/cooking.png" class="oneimg">
 
     </div>
 
@@ -48,16 +48,16 @@
                 <!-- admin은 controller에서? -->
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <a href="/admin" class="nav-link category">회원관리</a>
+                        <a href="/admin/u_index" class="nav-link category">회원 관리</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/recipe/rcpList" class="nav-link category">레시피관리</a>
+                        <a href="/admin/r_index" class="nav-link category">레시피 관리</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/admin/s_index" class="nav-link category">쇼핑관리</a>
+                        <a href="/admin/s_index" class="nav-link category">판매자 관리</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="/community" class="nav-link category">게시판 관리</a>
+                        <a href="/admin/c_index" class="nav-link category">게시판 관리</a>
                     </li>
                 </ul>
             </div>
@@ -88,7 +88,7 @@
                     <!--                </a></td>-->
                     <!--                <td th:text="${rd.report}"></td>-->
                     <!--                <td><a th:href="@{|/admin/delrcp/${rd.user_id}|}"  class="btn btn btn-secondary">삭제</a></td>-->
-                    <p class="fs-5 fw-bold" style="margin-bottom: 0" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
+<!--                    <p class="fs-5 fw-bold" style="margin-bottom: 0" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>-->
                     <hr />
                     <!--                  <div style="text-align: right; margin-bottom: 20px">-->
                     <!--                      <form role="form" id="rcp_sort_form" th:action="@{/recipe/list(rcp_sort=${pDto.rcp_sort})}">-->
@@ -103,24 +103,45 @@
                     <!--                          </th:block>-->
                     <!--                      </form>-->
                     <!--                  </div>-->
+
+<!--                    <div class="row align-items-center">-->
+<!--                        <div th:each="rcp : ${rcpList}" class="col-4">-->
+<!--                            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${pDto.rcp_sort}, cate_seq=${pDto.cate_seq}, currentPage=${pDto.currentPage})}">-->
+<!--                                <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />-->
+<!--                                <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />-->
+<!--                                <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>-->
+<!--                            </a>-->
+<!--                            <p class="d-flex justify-content-between">-->
+<!--                                <span th:text="${rcp.user_id}" class="left">닉네임</span>-->
+<!--                                &lt;!&ndash;                              <span th:text="'♥'+${rcp.scrap}" class="right">스크랩수</span>&ndash;&gt;-->
+<!--                                <span th:text="'신고'+${rcp.report}" class="right">신고수</span>-->
+<!--                            </p>-->
+<!--                            <p class="d-flex justify-content-between">-->
+<!--                                <span th:text="${rcp.time}" class="left">시간</span><span th:text="${rcp.difficulty}">난이도 하</span-->
+<!--                            ><span th:text="${rcp.amount}" class="right">3인분</span>-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
                     <div class="row align-items-center">
                         <div th:each="rcp : ${rcpList}" class="col-4">
-                            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${pDto.rcp_sort}, cate_seq=${pDto.cate_seq}, currentPage=${pDto.currentPage})}">
+                            <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.page})}">
                                 <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
                                 <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
                                 <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>
                             </a>
                             <p class="d-flex justify-content-between">
-                                <span th:text="${rcp.user_id}" class="left">닉네임</span>
-                                <!--                              <span th:text="'♥'+${rcp.scrap}" class="right">스크랩수</span>-->
-                                <span th:text="'신고'+${rcp.report}" class="right">신고수</span>
+              <span th:text="${rcp.user_id}" class="left">닉네임</span
+              ><span th:text="'신고'+${rcp.report}" class="right">신고수</span>
                             </p>
                             <p class="d-flex justify-content-between">
                                 <span th:text="${rcp.time}" class="left">시간</span><span th:text="${rcp.difficulty}">난이도 하</span
-                            ><span th:text="${rcp.amount}" class="right">3인분</span>
+                            ><a th:href="@{|admin/delrcp/${rcp.rcp_seq}}" class="btn btn btn-secondary">삭제</a>
                             </p>
                         </div>
                     </div>
+
+                    <!--페이징-->
                     <!--                  <nav aria-label="Page navigation example" style="margin-top: 30px">-->
                     <!--                      <ul class="pagination justify-content-center">-->
                     <!--                          <li class="page-item">-->
@@ -145,6 +166,35 @@
                     <!--                  </nav>-->
 
                     <!--              </tr>-->
+
+                    <nav aria-label="Page navigation example" style="margin-top: 30px">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a th:if="${pagenation.startPageNum} > 1" class="page-link" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.startPageNum - pagenation.blockPageCnt})}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                                <a th:if="${pagenation.startPageNum} == 1" class="page-link" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <th:block th:each="pagenations : ${#numbers.sequence(pagenation.startPageNum, pagenation.endPageNum)}">
+                                <li class="page-item active">
+                                    <a th:if="${pagenations} == ${pagenation.page}" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenations})}" th:text="${pagenations}" class="page-link"></a>
+                                </li>
+                                <li class="page-item">
+                                    <a th:if="${pagenations} != ${pagenation.page}" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenations})}" th:text="${pagenations}" class="page-link"></a>
+                                </li>
+                            </th:block>
+                            <li class="page-item">
+                                <a th:if="${pagenation.endPageNum} < ${pagenation.totalPageCnt}" class="page-link" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.startPageNum + pagenation.blockPageCnt})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                                <a th:if="${pagenation.endPageNum} == ${pagenation.totalPageCnt}" class="page-link" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
 
 
                     </tbody>

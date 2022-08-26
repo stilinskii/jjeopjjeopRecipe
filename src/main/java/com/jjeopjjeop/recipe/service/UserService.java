@@ -3,6 +3,7 @@ package com.jjeopjjeop.recipe.service;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.RecipeDTO;
 import com.jjeopjjeop.recipe.dto.UserDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +11,12 @@ import java.util.Map;
 
 public interface UserService {
    public List<UserDTO> listUsers();
-   public List<CommunityDTO> listMyCommunity(String user_id);
-   public List<RecipeDTO> listMyRecipe(String user_id);
+   public List<CommunityDTO> listMyCommunity(String user_id, Pagenation pagenation);
+   public List<CommunityDTO> listMyReview(String user_id, Pagenation pagenation);
+   public List<RecipeDTO> listMyRecipe(String user_id, Pagenation pagenation);
+   public int countMyCommunity(String user_id);
+   public int countMyReview(String user_id);
+   public int countMyRecipe(String user_id);
    public int addUser(UserDTO userDTO);
    public int removeUser(String user_id, String password);
    public UserDTO login(UserDTO userDTO);
@@ -26,6 +31,6 @@ public interface UserService {
 
    public void updateMypage(UserDTO userDTO);
 
-   public String checkId(String user_id);
+   public int checkId(String user_id);
 
 }

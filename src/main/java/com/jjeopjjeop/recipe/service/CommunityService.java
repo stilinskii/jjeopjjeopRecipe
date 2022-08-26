@@ -41,11 +41,12 @@ public class CommunityService {
     public void save(CommunityDTO dto, List<MultipartFile> image){
         communityDAO.insert(dto);
         if(image!=null){
-            saveImagesToDB(image,dto.getId());
+            saveImagesToDBAndLocal(image,dto.getId());
         }
     }
 
-    public void saveImagesToDB(List<MultipartFile> multipartFiles,Integer boardId){
+
+    public void saveImagesToDBAndLocal(List<MultipartFile> multipartFiles, Integer boardId){
         List<ImageDTO> community = fileStore.storeImages(multipartFiles, COMMUNITY);
         for (ImageDTO imageDTO : community) {
             saveImageToDB(imageDTO,boardId);
@@ -131,6 +132,10 @@ public class CommunityService {
         communityCommentDAO.deleteCommentById(commentId);
     }
 
+    public CommunityCommentDTO findCommentByUserId(String user_id){
+       return communityCommentDAO.findCommentByUserId(user_id);
+    }
+
     public void reportComment(Integer commentId){
         communityCommentDAO.reportCommentById(commentId);
     }
@@ -142,8 +147,8 @@ public class CommunityService {
     public void editPost(CommunityDTO community, List<MultipartFile> image) {
         communityDAO.updatePost(community);
         //이미지 있으면 새로 저장.
-        if(image!=null){
-            saveImagesToDB(image,community.getId());
+        if(!image.isEmpty()){
+            saveImagesToDBAndLocal(image,community.getId());
         }
     }
 

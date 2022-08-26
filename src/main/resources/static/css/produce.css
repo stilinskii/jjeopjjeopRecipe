@@ -1,3 +1,12 @@
+.a-to-black{
+    color: black;
+}
+
+.form_section textarea{
+  resize: none;  /*  사용자가 드래그로 크기조절하는 거 막기. */
+  height: 100px; /*근데 이게 안먹힌다. 직접 style=~해야됨.*/
+}
+
 /* ==============pagination 시작========================== */
 /*.pages의 모든 a의 글씨색 검정색으로 */
 .pages a{color:black;}
@@ -18,14 +27,13 @@
   color: rgb(0, 0, 0);
   border: 1px solid transparent; }
 
-  .page-item.active .page-link {
-    z-index: 1;
-    color: #fff;
-    background-color: #ffbe33;
-    border-color: #ccc;
-   }
-   
-
+  /*왜 안먹힘...? */
+.page-item.active .page-link {
+  z-index: 1;
+  color: #fff;
+  background-color: #ffbe33;
+  border-color: #ccc;
+  }
 /* ==============pagination 끝========================= */
 
 /* =================판매글 카드 시작======================= */
@@ -42,20 +50,18 @@
 /* =================판매글 카드 끝======================= */
 
 
-/*========book_section===========*/
-.book_section {
+/*========inner_content===========*/
+.form_section {
   position: relative;
 }
 
-.book_section .heading_container {
-  margin-bottom: 25px;
-}
-
-.book_section .form_container .form-control {
+/* 입력폼의 각각의 입력칸에 스타일 지정. */
+.form_section .form_container .form-control {
   width: 100%;
   border: none;
   height: 50px;
-  margin-bottom: 25px;
+  margin-top: 30px;
+  margin-bottom: 5px;
   padding-left: 25px;
   border: 1px solid #999;
   outline: none;
@@ -66,27 +72,8 @@
           box-shadow: none;
 }
 
-.book_section .form_container .form-control::-webkit-input-placeholder {
-  color: #222222;
-}
-
-.book_section .form_container .form-control:-ms-input-placeholder {
-  color: #222222;
-}
-
-.book_section .form_container .form-control::-ms-input-placeholder {
-  color: #222222;
-}
-
-.book_section .form_container .form-control::placeholder {
-  color: #222222;
-}
-
-.book_section .form_container .nice-select .current {
-  font-size: 16px;
-}
-
-.book_section .form_container button {
+/* 입력폼의 버튼에 스타일 */
+.form_section .form_container button {
   margin-top: 15px;
   border: none;
   text-transform: uppercase;
@@ -100,28 +87,13 @@
   border: none;
 }
 
-.book_section .form_container button:hover {
+.form_section .form_container button:hover {
   background-color: #e69c00;
 }
-/*========subpage 필요없어서 안가져옴.===========*/
-#try{
-  background-color: skyblue;
-  text-align: center;
-}
 
-/*=====.heading_container=========*/
-
-.heading_container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+/* 제목 */
+.form_section .heading_container {
+  margin-bottom: 25px;
 }
 
 .heading_container h2 {
@@ -131,24 +103,7 @@
   font-weight: bold;
 }
 
-.heading_container h2 span {
-  color: #ffbe33;
-}
-
-.heading_container p {
-  margin-top: 10px;
-  margin-bottom: 0;
-}
-
-.heading_container.heading_center {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  text-align: center;
-}
-/*
-=======================produceView, produceList css====================================
-*/
+/*=======================produceView, produceList css====================================*/
 
 .site-wrap:before {
   -webkit-transition: .3s all ease-in-out;
@@ -165,45 +120,11 @@
   opacity: 0;
   visibility: hidden; }
 
-.offcanvas-menu .site-wrap {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  z-index: 2;
-  overflow: hidden; }
-  .offcanvas-menu .site-wrap:before {
-    opacity: 1;
-    visibility: visible; }
-
-/*========site-section=========*/
 .site-section {
   padding: 2.5em 0; }
   @media (min-width: 768px) {
     .site-section {
       padding: 5em 0; } }
-  .site-section.site-section-sm {
-    padding: 4em 0; }
 
-.site-section-heading {
-  font-size: 30px;
-  color: #25262a;
-  position: relative; }
-  .site-section-heading:before {
-    content: "";
-    left: 0%;
-    top: 0;
-    position: absolute;
-    width: 40px;
-    height: 2px;
-    background: #7971ea; }
-  .site-section-heading.text-center:before {
-    content: "";
-    left: 50%;
-    top: 0;
-    -webkit-transform: translateX(-50%);
-    -ms-transform: translateX(-50%);
-    transform: translateX(-50%);
-    position: absolute;
-    width: 40px;
-    height: 2px;
-    background: #7971ea; }
+.site-section.site-section-sm {
+  padding: 4em 0; }

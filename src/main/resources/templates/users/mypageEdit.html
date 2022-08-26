@@ -1,22 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<!--카카오 오픈API-->
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script th:inline="javascript">
-function kakaopost() {
-    new daum.Postcode({
-        oncomplete: function(data) {
-           document.querySelector("#postno").value = data.zonecode;
-           document.querySelector("#address").value = data.address
-        }
-    }).open();
-}
-<!-- 생년월일 max 처리가 안됨 ==> 확인 후 삭제-->
-<!--document.getElementById('birthday').value = new Date().toISOString().substring(0, 10);;-->
-<!--document.getElementById("birthday").max = new Date().toISOString().split("T")[0];-->
-</script>
-
 <head th:replace="fragments/head('마이페이지')">
 <head>
     <meta charset="UTF-8">
@@ -31,32 +15,33 @@ function kakaopost() {
     <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-    <script type="text/javascript" th:inline="javascript">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/user.js}"></script>
+    <script th:inline="javascript">
         /*<![CDATA[*/
             var message = [[${message}]];
             if(message) {
                 alert(message);
             }
         /*]]>*/
+    </script>
 
-        function check_password(password){
-            var password = document.getElementById('password').value;
-            var password2 = document.getElementById('password2').value;
-            if(password != '' && password2 != ''){
-                if(password == password2){
-                    document.getElementById('check').innerHTML='비밀번호가 일치합니다.';
-                    document.getElementById('check').style.color='gray';
-                } else {
-                    document.getElementById('check').innerHTML='비밀번호가 일치하지 않습니다.';
-                    document.getElementById('check').style.color='red';
+    <!--카카오 오픈API-->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script th:inline="javascript">
+        function kakaopost() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                   document.querySelector("#postno").value = data.zonecode;
+                   document.querySelector("#address").value = data.address
                 }
-            }
+            }).open();
         }
     </script>
 <nav th:replace="fragments/nav :: front-nav('마이페이지')"></nav>
 <div class="wrapper d-flex align-items-stretch">
-    <div class="col" th:replace="fragments/userSidebar :: userSidebar"></div>
-    <div id="content" class="pt-5">
+    <div class="sidenav" th:replace="fragments/userSidebar :: userSidebar"></div>
+    <div id="content" class="main pt-5">
         <h4>내 정보 수정</h4>
         <form action="/mypage/edit" method="post" th:object="${user}">
             <div class="form-group h-100" id="signup">
@@ -91,7 +76,6 @@ function kakaopost() {
                             class="form-control"
                             id="password2"
                             placeholder="비밀번호를 다시 한번 입력하세요"
-                            required
                             th:onkeyup="check_password([[${user.password}]])"
                     />
                         <div id="check"></div>
@@ -170,14 +154,14 @@ function kakaopost() {
                 <div class="mb-3 py-1 px-5">
                     <label for="postno" class="form-label">우편번호</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="postno" size="7" readonly />
+                        <input type="text" class="form-control" id="postno" th:field="*{postno}" size="7" readonly />
                         <input type="button" class="btn btn-outline-warning" value="우편번호찾기" onclick="kakaopost()" />
                     </div>
                     <div class="invalid-feedback" th:errors="*{postno}">우편번호 오류</div>
                 </div>
                 <div class="mb-3 py-1 px-5">
                     <label for="address" class="form-label">주소</label>
-                    <input type="text" class="form-control" id="address" size="70" />
+                    <input type="text" class="form-control" id="address" th:field="*{address}" size="70" />
                     <div class="invalid-feedback" th:errors="*{address}">주소 오류</div>
                 </div>
                 <div class="d-flex justify-content-center pt-5">

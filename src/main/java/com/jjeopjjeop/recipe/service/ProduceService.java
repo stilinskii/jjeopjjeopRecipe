@@ -11,9 +11,9 @@ import java.util.Map;
 public interface ProduceService {
     void writeProcess(ProduceDTO produceDTO, MultipartFile file) throws Exception;
 
-    List<ProduceDTO> produceList(Pagenation pagenation);
+    List<ProduceDTO> produceList(Map<String, Object> map);
 
-    List<ProduceDTO> produceListType(int type);
+    List<ProduceDTO> produceListSort(Map<String, Object> map); //판매글 리스트 정렬
 
     void produceDeleteProcess(int produce_num);
 
@@ -21,7 +21,8 @@ public interface ProduceService {
 
     void produceUpdateProcess(ProduceDTO produceDTO);
 
-    int countProcess(); //페이지 처리를 위해 판매글 개수 세기
+    int produceFilterCount(int produce_type); //페이지 처리를 위해 판매글 개수 세기
+    int produceSortCount(int sort); //페이지처리를 위한 판매글(정렬) 개수세기
 
     //하영
     List<ProduceDTO> findProductsByKeyword(String keyword);

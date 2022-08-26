@@ -6,15 +6,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 @Setter
 @Getter
 @Component
 @NoArgsConstructor
 public class SellerDTO {
     private String user_id;
+    @NotBlank(message = "상호명을 입력해주세요.")
     private String business_name;
+    @NotNull(message = "사업자등록번호를 입력해주세요.")
     private Integer registration_number;
+    @NotBlank(message = "사업장 전화번호를 입력해주세요.")
     private String seller_phone;
+    @NotBlank(message = "사업장 주소를 입력해주세요.")
     private String seller_address;
     private Integer approval;
 

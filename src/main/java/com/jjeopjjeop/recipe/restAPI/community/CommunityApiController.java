@@ -38,14 +38,9 @@ public class CommunityApiController {
     }
 
     @PostMapping
-    public ResponseEntity savecommunityPost(@RequestBody CommunityForm communityForm){
+    public ResponseEntity saveCommunityPost(@RequestBody CommunityForm communityForm){
         CommunityDTO communityDTO = getCommunityDTO(communityForm);
         apiMapper.insert(communityDTO);
-//        Integer id = communityDTO.getId();
-//        //CommunityDTO savedPost = apiMapper.findCommunityPostById(id);
-//        if(savedPost==null){
-//            return new ResponseEntity("save fail", HttpStatus.BAD_REQUEST);
-//        }
 
         return ResponseEntity.ok().body("post save success");
     }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head('내 레시피')">
+<head th:replace="fragments/head('내 후기')">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -12,13 +12,14 @@
 
     <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
+
 <body>
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>
 <div class="wrapper d-flex align-items-stretch">
     <div class="sidenav" th:replace="fragments/userSidebar :: userSidebar"></div>
     <div id="content" class="main pt-5">
         <div class="container py-5 h-100">
-            <h4 class="row d-flex justify-content-center align-items-center mb-3">내 레시피</h4>
+            <h4 class="row d-flex justify-content-center align-items-center mb-3">내 후기</h4>
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -27,24 +28,19 @@
                     <th scope="col">작성자</th>
                     <th scope="col">작성일</th>
                     <th scope="col">조회</th>
-                    <th scope="col">스크랩 수</th>
+                    <th scope="col">좋아요</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="myRecipe :${myRecipeList}">
-                    <th scope="row" th:text="${myRecipe.rcp_seq}">1</th>
+                <tr th:each="myCommunity :${myReviewList}">
+                    <th scope="row" th:text="${myCommunity.id}">1</th>
                     <td>
-                        <a
-                            th:text="${myRecipe.rcp_name}"
-                            th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${#numbers.formatInteger(myRecipe.rcp_seq, 3)}, rcp_sort=${recipePageDTO.rcp_sort}
-                                    , cate_seq=${recipePageDTO.cate_seq}, currentPage=${recipePageDTO.currentPage})}">
-                            Title
-                        </a>
+                        <a th:text="${myCommunity.title}" th:href="@{/community/post(id = ${myCommunity.id})}">Title</a>
                     </td>
-                    <td th:text="${myRecipe.user_id}">Writer</td>
-                    <td th:text="${myRecipe.rcp_date}">WriteDate</td>
-                    <td th:text="${myRecipe.rcp_viewcnt}">ViewCount</td>
-                    <td th:text="${myRecipe.scrap}">LikeCount</td>
+                    <td th:text="${myCommunity.user_id}">Writer</td>
+                    <td th:text="${myCommunity.formatted_created_at}">WriteDate</td>
+                    <td th:text="${myCommunity.read_count}">ViewCount</td>
+                    <td th:text="${myCommunity.like_count}">LikeCount</td>
                 </tr>
                 </tbody>
             </table>

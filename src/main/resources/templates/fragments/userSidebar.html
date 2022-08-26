@@ -28,6 +28,17 @@
             </li>
             <li class="nav-item">
                 <a
+                        class="nav-link"
+                        th:classappend="${title}=='내 스크랩' ? 'active'"
+                        th:href="@{/mypage/recipe}"
+                        th:aria-current="${title}=='내 스크랩' ? 'page' : false"
+                >
+                    <i class="fa fa-bookmark"></i>
+                    My Scrap
+                </a>
+            </li>
+            <li class="nav-item">
+                <a
                     class="nav-link"
                     th:classappend="${title}=='내 게시글'? 'active'"
                     th:href="@{/mypage/board}"
@@ -35,6 +46,17 @@
                 >
                     <i class="fa fa-pencil-square-o"></i>
                     My Board
+                </a>
+            </li>
+            <li class="nav-item">
+                <a
+                        class="nav-link"
+                        th:classappend="${title}=='내 후기'? 'active'"
+                        th:href="@{/mypage/review}"
+                        th:aria-current="${title}=='내 후기' ? 'page' : false"
+                >
+                    <i class="fa fa-book"></i>
+                    My Review
                 </a>
             </li>
             <li class="nav-item">
