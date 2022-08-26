@@ -14,7 +14,6 @@
     />
 </head>
 <body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
     <form action="/recipe/search">
@@ -147,11 +146,7 @@
         </div>
     </div>
 </main>
-<script>
-    $('#rcp_sort').change(function(){
-      $('#rcp_sort_form').submit();
-    });
-
-</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/static/js/rcpList.js" th:src="@{/js/rcpList.js}"></script>
 </body>
 </html>
