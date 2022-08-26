@@ -49,34 +49,34 @@
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
                     &nbsp&nbsp
                     <a th:if="${cate1.cate_seq} == ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey})}" class="category" th:value="${cate1.cate_seq}">
-                    <span th:text="${cate1.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">상황별</span>
+                    <span th:text="${cate1.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">종류별</span>
                     </a>
                     <a th:if="${cate1.cate_seq} != ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey}, cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
-                    <span th:text="${cate1.cate_name}" th:attr="style = 'color: #fff;'">상황별</span>
-                    </a>
-                </span>
-            </p>
-            <p>
-                <span>재료별</span>
-                <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
-                    &nbsp&nbsp
-                    <a th:if="${cate2.cate_seq} == ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey})}" class="category">
-                    <span th:text="${cate2.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">재료별</span>
-                    </a>
-                    <a th:if="${cate2.cate_seq} != ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey}, cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
-                    <span th:text="${cate2.cate_name}" th:attr="style = 'color: #fff;'">재료별</span>
+                    <span th:text="${cate1.cate_name}" th:attr="style = 'color: #fff;'">종류별</span>
                     </a>
                 </span>
             </p>
             <p>
                 <span>상황별</span>
+                <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
+                    &nbsp&nbsp
+                    <a th:if="${cate2.cate_seq} == ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey})}" class="category">
+                    <span th:text="${cate2.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">상황별</span>
+                    </a>
+                    <a th:if="${cate2.cate_seq} != ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey}, cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
+                    <span th:text="${cate2.cate_name}" th:attr="style = 'color: #fff;'">상황별</span>
+                    </a>
+                </span>
+            </p>
+            <p>
+                <span>재료별</span>
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
                     &nbsp&nbsp
                     <a th:if="${cate3.cate_seq} == ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey})}" class="category">
-                    <span th:text="${cate3.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">상황별</span>
+                    <span th:text="${cate3.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">재료별</span>
                     </a>
                     <a th:if="${cate3.cate_seq} != ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey}, cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
-                    <span th:text="${cate3.cate_name}" th:attr="style = 'color: #fff;'">상황별</span>
+                    <span th:text="${cate3.cate_name}" th:attr="style = 'color: #fff;'">재료별</span>
                     </a>
                 </span>
             </p>
