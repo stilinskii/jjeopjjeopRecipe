@@ -8,6 +8,7 @@
 
 	<!--   dto경로: com.jjeopjjeop.recipe.dto.ProduceDTO
                      com.jjeopjjeop.recipe.dto.ProduceDTO-->
+
 	<!--판매글 작성 반영-->
 	<insert id="write" parameterType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		INSERT INTO produce_board
