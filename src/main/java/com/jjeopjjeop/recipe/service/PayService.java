@@ -4,6 +4,7 @@ import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.dto.PayDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,9 +13,9 @@ import java.util.List;
 public interface PayService {
     public void cartWriteProcess(PayDTO payDTO);
 
-    public List<ProduceDTO> cartView(PagenationDTO recipePageDTO);//마이페이지 들어가서 장바구니 보기
+    public List<ProduceDTO> cartView(Pagenation pagenation);//마이페이지 들어가서 장바구니 보기
 
-    public List<ProduceDTO> payView(RecipePageDTO recipePageDTO);//마이페이지 들어가서 구매내역 보기
+    public List<ProduceDTO> payView(Pagenation pagenation);//마이페이지 들어가서 구매내역 보기
 
     public void cartDelete(int pay_num); //장바구니 삭제
 

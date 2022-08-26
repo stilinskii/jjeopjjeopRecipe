@@ -1,6 +1,8 @@
 package com.jjeopjjeop.recipe.controller;
 
+import ch.qos.logback.core.joran.spi.ElementSelector;
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
 import com.jjeopjjeop.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
@@ -28,16 +30,14 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model){
-        //임의로 해놓음. 원래 인기순 불러와야함.
-        RecipePageDTO recipePageDTO = new RecipePageDTO();
-        recipePageDTO.setStartRow(1);
-        recipePageDTO.setEndRow(4);
-        recipePageDTO.setRcp_sort(2);//스크랩많은순
-        recipePageDTO.setCate_seq(0);//카테고리 선택안함.
-        List<RecipeDTO> rcpList = recipeService.listProcess(recipePageDTO);
+        List<ProduceDTO> list = produceService.getPopularProduceList();//4개만 가져옴
 
-        List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
-        log.info("reclist={}",rcpList.size());
+        Pagenation pagenation = new Pagenation(1, recipeService.countProcess(2), true);
+        pagenation.setStartRow(1);
+        pagenation.setEndRow(4);//4개만 가져옴
+        List<RecipeDTO> rcpList = recipeService.listProcess(pagenation, 2, 0);
+
+
         model.addAttribute("rcpList",rcpList);
         model.addAttribute("list",list);
 
@@ -59,28 +59,38 @@ public class HomeController {
         }
 
         //recipe
-        List<RecipeDTO> rcpListAll = recipeService.searchListByKeyword(keyword);
-        List<RecipeDTO> rcpList = rcpListAll.size()>8 ?getSmallListOfRecipe(rcpListAll):rcpListAll;
-        //shopping
-        List<ProduceDTO> productListAll = produceService.findProductsByKeyword(keyword);
-        List<ProduceDTO> productList = productListAll.size()>4 ? getSmallProductList(productListAll):productListAll;
-        log.info("list={}",productListAll.size());
-
-        //뭔가 더 좋은 방법이 있을 거 같은디...
-        if(rcpList.size()==0){
-            redirectAttributes.addFlashAttribute("NoRcpList",true);
+        List<RecipeDTO> rcpList;
+        int recipeByKeywordCnt = recipeService.searchCountProcess(keyword, 0);
+        if(recipeByKeywordCnt!=0){
+            Pagenation pagenation = new Pagenation(1, recipeByKeywordCnt, true);
+            //검색결과 8개보다 많을때 8개만 출력
+            if(recipeByKeywordCnt>8){
+                pagenation.setStartRow(1);
+                pagenation.setEndRow(8);
+            }
+            rcpList = recipeService.searchListProcess(pagenation, 0, 0, keyword);
+            redirectAttributes.addFlashAttribute("rcpList",rcpList);
+            redirectAttributes.addFlashAttribute("rcpListSize",recipeByKeywordCnt);//검색결과 전체개수
         }else{
-            redirectAttributes.addFlashAttribute("rcpList",rcpList);//레시피는 8개만... 키워드 관련 전체 레시피 개수도 필요함
-            redirectAttributes.addFlashAttribute("rcpListSize",rcpListAll.size());
-            session.setAttribute("rcpListAll",rcpListAll);
+            //검색결과가 0개이면
+            redirectAttributes.addFlashAttribute("NoRcpList",true);
         }
 
-        if(rcpList.size()==0){
+
+        //shopping
+        List<ProduceDTO> productListAll = produceService.findProductsByKeyword(keyword);
+        int totalCnt = productListAll.size();
+
+        if(totalCnt==0){
             redirectAttributes.addFlashAttribute("NoProductList",true);
         }else{
-            redirectAttributes.addFlashAttribute("productList",productList);//상품은 4개
+            List<ProduceDTO> productList = productListAll.size()>4 ? getSmallProductList(productListAll):productListAll;
+            redirectAttributes.addFlashAttribute("productList",productList);//상품 4개
             redirectAttributes.addFlashAttribute("productListSize",productListAll.size());
-            session.setAttribute("productListAll",productListAll);
+
+            //더보기 결과 페이지네이션을 위해
+            session.setAttribute("productListAllTotalCnt",totalCnt);
+            session.setAttribute("keyword",keyword);
         }
 
         redirectAttributes.addFlashAttribute("keyword",keyword);
@@ -88,13 +98,6 @@ public class HomeController {
         return "redirect:/search";
     }
 
-    private List<RecipeDTO> getSmallListOfRecipe(List<RecipeDTO> rcpListAll) {
-        List<RecipeDTO> rcpList=new ArrayList<>();
-        for (int i=0;i<8;i++) {
-            rcpList.add(rcpListAll.get(i));
-        }
-        return rcpList;
-    }
 
     private List<ProduceDTO> getSmallProductList(List<ProduceDTO> productListAll) {
         List<ProduceDTO> list=new ArrayList<>();
@@ -106,53 +109,49 @@ public class HomeController {
 
 
     @GetMapping("/moreProduct")
-    public ModelAndView produceList(String keyword, HttpSession session, ModelAndView mav) {
-        // 전체 레코드 수
-        List<ProduceDTO> productListAll = (List<ProduceDTO>) session.getAttribute("productListAll");
-        int totalRecord = productListAll.size();
-
-        RecipePageDTO recipePageDTO = new RecipePageDTO();
-        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
-            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
-           int currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
-            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
+    public ModelAndView produceList(@RequestParam(value="page", required=false, defaultValue = "0") int page, String keyword, HttpSession session, ModelAndView mav) {
+       //1페이지 이상으로갈때 keyword파라미터 없어지는걸 대비.
+        if(StringUtils.isEmpty(keyword)){
+            keyword= (String) session.getAttribute("keyword");
         }
 
+        // 검색결과 전체 레코드 수
+        int totalRecord = (int) session.getAttribute("productListAllTotalCnt");
+
+        Pagenation pagenation = new Pagenation(page,9, totalRecord);
+        List<ProduceDTO> list = produceService.findProductsByKeywordWithPaging(keyword,pagenation);
+
         mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
-        List<ProduceDTO> list = produceService.findProductsByKeywordWithPaging(keyword,recipePageDTO);
         mav.addObject("list", list);  //판매글 리스트 넘겨주기
-        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
+        mav.addObject("page", pagenation); //페이지 정보 넘겨주기
         mav.setViewName("/produce/produceList");
         return mav;
     }
 
-    // 레시피 목록 검색 메소드
     @GetMapping("/moreRecipe")
     public ModelAndView rcpSearchMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
                                         @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
-                                        String keyword,
-                                        ModelAndView mav, RecipePageDTO recipePageDTO, HttpSession session){
-        List<RecipeDTO> productListAll = (List<RecipeDTO>) session.getAttribute("rcpListAll");
-        int totalRecord = productListAll.size();
+                                        @RequestParam(value="keyword", required=false) String keyword,
+                                        @RequestParam(value="page", required=false, defaultValue = "1") int page,
+                                        ModelAndView mav){
 
-        if(totalRecord>0){
-            int currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
-            recipePageDTO = new RecipePageDTO(currentPage, totalRecord, keyword);
-            recipePageDTO.setRcp_sort(rcp_sort);
-            recipePageDTO.setCate_seq(cate_seq);
-        }
+        // 전체 페이지 수
+        Pagenation pagenation = new Pagenation(page, recipeService.searchCountProcess(keyword, 0), true);
+        log.info("keyword={}",keyword);
 
         // 레시피 분류 목록
         List<CategoryDTO> cateList = recipeService.cateListProcess();
 
         // 검색 레시피 목록
-        List<RecipeDTO> rcpList = recipeService.searchListProcess(recipePageDTO);
+        List<RecipeDTO> rcpList = recipeService.searchListProcess(pagenation, rcp_sort, cate_seq, keyword);
         //System.out.println(rcpList);
 
-        mav.addObject("totalRecord", totalRecord);
+        mav.addObject("rcp_sort", rcp_sort);
+        mav.addObject("cate_seq", cate_seq);
+        mav.addObject("searchKey", keyword);
         mav.addObject("cateList", cateList);
         mav.addObject("rcpList", rcpList);
-        mav.addObject("recipePageDTO", recipePageDTO);
+        mav.addObject("pagenation", pagenation);
         mav.setViewName("/recipe/rcpSearch");
         return mav;
     }

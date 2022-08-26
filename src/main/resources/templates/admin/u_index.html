@@ -33,6 +33,7 @@
 </head>
 
 <body class="">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <nav th:replace="fragments/nav :: front-nav('')"></nav>
 <main class="container">
     <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
@@ -41,7 +42,7 @@
 
     </div>
     <!-- 검색기능 -->
-    <form action="/admin/u_index" class="search_wrap">
+    <form action="/admin/u_index" class="search_wrap" name="search_key">
         <div class="search_wrap">
             <input class='keyword' type="text" name="keyword" placeholder="아이디를 검색하세요" th:value="${page.keyword}">
             <button class='s_btn'>검색</button>
@@ -114,28 +115,12 @@
                         <td th:text="${au.address}"></td>
 
                         <td><a th:href="@{|/admin/delU/${au.user_id}|}" class="btn btn-sm" onclick="alert('탈퇴되었습니다.')">탈퇴</a></td>
+<!--                        <p th:text="${au.user_id}"></p>-->
                     </tr>
                     </tbody>
                 </table>
 
                 <!--  페이징처리  -->
-<!--                <nav aria-label="Page navigation example">-->
-<!--                    <ul class="pagination justify-content-center">-->
-<!--                        <li class="page-item" th:if="${pageMaker.prev} == true">-->
-<!--                            <a class="page-link"-->
-<!--                               th:href="@{/admin/u_index(pageNum=${pageMaker.startPage}-1, amount=${pageMaker.cri.amount})}" tabindex="-1" aria-disabled="true">-->
-<!--                                Previous</a>-->
-<!--                        </li>-->
-
-<!--                        <li class="page-item" th:each="idx,iterStat : ${#numbers.sequence(pageMaker.startPage,pageMaker.endPage)}" th:classappend="${pageMaker.cri.pageNum} == ${idx} ? active : null">-->
-<!--                            <a class="page-link" th:href="@{/admin/u_index(pageNum=${idx},amount=${pageMaker.cri.amount})}" th:text="${idx}">1</a></li>-->
-
-<!--                        <li class="page-item" th:if="${pageMaker.next} == true and ${pageMaker.endPage > 0}">-->
-<!--                            <a class="page-link" th:href="@{/admin/u_index(pageNum=${pageMaker.endPage}+1,amount=${pageMaker.cri.amount})}">-->
-<!--                                Next</a></li>-->
-<!--                    </ul>-->
-<!--                </nav>-->
-
                 <nav class="mt-3" th:if="${page.count>page.perPage}">
                     <ul class="pagination justify-content-center">
                         <li

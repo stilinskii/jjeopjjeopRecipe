@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface ProduceDAO {
     public void write(ProduceDTO produceDTO); //판매글 쓰기
 
-    public List<ProduceDTO> produceList(RecipePageDTO recipePageDTO); //판매글 목록보기
+    public List<ProduceDTO> produceList(Pagenation pagenation); //판매글 목록보기
 
     public List<ProduceDTO> produceListType(int type);//필터링한 판매글 목록보기 ->나중에 이거 지우고 타임리프로 처리하게 바꾸기
 
@@ -30,4 +31,7 @@ public interface ProduceDAO {
     List<ProduceDTO> findProductsByKeyword(String keyword);
 
     List<ProduceDTO> findProductsByKeywordWithPaging(Map<String, Object> map);
+
+
+    List<Integer> getFourProduceNumOrderBySoldCount();
 }

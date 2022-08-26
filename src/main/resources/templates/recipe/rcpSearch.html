@@ -24,7 +24,7 @@
                     class="form-control rounded"
                     placeholder="검색어를 입력하세요."
                     name="searchKey"
-                    th:value="${recipePageDTO.searchKey}"
+                    th:value="${searchKey}"
                     aria-label="searchKey"
                     aria-describedby="button-addon2"
             />
@@ -40,7 +40,7 @@
             </a>
         </div>
     </form>
-    <p class="fw-bold fs-3 text-start" th:text="'《 ' + ${recipePageDTO.searchKey} + ' 》 검색 결과'"></p>
+    <p class="fw-bold fs-3 text-start" th:text="'《 ' + ${searchKey} + ' 》 검색 결과'"></p>
     <div class="rcp_list">
         * 분류를 선택하여 상세검색을 해보세요!
         <div class="cate_box rounded">
@@ -48,10 +48,10 @@
                 <span>종류별</span>
                 <span th:each="cate1 : ${cateList}" th:if="${cate1.cate_cate} == 1">
                     &nbsp&nbsp
-                    <a th:if="${cate1.cate_seq} == ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey})}" class="category" th:value="${cate1.cate_seq}">
+                    <a th:if="${cate1.cate_seq} == ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey})}" class="category" th:value="${cate1.cate_seq}">
                     <span th:text="${cate1.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">상황별</span>
                     </a>
-                    <a th:if="${cate1.cate_seq} != ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
+                    <a th:if="${cate1.cate_seq} != ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey}, cate_seq=${cate1.cate_seq})}" class="category" th:value="${cate1.cate_seq}">
                     <span th:text="${cate1.cate_name}" th:attr="style = 'color: #fff;'">상황별</span>
                     </a>
                 </span>
@@ -60,10 +60,10 @@
                 <span>재료별</span>
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
                     &nbsp&nbsp
-                    <a th:if="${cate2.cate_seq} == ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey})}" class="category">
+                    <a th:if="${cate2.cate_seq} == ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey})}" class="category">
                     <span th:text="${cate2.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">재료별</span>
                     </a>
-                    <a th:if="${cate2.cate_seq} != ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
+                    <a th:if="${cate2.cate_seq} != ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey}, cate_seq=${cate2.cate_seq})}" class="category" th:value="${cate2.cate_seq}">
                     <span th:text="${cate2.cate_name}" th:attr="style = 'color: #fff;'">재료별</span>
                     </a>
                 </span>
@@ -72,32 +72,32 @@
                 <span>상황별</span>
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
                     &nbsp&nbsp
-                    <a th:if="${cate3.cate_seq} == ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey})}" class="category">
+                    <a th:if="${cate3.cate_seq} == ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey})}" class="category">
                     <span th:text="${cate3.cate_name}" th:attr="style = 'color: black; font-weight:bold;'">상황별</span>
                     </a>
-                    <a th:if="${cate3.cate_seq} != ${recipePageDTO.cate_seq}" th:href="@{/recipe/search(searchKey=${recipePageDTO.searchKey}, cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
+                    <a th:if="${cate3.cate_seq} != ${cate_seq}" th:href="@{/recipe/search(searchKey=${searchKey}, cate_seq=${cate3.cate_seq})}" class="category" th:value="${cate3.cate_seq}">
                     <span th:text="${cate3.cate_name}" th:attr="style = 'color: #fff;'">상황별</span>
                     </a>
                 </span>
             </p>
         </div>
-        <p class="fs-5 fw-bold" style="margin-bottom: 0;" th:text="'레시피 조회 결과: '+${totalRecord}+'건의 레시피'"></p>
+        <p class="fs-5 fw-bold" style="margin-bottom: 0;" th:text="'레시피 조회 결과: '+${pagenation.count}+'건의 레시피'"></p>
         <hr />
         <div style="text-align: right; margin-bottom: 20px">
-            <form role="form" id="rcp_sort_form" th:action="@{/recipe/search(rcp_sort=${recipePageDTO.rcp_sort})}">
+            <form role="form" id="rcp_sort_form" th:action="@{/recipe/search(rcp_sort=${rcp_sort})}">
                 <select th:name="rcp_sort" id="rcp_sort" style="margin-right: 0%">
-                    <option th:value="0" th:attr="selected = ${recipePageDTO.rcp_sort == 0 ? 'true' : 'false'}">최신순</option>
-                    <option th:value="1" th:attr="selected = ${recipePageDTO.rcp_sort == 1 ? 'true' : 'false'}">오래된순</option>
-                    <option th:value="2" th:attr="selected = ${recipePageDTO.rcp_sort == 2 ? 'true' : 'false'}">스크랩 많은 순</option>
-                    <option th:value="3" th:attr="selected = ${recipePageDTO.rcp_sort == 3 ? 'true' : 'false'}">조회수 많은 순</option>
+                    <option th:value="0" th:attr="selected = ${rcp_sort == 0 ? 'true' : 'false'}">최신순</option>
+                    <option th:value="1" th:attr="selected = ${rcp_sort == 1 ? 'true' : 'false'}">오래된순</option>
+                    <option th:value="2" th:attr="selected = ${rcp_sort == 2 ? 'true' : 'false'}">스크랩 많은 순</option>
+                    <option th:value="3" th:attr="selected = ${rcp_sort == 3 ? 'true' : 'false'}">조회수 많은 순</option>
                 </select>
-                <input type="hidden" name="cate_seq" th:value="${recipePageDTO.cate_seq}">
-                <input type="hidden" name="searchKey" th:value="${recipePageDTO.searchKey}">
+                <input type="hidden" name="cate_seq" th:value="${cate_seq}">
+                <input type="hidden" name="searchKey" th:value="${searchKey}">
             </form>
         </div>
         <div class="row align-items-center" style="margin-bottom: 20px">
             <div th:each="rcp : ${rcpList}" class="col-4">
-                <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${recipePageDTO.rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${recipePageDTO.currentPage}, searchKey=${recipePageDTO.searchKey})}">
+                <a th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${rcp.rcp_seq}, rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pagenation.page}, searchKey=${searchKey})}">
                     <img th:if="${not #strings.isEmpty(rcp.filename)}" th:src="@{${rcp.filepath}+${rcp.filename}}" width="250px" height="180px" class="rounded float" />
                     <img th:if="${#strings.isEmpty(rcp.filename)}" src="/media/images/rcp_mainimg.png" width="250px" height="180px" class="rounded float" />
                     <p th:text="${rcp.rcp_name}" class="text-start fw-bold">레시피 제목</p>
@@ -115,20 +115,26 @@
         <nav aria-label="Page navigation example" style="margin-top: 30px">
             <ul class="pagination justify-content-center">
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                    <a th:if="${pagenation.startPageNum} > 1" class="page-link" th:href="@{/recipe/search(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, searchKey=${searchKey}, page=${pagenation.startPageNum - pagenation.blockPageCnt})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    <a th:if="${pagenation.startPageNum} == 1" class="page-link" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <th:block th:each="pDtos : ${#numbers.sequence(recipePageDTO.startPage, recipePageDTO.endPage)}">
+                <th:block th:each="pages : ${#numbers.sequence(pagenation.startPageNum, pagenation.endPageNum)}">
                     <li class="page-item active">
-                        <a th:if="${pDtos} == ${recipePageDTO.currentPage}" th:href="@{/recipe/search(rcp_sort=${recipePageDTO.rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, searchKey=${recipePageDTO.searchKey})}" th:text="${pDtos}" class="page-link"></a>
+                        <a th:if="${pages} == ${pagenation.page}" th:href="@{/recipe/search(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, searchKey=${searchKey})}" th:text="${pages}" class="page-link"></a>
                     </li>
                     <li class="page-item">
-                        <a th:if="${pDtos} != ${recipePageDTO.currentPage}" th:href="@{/recipe/search(rcp_sort=${recipePageDTO.rcp_sort}, cate_seq=${recipePageDTO.cate_seq}, currentPage=${pDtos}, searchKey=${recipePageDTO.searchKey})}" th:text="${pDtos}" class="page-link"></a>
+                        <a th:if="${pages} != ${pagenation.page}" th:href="@{/recipe/search(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${pages}, searchKey=${searchKey})}" th:text="${pages}" class="page-link"></a>
                     </li>
                 </th:block>
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
+                    <a th:if="${pagenation.endPageNum} < ${pagenation.totalPageCnt}" class="page-link" th:href="@{/recipe/search(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, searchKey=${searchKey}, page=${pagenation.startPageNum + pagenation.blockPageCnt})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                    <a th:if="${pagenation.endPageNum} == ${pagenation.totalPageCnt}" class="page-link" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

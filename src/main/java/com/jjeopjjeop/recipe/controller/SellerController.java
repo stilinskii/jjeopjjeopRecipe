@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -65,7 +66,7 @@ public class SellerController {
     //insert
 
     @GetMapping("/seller/write")
-    public String form(){
+    public String form(@ModelAttribute("sellerDTO") SellerDTO sellerDTO){
         return "/seller/write";
     }
 
@@ -77,15 +78,15 @@ public class SellerController {
     public String forFormSubmit(@Validated @ModelAttribute("sellerDTO") SellerDTO sellerDTO, BindingResult bindingResult, HttpSession session){
 //        sellerDTO.setUser_id(sellerDTO.getUser_id());
 //        sellerDTO.getBusiness_name(sellerDTO.getBusiness_name());
-        UserDTO userDTO = getUser(session);
-        String user_id = userDTO.getUser_id();
-        sellerDTO.setUser_id(user_id);
-
         //유효성검사
         if(bindingResult.hasErrors()){
             log.info("erros={}", bindingResult);
-            return "/seller/form";
+            return "/seller/write";
         }
+        //회원접근
+        UserDTO userDTO = getUser(session);
+        String user_id = userDTO.getUser_id();
+        sellerDTO.setUser_id(user_id);
 
         sellerService.save(sellerDTO);
         return "redirect:/produce/list";
