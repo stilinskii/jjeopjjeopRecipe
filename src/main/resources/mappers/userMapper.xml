@@ -46,14 +46,8 @@
         INSERT INTO user_j
         (user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address)
         VALUES(#{user_id}, #{password}, 1, #{username}, #{nickname}, #{email}, #{phone}, #{birthday},
-            #{gender}, #{postno}, #{address, jdbcType=VARCHAR})
+            #{gender}, #{postno}, #{address})
     </insert>
-
-<!--    <insert id="insertSeller" parameterType="com.jjeopjjeop.recipe.dto.SellerDTO">-->
-<!--        INSERT INTO seller-->
-<!--        (user_id, business_name, registration_number, seller_phone, seller_address, approval)-->
-<!--        VALUES(#{user_id}, #{business_name}, #{registration_number}, #{seller_phone}, #{seller_address}, #{approval});-->
-<!--    </insert>-->
 
     <select id="loginById" resultType="userDTO" parameterType="com.jjeopjjeop.recipe.dto.UserDTO">
 		SELECT * FROM user_j WHERE user_id=#{user_id} AND password=#{password}
@@ -82,8 +76,8 @@
         WHERE user_id=#{user_id}
     </update>
 
-    <select id="checkId" resultType="String" parameterType="String">
-        SELECT user_id FROM user_j WHERE user_id = #{user_id}
+    <select id="checkId" resultType="int" parameterType="String">
+        SELECT count(*) FROM user_j WHERE user_id = #{user_id}
     </select>
 
     <delete id="deleteUser" parameterType="String">
@@ -97,14 +91,43 @@
         WHERE a.user_id = #{user_id}
     </select>
 
-    <select id="viewMyCommunity" parameterType="String" resultType="CommunityDTO">
-        SELECT * FROM communityboard WHERE user_id=#{user_id}
+    <select id="viewMyCommunity" parameterType="Map" resultType="CommunityDTO">
+        SELECT * FROM
+        (SELECT *
+        FROM (select t1.*, row_number() OVER (PARTITION BY user_id ORDER BY id DESC) AS seqnum FROM CommunityBoard t1) t1
+        WHERE user_id=#{user_id} and category=0) t1
+        WHERE seqnum BETWEEN #{page.startRow} AND #{page.endRow}
     </select>
 
-    <select id="viewMyRecipe" parameterType="String" resultType="RecipeDTO">
-        SELECT rcp_li.*
+    <select id="countMyCommunity" parameterType="String" resultType="int">
+        SELECT count(*) as listCnt FROM communityboard WHERE user_id=#{user_id} and category=0
+    </select>
+
+    <select id="viewMyReview" parameterType="Map" resultType="CommunityDTO">
+        SELECT * FROM
+        (SELECT *
+        FROM (select t1.*, row_number() OVER (PARTITION BY user_id ORDER BY id DESC) AS seqnum FROM CommunityBoard t1) t1
+        WHERE user_id=#{user_id} and category=1) t1
+        WHERE seqnum BETWEEN #{page.startRow} AND #{page.endRow}
+    </select>
+
+    <select id="countMyReview" parameterType="String" resultType="int">
+        SELECT count(*) as listCnt FROM communityboard WHERE user_id=#{user_id} and category=1
+    </select>
+
+    <select id="viewMyRecipe" parameterType="Map" resultType="RecipeDTO">
+        SELECT * FROM
+        (SELECT rcp_li.*
+        FROM(SELECT rcp.*, row_number() OVER (PARTITION BY user_id ORDER BY rcp_seq DESC) AS rm FROM recipe rcp) rcp_li
+        WHERE user_id=#{user_id}) t2
+        <![CDATA[
+        WHERE rm >= #{page.startRow} AND rm <= #{page.endRow}
+        ]]>
+    </select>
+
+    <select id="countMyRecipe" parameterType="String" resultType="int">
+        SELECT count(rcp_seq)
         FROM(SELECT rcp.*, rownum rm FROM (SELECT * FROM recipe) rcp) rcp_li
         WHERE user_id=#{user_id}
-        ORDER BY rcp_seq
     </select>
 </mapper>
