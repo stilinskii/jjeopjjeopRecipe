@@ -37,10 +37,10 @@
 			<choose>
 				<when test="sort == 1">
 					FROM produce_board, pay_history
-					WHERE produce_board.produce_num = pay_history.produce_num
-					AND pay = 1
+					WHERE pay = 1
+					AND produce_board.produce_num = pay_history.produce_num
 					GROUP BY produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
-					ORDER BY count(*) DESC
+					ORDER BY sum(quantity) DESC
 				</when>
 				<when test="sort == 2">
 					FROM produce_board, pay_history, produce_review
@@ -89,14 +89,12 @@
 			FROM produce_board, pay_history
 			WHERE produce_board.produce_num = pay_history.produce_num
 			AND pay = 1
-			ORDER BY count(*) DESC
 		</if>
 		<if test="sort == 2">
 			FROM produce_board, pay_history, produce_review
 			WHERE pay=1
 			AND produce_review.pay_num = pay_history.pay_num
 			AND produce_board.produce_num = pay_history.produce_num
-			ORDER BY avg(produce_review.rating) DESC
 		</if>
 	</select>
 

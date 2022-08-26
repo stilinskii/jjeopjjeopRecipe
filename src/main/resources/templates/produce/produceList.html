@@ -39,7 +39,6 @@
     <!--============================nav스타일 적용위해 넣음 끝=============================-->
 </head>
 <body>
-
 <nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
 <div class="site-wrap">
     <div class="site-section">
@@ -78,8 +77,6 @@
                     <!--================드롭다운 끝=================-->
                     <div class="row mb-5" >
                         <!--  ====================상품 카드 시작======================-->
-
-
                         <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up" th:each="produce : ${list}">
                             <div class="block-4 text-center border" th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"
                                  style="cursor:pointer;">
@@ -100,6 +97,7 @@
 
                     <!--  ====================페이지네이션 시작======================-->
 <!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
+<!-- .page-item.active .page-link -->
                     <div class="row fixed-bottom" data-aos="fade-up" th:if="${page.count>page.perPage}">
                         <div class="col-md-12 text-center">
 <!--                            이거 없으면 페이지네이션 왼쪽하단으로 이동됨-->
@@ -115,8 +113,7 @@
                                         th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
                                         th:classappend="${page.page==number-1} ? 'active'">
                                         <a th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
-                                           class="page-link"
-                                           th:text="${number}"></a>
+                                           class="page-link" th:text="${number}"></a>
                                     </li>
                                     <li class="page-item" th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'">
                                         <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}" class="page-link"
@@ -135,8 +132,5 @@
     </div>
     </div>
 </div>
-<!-- **********************************-->
-
-<!-- **********************************-->
 </body>
 </html>

@@ -39,13 +39,12 @@ public class HomeController {
 
         //-----------여기부터
         //    List<ProduceDTO> list = produceService.produceListProcess(recipePageDTO);
-       // Pagenation pagenation = new Pagenation(1,5, produceService.countProcess()); #$#$
-       // List<ProduceDTO> list = produceService.produceList(pagenation); #$#$#$
+
         //------------여기까지
 
         //log.info("reclist={}",rcpList.size());
         //model.addAttribute("rcpList",rcpList);
-       // model.addAttribute("list",list);  #$#$#$
+       // model.addAttribute("list",list);
 
         return "index";
     }

@@ -21,9 +21,7 @@ public class PayServiceImp implements PayService{
     @Autowired
     private PayDAO payDAO;
 
-    public PayServiceImp() {
-
-    }
+    public PayServiceImp() {}
 
     //장바구니에 넣기
     @Override
@@ -63,20 +61,16 @@ public class PayServiceImp implements PayService{
     }
 
     //페이지 처리를 위해 각 회원의 장바구니 항목 개수 세기. 나중에 id부분변경 ->0816 변경함.
+
     @Override
     public int cartCount(String user_id) {
-        int count = payDAO.cartCount("user_id");  //왜 0이나오는걸까??????????
-        System.out.println("~~~~~~~~~~~~");
-        System.out.println(count);
-        System.out.println("~~~~~~~~~~~~");
-
-        return count;
+        return payDAO.cartCount(user_id);
     }
 
     //페이지 처리를 위해 각 회원의 구매내역 항목 개수 세기.
     @Override
     public int payCount(String user_id) {
-        return payDAO.payCount("user_id");
+        return payDAO.payCount(user_id);
     }
 
     //판매글에서 바로 결제할 때 쓰는것. 가장 최근에 장바구니에 들어간 항목의 pay_num 부르기

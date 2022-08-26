@@ -15,6 +15,7 @@ import com.jjeopjjeop.recipe.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,16 +45,19 @@ public class ProduceController {
     //판매글 작성폼 불러오기
     @MySecured
     @GetMapping({"/produce/write"})
-    public String produceWriteForm() {
+    public String produceWriteForm(Model model) {
+
+        model.addAttribute("produceDTO", new ProduceDTO()); //빈 오브젝트를 뷰에 넘겨준다.
         return "/produce/produceWrite";
     }
+
 
     //판매글 작성 반영
     @MySecured
     @PostMapping({"/produce/write"})
     public String produceWrite(ProduceDTO produceDTO, MultipartFile file) throws Exception{
         produceService.writeProcess(produceDTO, file);
-        return "redirect:/produce/list";
+        return "redirect:/produce/list/0";
     }
     //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +109,7 @@ public class ProduceController {
     public String produceDelete(@PathVariable("produceNum") int produce_num) {
         produceService.produceDeleteProcess(produce_num);
 
-        return "redirect:/produce/list";
+        return "redirect:/produce/list/0";
     }
 
     //판매글 상세보기

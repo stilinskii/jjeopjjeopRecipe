@@ -24,11 +24,11 @@ created_date	DATE		NOT NULL
     private Integer pay_num;
     private String produce_name;
 
-    @NotBlank(message = "필수 입력 값입니다.")
+    @NotNull(message = "별점을 선택해주세요")
     private Float rating;
 
     @NotNull
-    @Size(min = 1, max = 200, message = "내용을 1byte~200byte의범위로 적어주세요")
+    @Size(min = 1, max = 200, message = "내용을 1byte~200byte의 범위로 적어주세요")
     private String content;
 
     private Date created_date;
