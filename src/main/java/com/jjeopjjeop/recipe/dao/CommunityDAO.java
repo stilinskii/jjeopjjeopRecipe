@@ -19,8 +19,8 @@ public interface CommunityDAO {
     int recipeReviewCount();
     int freeForumCount();
     List<CommunityDTO> list(Pagenation pagenation);
-    List<CommunityDTO> recipeReviewList(PagenationDTO pagenationDTO);
-    List<CommunityDTO> freeForumList(PagenationDTO pagenationDTO);
+    List<CommunityDTO> recipeReviewList(Pagenation pagenation);
+    List<CommunityDTO> freeForumList(Pagenation pagenation);
     void insert(CommunityDTO communityDTO);
     CommunityDTO findPostById(int id);
     void storeImage(ImageDTO imageDTO);

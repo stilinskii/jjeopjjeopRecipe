@@ -36,9 +36,7 @@
 <main class="container">
   <div class="bg-white p-5 rounded d-flex flex-column align-items-center">
     <div class="menu" center>
-      <img src="/media/admin/shopping-cart.png">
-      <!--    <h1>판매자 관리</h1>-->
-      <!--    <h3>승인 목록</h3></td>-->
+      <img src="/media/admin/shopping-cart.png" class="oneimg">
     </div>
     <div class="s_group">
       <a href="/admin/s_index" class="btn_s">신청목록</a>
@@ -56,7 +54,7 @@
               <a href="/admin/u_index" class="nav-link category">회원관리</a>
             </li>
             <li class="list-group-item">
-              <a href="/recipe/list" class="nav-link category">레시피관리</a>
+              <a href="/admin/r_index" class="nav-link category">레시피관리</a>
             </li>
             <li class="list-group-item">
               <a href="/admin/s_index" class="nav-link category">판매자관리</a>
@@ -100,20 +98,56 @@
           </table>
 
           <!--페이징-->
-          <nav aria-label="Page navigation example">
+<!--          <nav aria-label="Page navigation example">-->
+<!--            <ul class="pagination justify-content-center">-->
+<!--              <li class="page-item" th:if="${pageMaker.prev} == true">-->
+<!--                <a class="page-link"-->
+<!--                   th:href="@{/admin/ss_index(pageNum=${pageMaker.startPage}-1, cntPerPage=${pageMaker.cri.amount})}" tabindex="-1" aria-disabled="true">-->
+<!--                  Previous</a>-->
+<!--              </li>-->
+
+<!--              <li class="page-item" th:each="idx,iterStat : ${#numbers.sequence(pageMaker.startPage,pageMaker.endPage)}" th:classappend="${pageMaker.cri.pageNum} == ${idx} ? active : null">-->
+<!--                <a class="page-link" th:href="@{/admin/ss_index(pageNum=${idx},amount=${pageMaker.cri.amount})}" th:text="${idx}">1</a></li>-->
+
+<!--              <li class="page-item" th:if="${pageMaker.next} == true and ${pageMaker.endPage > 0}">-->
+<!--                <a class="page-link" th:href="@{/admin/ss_index(pageNum=${pageMaker.endPage}+1,amount=${pageMaker.cri.amount})}">-->
+<!--                  Next</a></li>-->
+<!--            </ul>-->
+<!--          </nav>-->
+
+          <nav class="mt-3" th:if="${page.count>page.perPage}">
             <ul class="pagination justify-content-center">
-              <li class="page-item" th:if="${pageMaker.prev} == true">
-                <a class="page-link"
-                   th:href="@{/admin/ss_index(pageNum=${pageMaker.startPage}-1, cntPerPage=${pageMaker.cri.amount})}" tabindex="-1" aria-disabled="true">
-                  Previous</a>
+              <li
+                      class="page-item"
+                      th:classappend="${page.page == 0} ? 'disabled'"
+              >
+                <a
+                        th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}"
+                        class="page-link"
+                >Previous</a
+                >
               </li>
-
-              <li class="page-item" th:each="idx,iterStat : ${#numbers.sequence(pageMaker.startPage,pageMaker.endPage)}" th:classappend="${pageMaker.cri.pageNum} == ${idx} ? active : null">
-                <a class="page-link" th:href="@{/admin/ss_index(pageNum=${idx},amount=${pageMaker.cri.amount})}" th:text="${idx}">1</a></li>
-
-              <li class="page-item" th:if="${pageMaker.next} == true and ${pageMaker.endPage > 0}">
-                <a class="page-link" th:href="@{/admin/ss_index(pageNum=${pageMaker.endPage}+1,amount=${pageMaker.cri.amount})}">
-                  Next</a></li>
+              <li
+                      class="page-item"
+                      th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
+                      th:classappend="${page.page==number-1} ? 'active'"
+              >
+                <a
+                        th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
+                        class="page-link"
+                        th:text="${number}"
+                ></a>
+              </li>
+              <li
+                      class="page-item"
+                      th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'"
+              >
+                <a
+                        th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}"
+                        class="page-link"
+                >Next</a
+                >
+              </li>
             </ul>
           </nav>
 

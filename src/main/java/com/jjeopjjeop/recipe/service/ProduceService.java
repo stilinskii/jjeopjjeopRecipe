@@ -26,5 +26,7 @@ public interface ProduceService {
 
     //하영
     List<ProduceDTO> findProductsByKeyword(String keyword);
-    List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, RecipePageDTO pageDTO);
+    List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, Pagenation pagenation);
+
+    List<ProduceDTO> getPopularProduceList();
 }

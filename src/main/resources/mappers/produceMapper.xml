@@ -14,47 +14,54 @@
 		VALUES(produce_num_seq.nextval, #{user_id}, #{produce_type}, #{produce_name}, #{price}, #{produce_image}, #{produce_image_path}, #{produce_description})
 	</insert>
 
-	<!--판매글 리스트 필터링: 0은 전체. 이외에는 type따라 -->
-	<select id="produceList" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
-		SELECT rcp_li.*
-		FROM (SELECT rcp.*, rownum rm FROM
-			(SELECT *
-			FROM produce_board
-			<if test="produce_type > 0">
-				WHERE produce_type=#{produce_type}
-			</if>
-			ORDER BY produce_num DESC)rcp)rcp_li
+	<!--	나중에 검색때 쓰면 될듯~~-->
+	<!--	<select id="produceList" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">-->
+	<!--		SELECT * FROM produce_board ORDER BY produce_num-->
+	<!--	</select>-->
+
+
+	<!--	produce_num	NUMBER-->
+	<!--	user_id	VARCHAR2(10)-->
+	<!--	produce_type	NUMBER-->
+	<!--	produce_name	VARCHAR2(30)-->
+	<!--	price	NUMBER-->
+	<!--	produce_image	VARCHAR2(300)-->
+	<!--	produce_image_path	VARCHAR2(300)-->
+	<!--	produce_description	VARCHAR2(200)-->
+
+
+	<!--	<resultMap id="produceResult" type="com.jjeopjjeop.recipe.dto.ProduceDTO">-->
+	<!--		<result property="produce_num" column="produce_num" />-->
+	<!--		<result property="user_id" column="user_id" />-->
+	<!--		<result property="produce_type" column="produce_type" />-->
+	<!--		<result property="produce_name" column="produce_name" />-->
+	<!--		<result property="price" column="price" />-->
+	<!--		<result property="produce_image" column="produce_image" />-->
+	<!--		<result property="produce_image_path" column="produce_image_path" />-->
+	<!--		<result property="produce_description" column="produce_description" />-->
+	<!--	</resultMap>-->
+
+
+	<!--모든 판매글 조회-->
+	<!--<select id="produceList" resultMap="produceResult">-->
+	<!--	<select id="produceList" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">-->
+	<!--		SELECT * FROM produce_board ORDER BY produce_num DESC-->
+	<!--	</select>-->
+
+	<select id="produceList" parameterType="PagenationDTO" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		<![CDATA[
-     	 WHERE rm >= #{startRow} AND rm <= #{endRow}
+        SELECT rcp_li.* FROM
+            (SELECT rcp.*, rownum rm FROM
+                (SELECT * FROM produce_board
+                ORDER BY produce_num DESC)rcp)rcp_li
+        WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
 	</select>
 
-	<!--판매글 리스트 정렬: 0은 최신 순. 1은 판매량 순, 2는 리뷰 순 -->
-	<select id="produceListSort" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
-		SELECT rcp_li.*
-		FROM (SELECT rcp.*, rownum rm FROM
-			(SELECT produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
-			<choose>
-				<when test="sort == 1">
-					FROM produce_board, pay_history
-					WHERE pay = 1
-					AND produce_board.produce_num = pay_history.produce_num
-					GROUP BY produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
-					ORDER BY sum(quantity) DESC
-				</when>
-				<when test="sort == 2">
-					FROM produce_board, pay_history, produce_review
-					WHERE pay=1
-					AND produce_review.pay_num = pay_history.pay_num
-					AND produce_board.produce_num = pay_history.produce_num
-					GROUP BY produce_review.rating, produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
-					ORDER BY avg(produce_review.rating) DESC
-				</when>
-			</choose>
-		)rcp)rcp_li
-		<![CDATA[
-     	 WHERE rm >= #{startRow} AND rm <= #{endRow}
-        ]]>
+	<!--필터링한 판매글 조회-->
+	<!--<select id="produceListType" parameterType="com.jjeopjjeop.recipe.dto.ProduceDTO" resultMap="produceResult"   >-->
+	<select id="produceListType" parameterType="int" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO"   >
+		SELECT * FROM produce_board WHERE produce_type=#{produce_type} ORDER BY produce_num DESC
 	</select>
 
 	<!--판매글 삭제-->
@@ -74,33 +81,14 @@
 		WHERE produce_num=#{produce_num}
 	</update>
 
-	<!--페이지 처리를 위해 판매글(필터링) 개수 세기-->
-	<select id="produceFilterCount" resultType="int" parameterType="int">
+	<!--페이지 처리를 위해 판매글 개수 세기-->
+	<select id="produceCount" resultType="int">
 		SELECT count(*) FROM produce_board
-		<if test="produce_type > 0">
-			WHERE produce_type=#{produce_type}
-		</if>
 	</select>
 
-	<!--페이지 처리를 위해 판매글(정렬) 개수 세기-->
-	<select id="produceSortCount" resultType="int" parameterType="int">
-		SELECT count(distinct produce_board.produce_num)
-		<if test="sort == 1">
-			FROM produce_board, pay_history
-			WHERE produce_board.produce_num = pay_history.produce_num
-			AND pay = 1
-		</if>
-		<if test="sort == 2">
-			FROM produce_board, pay_history, produce_review
-			WHERE pay=1
-			AND produce_review.pay_num = pay_history.pay_num
-			AND produce_board.produce_num = pay_history.produce_num
-		</if>
-	</select>
+	<select id="findProductsByKeyword" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+		SELECT * FROM produce_board WHERE produce_name LIKE '%' || #{keyword, jdbcType=VARCHAR} || '%'
 
-
-	<select id="findProductsByKeyword" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
-		SELECT * FROM produce_board WHERE produce_name LIKE '%' || #{keyword} || '%' ORDER BY produce_num DESC
 	</select>
 
 	<select id="findProductsByKeywordWithPaging" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
@@ -113,5 +101,19 @@
         WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
 	</select>
+
+
+	<select id="getFourProduceNumOrderBySoldCount" resultType="int">
+		SELECT * FROM  (select t1.*, rownum rm FROM
+		(select produce_num from(
+		SELECT count(*), produce_num
+		FROM pay_history
+		WHERE pay = 1
+		GROUP BY produce_num
+		ORDER BY count(*) DESC) )t1)
+		WHERE rm BETWEEN 1 AND 4
+	</select>
+
+
 
 </mapper>

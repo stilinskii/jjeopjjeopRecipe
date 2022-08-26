@@ -8,4 +8,8 @@
         SELECT * FROM communityboard
     </select>
 
+    <select id="findCommunityPostById" parameterType="int" resultType="CommunityDTO">
+        SELECT * FROM CommunityBoard WHERE id=#{id}
+    </select>
+
 </mapper>
