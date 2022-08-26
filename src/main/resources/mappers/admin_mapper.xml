@@ -2,71 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jjeopjjeop.recipe.dao.AdminDAO">
 
-    <!--    <resultMap id="userResult" type="com.jjeopjjeop.recipe.dto.AdminDTO">-->
-    <!--        <result property="user_id" column="user_id" />-->
-    <!--        <result property="password" column="password" />-->
-    <!--        <result property="usertype" column="usertype" />-->
-    <!--        <result property="username" column="username" />-->
-    <!--        <result property="nickname" column="nickname" />-->
-    <!--        <result property="email" column="email" />-->
-    <!--        <result property="phone" column="phone" />-->
-    <!--        <result property="birthday" column="birthday" />-->
-    <!--        <result property="gender" column="gender" />-->
-    <!--        <result property="postno" column="postno" />-->
-    <!--        <result property="address" column="address" />-->
-    <!--    </resultMap>-->
 
-    <!--    불러오는지 확인-->
-    <!--    <select id="count" resultType="int">-->
-    <!--        SELECT count(*) FROM User_j-->
-    <!--    </select>-->
-
-    <!--    회원목록-->
-    <!--    <select id="userList" resultMap="userResult">-->
-    <!--        SELECT * FROM User_j-->
-    <!--    </select>-->
-
-    <!--회원등록-->
-    <!--    <insert id="insertUser" parameterType="AdminDTO">-->
-    <!--        INSERT User_j(user_id, password, usertype, username,-->
-    <!--                      nickname, email, phone, birthday, gender, postno, address)-->
-    <!--        VALUES(#{user_id}, #{password}, #{usertype}, #{username},-->
-    <!--                           #{nickname}, #{email}, #{phone}, #{birthday}, #{gender},-->
-    <!--                           #{postno}, #{address})-->
-    <!--    </insert>-->
-
-    <!--회원 목록 -->
-    <!-- recipeDTO-->
-    <!--    <select id="UserList" parameterType="RecipePageDTO" resultType="UserDTO">-->
-    <!--        <![CDATA[-->
-    <!--        SELECT rcp_li.* FROM-->
-    <!--            (SELECT rcp.*, rownum rm FROM-->
-    <!--                (select *-->
-    <!--			from User_j)rcp)rcp_li-->
-    <!--        WHERE rm >= #{startRow} AND rm <= #{endRow}-->
-    <!--        ]]>-->
-    <!--    </select>-->
-
-    <select id="UserList" parameterType="A_criteria" resultType="UserDTO">
-        <![CDATA[
-			select user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
-			from
-			(
-			   select
-			   rownum R, user_id, password, usertype, username, nickname, email, phone, birthday, gender, postno, address
-			   from User_j where rownum <= #{pageNum} * #{amount}
-		]]>
+    <!-- 회원목록 -->
+    <select id="userList" parameterType="com.jjeopjjeop.recipe.pagenation.Pagenation" resultType="UserDTO">
+            SELECT * FROM (select t1.*,row_number() OVER (order by user_id DESC) AS seqnum
+            FROM User_j t1
         <if test="keyword != null">
-            and user_id like '%'||#{keyword}||'%'
+            where user_id like '%'||#{keyword}||'%'
         </if>
-        <![CDATA[
-		     )
-		where R > (#{pageNum} -1) * #{amount}
-	]]>
-
+        ) t1
+            WHERE seqnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
-    <!-- 회원 수-->
+    <!-- 회원 수 -->
     <select id="countUser" resultType="int">
         select count(*) from User_j
         <if test="keyword != null">
@@ -74,7 +22,11 @@
         </if>
     </select>
 
-    <!-- 회원상세 -->
+<!--    <select id="countUser" resultType="int">-->
+<!--        SELECT count(*) FROM User_j-->
+<!--    </select>-->
+
+    <!-- 회원 상세 -->
     <select id="detailU" resultType="UserDTO">
         select user_id as user_id,
         password as password,
@@ -91,56 +43,44 @@
         where user_id = #{user_id}
     </select>
 
-    <!--    미승인판매자 리스트-->
-    <select id="nSellerList" parameterType="A_criteria" resultType="SellerDTO">
-        <![CDATA[
-        SELECT user_id, business_name, registration_number, seller_phone, seller_address, approval
-        FROM
-        (
-            SELECT
-            ROWNUM R, user_id, business_name, registration_number, seller_phone, seller_address, approval
-            FROM Seller
-            WHERE ROWNUM <= #{pageNum} * #{amount}
-        )
-           WHERE R> (#{pageNum}-1) * #{amount} AND approval = 0
-        ]]>
+    <!-- 미승인판매자 리스트 -->
+    <select id="nSellerList" parameterType="com.jjeopjjeop.recipe.pagenation.Pagenation" resultType="SellerDTO">
+        SELECT * FROM (select t1.*,row_number() OVER (order by user_id desc) AS seqnum
+        FROM Seller t1 WHERE approval = 0) t1
+        WHERE seqnum BETWEEN #{startRow} AND #{endRow}
+
     </select>
 
-    <!--    승인판매자 리스트-->
-    <select id="ySellerList" parameterType="A_criteria" resultType="SellerDTO">
-        <![CDATA[
-        SELECT user_id, business_name, registration_number, seller_phone, seller_address, approval
-        FROM
-        (
-            SELECT
-            ROWNUM R, user_id, business_name, registration_number, seller_phone, seller_address, approval
-            FROM Seller
-            WHERE ROWNUM <= #{pageNum} * #{amount}
-        )
-           WHERE R> (#{pageNum}-1) * #{amount} AND approval = 1
-        ]]>
+    <!-- 승인판매자 리스트 -->
+    <select id="ySellerList" parameterType="com.jjeopjjeop.recipe.pagenation.Pagenation" resultType="SellerDTO">
+        SELECT * FROM (select t2.*,row_number() OVER (order by user_id desc) AS seqnum
+        FROM Seller t2 WHERE approval = 1) t2
+        WHERE seqnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
-    <!-- 레시피 신고순-->
-    <select id="rcpList" parameterType="RecipePageDTO" resultType="RecipeDTO">
+    <!-- 레시피 신고순 -->
+    <select id="rcpList" parameterType="Map" resultType="RecipeDTO">
         SELECT rcp_li.* FROM
         (SELECT rcp.*, rownum rm FROM
         (SELECT * FROM recipe
-        <if test="cate_seq != 0">
+        <if test="cate_seq > 0">
             WHERE rcp_seq IN (
             SELECT rcp_seq FROM cate_rcp
             WHERE cate_seq IN #{cate_seq}
             )
         </if>
-        ORDER BY
-        report desc
+        ORDER BY report desc
         )rcp)rcp_li
         <![CDATA[
-        WHERE rm >= #{startRow} AND rm <= #{endRow}
+        WHERE rm >= #{page.startRow} AND rm <= #{page.endRow}
         ]]>
     </select>
 
-
-
+    <!--커뮤니티 신고순 리스트-->
+    <select id="reportCom" parameterType="com.jjeopjjeop.recipe.pagenation.Pagenation" resultType="CommunityDTO">
+        SELECT * FROM (select t1.*,row_number() OVER (order by report desc) AS seqnum
+        FROM CommunityBoard t1) t1
+        WHERE seqnum BETWEEN #{startRow} AND #{endRow}
+    </select>
 
 </mapper>

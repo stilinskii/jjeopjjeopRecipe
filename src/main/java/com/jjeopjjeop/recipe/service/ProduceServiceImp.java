@@ -5,12 +5,10 @@ import com.jjeopjjeop.recipe.dao.ProduceDAO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,14 +39,16 @@ class ProduceServiceImp implements ProduceService {
         produceDAO.write(produceDTO);
     }
     @Override
-    public List<ProduceDTO> produceListProcess(RecipePageDTO recipePageDTO) {
-        return produceDAO.produceList(recipePageDTO);
+    public List<ProduceDTO> produceList(Map<String, Object> map) {
+        return produceDAO.produceList(map);
     }
 
     @Override
-    public List<ProduceDTO> produceListTypeProcess(int type) {
-        return produceDAO.produceListType(type);
+    public List<ProduceDTO> produceListSort(Map<String, Object> map) {
+
+        return produceDAO.produceListSort(map);
     }
+
 
     @Override
     public void produceDeleteProcess(int produce_num) {
@@ -79,10 +79,16 @@ class ProduceServiceImp implements ProduceService {
         produceDAO.produceUpdate(produceDTO);
     }
 
-    //페이지 처리를 위해 판매글 개수 세기
+    //페이지 처리를 위해 판매글(필터링) 개수 세기
     @Override
-    public int countProcess() {
-        return produceDAO.produceCount();
+    public int produceFilterCount(int produce_type) {
+        return produceDAO.produceFilterCount(produce_type);
+    }
+
+    //페이지처리를 위한 판매글(정렬) 개수세기
+    @Override
+    public int produceSortCount(int sort) {
+        return produceDAO.produceSortCount(sort);
     }
 
     //하영 통합검색에 필요.
@@ -92,15 +98,27 @@ class ProduceServiceImp implements ProduceService {
     }
 
     @Override
-    public List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, RecipePageDTO pageDTO) {
+    public List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, Pagenation pagenation) {
         Map<String, Object> map = new HashMap<>();
         map.put("keyword",keyword);
-        map.put("startRow",pageDTO.getStartRow());
-        map.put("endRow",pageDTO.getEndRow());
-        log.info("map info={},{},{}",keyword,pageDTO.getStartRow(),pageDTO.getEndRow());
+        map.put("startRow",pagenation.getStartRow());
+        map.put("endRow",pagenation.getEndRow());
+        log.info("map info={},{},{}",keyword,pagenation.getStartRow(),pagenation.getEndRow());
 
         return produceDAO.findProductsByKeywordWithPaging(map);
     }
+
+    @Override
+    public List<ProduceDTO> getPopularProduceList() {
+        List<Integer> produceNum = produceDAO.getFourProduceNumOrderBySoldCount();
+        List<ProduceDTO> products = new ArrayList<>();
+
+        for (Integer produceId : produceNum) {
+            products.add(produceDAO.produceView(produceId));
+        }
+        return products;
+    }
+
 
 
 }

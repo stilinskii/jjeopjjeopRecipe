@@ -30,23 +30,30 @@ function dataSend() {
   alert('좋아용완료');
 }
 
-//댓글 수정 구현
+/**
+ * 댓글 수정 구현
+ */
 const editBtns = document.querySelectorAll('.edit-btn');
 const commentBox = document.querySelectorAll('input.comment-content');
+let editBtnsArr = Array.from(editBtns);
 let action = true;
-let editBox;
-let index = 0;
 
-editBtns.forEach((editBtn) => {
-  console.log(commentBox[index]);
-  editBtn.addEventListener('click', function () {
-    console.log('index=' + index);
-    editmode(commentBox[index]);
+activeEditComment();
+
+function activeEditComment() {
+  editBtns.forEach((editBtn) => {
+    console.log(editBtn);
+
+    editBtn.addEventListener('click', function () {
+      let index = editBtnsArr.indexOf(editBtn);
+      console.log('index=' + index);
+      //버튼과 짝인 인풋박스 파라미터로 보내기
+      editmode(commentBox[index]);
+    });
   });
-});
+}
 
 function editmode(editBox) {
-  console.log(editBox);
   if (action) {
     editBox.disabled = false;
   } else {
@@ -57,7 +64,6 @@ function editmode(editBox) {
       console.log('edit success');
       editBox.disabled = true;
     });
-    index++;
   }
   action = !action;
 }

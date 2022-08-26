@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>admin main</title>
-    <th:block th:replace="fragments/head :: link">
+<!--    <th:block th:replace="fragments/head :: link">-->
 
         <!-- bootstrap  -->
         <link
@@ -24,8 +24,8 @@
                 href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
                 rel="stylesheet"
         />
-        <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
-    </th:block>
+<!--        <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />-->
+<!--    </th:block>-->
     <!--  <link-->
     <!--          rel="stylesheet"-->
     <!--          href="/static/css/community.css"-->
@@ -41,36 +41,29 @@
 
 <body class="">
 <div class="container">
+    <h2>환영합니다! 관리자 페이지입니다.</h2>
     <div class="row">
         <div class="card" style="width: 15rem;">
             <img src="\media\admin\user.png" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">회원 관리</h5>
-                <p class="card-text">회원 관리</p>
                 <a href="/admin/u_index" class="btn btn-primary btn-dark">회원 관리</a>
             </div>
         </div>
         <div class="card" style="width: 15rem;">
             <img src="\media\admin\cooking.png" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">레시피 관리</h5>
-                <p class="card-text">레시피 관리</p>
-                <a href="/recipe/list" class="btn btn-primary btn-dark">레시피 관리</a>
+                <a href="/admin/r_index" class="btn btn-primary btn-dark">레시피 관리</a>
             </div>
         </div>
         <div class="card" style="width: 15rem;">
             <img src="\media\admin\shopping-cart.png" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">판매자 관리</h5>
-                <p class="card-text">판매자 관리</p>
                 <a href="/admin/s_index" class="btn btn-primary btn-dark">판매자 관리</a>
             </div>
         </div>
         <div class="card" style="width: 15rem;">
             <img src="\media\admin\board.png" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">게시판 관리</h5>
-                <p class="card-text">게시판 관리</p>
                 <a href="/admin/c_index" class="btn btn-primary btn-dark">게시판 관리</a>
             </div>
         </div>

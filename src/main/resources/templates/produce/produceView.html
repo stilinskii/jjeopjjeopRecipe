@@ -12,18 +12,6 @@
     <!--임의 추가 끝-->
 
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
-
-
-    <style>
-        body {
-          line-height: 1.7;
-          color: #8c92a0;
-          font-weight: 300;
-          font-size: 16px; }
-
-
-    </style>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function() {
@@ -62,7 +50,7 @@
     <div class="bg-light py-3">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 mb-0"><a th:href="@{/produce/list}">농산물직거래</a> <span class="mx-2 mb-0">/</span>
+                <div class="col-md-12 mb-0"><a th:href="@{/produce/list/0}">농산물직거래</a> <span class="mx-2 mb-0">/</span>
                     <strong class="text-black" th:text="${produceDTO.produce_name}">상품명</strong></div>
             </div>
         </div>
