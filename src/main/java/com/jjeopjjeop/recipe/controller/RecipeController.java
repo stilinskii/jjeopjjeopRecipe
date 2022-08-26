@@ -1,5 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
+import com.jjeopjjeop.recipe.config.MySecured;
 import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.RecipeCommentService;
@@ -168,11 +169,12 @@ public class RecipeController {
     }
 
     // 레시피 작성 페이지 요청 메소드
+    @MySecured(role = MySecured.Role.USER)
     @GetMapping("/recipe/write")
     public String rcpWriteMethod(Model model, HttpSession session){
-        if(session.getAttribute("user_id") == null){
-            return "redirect:/login";
-        }
+//        if(session.getAttribute("user_id") == null){
+//            return "redirect:/login";
+//        }
 
         RecipeDTO recipeDTO = new RecipeDTO();
 
