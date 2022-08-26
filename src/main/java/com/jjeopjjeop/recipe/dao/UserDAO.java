@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -15,7 +16,7 @@ public interface UserDAO {
    public List<UserDTO> selectAllUserList() throws DataAccessException;
    public int insertUser(UserDTO userDTO) throws DataAccessException;
    public int deleteUser(String user_id, String password) throws DataAccessException;
-   public String checkId(String user_id) throws DataAccessException;
+   public int checkId(String user_id) throws DataAccessException;
    public UserDTO loginById(UserDTO userDTO) throws DataAccessException;
    public UserDTO findId(UserDTO userDTO) throws DataAccessException;
    public UserDTO findPassword(UserDTO userDTO) throws DataAccessException;
@@ -23,6 +24,10 @@ public interface UserDAO {
    public UserDTO readMypage(String user_id) throws DataAccessException;
    public int updateMypage(UserDTO userDTO) throws DataAccessException;
    public List<UserDTO> showMyCommunity(String user_id) throws DataAccessException;
-   public List<CommunityDTO> viewMyCommunity(String user_id) throws DataAccessException;
-   public List<RecipeDTO> viewMyRecipe(String user_id) throws DataAccessException;
+   public List<CommunityDTO> viewMyCommunity(Map<String, Object> map) throws DataAccessException;
+   public List<RecipeDTO> viewMyRecipe(Map<String, Object> map) throws DataAccessException;
+   public List<CommunityDTO> viewMyReview(Map<String, Object> map) throws DataAccessException;
+   public int countMyCommunity(String user_id) throws DataAccessException;
+   public int countMyRecipe(String user_id) throws DataAccessException;
+   public int countMyReview(String user_id) throws DataAccessException;
 }

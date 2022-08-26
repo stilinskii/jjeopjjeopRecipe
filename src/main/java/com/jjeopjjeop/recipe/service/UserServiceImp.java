@@ -4,6 +4,7 @@ import com.jjeopjjeop.recipe.dao.UserDAO;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.RecipeDTO;
 import com.jjeopjjeop.recipe.dto.UserDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -29,13 +31,33 @@ public class UserServiceImp implements UserService{
    }
 
    @Override
-   public List<CommunityDTO> listMyCommunity(String user_id) {
-      return userDAO.viewMyCommunity(user_id);
+   public List<CommunityDTO> listMyCommunity(String user_id, Pagenation pagenation) {
+      return userDAO.viewMyCommunity(Map.of("user_id", user_id, "page", pagenation));
    }
 
    @Override
-   public List<RecipeDTO> listMyRecipe(String user_id) {
-      return userDAO.viewMyRecipe(user_id);
+   public List<CommunityDTO> listMyReview(String user_id, Pagenation pagenation) {
+      return userDAO.viewMyReview(Map.of("user_id", user_id, "page", pagenation));
+   }
+
+   @Override
+   public List<RecipeDTO> listMyRecipe(String user_id, Pagenation pagenation) {
+      return userDAO.viewMyRecipe(Map.of("user_id", user_id, "page", pagenation));
+   }
+
+   @Override
+   public int countMyCommunity(String user_id) {
+      return userDAO.countMyCommunity(user_id);
+   }
+
+   @Override
+   public int countMyReview(String user_id) {
+      return userDAO.countMyReview(user_id);
+   }
+
+   @Override
+   public int countMyRecipe(String user_id) {
+      return userDAO.countMyRecipe(user_id);
    }
 
    @Override
@@ -119,7 +141,7 @@ public class UserServiceImp implements UserService{
    }
 
    @Override
-   public String checkId(String user_id) {
+   public int checkId(String user_id) {
       return userDAO.checkId(user_id);
    }
 

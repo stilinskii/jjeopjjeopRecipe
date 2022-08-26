@@ -6,6 +6,7 @@ import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.RecipeDTO;
 import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import com.jjeopjjeop.recipe.dto.UserDTO;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.UserServiceImp;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -72,11 +74,12 @@ public class UserController {
    //아이디 중복 확인
    @ResponseBody
    @GetMapping("/signup/idCheck")
-   public String userIdExist(String user_id, Model model){
-      user_id = userServiceImp.checkId(user_id);
+   public int userIdExist(String user_id, Model model){
+      int result = userServiceImp.checkId(user_id);
       log.info("idCheck result: " + user_id);
+      log.info("checkId result: " + result);
       model.addAttribute("user_id", user_id);
-      return user_id;
+      return result;
    }
 
    //로그인 페이지
@@ -214,6 +217,7 @@ public class UserController {
       user_id = (String) session.getAttribute("user_id");
       UserDTO userDTO = userServiceImp.readMypage(user_id);
 //      System.out.println(userDTO.getPassword());
+      log.info("userDTO={}", userDTO);
       model.addAttribute("user", userDTO);
       return "users/mypageEdit";
    }
@@ -271,28 +275,65 @@ public class UserController {
    //내 게시글 보기
    @MySecured
    @GetMapping("/mypage/board")
-   public String showMyCommunity(String user_id, HttpSession session, Model model){
+   public String showMyCommunity(@RequestParam(value = "user_id", required = false, defaultValue = "") String user_id,
+                                 @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                 HttpSession session, Model model){
       logger.info("Get myBoard");
       user_id = (String) session.getAttribute("user_id");
 //      System.out.println("user_id: " + user_id);
-      List<CommunityDTO> communityDTOList = userServiceImp.listMyCommunity(user_id);
+      Pagenation pagenation = new Pagenation(page, 5, userServiceImp.countMyCommunity(user_id));
+      List<CommunityDTO> communityDTOList = userServiceImp.listMyCommunity(user_id, pagenation);
 //      log.info("communityDTOList={}",communityDTOList.get(0).getUser_id());
-//      System.out.println(communityDTOList);
+
+      model.addAttribute("user_id", user_id);
       model.addAttribute("myCommunityList", communityDTOList);
+      model.addAttribute("page", pagenation);
+//      System.out.println("page= "+page);
+//      System.out.println("startRow: "+pagenation.getStartRow()+" / endRow: "+pagenation.getEndRow());
+//      System.out.println("myCommunityList: " + communityDTOList);
+//      System.out.println("page: " + pagenation);
       return "users/myCommunity";
+   }
+
+   //내 레시피 후기 보기
+   @MySecured
+   @GetMapping("/mypage/review")
+   public String showMyReview(@RequestParam(value = "user_id", required = false, defaultValue = "") String user_id,
+                                 @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                 HttpSession session, Model model){
+      logger.info("Get myReview");
+      user_id = (String) session.getAttribute("user_id");
+
+      Pagenation pagenation = new Pagenation(page, 5, userServiceImp.countMyReview(user_id));
+      List<CommunityDTO> communityDTOList = userServiceImp.listMyReview(user_id, pagenation);
+
+      model.addAttribute("user_id", user_id);
+      model.addAttribute("myReviewList", communityDTOList);
+      model.addAttribute("page", pagenation);
+
+      return "users/myReview";
    }
 
    //내 레시피 보기
    @MySecured
    @GetMapping("/mypage/recipe")
-   public String showMyRecipe(RecipePageDTO recipePageDTO, HttpSession session, Model model){
+   public String showMyRecipe(String user_id, RecipePageDTO recipePageDTO, @RequestParam(value="page", required = false, defaultValue = "0") int page,
+                              HttpSession session, Model model){
       logger.info("Get myRecipe");
-      String user_id = (String) session.getAttribute("user_id");
-      List<RecipeDTO> recipeDTOList = userServiceImp.listMyRecipe(user_id);
+
+      user_id = (String) session.getAttribute("user_id");
+      Pagenation pagenation = new Pagenation(page, 5, userServiceImp.countMyRecipe(user_id));
+
+      List<RecipeDTO> recipeDTOList = userServiceImp.listMyRecipe(user_id, pagenation);
+
       model.addAttribute("myRecipeList", recipeDTOList);
-      model.addAttribute("recipePageDTO", recipePageDTO);
-      System.out.println(recipeDTOList);
-      System.out.println(recipePageDTO);
+//      model.addAttribute("recipePageDTO", recipePageDTO);
+      model.addAttribute("page", pagenation);
+//      System.out.println("page= "+page);
+//      System.out.println("startRow: "+pagenation.getStartRow()+" / endRow: "+pagenation.getEndRow());
+//      System.out.println("myRecipeList: " + recipeDTOList);
+//      System.out.println("page: " + pagenation);
+
       return "users/myRecipe";
    }
 

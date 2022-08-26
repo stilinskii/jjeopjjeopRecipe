@@ -19,8 +19,8 @@
 
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>
 <div class="wrapper d-flex align-items-stretch">
-    <div class="col" th:replace="fragments/userSidebar :: userSidebar"></div>
-    <div id="content" class="pt-5">
+    <div class="sidenav" th:replace="fragments/userSidebar :: userSidebar"></div>
+    <div id="content" class="main pt-5">
         <div class="container py-5 h-100">
             <h4 class="row d-flex justify-content-center align-items-center mb-3">구매내역</h4>
             <table class="table table-hover">

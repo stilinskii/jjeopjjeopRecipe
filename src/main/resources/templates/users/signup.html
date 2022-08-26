@@ -3,14 +3,14 @@
 <!--카카오 오픈API-->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script th:inline="javascript">
-function kakaopost() {
-    new daum.Postcode({
-        oncomplete: function(data) {
-           document.querySelector("#postno").value = data.zonecode;
-           document.querySelector("#address").value = data.address
-        }
-    }).open();
-}
+    function kakaopost() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+               document.querySelector("#postno").value = data.zonecode;
+               document.querySelector("#address").value = data.address
+            }
+        }).open();
+    }
 </script>
 <head th:replace="fragments/head('회원가입')">
     <meta charset="UTF-8">
@@ -54,7 +54,9 @@ function kakaopost() {
 </head>
 
 <body>
-    <script type="text/javascript" th:inline="javascript">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/user.js"></script>
+    <script th:inline="javascript" >
         /*<![CDATA[*/
             var message = [[${message}]];
             if(message) {
@@ -62,32 +64,25 @@ function kakaopost() {
             }
         /*]]>*/
 
-        function check_password(password){
-            var password = document.getElementById('password').value;
-            var password2 = document.getElementById('password2').value;
-            if(password != '' && password2 != ''){
-                if(password == password2){
-                    document.getElementById('check').innerHTML='비밀번호가 일치합니다.';
-                    document.getElementById('check').style.color='gray';
-                } else {
-                    document.getElementById('check').innerHTML='비밀번호가 일치하지 않습니다.';
-                    document.getElementById('check').style.color='red';
-                }
-            }
-        }
 
         function checkUserIdExist(user_id){
             var user_id = $('#user_id').val();
             if(user_id.length == 0){
                 alert('아이디를 입력해주세요');
+            } else{
+                requestAjax(user_id);
             }
+        }
+
+        function requestAjax(user_id){
+            var user_id = $('#user_id').val();
             $.ajax({
                 url: '/signup/idCheck',
                 type: 'get',
                 dataType: 'text',
                 data: {user_id : user_id},
                 success: function(data){
-                            if(data != null){
+                            if(data == 1){
                                 alert('사용할 수 없는 아이디입니다');
                                 $('#user_id').val('');
                             } else {
@@ -96,6 +91,7 @@ function kakaopost() {
                         }
             })
         }
+
     </script>
 <nav th:replace="fragments/nav :: front-nav('회원가입')"></nav>
 <div class="container d-flex align-items-center">
@@ -116,8 +112,8 @@ function kakaopost() {
                                 maxlength="30"
                         />
                         <input type="button" class="btn btn-outline-warning" value="중복확인" onclick="checkUserIdExist()" />
+                        <div class="invalid-feedback" th:errors="*{user_id}">아이디 오류</div>
                     </div>
-                    <div class="invalid-feedback" th:errors="*{user_id}">아이디 오류</div>
                 </div>
                 <div class="mb-3 py-1 px-5">
                     <label for="password" class="form-label">비밀번호</label>
@@ -138,7 +134,6 @@ function kakaopost() {
                             class="form-control"
                             id="password2"
                             placeholder="비밀번호를 다시 한번 입력하세요"
-                            required
                             th:onkeyup="check_password([[${user.password}]])"
                     />
                         <div id="check"></div>
@@ -218,33 +213,16 @@ function kakaopost() {
                 <div class="mb-3 py-1 px-5">
                     <label for="postno" class="form-label">우편번호</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="postno" size="7" readonly />
+                        <input type="text" class="form-control" id="postno" th:field="*{postno}" size="7" readonly />
                         <input type="button" class="btn btn-outline-warning" value="우편번호찾기" onclick="kakaopost()" />
                     </div>
                     <div class="invalid-feedback" th:errors="*{postno}">우편번호 오류</div>
                 </div>
                 <div class="mb-3 py-1 px-5">
                     <label for="address" class="form-label">주소</label>
-                    <input type="text" class="form-control" id="address" size="70" />
+                    <input type="text" class="form-control" id="address" th:field="*{address}" size="70" />
                     <div class="invalid-feedback" th:errors="*{address}">주소 오류</div>
                 </div>
-                <!-- 판매자인 경우 아래 추가 기입 -->
-                <!--        <div class="mb-3">-->
-                <!--            <label for="business_name">상호명</label>-->
-                <!--            <input type="text" id="business_name" name="business_name" />-->
-                <!--        </div>-->
-                <!--        <div class="mb-3">-->
-                <!--            <label for="registration_number">사업자 등록번호</label>-->
-                <!--            <input type="text" id="registration_number" name="registration_number" />-->
-                <!--        </div>-->
-                <!--        <div class="mb-3">-->
-                <!--            <label for="seller_phone">사업장 전화번호</label>-->
-                <!--            <input type="text" id="seller_phone" name="seller_phone" />-->
-                <!--        </div>-->
-                <!--        <div class="mb-3">-->
-                <!--            <label for="seller_address">사업장 주소</label>-->
-                <!--            <input type="text" id="seller_address" name="seller_address" />-->
-                <!--        </div>-->
                 <div class="d-flex justify-content-center pt-5">
                     <input
                             type="submit"
