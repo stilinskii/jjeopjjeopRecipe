@@ -123,8 +123,8 @@
             </p>
             <p th:text="'분류 | '" style="display: inline;">
                 <p th:each="cates, i: ${cate_list}" style="display: inline;">
-                    <span th:if="${i.index} == 0" th:text="${cates}"></span>
-                    <span th:if="${i.index} != 0" th:text="', ' + ${cates}"></span>
+                    <span th:if="${i.index} != 0">, </span>
+                <a class="viewBtn" th:href="@{/recipe/list(cate_seq=${cates.cate_seq})}" th:text="${cates.cate_name}"></a>
                 </p>
             </p>
             <p th:text="'소개 | '+${rcp.summary}"></p>

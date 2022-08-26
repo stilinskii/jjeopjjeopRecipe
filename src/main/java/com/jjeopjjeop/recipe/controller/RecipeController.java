@@ -111,9 +111,10 @@ public class RecipeController {
 
         for(int i=0; i<list.size(); i++){
             cate_list.add(list.get(i).getCate_name());
+            System.out.println(list.get(i).getCate_name());
         }
 
-        mav.addObject("cate_list", cate_list);
+        mav.addObject("cate_list", service.getRcpCateProcess(rcp_seq));
 
         // 스크랩 체크
         UserScrapDTO userScrapDTO = new UserScrapDTO();
