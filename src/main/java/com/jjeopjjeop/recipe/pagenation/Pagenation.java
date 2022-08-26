@@ -4,6 +4,8 @@ import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +22,9 @@ public class Pagenation {
 
     private Integer startPageNum;//프론트에 보여질 페이지네이션 시작 번호
     private Integer endPageNum;//끝번호
+
+    //heeyeon
+    private String keyword;
 
     // ↓레시피용으로 추가↓
     private Integer blockPageCnt;//한 블록에 보여줄 페이지수
@@ -42,6 +47,7 @@ public class Pagenation {
         this.endRow = perPage*(page +1);
         this.startPageNum = startPageNum;
         this.endPageNum = endPageNum;
+
     }
 
     // ↓레시피, 레시피 댓글용↓
@@ -67,6 +73,4 @@ public class Pagenation {
         // 끝 페이지
         endPageNum = Math.min(startPageNum + blockPageCnt - 1, totalPageCnt);
     }
-
-
 }
