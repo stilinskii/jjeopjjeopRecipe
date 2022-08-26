@@ -2,13 +2,11 @@ package com.jjeopjjeop.recipe.dao;
 
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.ImageDTO;
-import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.form.CommunitySearchForm;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +17,8 @@ public interface CommunityDAO {
     int recipeReviewCount();
     int freeForumCount();
     List<CommunityDTO> list(Pagenation pagenation);
-    List<CommunityDTO> recipeReviewList(PagenationDTO pagenationDTO);
-    List<CommunityDTO> freeForumList(PagenationDTO pagenationDTO);
+    List<CommunityDTO> recipeReviewList(Pagenation pagenation);
+    List<CommunityDTO> freeForumList(Pagenation pagenation);
     void insert(CommunityDTO communityDTO);
     CommunityDTO findPostById(int id);
     void storeImage(ImageDTO imageDTO);

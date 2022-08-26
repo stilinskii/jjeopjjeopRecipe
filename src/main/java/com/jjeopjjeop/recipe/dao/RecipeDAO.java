@@ -2,18 +2,20 @@ package com.jjeopjjeop.recipe.dao;
 
 import com.jjeopjjeop.recipe.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
 public interface RecipeDAO {
     public int count(int cate_seq);
     //public int count();
-    public List<RecipeDTO> list(RecipePageDTO recipePageDTO);
-    public int searchCount(RecipePageDTO recipePageDTO);
-    public List<RecipeDTO> searchList(RecipePageDTO recipePageDTO);
+    public List<RecipeDTO> list(Map<String, Object> map);
+    public int searchCount(Map<String, Object> map);
+    public List<RecipeDTO> searchList(Map<String, Object> map);
     public List<RecipeDTO> favoriteList();
     public List<CategoryDTO> cateList();
     public RecipeDTO content(int num);
@@ -40,10 +42,15 @@ public interface RecipeDAO {
     public void writeCate(int cate_seq);
 
     public RecipeDTO updateNum(int num);
+
+    // update 처리
     public void update(RecipeDTO recipeDTO);
+    public void updateManual(ManualDTO manualDTO);
+    public void updateCate(@Param("cate_seq") int cate_seq, @Param("rcp_seq") int rcp_seq);
+    public List<Integer> callUpdateCate(int rcp_seq);
     public void delete(int num);
     public void deleteManual(int num);
-    public void deleteCate(int num);
+    public void deleteCate(int rcp_seq);
     public String getFile(int rcp_seq); // 레시피 대표 첨부파일
     public List<String> getFileM(int rcp_seq); // 요리과정 첨부파일
 

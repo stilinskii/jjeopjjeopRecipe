@@ -1,6 +1,9 @@
 package com.jjeopjjeop.recipe.controller;
 
+import com.jjeopjjeop.recipe.config.MySecured;
+import com.jjeopjjeop.recipe.dao.PayDAO;
 import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.KakaoPay;
 import com.jjeopjjeop.recipe.service.PayService;
 
@@ -15,7 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -30,119 +35,55 @@ public class PayController {
     @Autowired
     private ProduceDTO produceDTO2;
 
-
-
     //판매글 상세페이지에서 버튼 클릭하여 장바구니에 넣기
+    @MySecured //로그인안한상태로 클릭시 로그인 페이지로 넘어가게
     @PostMapping("/cart/write")
     public String cartWrite(PayDTO payDTO){
         payService.cartWriteProcess(payDTO);
         return "redirect:/produce/view/" + payDTO.getProduce_num();
     }
 
-   private int currentPage;
-//
-//    @GetMapping("/mypage/cart/view")
-//    public ModelAndView cartView(ModelAndView mav, RecipePageDTO recipePageDTO, HttpServletRequest request){
-//        // 전체 레코드 수
-//        int totalRecord = payService.cartCount(request);
-//
-//        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
-//            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
-//            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
-//            //recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
-//            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);
-//        }
-//
-//        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
-//        List<ProduceDTO> list = payService.cartView(recipePageDTO);
-//        mav.addObject("list", list);
-//        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
-//        mav.setViewName("/users/cart");
-//
-//        return mav;
-//    }
 
-//
-//    @GetMapping
-//    public String all(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model){
-//        PagenationDTO pagenationDTO = getPagenationDTO(page, communityService.count());
-//        List<CommunityDTO> board = communityService.getBoard(pagenationDTO);
-//
-//        model.addAttribute("board",board);
-//        model.addAttribute("page",pagenationDTO);
-//        //model.addAttribute("localDateTime", LocalDateTime.now());
-//        return "community/index";
-//    }
-
+    @MySecured
     @GetMapping("/mypage/cart/view")
-    public ModelAndView cartView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,ModelAndView mav, RecipePageDTO recipePageDTO, HttpServletRequest request){
-        // 전체 레코드 수
-        int totalRecord = payService.cartCount(request);
-        PagenationDTO pagenationDTO = getPagenationDTO(page,totalRecord,5);
+    public ModelAndView cartView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String user_id = (String) session.getAttribute("user_id");
 
-        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
-        List<ProduceDTO> list = payService.cartView(pagenationDTO);
-        mav.addObject("list", list);
-        mav.addObject("page", pagenationDTO); //페이지 정보 넘겨주기
+        int totalRecord = payService.cartCount(user_id);
+        Pagenation pagenation = new Pagenation(page,5, totalRecord); //페이지 처리를 위한 계산
+
+        //mapper에 보낼 값들.
+        Map<String, Object> map = new HashMap<>();
+        map.put("startRow", pagenation.getStartRow());
+        map.put("endRow", pagenation.getEndRow());
+        map.put("user_id", user_id);
+
+        mav.addObject("list", payService.cartView(map));
+        mav.addObject("page", pagenation); //페이지 정보 넘겨주기
         mav.setViewName("/users/cart");
 
         return mav;
     }
 
-    private PagenationDTO getPagenationDTO(Integer page, int recordCount, int perPage) {
-        PagenationDTO pagenationDTO = new PagenationDTO();
-        int startRow = (page != null) ? page : 0; // page가 입력되지 않았으면 자동으로 1페이지로(0이 1)
-        int count = recordCount;// 전체 글 개수
-        //int perPage = 10;//한페이지당 보여질 글 개수
-        int totalPageCnt = (int) Math.ceil((double) count/(double) perPage); // 전체글 / 페이지에 보여질 개수 = 페이지 수
-
-        log.info("****************************startRow={}",startRow);
-        log.info("****************************count={}",count); //얘가 11이 나옴. 총 row 개수
-        log.info("****************************perPage={}",perPage); //얘는 5. 위에서 설정했지.
-        log.info("****************************totalPageCnt={}",totalPageCnt);  //얘가 3이나옴. 11개를 5개씩이니까 맞음.
-
-//5개만보이게, 6페이지면 23456
-        int startPageNum = (page >=totalPageCnt-3)&&(totalPageCnt>= 4) ? totalPageCnt-4:Math.max(1, page -1); //현재페이지가 총
-        //현재페이지가 총페이지 수-3이하면
-        //총페이지 -4를 시작 페이지Num으로 잡아라.
-        //그런데 문제는 총페이지가 4이하면 시작페이지가 0으로된다.
-        //그래서 &&(totalPageCnt>= 4) 이거넣었더니 됐다!
-        int endPageNum = page >=totalPageCnt-3 ? totalPageCnt: Math.min(startPageNum + 4, totalPageCnt);
-
-        log.info("********start and end={},{}*********",startPageNum,endPageNum);
-        pagenationDTO.setPage(startRow);
-        pagenationDTO.setCount(count);
-        pagenationDTO.setTotalPageCnt(totalPageCnt);
-        pagenationDTO.setPerPage(perPage);
-        //db에 넘길 row num
-        pagenationDTO.setStartRow(1 + (perPage * page));
-        pagenationDTO.setEndRow(perPage*(page +1));
-        //front에 넘길 페이지 번호
-        pagenationDTO.setStartPageNum(startPageNum);
-        pagenationDTO.setEndPageNum(endPageNum);
-
-        log.info("start and end={},{}",startPageNum,endPageNum);
-
-        return pagenationDTO;
-    }
-/////////////////////////////////////////////////////////////////////////////
-
     //구매내역 보기
+    @MySecured
     @GetMapping("/mypage/pay/view")
-    public ModelAndView payView(ModelAndView mav, RecipePageDTO recipePageDTO, HttpServletRequest request){
-        // 전체 레코드 수
-        int totalRecord = payService.payCount(request);
+    public ModelAndView payView(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String user_id = (String) session.getAttribute("user_id");
+        int totalRecord = payService.payCount(user_id);// 전체 레코드 수
 
-        if(totalRecord>0){//전체 레코드 수가 0개보다 많으면
-            //현재페이지와 1중에 큰 것을 currentPage에 넣음.게시판에 들어오고 아무것도 안누르면 currentPage 0이니까
-            currentPage = Math.max(recipePageDTO.getCurrentPage(), 1);
-            recipePageDTO = new RecipePageDTO(currentPage, totalRecord);  //이제 startrow, endrow 계산됨.
-        }
+        Pagenation pagenation = new Pagenation(page,5, totalRecord); //페이지 처리를 위한 계산
 
-        mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
-        List<ProduceDTO> list = payService.payView(recipePageDTO);
-        mav.addObject("list", list);
-        mav.addObject("pDto", recipePageDTO); //페이지 정보 넘겨주기
+        //mapper에 보낼 값들.
+        Map<String, Object> map = new HashMap<>();
+        map.put("startRow", pagenation.getStartRow());
+        map.put("endRow", pagenation.getEndRow());
+        map.put("user_id", user_id);
+
+        mav.addObject("list", payService.payView(map));
+        mav.addObject("page", pagenation); //페이지 정보 넘겨주기
         mav.setViewName("/users/payment");
 
         return mav;
@@ -150,6 +91,7 @@ public class PayController {
 
 
     //본인 마이페이지 들어가서 장바구니 항목 삭제
+    @MySecured
     @GetMapping("/mypage/cart/delete/{pay_num}")
     public String cartDelete(@PathVariable("pay_num") int pay_num){
         payService.cartDelete(pay_num);
@@ -157,10 +99,12 @@ public class PayController {
     }
 ////카카오페이시작///////////////////////////////////////////////////////////////////////////////////////
     //카카오페이 결제
-    @Setter(onMethod_ = @Autowired)
+  //  @Setter(onMethod_ = @Autowired) 갑자기 빨간줄생김??? 그래서 지우고 아래처럼했는데 되네? 이유를 모르겠음.
+    @Autowired
     private KakaoPay kakaopay;
 
     //판매글 상세페이지에서 버튼 클릭하여 장바구니에 넣고 바로 결제하기
+    @MySecured
     @PostMapping("/kakaoPayDirect")
     public String kakaoPayDirect(PayDTO payDTO, HttpServletRequest request){
         //장바구니에 넣음.
@@ -187,6 +131,7 @@ public class PayController {
 
 
     //결제요청
+    @MySecured
     @PostMapping("/kakaoPay/{pay_num}")
     public String kakaoPay(@PathVariable("pay_num") int pay_num) {
         ProduceDTO produceDTO = payService.payInfo(pay_num);
@@ -203,6 +148,7 @@ public class PayController {
 
     //결제완료
     //kakaoPaySuccess()이거 어떻게 호출???
+    @MySecured
     @GetMapping("/kakaoPaySuccess")
     public void kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) {
         model.addAttribute("info", kakaopay.kakaoPayInfo(pg_token, produceDTO2)); //java.lang.NullPointerException
@@ -218,10 +164,11 @@ public class PayController {
 ////카카오페이 끝///////////////////////////////////////////////////////////////////////////////////////
     
    //결제성공후 pay를 1로 바꿔주기.
+   @MySecured
     @PostMapping("/mypage/cart/update/{pay_num}")
     public String cartUpdate(@PathVariable("pay_num") int pay_num){
         payService.cartUpdate(pay_num);
-        return "redirect:/produce/list";
+        return "redirect:/produce/list/0";
     }
 
 

@@ -5,7 +5,6 @@ import com.jjeopjjeop.recipe.dao.CommunityDAO;
 import com.jjeopjjeop.recipe.dto.CommunityCommentDTO;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.ImageDTO;
-import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.file.FileStore;
 import com.jjeopjjeop.recipe.form.CommunitySearchForm;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
@@ -31,22 +30,23 @@ public class CommunityService {
     public List<CommunityDTO> getBoard(Pagenation pagenation){
         return communityDAO.list(pagenation);
     }
-    public List<CommunityDTO> getRecipeReviews(PagenationDTO pagenationDTO){
-        return communityDAO.recipeReviewList(pagenationDTO);
+    public List<CommunityDTO> getRecipeReviews(Pagenation pagenation){
+        return communityDAO.recipeReviewList(pagenation);
     }
 
-    public List<CommunityDTO> getFreeForums(PagenationDTO pagenationDTO){
-        return communityDAO.freeForumList(pagenationDTO);
+    public List<CommunityDTO> getFreeForums(Pagenation pagenation){
+        return communityDAO.freeForumList(pagenation);
     }
 
     public void save(CommunityDTO dto, List<MultipartFile> image){
         communityDAO.insert(dto);
         if(image!=null){
-            saveImagesToDB(image,dto.getId());
+            saveImagesToDBAndLocal(image,dto.getId());
         }
     }
 
-    public void saveImagesToDB(List<MultipartFile> multipartFiles,Integer boardId){
+
+    public void saveImagesToDBAndLocal(List<MultipartFile> multipartFiles, Integer boardId){
         List<ImageDTO> community = fileStore.storeImages(multipartFiles, COMMUNITY);
         for (ImageDTO imageDTO : community) {
             saveImageToDB(imageDTO,boardId);
@@ -132,6 +132,10 @@ public class CommunityService {
         communityCommentDAO.deleteCommentById(commentId);
     }
 
+    public CommunityCommentDTO findCommentByUserId(String user_id){
+       return communityCommentDAO.findCommentByUserId(user_id);
+    }
+
     public void reportComment(Integer commentId){
         communityCommentDAO.reportCommentById(commentId);
     }
@@ -143,8 +147,8 @@ public class CommunityService {
     public void editPost(CommunityDTO community, List<MultipartFile> image) {
         communityDAO.updatePost(community);
         //이미지 있으면 새로 저장.
-        if(image!=null){
-            saveImagesToDB(image,community.getId());
+        if(!image.isEmpty()){
+            saveImagesToDBAndLocal(image,community.getId());
         }
     }
 
@@ -155,8 +159,8 @@ public class CommunityService {
         communityDAO.deleteImageByPostId(postId);
     }
 
-    public List<CommunityDTO> findCommunityBySearch(CommunitySearchForm searchForm, PagenationDTO pagenationDTO) {
-        return communityDAO.findCommunityBySearch(Map.of("form",searchForm,"page",pagenationDTO));
+    public List<CommunityDTO> findCommunityBySearch(CommunitySearchForm searchForm, Pagenation pagenation) {
+        return communityDAO.findCommunityBySearch(Map.of("form",searchForm,"page",pagenation));
     }
 
     public Integer countCommunityBySearch(CommunitySearchForm searchForm){

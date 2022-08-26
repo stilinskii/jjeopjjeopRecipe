@@ -37,50 +37,64 @@
                     <input type="hidden" th:value="${produceDTO.produce_num}">
                     <tr>
                         <th:block th:each="payDTO : ${produceDTO.payDTOList}">
-                            <th:block th:if="${session.user_id == payDTO.user_id}"><!--로그인한 회원의 아이디와 pay_history의 회원아이디와 일치하는것만 보이도록.-->
-                                <td th:text="${produceDTOStat.count}">일련번호</td>
-                                <td><a th:href="@{/produce/view/{produceNum}(produceNum=${produceDTO.produce_num})}" th:text="${produceDTO.produce_name}"></a></td>
-                                <td th:text="${payDTO.quantity}">수량</td>
-                                <td data-th-text="${#numbers.formatInteger(payDTO.total_price, 3, 'COMMA') + '원'}">총가격</td>
-                                <td>
-                                    <th:block th:if="${payDTO.review_check == 0}"> <!-- 리뷰 안남겼으면 얘 보이게-->
-                                        <form method="get" th:action="@{/review/write/{pay_num}(pay_num=${payDTO.pay_num})}">
-                                            <button type="submit" class="btn btn-md btn-warning">리뷰 남기기</button>
-                                        </form>
-                                    </th:block>
-                                    <th:block th:unless="${payDTO.review_check == 0}"> <!--만약 리뷰 남겼으면 얘보이게-->
-                                        <a th:href="@{/review/view/{pay_num}(pay_num=${payDTO.pay_num})}">리뷰 수정</a>&nbsp&nbsp&nbsp
-                                        <a class="confirmDeletion" th:href="@{/review/delete/{payNum}(payNum=${payDTO.pay_num})}">리뷰 삭제</a>
-                                    </th:block>
-                                </td>
-                            </th:block>
+                            <td th:text="${page.perPage * page.page + produceDTOStat.count}">일련번호</td>
+                            <!--페이지당 보이는 게시글 수 * 현재페이지번호 + 한페이지당 일련번호로 계산해서 페이지 넘어가도 일련번호 이어지게 만듧.-->
+                            <td><a th:href="@{/produce/view/{produceNum}(produceNum=${produceDTO.produce_num})}" th:text="${produceDTO.produce_name}"></a></td>
+                            <td th:text="${payDTO.quantity}">수량</td>
+                            <td data-th-text="${#numbers.formatInteger(payDTO.total_price, 3, 'COMMA') + '원'}">총가격</td>
+                            <td>
+                                <th:block th:if="${payDTO.review_check == 0}"> <!-- 리뷰 안남겼으면 얘 보이게-->
+                                    <form method="get" th:action="@{/review/write/{pay_num}(pay_num=${payDTO.pay_num})}">
+                                        <button type="submit" class="btn btn-md btn-warning">리뷰 남기기</button>
+                                    </form>
+                                </th:block>
+                                <th:block th:unless="${payDTO.review_check == 0}"> <!--만약 리뷰 남겼으면 얘보이게-->
+                                    <a th:href="@{/review/view/{pay_num}(pay_num=${payDTO.pay_num})}">리뷰 수정</a>&nbsp&nbsp&nbsp
+                                    <a class="confirmDeletion" th:href="@{/review/delete/{payNum}(payNum=${payDTO.pay_num})}">리뷰 삭제</a>
+                                </th:block>
+                            </td>
                         </th:block>
                     </tr>
                 </div>
                 </tbody>
             </table>
 <!-- ======================================pagination시작====================================== -->
-            <!--fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
-            <div class="row fixed-bottom" data-aos="fade-up">
-                <div class="col-md-12 text-center">
-                    <!-- 이거 없으면 페이지네이션 왼쪽하단으로 이동됨-->
-                    <div class="site-block-27">
-                        <!--이거없으면 스타일 적용안됨.-->
-                        <ul>
-                            <li><a href="#">&lt;</a></li>
-                            <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
-                                <li class="page-item active">
-                                    <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/mypage/pay/view}" th:text="${pDtos}"></a>
-                                </li>
-                                <li class="page-item">
-                                    <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/mypage/pay/view(currentPage=${pDtos})}" th:text="${pDtos}"></a>
-                                </li>
-                            </th:block>
-                            <li><a href="#">&gt;</a></li>
-                        </ul>
-                    </div>
-                </div>
-<!-- ======================================pagination 끝====================================== -->             
+            <nav class="mt-3" th:if="${page.count>page.perPage}">
+                <ul class="pagination">
+                    <li
+                            class="page-item"
+                            th:classappend="${page.page == 0} ? 'disabled'"
+                    >
+                        <a
+                                th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}"
+                                class="page-link"
+                        >Previous</a
+                        >
+                    </li>
+                    <li
+                            class="page-item"
+                            th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
+                            th:classappend="${page.page==number-1} ? 'active'"
+                    >
+                        <a
+                                th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
+                                class="page-link"
+                                th:text="${number}"
+                        ></a>
+                    </li>
+                    <li
+                            class="page-item"
+                            th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'"
+                    >
+                        <a
+                                th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}"
+                                class="page-link"
+                        >Next</a
+                        >
+                    </li>
+                </ul>
+            </nav>
+<!-- ======================================pagination 끝====================================== -->
         </div>
     </div>
 </div>

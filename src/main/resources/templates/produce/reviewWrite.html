@@ -8,11 +8,9 @@
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
 </head>
 <body>
-    <!-- 0819 sub_page 지워봄. 잘될까? -->
-
-<!-- book section -->
-<section class="book_section layout_padding mt-5">
-    <div class="container" >
+<nav th:replace="fragments/nav :: front-nav(title)"></nav>
+<section class="form_section layout_padding mt-5">
+    <div class="container">
         <div class="heading_container d-block text-center">
             <h2>리뷰 등록</h2>
         </div>
@@ -20,14 +18,16 @@
         <div class="row d-flex justify-content-center">
             <div class="col-md-6">
                 <div class="form_container">
-                    <form name="write" id="write" method="post" enctype="multipart/form-data" th:action="@{/review/write}">
+                    <form name="write" id="write" method="post" enctype="multipart/form-data" th:action="@{/review/write}"
+                          th:object="${reviewDTO}">
                         <div>
-                            <input type="text" class="form-control" placeholder="아이디" th:value="${session.user_id}"/>
+                            <input type="hidden" class="form-control" placeholder="아이디" th:value="${session.user_id}"/>
                         </div>
                         <div>
-<!--                            이렇게 ☆써도 되는건가? 일단 나오긴함. -->
-                            <select class="form-control nice-select wide" name='rating' size='1'>
-                                <option value="" disabled selected>별점선택</option>
+     <!--이렇게 ☆써도 되는건가? 일단 나오긴함.
+     th:field="*{rating}"-->
+                            <select class="form-control nice-select wide form-select" name='rating' size='1' th:errorclass="is-invalid" th:field="*{rating}">
+                                <option value="" selected>별점선택</option>
                                 <option th:value="0.5">☆</option>
                                 <option th:value="1">★</option>
                                 <option th:value="1.5">★☆</option>
@@ -39,13 +39,23 @@
                                 <option th:value="4.5">★★★★☆</option>
                                 <option th:value="5">★★★★★</option>
                             </select>
+                            <div class="invalid-feedback" th:errors="*{rating}">
+                                에러메시지
+                            </div>
                         </div>
                         <div>
-                            <textarea class="form-control" name="content" placeholder="리뷰를 작성해주세요(~자 이내로 작성해주세요)"></textarea>
+                            <textarea class="form-control" name="content" rows="5" placeholder="리뷰를 작성해주세요(~자 이내로 작성해주세요)"
+                                      th:field="*{content}" th:classappend="${#fields.hasErrors('content')} ? 'is-invalid'">
+                            </textarea>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+                                에러메시지
+                            </div>
                         </div>
                         <input type="hidden" name="pay_num" th:value="${pay_num}">
                         <!--어떤 pay_num의 리뷰인지 알기위해, pathVariable로 넘어온 값을 여기에 써서 reviewWrite에 넘겨준다.-->
-                        <button>등록</button>
+                        <div class="btn_box d-flex justify-content-center">
+                            <button>등록</button>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -9,11 +9,8 @@
 
 </head>
 <body>
-    <!-- 0819 sub_page 지워봄. 잘될까? -->
-    
 <nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
-    <!-- book section -->
-    <section class="book_section layout_padding mt-5">
+    <section class="form_section layout_padding mt-5">
         <div class="container position-relative">
             <div class="heading_container d-block text-center">
                 <h2>판매게시글 수정</h2>
@@ -21,7 +18,6 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-md-6">
                     <div class="form_container">
-<!--                        -->
                         <form name="update" id="update" method="post" th:action="@{/produce/update/{produceNum}(produceNum=${produceDTO.produce_num})}">
                             <input type="hidden" name="produce_num" placeholder="게시글번호" th:value="${produceDTO.produce_num}"/>
                                 <!--이게 있어야 produce_num이 mapper로 넘어갈 수있다. -->
@@ -38,7 +34,6 @@
                                     <option th:value="3">곡물</option>
                                     <option th:value="4">기타</option>
                                 </select>
-
                             </div>
                             <div>
                                 <input type="text" class="form-control" name="produce_name" placeholder="상품명" th:value="${produceDTO.produce_name}" />
@@ -48,7 +43,7 @@
                             </div>
                             <div>
                                 <textarea class="form-control" name="produce_description" th:text="${produceDTO.produce_description}">상품상세설명</textarea>
-<!--                                textarea는 th:value 안먹힘. th:text로 하기.-->
+                                <!-- textarea는 th:value 안먹힘. th:text로 하기.-->
                             </div>
                             <div class="btn_box d-flex justify-content-center">
                                 <button type="submit">수정</button>
@@ -60,7 +55,6 @@
             </div>
         </div>
     </section>
-    <!-- end book section -->
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>

@@ -43,21 +43,20 @@
 <div class="site-wrap">
     <div class="site-section">
         <div class="container">
-
             <button class="btn btn-warning mb-3"><a th:href="@{/produce/write}" class="a-to-black">판매글 쓰기</a></button>
             <div class="row mb-5">
-                <div class="col-md-10 order-2"><!-- 얘가 우측통째로 -->
+                <div class="col-md-12 order-2"><!-- 얘가 우측통째로 -->
                     <!--================드롭다운 시작=================-->
                     <div class="row">
                         <div class="col-md-12 mb-5">
                             <div class="float-md-left mb-4"><h1>농산물 직거래 마당</h1></div>
                             <div class="d-flex">
                                 <div class="dropdown mr-1 ml-md-auto">
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-warning btn-md dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         분류
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
-                                        <a class="dropdown-item" th:href="@{/produce/list}">전체</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/0}">전체</a>
                                         <a class="dropdown-item" th:href="@{/produce/list/1}">채소</a>
                                         <a class="dropdown-item" th:href="@{/produce/list/2}">과일</a>
                                         <a class="dropdown-item" th:href="@{/produce/list/3}">곡물</a>
@@ -65,14 +64,11 @@
                                     </div>
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
+                                    <button type="button" class="btn btn-warning btn-md dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">정렬</button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                                        <a class="dropdown-item" href="#">Relevance</a>
-                                        <a class="dropdown-item" href="#">Name, A to Z</a>
-                                        <a class="dropdown-item" href="#">Name, Z to A</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Price, low to high</a>
-                                        <a class="dropdown-item" href="#">Price, high to low</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/0}">최신순</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/sort/1}">판매량 순</a>
+                                        <a class="dropdown-item" th:href="@{/produce/list/sort/2}">리뷰 순</a>
                                     </div>
                                 </div>
                             </div>
@@ -101,37 +97,40 @@
 
                     <!--  ====================페이지네이션 시작======================-->
 <!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
-                    <div class="row fixed-bottom" data-aos="fade-up">
+<!-- .page-item.active .page-link -->
+                    <div class="row fixed-bottom" data-aos="fade-up" th:if="${page.count>page.perPage}">
                         <div class="col-md-12 text-center">
 <!--                            이거 없으면 페이지네이션 왼쪽하단으로 이동됨-->
-                            <div class="site-block-27">
-                                <!--이거없으면 스타일 적용안됨.-->
-                                <ul>
-                                    <li><a href="#">&lt;</a></li>
-                                    <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">
-                                        <li class="page-item active">
-                                            <a class="a-to-black" th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/produce/list}" th:text="${pDtos}"></a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="a-to-black" th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/produce/list(currentPage=${pDtos})}" th:text="${pDtos}"></a>
-                                        </li>
-                                    </th:block>
-                                    <li><a href="#">&gt;</a></li>
+                            <div class="pages">
+                                <ul class="pagination" style="justify-content: center">
+                                    <li class="page-item" th:classappend="${page.page == 0} ? 'disabled'">
+                                        <a  th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}" class="page-link"
+                                        style="background-color: #ffbe33">
+                                            &lt;
+                                        </a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
+                                        th:classappend="${page.page==number-1} ? 'active'">
+                                        <a th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
+                                           class="page-link" th:text="${number}"></a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'">
+                                        <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}" class="page-link"
+                                            style="background-color: #ffbe33">
+                                            &gt;
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
                         <!--  ====================페이지네이션 끝======================-->
-                </div>
+                    
             </div>
-        </div>
-<!--  =======================================좌측 ===========================================-->
-         <div class="col-md-2 order-1 mb-5 mb-md-0" style="border: 1px solid black;">광고? 인기 상품? 보통은 여기는 필터링or광고부분. 아니면 아예 상품을 4x4로 하든가 </div>
         </div>
     </div>
     </div>
 </div>
-<!-- **********************************-->
-
-<!-- **********************************-->
 </body>
 </html>

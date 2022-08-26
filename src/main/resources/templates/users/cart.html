@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="fragments/head('내 게시글')">
     <!-- th:replace="fragments/head('내 게시글')" 일단 빼둠.-->
     <head>
         <meta charset="UTF-8">
@@ -26,8 +26,6 @@
     <div id="content" class="pt-5">
         <div class="container py-5 h-100">
             <h4 class="row d-flex justify-content-center align-items-center mb-3">장바구니</h4>
-            <h5>여러분 여기가 이상하게 나올거예요. 타임리프로 user_id를 필터링해서 그렇습니다... 나중에 고칠게요!
-                보이는 것만 불편하지 쓰는데는 기능상에는 큰문제 없을거예요!</h5>
             <table class="table table-hover">
                 <thead>
                     <tr class="table-warning">
@@ -44,20 +42,19 @@
                         <input type="hidden" th:value="${produceDTO.produce_num}">
                         <tr>
                             <th:block th:each="payDTO : ${produceDTO.payDTOList}">
-                                <th:block th:if="${session.user_id == payDTO.user_id}"><!--로그인한 회원의 아이디와 pay_history의 회원아이디와 일치하는것만 보이도록.-->
-                                    <td th:text="${produceDTOStat.count}">일련번호</td>
-                                    <td><a th:href="@{/produce/view/{produceNum}(produceNum=${produceDTO.produce_num})}" th:text="${produceDTO.produce_name}"></a></td>
-                                    <td th:text="${payDTO.quantity}">수량</td>
-                                    <td data-th-text="${#numbers.formatInteger(payDTO.total_price, 3, 'COMMA') + '원'}">총가격</td>
-                                    <td>
-                                        <form method="post" th:action="@{/kakaoPay/{pay_num}(pay_num=${payDTO.pay_num})}">
-                                            <button class="btn btn-md btn-warning">카카오페이로 결제하기</button>
-                                        </form>
-                                    </td>
-                                    <td><a th:href="@{/mypage/cart/delete/{pay_num}(pay_num=${payDTO.pay_num})}">
-                                        <button type="button" class="btn btn-md btn-warning confirmDeletion">삭제</button></a>
-                                    </td>
-                                </th:block>
+                                <td th:text="${page.perPage * page.page + produceDTOStat.count}">일련번호</td>
+                                <!--페이지당 보이는 게시글 수 * 현재페이지번호 + 한페이지당 일련번호로 계산해서 페이지 넘어가도 일련번호 이어지게 만듧.-->
+                                <td><a th:href="@{/produce/view/{produceNum}(produceNum=${produceDTO.produce_num})}" th:text="${produceDTO.produce_name}"></a></td>
+                                <td th:text="${payDTO.quantity}">수량</td>
+                                <td data-th-text="${#numbers.formatInteger(payDTO.total_price, 3, 'COMMA') + '원'}">총가격</td>
+                                <td>
+                                    <form method="post" th:action="@{/kakaoPay/{pay_num}(pay_num=${payDTO.pay_num})}">
+                                        <button class="btn btn-md btn-warning">카카오페이로 결제하기</button>
+                                    </form>
+                                </td>
+                                <td><a th:href="@{/mypage/cart/delete/{pay_num}(pay_num=${payDTO.pay_num})}">
+                                    <button type="button" class="btn btn-md btn-warning confirmDeletion">삭제</button></a>
+                                </td>
                             </th:block>
                         </tr>
                     </div>
@@ -83,44 +80,29 @@
 <!--                    </div>-->
 <!--                </div>-->
                 <!--  ====================페이지네이션 끝======================-->
-
-
-            <h1 th:text="${page.startPageNum}"></h1>
-            <h1 th:text="${page.endPageNum}"></h1>
-
-
             <nav class="mt-3" th:if="${page.count>page.perPage}">
                 <ul class="pagination">
                     <li
-                            class="page-item"
-                            th:classappend="${page.page == 0} ? 'disabled'"
-                    >
-                        <a
-                                th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}"
-                                class="page-link"
-                        >Previous</a
-                        >
+                        class="page-item"
+                        th:classappend="${page.page == 0} ? 'disabled'">
+                        <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}"
+                            class="page-link">Previous</a>
                     </li>
                     <li
-                            class="page-item"
-                            th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
-                            th:classappend="${page.page==number-1} ? 'active'"
-                    >
+                        class="page-item"
+                        th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
+                        th:classappend="${page.page==number-1} ? 'active'">
                         <a
-                                th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
-                                class="page-link"
-                                th:text="${number}"
+                            th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
+                            class="page-link"
+                            th:text="${number}"
                         ></a>
                     </li>
                     <li
-                            class="page-item"
-                            th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'"
-                    >
-                        <a
-                                th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}"
-                                class="page-link"
-                        >Next</a
-                        >
+                        class="page-item"
+                        th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'">
+                        <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}"
+                            class="page-link">Next</a>
                     </li>
                 </ul>
             </nav>
