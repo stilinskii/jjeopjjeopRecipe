@@ -53,6 +53,7 @@ public interface RecipeDAO {
     public void delete(int num);
     public void deleteManual(int num);
     public void deleteCate(int rcp_seq);
+    public void changeDeletedRcp(int rcp_seq);
 
     // 첨부파일 처리
     public String getFile(int rcp_seq); // 레시피 대표 첨부파일

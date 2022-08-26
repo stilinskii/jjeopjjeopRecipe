@@ -217,6 +217,11 @@
         WHERE rcp_seq=#{rcp_seq}
     </delete>
 
+    <update id="changeDeletedRcp" parameterType="int">
+        UPDATE communityboard SET rcp_seq = null, category = 2
+        WHERE rcp_seq = #{rcp_seq}
+    </update>
+
     <select id="getFile" parameterType="int" resultType="String">
         SELECT filename FROM recipe WHERE rcp_seq=#{rcp_seq}
     </select>
