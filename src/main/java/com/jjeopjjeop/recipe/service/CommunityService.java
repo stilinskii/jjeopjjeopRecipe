@@ -11,6 +11,7 @@ import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -54,6 +55,7 @@ public class CommunityService {
     }
 
     public void saveImageToDB(ImageDTO imageDTO,Integer boardId){
+        log.info("boardId={}",boardId);
         imageDTO.setBoard_id(boardId);
         communityDAO.storeImage(imageDTO);
     }
@@ -132,8 +134,8 @@ public class CommunityService {
         communityCommentDAO.deleteCommentById(commentId);
     }
 
-    public CommunityCommentDTO findCommentByUserId(String user_id){
-       return communityCommentDAO.findCommentByUserId(user_id);
+    public CommunityCommentDTO findCommentById(Integer commentId){
+       return communityCommentDAO.findCommentById(commentId);
     }
 
     public void reportComment(Integer commentId){
@@ -144,12 +146,15 @@ public class CommunityService {
         communityCommentDAO.editComment(commentEditInfo);
     }
 
+    @Transactional
     public void editPost(CommunityDTO community, List<MultipartFile> image) {
-        communityDAO.updatePost(community);
-        //이미지 있으면 새로 저장.
-        if(!image.isEmpty()){
+        if (!image.isEmpty()) {
+            deleteCurrentImages(community.getId());
+            community.setImage_exists(1);
             saveImagesToDBAndLocal(image,community.getId());
         }
+        communityDAO.updatePost(community);
+
     }
 
     public void deleteCurrentImages(Integer postId) {

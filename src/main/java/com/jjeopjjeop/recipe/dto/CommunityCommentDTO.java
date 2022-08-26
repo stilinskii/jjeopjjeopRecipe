@@ -1,8 +1,6 @@
 package com.jjeopjjeop.recipe.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
@@ -11,6 +9,8 @@ import java.util.Date;
 
 @Component
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter @Setter
 public class CommunityCommentDTO {
 

@@ -22,5 +22,5 @@ public interface CommunityCommentDAO {
 
     void editComment(Map<String,Object> commentEditInfo);
 
-    CommunityCommentDTO findCommentByUserId(String user_id);
+    CommunityCommentDTO findCommentById(Integer commentId);
 }
