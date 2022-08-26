@@ -63,6 +63,5 @@
     });
 
     $("textarea[name=manual_txt]").on("change", function(){
-        console.log($("textarea[name=manual_txt]").val());
         manual_txt = $("textarea[name=manual_txt]").val();
     });

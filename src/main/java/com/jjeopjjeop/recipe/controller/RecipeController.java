@@ -113,10 +113,6 @@ public class RecipeController {
             cate_list.add(list.get(i).getCate_name());
         }
 
-        for(String data : cate_list){
-            System.out.println(data);
-        }
-
         mav.addObject("cate_list", cate_list);
 
         // 스크랩 체크

@@ -42,6 +42,8 @@
 
     $(".cate_box a[style='color: black; font-weight: bold;']").each(function(index, item){
         cateArr.push($(item).attr('value'));
+        $('#cateArr').attr('value', cateArr);
+        console.log($(item).attr('value'));
     });
 
     $(".cate_box a").on("click", function(e){

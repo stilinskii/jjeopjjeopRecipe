@@ -144,7 +144,7 @@
         </div>
     </div>
     <hr/>
-    <h1 th:text="${rcp.rcp_seq}+'번 레시피 본문입니다. 이부분 나중에 삭제'"></h1>
+<!--    <h1 th:text="${rcp.rcp_seq}+'번 레시피 본문입니다. 이부분 나중에 삭제'"></h1>-->
     <h2 th:text="'재료'"></h2>
     <p th:text="${rcp.rcp_parts_dtls}"></p>
     <hr/>
@@ -153,6 +153,7 @@
         <span class="h3" th:text="${manual.manual_no}"></span>
         <img th:if="${not #strings.isEmpty(manual.filename)}" th:src="@{${manual.filepath}+${manual.filename}}" alt="sub image"/>
         <span th:text="${manual.manual_txt}" style="display: block;"></span>
+        <br/>
     </p>
     <hr/>
     <h2 th:text="'#'"></h2>
