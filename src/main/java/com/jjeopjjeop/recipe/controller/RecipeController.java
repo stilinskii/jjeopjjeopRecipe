@@ -37,7 +37,7 @@ public class RecipeController {
                                       @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
                                       @RequestParam(value="page", required=false, defaultValue = "1") int page, ModelAndView mav,
                                       HttpSession session){
-        System.out.println(session.getAttribute("user_type"));
+        System.out.println(session.getAttributeNames());
 
         // 전체 레코드 수
         Pagenation pagenation = new Pagenation(page, service.countProcess(cate_seq), true);
