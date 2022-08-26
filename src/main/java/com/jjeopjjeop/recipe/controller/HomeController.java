@@ -1,6 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
-import ch.qos.logback.core.joran.spi.ElementSelector;
+
 import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
@@ -37,14 +37,13 @@ public class HomeController {
         pagenation.setEndRow(4);//4개만 가져옴
         List<RecipeDTO> rcpList = recipeService.listProcess(pagenation, 2, 0);
 
-
         model.addAttribute("rcpList",rcpList);
         model.addAttribute("list",list);
 
         return "index";
     }
 
-
+//상세검색 시작
     @GetMapping("/search")
     public String searchPage(){
         return "searchPage";
@@ -77,7 +76,7 @@ public class HomeController {
         }
 
 
-        //shopping
+        //shopping - 쇼핑에는 키워드 검색 기능이 따로 없어서 만듦
         List<ProduceDTO> productListAll = produceService.findProductsByKeyword(keyword);
         int totalCnt = productListAll.size();
 
@@ -137,7 +136,6 @@ public class HomeController {
 
         // 전체 페이지 수
         Pagenation pagenation = new Pagenation(page, recipeService.searchCountProcess(keyword, 0), true);
-        log.info("keyword={}",keyword);
 
         // 레시피 분류 목록
         List<CategoryDTO> cateList = recipeService.cateListProcess();

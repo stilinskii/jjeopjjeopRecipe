@@ -1,5 +1,6 @@
 package com.jjeopjjeop.recipe.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
+@Builder
 @Getter @Setter
 public class CommunityCommentDTO {
 
@@ -21,6 +23,7 @@ public class CommunityCommentDTO {
     private Date updated_at;
     private Integer report;
 
+    //transient
     private String formatted_created_at;
 
     public String getFormatted_created_at() {

@@ -18,6 +18,10 @@
         SELECT * FROM comment_board where board_id=#{id}
     </select>
 
+    <select id="findCommentByUserId" resultType="String">
+        SELECT * FROM comment_board where user_id = #{user_id}
+    </select>
+
     <delete id="deleteCommentById" parameterType="int">
         DELETE FROM comment_board WHERE id=#{commentId}
     </delete>

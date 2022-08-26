@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
@@ -17,54 +16,68 @@
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
 <main class="custom container">
+    <!-- 모달 start -->
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">필수 항목 입력</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" id="alertBtn" style="display: none;" data-bs-toggle="modal" data-bs-target="#alertModal">레시피 수정</button>
+    <!-- 모달 end -->
     <p class="fw-bold fs-2 text-start">레시피 수정하기</p>
-    <form action="" th:object="${recipeDTO}" method="post" enctype="multipart/form-data">
-        <input type="hidden" th:field="*{user_id}" th:value="${recipeDTO.user_id}">
-        <input type="hidden" th:field="*{rcp_seq}" th:value="${recipeDTO.rcp_seq}">
-        <input type="hidden" th:field="*{filename}" th:value="${recipeDTO.filename}">
-        <input type="hidden" th:field="*{filepath}" th:value="${recipeDTO.filepath}">
+    <form action="/recipe/update" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="user_id" th:value="${recipeDTO.user_id}">
+        <input type="hidden" name="rcp_seq" th:value="${recipeDTO.rcp_seq}">
+        <input type="hidden" name="filename" th:value="${recipeDTO.filename}">
+        <input type="hidden" name="filepath" th:value="${recipeDTO.filepath}">
         <div class="row" style="margin-bottom:15px;">
             <div class="col-4 d-grid gap-2 d-md-block img_up">
                 <label for="rcp_file" style="cursor:pointer;">
                     <img th:if="${not #strings.isEmpty(recipeDTO.filename)}" th:src="@{${recipeDTO.filepath}+${recipeDTO.filename}}" width="100%" height="230px" alt="main image"/>
                     <img th:if="${#strings.isEmpty(recipeDTO.filename)}" src="/media/images/rcp_mainimg.png" width="100%" height="230px" alt="main image"/>
                 </label>
-                <input type="file" id="rcp_file" th:value="${recipeDTO.upload}" th:field="*{upload}" style="display: none;">
+                <input type="file" id="rcp_file" th:value="${recipeDTO.upload}" name="upload" style="display: none;">
                 <button type="button" class="btn btn-dark" style="width: 100%;">
                     <label for="rcp_file" style="width: 100%; height:100%; cursor:pointer;">대표 이미지 첨부</label>
                 </button>
             </div>
             <div class="col-8">
-                <p><input type="text" class="form-control" th:field="*{rcp_name}" width="90%" placeholder="레시피 이름" value="${recipeDTO.rcp_name}"></p>
-                <div class="validationError" th:if="${#fields.hasErrors('rcp_name')}" th:errors="*{rcp_name}"></div>
-                <select class="form-select" th:field="*{time}" id="rcp_time">
+                <p><input type="text" class="form-control" id="rcp_name" name="rcp_name" width="90%" placeholder="레시피 이름" th:value="${recipeDTO.rcp_name}"></p>
+                <select class="form-select" name="time" id="rcp_time">
                     <option value="">소요시간</option>
-                    <option value="10분 이내">10분 이내</option>
-                    <option value="20분 이내">20분 이내</option>
-                    <option value="30분 이내">30분 이내</option>
-                    <option value="1시간 이내">1시간 이내</option>
-                    <option value="2시간 이내">2시간 이내</option>
-                    <option value="2시간 이상">2시간 이상</option>
+                    <option th:value="'10분 이내'" th:attr="selected = ${recipeDTO.time == '10분 이내' ? 'true' : 'false'}">10분 이내</option>
+                    <option th:value="'20분 이내'" th:attr="selected = ${recipeDTO.time == '20분 이내' ? 'true' : 'false'}">20분 이내</option>
+                    <option th:value="'30분 이내'" th:attr="selected = ${recipeDTO.time == '30분 이내' ? 'true' : 'false'}">30분 이내</option>
+                    <option th:value="'1시간 이내'" th:attr="selected = ${recipeDTO.time == '1시간 이내' ? 'true' : 'false'}">1시간 이내</option>
+                    <option th:value="'2시간 이내'" th:attr="selected = ${recipeDTO.time == '2시간 이내' ? 'true' : 'false'}">2시간 이내</option>
+                    <option th:value="'2시간 이상'" th:attr="selected = ${recipeDTO.time == '2시간 이상' ? 'true' : 'false'}">2시간 이상</option>
                 </select>
-                <select class="form-select" th:field="*{difficulty}" id="difficulty">
+                <select class="form-select" name="difficulty" id="difficulty">
                     <option value="">난이도</option>
-                    <option value="쉬움">쉬움</option>
-                    <option value="보통">보통</option>
-                    <option value="어려움">어려움</option>
+                    <option th:value="'쉬움'" th:attr="selected = ${recipeDTO.difficulty == '쉬움' ? 'true' : 'false'}">쉬움</option>
+                    <option th:value="'보통'" th:attr="selected = ${recipeDTO.difficulty == '보통' ? 'true' : 'false'}">보통</option>
+                    <option th:value="'어려움'" th:attr="selected = ${recipeDTO.difficulty == '어려움' ? 'true' : 'false'}">어려움</option>
                 </select>
-                <select class="form-select" th:field="*{amount}" id="amount">
+                <select class="form-select" name="amount" id="amount">
                     <option value="">양</option>
-                    <option value="1인분">1인분</option>
-                    <option value="2인분">2인분</option>
-                    <option value="3인분">3인분</option>
-                    <option value="4인분">4인분</option>
-                    <option value="5인분 이상">5인분 이상</option>
+                    <option th:value="'1인분'" th:attr="selected = ${recipeDTO.amount == '1인분' ? 'true' : 'false'}">1인분</option>
+                    <option th:value="'2인분'" th:attr="selected = ${recipeDTO.amount == '2인분' ? 'true' : 'false'}">2인분</option>
+                    <option th:value="'3인분'" th:attr="selected = ${recipeDTO.amount == '3인분' ? 'true' : 'false'}">3인분</option>
+                    <option th:value="'4인분'" th:attr="selected = ${recipeDTO.amount == '4인분' ? 'true' : 'false'}">4인분</option>
+                    <option th:value="'5인분 이상'" th:attr="selected = ${recipeDTO.amount == '5인분 이상' ? 'true' : 'false'}">5인분 이상</option>
                 </select>
-                <div class="validationError" th:if="${#fields.hasErrors('time')}" th:errors="*{time}"></div>
-                <div class="validationError" th:if="${#fields.hasErrors('difficulty')}" th:errors="*{difficulty}"></div>
-                <div class="validationError" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></div>
-                <textarea class="form-control" th:field="*{summary}" placeholder="레시피를 간단히 소개해 주세요." value="${recipeDTO.summary}"></textarea>
-                <div class="validationError" th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}"></div>
+                <textarea class="form-control" name="summary" th:value="${recipeDTO.summary}" th:text="${recipeDTO.summary}" placeholder="레시피를 간단히 소개해 주세요." ></textarea>
             </div>
         </div>
         <p>*레시피에 어울리는 분류를 선택해 주세요.</p>
@@ -80,28 +93,27 @@
                 </span>
             </p>
             <p>
-                <span>재료별</span>
+                <span>상황별</span>
                 <span th:each="cate2 : ${cateList}" th:if="${cate2.cate_cate} == 2">
                     &nbsp&nbsp
                     <a href="#" th:value="${cate2.cate_seq}" th:attr="style = ${cate2.rcp_chk == true ? 'color: black; font-weight: bold;' : 'color: #fff;'}">
-                        <span th:text="${cate2.cate_name}">재료별</span>
+                        <span th:text="${cate2.cate_name}">상황별</span>
                     </a>
                 </span>
             </p>
             <p>
-                <span>상황별</span>
+                <span>재료별</span>
                 <span th:each="cate3 : ${cateList}" th:if="${cate3.cate_cate} == 3">
                     &nbsp&nbsp
                     <a href="#" th:value="${cate3.cate_seq}" th:attr="style = ${cate3.rcp_chk == true ? 'color: black; font-weight: bold;' : 'color: #fff;'}">
-                        <span th:text="${cate3.cate_name}">상황별</span>
+                        <span th:text="${cate3.cate_name}">재료별</span>
                     </a>
                 </span>
             </p>
         </div>
         <hr/>
         <p class="fw-bold fs-2 text-start">재료</p>
-        <textarea th:field="*{rcp_parts_dtls}" placeholder="양파 반 쪽, 굴소스 한 숟갈, 베이컨 100g..." value="${recipeDTO.rcp_parts_dtls}"></textarea>
-        <div class="validationError" th:if="${#fields.hasErrors('rcp_parts_dtls')}" th:errors="*{rcp_parts_dtls}"></div>
+        <textarea name="rcp_parts_dtls" placeholder="양파 반 쪽, 굴소스 한 숟갈, 베이컨 100g..." th:text="${recipeDTO.rcp_parts_dtls}" th:value="${recipeDTO.rcp_parts_dtls}"></textarea>
         <hr/>
         <p class="fw-bold fs-2 text-start">요리 순서</p>
         <div class="manual_container">
@@ -118,79 +130,18 @@
         <hr/>
         <p class="fw-bold fs-2 text-start">해쉬태그</p>
         <p>*레시피에 어울리는 해쉬태그를 입력해 주세요.</p>
-        <textarea th:field="*{hash_tag}" placeholder="귀찮을 때, 자취요리, 야채듬뿍..." value="${recipeDTO.hash_tag}"></textarea>
+        <textarea name="hash_tag" placeholder="귀찮을 때, 자취요리, 야채듬뿍..." th:text="${recipeDTO.hash_tag}" th:value="${recipeDTO.hash_tag}"></textarea>
         <hr/>
         <p class="d-flex justify-content-between">
             <a th:href="@{/recipe/list}" class="btn btn-danger">
                 &nbsp&nbsp취소&nbsp&nbsp
             </a>
-            <button type="submit" class="btn btn-primary">&nbsp&nbsp작성&nbsp&nbsp</button>
+            <button class="btn btn-primary" id="submitBtn">&nbsp&nbsp수정&nbsp&nbsp</button>
         </p>
     </form>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
-    var manualNo = $('.rcp_manual').last().children(":first").text() * 1;
-    console.log(manualNo);
-    var inputContainer = document.querySelector(".manual_container");
-    var inputNode = $('.rcp_manual').last();
-    var n1 = inputNode.clone();
-
-    $('#addManual').on("click", function(e){
-        e.preventDefault();
-        manualNo++;
-        n1.attr("style", "");
-        n1.children(".manual_step").text(manualNo);
-        n1.children("textarea").text('');
-        n1.clone().appendTo($('.manual_container'));
-    });
-
-    $(document).on('click', '.removeManual', function(){
-        if(manualNo > 1){
-            manualNo--;
-            var manualIndex = $(this).parent().parent().children(":first").html();
-            $(this).parent().parent().remove();
-
-            $('.rcp_manual').each(function(index, item){
-                var manualIndex2 = item.firstChild.nextSibling.innerHTML;
-                if(manualIndex < manualIndex2){
-                    item.firstChild.nextSibling.innerHTML = manualIndex2 - 1;
-                };
-            });
-        }
-    });
-
-    var imgUp = document.querySelector(".img_up");
-    var imgSrc = imgUp.querySelector("img");
-    var fileInput = imgUp.querySelector(`input[type="file"]`);
-    fileInput.addEventListener('input', () => {
-        const reader = new FileReader();
-		reader.addEventListener('load', () => {
-		    imgSrc.setAttribute('src', reader.result);
-		});
-		reader.readAsDataURL(fileInput.files[0]);
-    });
-
-    var cateArr = [];
-
-    $(".cate_box a[style='color: black; font-weight: bold;']").each(function(index, item){
-        cateArr.push($(item).attr('value'));
-    });
-
-    $(".cate_box a").on("click", function(e){
-        e.preventDefault();
-        if(cateArr.indexOf($(this).attr("value")) == -1){
-            cateArr.push($(this).attr("value"));
-            $(this).attr("style", "color: black; font-weight: bold;");
-            console.log($(this) + '추가');
-        }else{
-            cateArr.splice(cateArr.indexOf($(this).attr("value")), 1);
-            $(this).attr("style", "color: #fff;");
-            console.log($(this) + '해제');
-        }
-        $('#cateArr').attr('value', cateArr);
-    });
-
-</script>
+<script src="/static/js/rcpUpdate.js" th:src="@{/js/rcpUpdate.js}"></script>
 </body>
 </html>
