@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<!--    th:replace="fragments/head('쇼핑')" 일단 빼둠.-->
+<!--일단 빼둠.-->
     <meta charset="UTF-8">
     <title>Title</title>
     <!--==========================임의추가 시작==========================-->
@@ -19,24 +19,7 @@
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
     <link href="/static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
 
-    <!--============================nav스타일 적용위해 넣음 시작(나중에 삭제할것.)=============================-->
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-    />
-
-    <link
-            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-            rel="stylesheet"
-    />
-    <link
-            href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-            rel="stylesheet"
-    />
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-
-    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!--============================nav스타일 적용위해 넣음 끝=============================-->
+    <th:block th:replace="fragments/head :: links"> </th:block>
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
