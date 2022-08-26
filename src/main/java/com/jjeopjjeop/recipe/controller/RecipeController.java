@@ -323,12 +323,12 @@ public class RecipeController {
     @GetMapping("/recipe/delete")
     public String rcpDeleteMethod(@RequestParam int rcp_seq, HttpServletRequest request, HttpSession session){
         RecipeDTO recipeDTO = service.contentProcess(rcp_seq);
-        if(session.getAttribute("user_id") == null || !session.getAttribute("user_id").equals(recipeDTO.getUser_id()) || session.getAttribute("user_id").equals("admin")){
+        if(session.getAttribute("user_id") == null || (!session.getAttribute("user_id").equals("admin") && !session.getAttribute("user_id").equals(recipeDTO.getUser_id()))){
             return "error/500";
         }
 
         service.deleteProcess(rcp_seq, urlPath(request, 0), urlPath(request, 1));
-        return "redirect:/recipe/list";
+        return session.getAttribute("user_id").equals("admin") ? "redirect:/admin/c_index" : "redirect:/recipe/list";
     }
 
     // 첨부파일 처리를 위한 메소드

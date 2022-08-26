@@ -136,7 +136,7 @@
                             </p>
                             <p class="d-flex justify-content-between">
                                 <span th:text="${rcp.time}" class="left">시간</span><span th:text="${rcp.difficulty}">난이도 하</span
-                            ><a th:href="@{|admin/delrcp/${rcp.rcp_seq}}" class="btn btn btn-secondary">삭제</a>
+                            ><a th:href="@{/recipe/delete(rcp_seq=${rcp.rcp_seq})}" class="btn btn btn-secondary">삭제</a>
                             </p>
                         </div>
                     </div>
