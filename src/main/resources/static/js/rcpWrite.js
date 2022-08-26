@@ -2,6 +2,7 @@
     var inputContainer = document.querySelector(".manual_container");
     var inputNode = document.querySelector(".rcp_manual");
     var n1 = inputNode.cloneNode(true);
+    var manual_txt = "";
 
     $('#addManual').on("click", function(e){
         e.preventDefault();
@@ -59,4 +60,9 @@
         }else{
             $("form").submit();
         }
+    });
+
+    $("textarea[name=manual_txt]").on("change", function(){
+        console.log($("textarea[name=manual_txt]").val());
+        manual_txt = $("textarea[name=manual_txt]").val();
     });

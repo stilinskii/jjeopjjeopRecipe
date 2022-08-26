@@ -164,7 +164,7 @@
         <a th:if="${searchKey == null}" th:href="@{/recipe/list(rcp_sort=${rcp_sort}, cate_seq=${cate_seq}, page=${page})}" class="btn btn-secondary me-md-5">
             레시피 목록으로 돌아가기
         </a>
-        <a href="#" class="btn btn-dark">
+        <a th:href="@{/community/form}" class="btn btn-dark">
             이 레시피 후기 작성하기
         </a>
     </div>
