@@ -1,15 +1,15 @@
 package com.jjeopjjeop.recipe.dto;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 @Component
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ImageDTO {
     private Integer id;
     private String filename;

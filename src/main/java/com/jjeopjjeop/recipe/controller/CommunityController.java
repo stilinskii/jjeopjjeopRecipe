@@ -55,22 +55,18 @@ public class CommunityController {
 
     @GetMapping("/freeForum")
     public String freeForum(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model){
-        //PagenationDTO pagenationDTO = getPagenationDTO(page, communityService.freeForumCount());
         Pagenation pagenation = new Pagenation(page,10,communityService.recipeReviewCount());
         List<CommunityDTO> board = communityService.getFreeForums(pagenation);
 
         model.addAttribute("board",board);
         model.addAttribute("page",pagenation);
-        //model.addAttribute("localDateTime", LocalDateTime.now());
         return "community/freeForum";
     }
 
     @MySecured
     @GetMapping("/form")
     public String form(@ModelAttribute("community") CommunityDTO community, Model model){
-        //빈 객체 넘기기
-        // form.html에 th:object를 썼기때문에 모델 어트리뷰트가 있어야함.
-        // th:object를 쓰면 id name value 생략가능
+
         List<RecipeDTO> recipes = Collections.emptyList();
         model.addAttribute("recipes",recipes);
         return "community/form";
@@ -81,12 +77,10 @@ public class CommunityController {
     @PostMapping("/form")
     public String forFormSubmit(@Validated @ModelAttribute("community") CommunityDTO community, BindingResult bindingResult, @RequestPart(value = "image",required=false) List<MultipartFile> image,HttpSession session){
         if(bindingResult.hasErrors()){
-            log.info("errors={}", bindingResult);
             return "community/form";
         }
 
         //성공로직
-        //transaction 처리 필요 TODO
         UserDTO user = getUser(session);
         String userId = user.getUser_id();
         community.setUser_id(userId);
@@ -96,17 +90,12 @@ public class CommunityController {
             community.setRcp_seq(0);
         }
 
-        //로직 매우 맘에안듦.
-        //이미지 테이블에 포스트 아이디로 된 이미지가있는지 확인하는 로직을 짜도 되긴되지만
-        //그게 더 속도가 느릴껏같음.
-        log.info("image={}",image.isEmpty());
-        log.info("image={}",image.get(0).isEmpty());
+        //사진 있으면 사진있는 게시판이라고 표시(인덱스에서 사진있음 표시 위해)
         if(image.get(0).isEmpty()){
             community.setImage_exists(0);
         }else{
             community.setImage_exists(1);
         }
-        log.info("post image exists={}",community.getImage_exists());
         communityService.save(community,image);
 
 
@@ -166,25 +155,29 @@ public class CommunityController {
 
     @MySecured
     @PostMapping("/edit/{postId}")
-    public String editPostByIdSubmit(@PathVariable Integer postId, CommunityDTO community, @RequestPart(value = "image",required=false) List<MultipartFile> image){
-        //,
-        //        IMAGE_EXISTS = #{image_exists} mapper 부분 처리
-        log.info("getContent={}",community.getContent());
-        log.info("getId={}",community.getId());
-        log.info("getTitle={}",community.getRcp_seq());
-        if(!image.isEmpty()){
-            communityService.deleteCurrentImages(postId);
-            community.setImage_exists(1);
+    public String editPostByIdSubmit(@PathVariable Integer postId, CommunityDTO community, @RequestPart(value = "image",required=false) List<MultipartFile> image,HttpSession session){
+        String user_id = getUser(session).getUser_id();
+        //글을 쓴 회원이거나 관리자이면 가능
+        if (user_id.equals(communityService.findPostById(postId).getUser_id()) || user_id.equals("admin")) {
+
+            if (!image.isEmpty()) {
+                communityService.deleteCurrentImages(postId);
+                community.setImage_exists(1);
+            }
+            community.setId(postId);
+            communityService.editPost(community, image);
         }
-        community.setId(postId);
-        communityService.editPost(community,image);
         return "redirect:/community/post?id="+postId;
     }
 
     @MySecured
     @GetMapping("/delete/{postId}")
-    public String deletePostById(@PathVariable Integer postId){
-        communityService.deletePost(postId);
+    public String deletePostById(@PathVariable Integer postId, HttpSession session){
+        String user_id = getUser(session).getUser_id();
+        //글을 쓴 회원이거나 관리자이면 가능
+        if (user_id.equals(communityService.findPostById(postId).getUser_id()) || user_id.equals("admin")){
+            communityService.deletePost(postId);
+        }
         return "redirect:/community";
     }
 
@@ -228,7 +221,7 @@ public class CommunityController {
         communityService.postComment(communityCommentDTO);
 
         String refererLink = request.getHeader("referer");
-        log.info(refererLink);
+
         return "redirect:"+refererLink;
     }
 
@@ -238,12 +231,14 @@ public class CommunityController {
     @ResponseBody
     @PostMapping("/post/comment/edit")
     public void editComment(Integer commentId, String content){
+        //사용자 관리자만 되게끔 수정
         communityService.editComment(Map.of("commentId",commentId,"content",content));
     }
 
     @MySecured
     @GetMapping("/post/comment/delete")
     public String deleteComment(Integer commentId, HttpServletRequest request){
+        //사용자 관리자만 되게끔 수정
         communityService.deleteComment(commentId);
         String refererLink = request.getHeader("referer");
 
@@ -276,7 +271,6 @@ public class CommunityController {
             model.addAttribute("board",communityBySearch);
         }
 
-        //PagenationDTO pagenationDTO = getPagenationDTO(page, totalCnt);
         model.addAttribute("page",pagenation);
 
         return "community/detailSearch";
