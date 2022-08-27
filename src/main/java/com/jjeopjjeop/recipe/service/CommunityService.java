@@ -40,10 +40,28 @@ public class CommunityService {
     }
 
     public void save(CommunityDTO dto, List<MultipartFile> image){
+
+        //자유글이면 레시피가 선택됐더라도 선택X
+        if(dto.getCategory().equals("0")){
+            dto.setRcp_seq(null);
+        }
+
+        //해당 포스트의 이미지 여부 표시
+        if(hasUploadedImage(image)){
+            dto.setImage_exists(1);
+        }else{
+            dto.setImage_exists(0);
+        }
         communityDAO.insert(dto);
-        if(image!=null){
+
+        //해당 포스트가 저장된 후 이미지테이블에 포스트가 저장된 후 생성된 포스트 아이디와 함께 이미지정보 저장.
+        if(dto.getImage_exists()==1){
             saveImagesToDBAndLocal(image,dto.getId());
         }
+    }
+
+    private boolean hasUploadedImage(List<MultipartFile> image) {
+        return !image.get(0).isEmpty();
     }
 
 
@@ -75,7 +93,6 @@ public class CommunityService {
         //포스트에 해당하는 이미지들 db에서 불러와서 set하기
         List<ImageDTO> image = communityDAO.findImageByPostId(id);
         if(hasImage(image)){
-        log.info("image={}",image.get(0).getFilename());
             post.setImages(image);
         }
         //유저가 해당 포스트 like했는지 확인
@@ -148,7 +165,8 @@ public class CommunityService {
 
     @Transactional
     public void editPost(CommunityDTO community, List<MultipartFile> image) {
-        if (!image.isEmpty()) {
+
+        if (hasUploadedImage(image)) {
             deleteCurrentImages(community.getId());
             community.setImage_exists(1);
             saveImagesToDBAndLocal(image,community.getId());
@@ -156,6 +174,8 @@ public class CommunityService {
         communityDAO.updatePost(community);
 
     }
+
+
 
     public void deleteCurrentImages(Integer postId) {
         //이미지 삭제 로직

@@ -51,7 +51,7 @@ public class ReviewController {
     //리뷰 작성 반영하기
     @MySecured
     @PostMapping("/review/write")
-    public String reviewWrite(@Validated ReviewDTO reviewDTO, BindingResult bindingResult){
+    public String reviewWrite(@Validated ReviewDTO reviewDTO, BindingResult bindingResult, Model model){
 
         if (bindingResult.hasErrors()) { //에러있으면
             System.out.println("---------------------------------------------------");
@@ -59,6 +59,7 @@ public class ReviewController {
 
             log.info("rating={}", reviewDTO.getRating());
             log.info("content={}", reviewDTO.getContent());
+
             return "/produce/reviewWrite"; //폼다시 불러오게 ??? 이게 맞나?
 
         //    return "redirect:/review/write/" + reviewDTO.getPay_num();

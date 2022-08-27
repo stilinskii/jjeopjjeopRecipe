@@ -85,19 +85,7 @@ public class CommunityController {
         String userId = user.getUser_id();
         community.setUser_id(userId);
 
-        //자유글이면 레시피가 선택됐더라도 선택X
-        if(community.getCategory().equals("0")){
-            community.setRcp_seq(null);
-        }
-
-        //사진 있으면 사진있는 게시판이라고 표시(인덱스에서 사진있음 표시 위해)
-        if(image.get(0).isEmpty()){
-            community.setImage_exists(0);
-        }else{
-            community.setImage_exists(1);
-        }
         communityService.save(community,image);
-
 
         return "redirect:/community/post?id="+community.getId();
     }
