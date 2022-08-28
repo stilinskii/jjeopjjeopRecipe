@@ -14,12 +14,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -93,7 +92,7 @@ public class CommunityController {
     //ajax
     @MySecured
     @PostMapping("/form/searchRecipe")
-    public String searchKeyword(String searchKey, Model model){
+    public String searchRecipeByKeyword(String searchKey, Model model){
         List<RecipeDTO> recipes = recipeService.searchListByKeyword(searchKey);
         model.addAttribute("recipes",recipes);
        return "community/form :: .recipe-box";
@@ -103,26 +102,26 @@ public class CommunityController {
     @GetMapping("/post")
     public String post(Integer id, Model model, HttpSession session){
 
-        UserDTO user = getUser(session);
-        String userId = user.getUser_id();
+        String userId = (String) session.getAttribute("user_id");
+
         //로그인한 유저가 해당 포스트 좋아요 했는지도 확인함.
         CommunityDTO post = communityService.findPostWithLikeInfo(id,userId);
+
+        //댓글
         List<CommunityCommentDTO> comments = communityService.findComments(id);
-        log.info("post.getCategory()={}",post.getCategory());
+
         //글이 레시피 후기글이면 레시피 정보도 넘기기.
+        String category = post.getCategory();
+        if(category.equals("1")){
         Integer rep_scq = post.getRcp_seq();
-        if(rep_scq != null && rep_scq !=0){
             RecipeDTO recipeDTO = recipeService.contentProcess(rep_scq);
             model.addAttribute("recipe", recipeDTO);
 
-        }else {
+        }else if(category.equals("2")){
             //삭제된 레시피의 후기글일때 넘기기.
-            if (post.getCategory().equals("2")) {
-                model.addAttribute("deletedRecipe", true);
-            }
+            model.addAttribute("deletedRecipe", true);
         }
-        //로그인한 유저의 정보도 뷰에 넘김.
-        model.addAttribute("user",user);
+
         //포스트
         model.addAttribute("community",post);
         //댓글
@@ -257,22 +256,26 @@ public class CommunityController {
                                Model model, HttpServletRequest request){
 
         Pagenation pagenation = new Pagenation(page,10,totalCnt);
+
         //검색을 통해서 들어온거면 검색 값 넘기기. 아니면 안넘김.
-        String referer = request.getHeader("referer");
-        if(referer.contains("/community/search")){
+        String[] referer = request.getHeader("referer").split("/");
+        String lastUri = referer[referer.length - 1];
+        if(lastUri.equals("search")){
             List<CommunityDTO> communityBySearch = communityService.findCommunityBySearch(form, pagenation);
             model.addAttribute("board",communityBySearch);
+            CommunitySearchForm communitySearchForm = form;
+            model.addAttribute("searchForm",communitySearchForm);
+            model.addAttribute("page",pagenation);
         }
-
-        model.addAttribute("page",pagenation);
 
         return "community/detailSearch";
     }
 
+
     @PostMapping("/search")
     public String detailSearchSubmit(CommunitySearchForm searchForm){
-        totalCnt = communityService.countCommunityBySearch(searchForm);
         form=searchForm;
+        totalCnt = communityService.countCommunityBySearch(searchForm);
         return "redirect:/community/search";
     }
 

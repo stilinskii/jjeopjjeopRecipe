@@ -114,7 +114,7 @@
 
     <select id="findCommunityBySearch" parameterType="Map" resultType="CommunityDTO">
 
-        SELECT * FROM (SELECT t1.* ,row_number() OVER (order by id DESC) AS seqnum FROM (SELECT * FROM (SELECT * FROM communityboard
+        SELECT * FROM (SELECT t1.* ,row_number() OVER (order by created_at DESC) AS seqnum FROM (SELECT * FROM (SELECT * FROM communityboard
 
             <choose>
                 <when test="form.category == 'all'">

@@ -43,7 +43,7 @@ public class HomeController {
         return "index";
     }
 
-//상세검색 시작
+//통합검색 시작
     @GetMapping("/search")
     public String searchPage(){
         return "searchPage";
@@ -142,7 +142,6 @@ public class HomeController {
 
         // 검색 레시피 목록
         List<RecipeDTO> rcpList = recipeService.searchListProcess(pagenation, rcp_sort, cate_seq, keyword);
-        //System.out.println(rcpList);
 
         mav.addObject("rcp_sort", rcp_sort);
         mav.addObject("cate_seq", cate_seq);

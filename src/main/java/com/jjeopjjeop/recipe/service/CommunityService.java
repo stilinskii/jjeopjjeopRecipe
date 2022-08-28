@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -191,4 +194,7 @@ public class CommunityService {
     public Integer countCommunityBySearch(CommunitySearchForm searchForm){
         return communityDAO.countCommunityBySearch(searchForm);
     }
+
+
+
 }
