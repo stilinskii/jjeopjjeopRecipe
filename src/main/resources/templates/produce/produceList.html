@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<!--일단 빼둠.-->
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>농산물 직거래 장터</title>
     <!--==========================임의추가 시작==========================-->
 <!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"-->
 <!--          th:href="@{/css/bootstrap.css}"/>-->
@@ -16,17 +15,16 @@
 
     <!--==========================임의 추가 끝==========================-->
 
-    <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
+    <th:block th:replace="fragments/head :: links"> </th:block><!--이유를 모르겠는데 아래 두줄보다 얘가 위에 있어야 페이지네이션 노란색이 먹힘/-->
     <link href="/static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
-
-    <th:block th:replace="fragments/head :: links"> </th:block>
+    <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
 <div class="site-wrap">
     <div class="site-section">
         <div class="container">
-            <button class="btn btn-warning mb-3"><a th:href="@{/produce/write}" class="a-to-black">판매글 쓰기</a></button>
+            <button class="btn btn-warning btn-lg mb-3"><a th:href="@{/produce/write}" class="a-to-black">판매글 쓰기</a></button>
             <div class="row mb-5">
                 <div class="col-md-12 order-2"><!-- 얘가 우측통째로 -->
                     <!--================드롭다운 시작=================-->
@@ -71,7 +69,11 @@
                                 </figure>
                                 <div class="block-4-text p-4">
                                     <h3 class="text-dark font-weight-bold" th:text="${produce.produce_name}">상품명</h3>
-                                    <p class="mb-0 text-secondary" th:text="${produce.user_id}">판매자</p>
+                                    <th:block th:each="item : ${idToBusinessName}">
+                                        <th:block th:if="${produce.user_id == item.key}">
+                                            <p class="mb-0 text-secondary" th:text="${item.value}">판매자</p>
+                                        </th:block>
+                                    </th:block>
                                     <p class="font-weight-bold" data-th-text="${#numbers.formatInteger(produce.price, 3, 'COMMA') + '원'}" >상품가격</p>
                                 </div>
                             </div>

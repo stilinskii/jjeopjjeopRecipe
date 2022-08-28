@@ -215,56 +215,56 @@
         </div>
       </div>
       <!-- ================인기상품==================== -->
-      <div class="shopping-popular bg-white mb-5">
-        <div class="d-flex title">
-          <h5 class="me-auto">인기 상품</h5>
-          <!-- 품절임박한 상품 순으로 정렬된 레시피 페이지로 이동 -->
-          <h6><a th:href="@{/produce/list}">> 더보기</a></h6>
-        </div>
-        <div class="row">
-          <div
-            class="col-3 mb-4"
-            data-aos="fade-up"
-            th:each="produce : ${list}"
-          >
-            <div
-              class="block-4 text-center border"
-              th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"
-              style="cursor: pointer"
-            >
-              <figure class="block-4-image">
-                <!--                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
-                <a
-                  th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}"
-                >
-                  <img
-                    class="img-fluid"
-                    th:src="${produce.produce_image_path}"
-                    alt="상품이미지"
-                  />
-                </a>
-              </figure>
-              <div class="block-4-text p-4">
-                <h3
-                  class="text-dark font-weight-bold"
-                  th:text="${produce.produce_name}"
-                >
-                  상품명
-                </h3>
-                <p class="mb-0 text-secondary" th:text="${produce.user_id}">
-                  판매자
-                </p>
-                <p
-                  class="font-weight-bold"
-                  data-th-text="${#numbers.formatInteger(produce.price, 3, 'COMMA') + '원'}"
-                >
-                  상품가격
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<!--      <div class="shopping-popular bg-white mb-5">-->
+<!--        <div class="d-flex title">-->
+<!--          <h5 class="me-auto">인기 상품</h5>-->
+<!--          &lt;!&ndash; 품절임박한 상품 순으로 정렬된 레시피 페이지로 이동 &ndash;&gt;-->
+<!--          <h6><a th:href="@{/produce/list/sort/1}">더보기</a></h6>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div-->
+<!--            class="col-3 mb-4"-->
+<!--            data-aos="fade-up"-->
+<!--            th:each="produce : ${list}"-->
+<!--          >-->
+<!--            <div-->
+<!--              class="block-4 text-center border"-->
+<!--              th:onclick="|location.href='@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}'|"-->
+<!--              style="cursor: pointer"-->
+<!--            >-->
+<!--              <figure class="block-4-image">-->
+<!--                &lt;!&ndash;                                    이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?&ndash;&gt;-->
+<!--                <a-->
+<!--                  th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}"-->
+<!--                >-->
+<!--                  <img-->
+<!--                    class="img-fluid"-->
+<!--                    th:src="${produce.produce_image_path}"-->
+<!--                    alt="상품이미지"-->
+<!--                  />-->
+<!--                </a>-->
+<!--              </figure>-->
+<!--              <div class="block-4-text p-4">-->
+<!--                <h3-->
+<!--                  class="text-dark font-weight-bold"-->
+<!--                  th:text="${produce.produce_name}"-->
+<!--                >-->
+<!--                  상품명-->
+<!--                </h3>-->
+<!--                <p class="mb-0 text-secondary" th:text="${produce.user_id}">-->
+<!--                  판매자-->
+<!--                </p>-->
+<!--                <p-->
+<!--                  class="font-weight-bold"-->
+<!--                  data-th-text="${#numbers.formatInteger(produce.price, 3, 'COMMA') + '원'}"-->
+<!--                >-->
+<!--                  상품가격-->
+<!--                </p>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
     </main>
     <footer class="blog-footer">
       <hr />
