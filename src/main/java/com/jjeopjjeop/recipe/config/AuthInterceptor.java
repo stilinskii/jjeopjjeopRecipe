@@ -31,14 +31,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
       // method에 @MySecured가 없는 경우 ==> 인증이 필요 없는 요청
       if (mySecured == null) {
-         log.info(String.valueOf(mySecured));
+//         log.info(String.valueOf(mySecured));
          return true;
       }
 
       // @MySecured가 있는 경우 ==> 세션이 있는지 체크
       HttpSession session = request.getSession();
       if (session == null) {
-         log.info(String.valueOf(session));
+//         log.info(String.valueOf(session));
          response.sendRedirect("/login");
          return false;
       }
@@ -46,7 +46,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
       // 세션이 존재하면 유효한 유저인지 확인
       UserDTO user = (UserDTO) session.getAttribute("user");
       if (user == null) {
-         log.info(String.valueOf(user));
+//         log.info(String.valueOf(user));
          response.sendRedirect("/login");
          return false;
       }

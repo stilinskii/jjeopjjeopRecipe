@@ -1,6 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
-import com.jjeopjjeop.recipe.config.MyProperties;
+
 import com.jjeopjjeop.recipe.config.MySecured;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.RecipeDTO;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,10 +33,10 @@ public class UserController {
 
    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-   @Autowired
-   private MyProperties prop;
-   @Autowired
-   private JavaMailSender javaMailSender;
+//   @Autowired
+//   private MyProperties prop;
+//   @Autowired
+//   private JavaMailSender javaMailSender;
    @Autowired
    private UserDTO userDTO;
    @Autowired
@@ -59,7 +58,7 @@ public class UserController {
       if (bindingResult.hasErrors()){
          //회원가입 실패 시 기존 데이터 유지
          //model.addAttribute("userDTO", userDTO);
-         logger.info("errors={}", bindingResult);
+//         logger.info("errors={}", bindingResult);
 //         model.addAttribute("message", "형식에 맞지 않는 값이 입력되었습니다.");
          return "users/signup";
       }else {
@@ -76,8 +75,8 @@ public class UserController {
    @GetMapping("/signup/idCheck")
    public int userIdExist(String user_id, Model model){
       int result = userServiceImp.checkId(user_id);
-      log.info("idCheck result: " + user_id);
-      log.info("checkId result: " + result);
+//      log.info("idCheck result: " + user_id);
+//      log.info("checkId result: " + result);
       model.addAttribute("user_id", user_id);
       return result;
    }
@@ -175,23 +174,25 @@ public class UserController {
       return "/users/findpw";
    }
 
-   //인증번호 발송
+   //인증번호 발송 ===> application.properties 노출로 보안 이슈 발생 ==> 기존 아이디 찾기와 동일한 방식으로 변경
    @PostMapping("/findpw")
    public String sendEmail(@ModelAttribute("user") UserDTO userDTO, Model model, RedirectAttributes rAttr) throws Exception{
       userDTO = userServiceImp.findPassword(userDTO);
-      logger.info("userDTO={}", userDTO);
+//      logger.info("userDTO={}", userDTO);
 
       if(userDTO == null){
          rAttr.addFlashAttribute("message", "아이디와 이메일이 일치하지 않습니다.");
          return "redirect:/findpw";
       }else {
 
-         String email = userDTO.getEmail();
+//         String email = userDTO.getEmail();
+//
+//         userServiceImp.updatePassword(userDTO);
+//         userServiceImp.sendMail(email);
+//
+//         logger.info(email);
+           model.addAttribute("user", userDTO);
 
-         userServiceImp.updatePassword(userDTO);
-         userServiceImp.sendMail(email);
-
-         logger.info(email);
          return "users/findpwComplete";
       }
    }
@@ -217,7 +218,7 @@ public class UserController {
       user_id = (String) session.getAttribute("user_id");
       UserDTO userDTO = userServiceImp.readMypage(user_id);
 //      System.out.println(userDTO.getPassword());
-      log.info("userDTO={}", userDTO);
+//      log.info("userDTO={}", userDTO);
       model.addAttribute("user", userDTO);
       return "users/mypageEdit";
    }
@@ -226,7 +227,7 @@ public class UserController {
    public String updateMypage(@Validated @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult,
                               RedirectAttributes rAttr, Model model){
       if(bindingResult.hasErrors()){
-         logger.info("errors={}", bindingResult);
+//         logger.info("errors={}", bindingResult);
          model.addAttribute("message", "형식에 맞지 않는 값이 입력되었습니다.");
          return "users/mypageEdit";
       }else{
@@ -254,8 +255,8 @@ public class UserController {
       String sessionId = user.getUser_id();
       String sessionPassword = user.getPassword();
 
-      System.out.println("session: "+sessionPassword);
-      System.out.println("Input: "+password);
+//      System.out.println("session: "+sessionPassword);
+//      System.out.println("Input: "+password);
 
       if(!(sessionId.equals(user_id))){
          rAttr.addFlashAttribute("message", "아이디가 일치하지 않습니다.");
@@ -266,7 +267,7 @@ public class UserController {
       } else {
          logger.info("post withdraw");
          userServiceImp.removeUser(user_id, password);
-         System.out.println(userServiceImp.removeUser(user_id, password));
+//         System.out.println(userServiceImp.removeUser(user_id, password));
          session.invalidate();
          return "users/withdrawComplete";
       }
@@ -288,10 +289,10 @@ public class UserController {
       model.addAttribute("user_id", user_id);
       model.addAttribute("myCommunityList", communityDTOList);
       model.addAttribute("page", pagenation);
-      System.out.println("page= "+page);
-      System.out.println("startRow: "+pagenation.getStartRow()+" / endRow: "+pagenation.getEndRow());
-      System.out.println("myCommunityList: " + communityDTOList);
-      System.out.println("page: " + pagenation);
+//      System.out.println("page= "+page);
+//      System.out.println("startRow: "+pagenation.getStartRow()+" / endRow: "+pagenation.getEndRow());
+//      System.out.println("myCommunityList: " + communityDTOList);
+//      System.out.println("page: " + pagenation);
       return "users/myCommunity";
    }
 

@@ -59,7 +59,7 @@ public class ProduceController {
         String user_id = (String) session.getAttribute("user_id");
         UserDTO user = userService.findUserById(user_id);
         //유저 타입이 판매자가 아닌경우
-        if(isSeller(user)){
+        if(isNotSeller(user)){
             //이미 판매자 등록했는데 아직 승인이 안난경우
             if(isWaitingToBeApproved(user_id)){
                 alertAndMovePage(response,"판매자 등록 처리중입니다. 잠시만 기다려주세요!","/produce/list/0");
@@ -74,7 +74,7 @@ public class ProduceController {
         return "/produce/produceWrite";
     }
 
-    private boolean isSeller(UserDTO user) {
+    private boolean isNotSeller(UserDTO user) {
         return user.getUsertype() < 2;
     }
 
