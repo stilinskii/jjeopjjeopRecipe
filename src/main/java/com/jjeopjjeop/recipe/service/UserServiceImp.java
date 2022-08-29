@@ -145,4 +145,11 @@ public class UserServiceImp implements UserService{
       return userDAO.checkId(user_id);
    }
 
+
+
+   @Override
+   public UserDTO findUserById(String user_id) {
+      return userDAO.findUserById(user_id);
+   }
+
 }

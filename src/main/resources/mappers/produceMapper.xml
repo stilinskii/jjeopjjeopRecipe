@@ -107,13 +107,11 @@
 	<select id="searchSellerBusinessName" parameterType="String" resultType="String">
 		SELECT business_name FROM seller WHERE user_id = #{user_id}
 	</select>
-<!--======================================index.html용==================================================
-	정아: AND end_of_sale = 0 아래 두개에 추가함.-->
-	<select id="findProductsByKeyword" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
-		SELECT * FROM produce_board WHERE end_of_sale = 0 AND produce_name LIKE '%' || #{keyword, jdbcType=VARCHAR} || '%'
-	<!--======================================index.html용==================================================-->
+<!--======================================index.html용==================================================-->
+
 	<select id="findProduceByKeyword" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
-		SELECT * FROM produce_board WHERE produce_name LIKE '%' || #{keyword, jdbcType=VARCHAR} || '%'
+		SELECT * FROM produce_board WHERE end_of_sale = 0 AND produce_name LIKE '%' || #{keyword, jdbcType=VARCHAR} || '%'
+
 
 	</select>
 
