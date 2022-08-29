@@ -23,9 +23,6 @@
         </if>
     </select>
 
-<!--    <select id="countUser" resultType="int">-->
-<!--        SELECT count(*) FROM User_j-->
-<!--    </select>-->
 
     <!-- 회원 상세 -->
     <select id="detailU" resultType="UserDTO">

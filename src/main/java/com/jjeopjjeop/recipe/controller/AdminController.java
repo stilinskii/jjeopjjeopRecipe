@@ -41,7 +41,7 @@ public class AdminController {
 
 
     //page
-   // @MySecured(role = MySecured.Role.ADMIN)
+    @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/u_index")
     public String UserList(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model,String keyword) {
         log.info("회원 리스트");
@@ -54,6 +54,7 @@ public class AdminController {
     }
 
     //회원상세
+    @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/detailU")
     public String detailU(String user_id, Model model){
         UserDTO detailU = adminService.detailUser(user_id);
@@ -62,7 +63,7 @@ public class AdminController {
     }
 
     //회원 삭제하기(키가 연결되어서 안 됨)
-    // @MySecured(role = MySecured.Role.ADMIN)
+    @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("delU/{user_id}")
     public String delUser(@PathVariable String user_id){
         log.info("user_id={}",user_id);
@@ -79,6 +80,7 @@ public class AdminController {
 
     //미승인 판매자 리스트
 
+    @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/s_index")
     public String nSellerList(@RequestParam(value = "page", required = false, defaultValue = "0")Integer page, Model model){
        log.info("nseller");
@@ -92,7 +94,7 @@ public class AdminController {
 
 
     //승인 판매자 리스트
-    //@MySecured(role = MySecured.Role.ADMIN)
+    @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/ss_index")
     public String ySellerList(@RequestParam(value = "page", required = false, defaultValue = "0")Integer page, Model model){
        Pagenation pagenation = new Pagenation(page, 10, adminService.countYseller());
@@ -121,6 +123,7 @@ public class AdminController {
 
 
     //레시피 목록
+    @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/r_index")
     //다현님꺼
     public ModelAndView rcpList(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
@@ -150,7 +153,7 @@ public class AdminController {
     }
 
     //레시피 삭제
-    // @MySecured(role = MySecured.Role.ADMIN)
+    @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("delrcp/{rcp_seq}")
     public  String delRcp(@PathVariable("rcp_seq") int rcp_seq){
         adminService.delRcp(rcp_seq);
@@ -158,6 +161,7 @@ public class AdminController {
     }
 
     //게시판 신고순 리스트
+    @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/c_index")
     public String appcomm(@RequestParam(value = "page", required = false, defaultValue = "0")Integer page,Model model){
         Pagenation pagenation = new Pagenation(page, 10, communityService.count());
@@ -168,7 +172,7 @@ public class AdminController {
     }
 
     //게시판 삭제(완)
-    // @MySecured(role = MySecured.Role.ADMIN)
+    @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/delcom/{id}")
     public String delcomm(@PathVariable Integer id){
         log.info("access");
