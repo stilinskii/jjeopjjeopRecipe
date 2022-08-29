@@ -288,10 +288,10 @@ public class UserController {
       model.addAttribute("user_id", user_id);
       model.addAttribute("myCommunityList", communityDTOList);
       model.addAttribute("page", pagenation);
-//      System.out.println("page= "+page);
-//      System.out.println("startRow: "+pagenation.getStartRow()+" / endRow: "+pagenation.getEndRow());
-//      System.out.println("myCommunityList: " + communityDTOList);
-//      System.out.println("page: " + pagenation);
+      System.out.println("page= "+page);
+      System.out.println("startRow: "+pagenation.getStartRow()+" / endRow: "+pagenation.getEndRow());
+      System.out.println("myCommunityList: " + communityDTOList);
+      System.out.println("page: " + pagenation);
       return "users/myCommunity";
    }
 

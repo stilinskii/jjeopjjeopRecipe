@@ -87,7 +87,7 @@ public class CommunityController {
 
         //자유글이면 레시피가 선택됐더라도 선택X
         if(community.getCategory().equals("0")){
-            community.setRcp_seq(0);
+            community.setRcp_seq(null);
         }
 
         //사진 있으면 사진있는 게시판이라고 표시(인덱스에서 사진있음 표시 위해)
@@ -120,11 +120,18 @@ public class CommunityController {
         //로그인한 유저가 해당 포스트 좋아요 했는지도 확인함.
         CommunityDTO post = communityService.findPostWithLikeInfo(id,userId);
         List<CommunityCommentDTO> comments = communityService.findComments(id);
-
+        log.info("post.getCategory()={}",post.getCategory());
         //글이 레시피 후기글이면 레시피 정보도 넘기기.
         Integer rep_scq = post.getRcp_seq();
         if(rep_scq != null && rep_scq !=0){
-            model.addAttribute("recipe",recipeService.contentProcess(rep_scq));
+            RecipeDTO recipeDTO = recipeService.contentProcess(rep_scq);
+            model.addAttribute("recipe", recipeDTO);
+
+        }else {
+            //삭제된 레시피의 후기글일때 넘기기.
+            if (post.getCategory().equals("2")) {
+                model.addAttribute("deletedRecipe", true);
+            }
         }
         //로그인한 유저의 정보도 뷰에 넘김.
         model.addAttribute("user",user);
@@ -159,11 +166,6 @@ public class CommunityController {
         String user_id = getUser(session).getUser_id();
         //글을 쓴 회원이거나 관리자이면 가능
         if (user_id.equals(communityService.findPostById(postId).getUser_id()) || user_id.equals("admin")) {
-
-            if (!image.isEmpty()) {
-                communityService.deleteCurrentImages(postId);
-                community.setImage_exists(1);
-            }
             community.setId(postId);
             communityService.editPost(community, image);
         }
@@ -198,7 +200,6 @@ public class CommunityController {
         UserDTO user = getUser(session);
         String userId = user.getUser_id();
 
-        //코드 맘에안듦. TODO
         CommunityDTO post;
         if(add==true){
             communityService.addLikeCnt(postId,userId);
@@ -230,16 +231,20 @@ public class CommunityController {
     @MySecured
     @ResponseBody
     @PostMapping("/post/comment/edit")
-    public void editComment(Integer commentId, String content){
-        //사용자 관리자만 되게끔 수정
-        communityService.editComment(Map.of("commentId",commentId,"content",content));
+    public void editComment(Integer commentId, String content,HttpSession session){
+        String user_id = getUser(session).getUser_id();
+        if(user_id.equals(communityService.findCommentById(commentId).getUser_id()) || user_id.equals("admin")){
+            communityService.editComment(Map.of("commentId",commentId,"content",content));
+        }
     }
 
     @MySecured
     @GetMapping("/post/comment/delete")
-    public String deleteComment(Integer commentId, HttpServletRequest request){
-        //사용자 관리자만 되게끔 수정
-        communityService.deleteComment(commentId);
+    public String deleteComment(Integer commentId, HttpServletRequest request,HttpSession session){
+        String user_id = getUser(session).getUser_id();
+        if(user_id.equals(communityService.findCommentById(commentId).getUser_id()) || user_id.equals("admin")){
+            communityService.deleteComment(commentId);
+        }
         String refererLink = request.getHeader("referer");
 
         return "redirect:"+refererLink;

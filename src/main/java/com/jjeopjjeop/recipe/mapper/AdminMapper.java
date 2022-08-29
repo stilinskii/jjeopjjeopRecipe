@@ -25,8 +25,12 @@ public interface AdminMapper {
     @Delete("delete from User_j where user_id = #{user_id}")
     void delUser(String user_id);
 
+    //회원 정지 업데이트?
+    @Update("update User_j set usertype = 4 where user_id=#{user_id}")
+    void updateUser(String user_id);
 
-    //판매자 신청자 카운트
+
+   //판매자 신청자 카운트
     @Select("select count(*) from Seller where approval = 0")
     int countNseller();
 

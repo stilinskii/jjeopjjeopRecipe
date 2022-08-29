@@ -12,6 +12,7 @@
         </if>
         ) t1
             WHERE seqnum BETWEEN #{startRow} AND #{endRow}
+            AND usertype != 4
     </select>
 
     <!-- 회원 수 -->

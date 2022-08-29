@@ -49,6 +49,7 @@
         </div>
         <h1 th:text="${community.title}">글제목</h1>
         <div class="d-flex bd-highlight detail">
+    
           <p
             class="me-auto bd-highlight"
             th:text="${community.user_id}"
@@ -67,6 +68,9 @@
           </p>
         </div>
         <hr class="my-2 line border border-dark" />
+        <div th:if="${deletedRecipe}">
+          <h3>레시피가 삭제되었습니다.</h3>
+        </div>
         <div
           th:if="${recipe}"
           class="result d-flex justify-content-between border border-secondary m-1 rounded"
