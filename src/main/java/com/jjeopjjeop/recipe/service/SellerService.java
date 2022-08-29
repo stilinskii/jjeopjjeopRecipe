@@ -21,7 +21,7 @@ public class SellerService {
         sellerMapper.insert(seller);
     }
 
-    public Integer isThisUserSeller(String user_id) {
+    public Integer findSellerById(String user_id) {
         return sellerMapper.findSellerById(user_id);
     }
 }

@@ -59,9 +59,9 @@ public class ProduceController {
         String user_id = (String) session.getAttribute("user_id");
         UserDTO user = userService.findUserById(user_id);
         //유저 타입이 판매자가 아닌경우
-        if(user.getUsertype()<2){
+        if(isSeller(user)){
             //이미 판매자 등록했는데 아직 승인이 안난경우
-            if(sellerService.isThisUserSeller(user_id)>0){
+            if(isWaitingToBeApproved(user_id)){
                 alertAndMovePage(response,"판매자 등록 처리중입니다. 잠시만 기다려주세요!","/produce/list/0");
             }else{
                 //판매자 등록 안한경우
@@ -72,6 +72,14 @@ public class ProduceController {
         model.addAttribute("produceDTO", new ProduceDTO()); //빈 오브젝트를 뷰에 넘겨준다.
 
         return "/produce/produceWrite";
+    }
+
+    private boolean isSeller(UserDTO user) {
+        return user.getUsertype() < 2;
+    }
+
+    private boolean isWaitingToBeApproved(String user_id) {
+        return sellerService.findSellerById(user_id) > 0;
     }
 
     public static void alertAndMovePage(HttpServletResponse response, String alertText, String nextPage)  throws IOException {
