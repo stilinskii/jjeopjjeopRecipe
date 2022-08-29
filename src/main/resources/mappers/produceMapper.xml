@@ -5,14 +5,12 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.jjeopjjeop.recipe.dao.ProduceDAO">
-
-	<!--   dto경로: com.jjeopjjeop.recipe.dto.ProduceDTO
-                     com.jjeopjjeop.recipe.dto.ProduceDTO-->
-
+	<!--	dto경로: com.jjeopjjeop.recipe.dto.ProduceDTO
+                        com.jjeopjjeop.recipe.dto.ProduceDTO-->
 	<!--판매글 작성 반영-->
 	<insert id="write" parameterType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		INSERT INTO produce_board
-		VALUES(produce_num_seq.nextval, #{user_id}, #{produce_type}, #{produce_name}, #{price}, #{produce_image}, #{produce_image_path}, #{produce_description})
+		VALUES(produce_num_seq.nextval, #{user_id}, #{produce_type}, #{produce_name}, #{price}, #{produce_image}, #{produce_image_path}, #{produce_description}, 0)
 	</insert>
 
 	<!--판매글 리스트 필터링: 0은 전체. 이외에는 type따라 -->
@@ -21,12 +19,13 @@
 		FROM (SELECT rcp.*, rownum rm FROM
 		(SELECT *
 		FROM produce_board
+		WHERE end_of_sale = 0
 		<if test="produce_type > 0">
-			WHERE produce_type=#{produce_type}
+			AND produce_type=#{produce_type}
 		</if>
 		ORDER BY produce_num DESC)rcp)rcp_li
 		<![CDATA[
-         WHERE rm >= #{startRow} AND rm <= #{endRow}
+     	 WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
 	</select>
 
@@ -40,6 +39,7 @@
 				FROM produce_board, pay_history
 				WHERE pay = 1
 				AND produce_board.produce_num = pay_history.produce_num
+				AND produce_board.end_of_sale = 0
 				GROUP BY produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
 				ORDER BY sum(quantity) DESC
 			</when>
@@ -48,38 +48,41 @@
 				WHERE pay=1
 				AND produce_review.pay_num = pay_history.pay_num
 				AND produce_board.produce_num = pay_history.produce_num
+				AND produce_board.end_of_sale = 0
 				GROUP BY produce_review.rating, produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
 				ORDER BY avg(produce_review.rating) DESC
 			</when>
 		</choose>
 		)rcp)rcp_li
 		<![CDATA[
-         WHERE rm >= #{startRow} AND rm <= #{endRow}
+     	 WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
 	</select>
 
-	<!--판매글 삭제-->
-	<delete id="produceDelete" parameterType="int">
-		DELETE FROM produce_board WHERE produce_num=#{produce_num}
-	</delete>
+	<update id="produceUpdateSale" parameterType="int">
+		UPDATE produce_board
+		SET end_of_sale = 1
+		WHERE produce_num = #{produce_num}
+	</update>
 
 	<!--판매글 상세보기-->
 	<select id="produceView" parameterType="int" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
-		SELECT * FROM produce_board WHERE produce_num=#{produce_num}
+		SELECT * FROM produce_board WHERE produce_num=#{produce_num} and end_of_sale = 0
 	</select>
 
 	<!--판매글 수정-->
 	<update id="produceUpdate" parameterType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		UPDATE produce_board
-		SET produce_type=#{produce_type}, produce_name=#{produce_name}, price=#{price}, produce_description=#{produce_description}
+		SET produce_type=#{produce_type}, produce_name=#{produce_name}, price=#{price}, produce_description=#{produce_description}, produce_image = #{produce_image}, produce_image_path = #{produce_image_path}
 		WHERE produce_num=#{produce_num}
 	</update>
 
 	<!--페이지 처리를 위해 판매글(필터링) 개수 세기-->
 	<select id="produceFilterCount" resultType="int" parameterType="int">
 		SELECT count(*) FROM produce_board
+		WHERE end_of_sale = 0
 		<if test="produce_type > 0">
-			WHERE produce_type=#{produce_type}
+			AND produce_type=#{produce_type}
 		</if>
 	</select>
 
@@ -90,27 +93,35 @@
 			FROM produce_board, pay_history
 			WHERE produce_board.produce_num = pay_history.produce_num
 			AND pay = 1
+			AND produce_board.end_of_sale = 0
 		</if>
 		<if test="sort == 2">
 			FROM produce_board, pay_history, produce_review
 			WHERE pay=1
 			AND produce_review.pay_num = pay_history.pay_num
 			AND produce_board.produce_num = pay_history.produce_num
+			AND produce_board.end_of_sale = 0
 		</if>
 	</select>
 
-	<!--======================================index.html용==================================================-->
-	<select id="findProductsByKeyword" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
-		SELECT * FROM produce_board WHERE produce_name LIKE '%' || #{keyword, jdbcType=VARCHAR} || '%'
+	<select id="searchSellerBusinessName" parameterType="String" resultType="String">
+		SELECT business_name FROM seller WHERE user_id = #{user_id}
+	</select>
+<!--======================================index.html용==================================================-->
+
+	<select id="findProduceByKeyword" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+		SELECT * FROM produce_board WHERE end_of_sale = 0 AND produce_name LIKE '%' || #{keyword, jdbcType=VARCHAR} || '%'
+
 
 	</select>
 
-	<select id="findProductsByKeywordWithPaging" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+	<select id="findProduceByKeywordWithPaging" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		<![CDATA[
         SELECT rcp_li.* FROM
             (SELECT rcp.*, rownum rm FROM
                 (SELECT * FROM produce_board
-                WHERE produce_name LIKE '%' || #{keyword} || '%'
+                WHERE end_of_sale = 0
+                AND produce_name LIKE '%' || #{keyword} || '%'
                 ORDER BY produce_num DESC)rcp)rcp_li
         WHERE rm >= #{startRow} AND rm <= #{endRow}
         ]]>
@@ -118,13 +129,20 @@
 
 
 	<select id="getFourProduceNumOrderBySoldCount" resultType="int">
-		SELECT * FROM  (select t1.*, rownum rm FROM
-		(select produce_num from(
-		SELECT count(*), produce_num
-		FROM pay_history
+		SELECT rcp_li.*
+		FROM (SELECT rcp.*, rownum rm FROM
+		(SELECT produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
+		FROM produce_board, pay_history
 		WHERE pay = 1
-		GROUP BY produce_num
-		ORDER BY count(*) DESC) )t1)
-		WHERE rm BETWEEN 1 AND 4
+		AND produce_board.produce_num = pay_history.produce_num
+		AND produce_board.end_of_sale =0
+		GROUP BY produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
+		ORDER BY sum(quantity) DESC
+		)rcp)rcp_li
+
+		WHERE rm between 1 AND 4
 	</select>
+
+
+
 </mapper>

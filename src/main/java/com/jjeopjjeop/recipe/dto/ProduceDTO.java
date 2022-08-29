@@ -1,6 +1,5 @@
 package com.jjeopjjeop.recipe.dto;
 
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,14 +26,14 @@ public class ProduceDTO {
     @Positive(message = "1이상의 숫자를 입력해주세요.")
     private Integer price;
 
-    @NotNull(message = "사진은 필수 입력값입니다.")
-    @Size(min = 1, max = 300, message = "사진의 이름은 300byte이하만 가능합니다.")
     private String produce_image;
 
     private String produce_image_path;
 
     @Size(min = 1, max = 200, message = "상품 설명은 필수 입력값입니다.(최대: 한글 113자/영어 200자)")
     private String produce_description;
+
+    private Integer end_of_sale;
 
     @Autowired
     private PayDTO payDTO;//장바구니에 쓰려고 만듦.

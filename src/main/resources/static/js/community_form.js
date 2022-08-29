@@ -46,7 +46,6 @@ function searchRecipe() {
   });
 
   $(document).ajaxComplete(function () {
-    console.log('complete ajax');
     selectRecipeProcess();
   });
 }

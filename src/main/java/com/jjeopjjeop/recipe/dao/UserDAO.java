@@ -27,7 +27,11 @@ public interface UserDAO {
    public List<CommunityDTO> viewMyCommunity(Map<String, Object> map) throws DataAccessException;
    public List<RecipeDTO> viewMyRecipe(Map<String, Object> map) throws DataAccessException;
    public List<CommunityDTO> viewMyReview(Map<String, Object> map) throws DataAccessException;
+   public List<RecipeDTO> viewMyScrap(Map<String, Object> map) throws DataAccessException;
    public int countMyCommunity(String user_id) throws DataAccessException;
    public int countMyRecipe(String user_id) throws DataAccessException;
    public int countMyReview(String user_id) throws DataAccessException;
+   public int countMyScrap(String user_id) throws DataAccessException;
+
+    UserDTO findUserById(String user_id);
 }

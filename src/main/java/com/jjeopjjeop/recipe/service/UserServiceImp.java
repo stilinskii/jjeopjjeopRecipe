@@ -46,6 +46,11 @@ public class UserServiceImp implements UserService{
    }
 
    @Override
+   public List<RecipeDTO> listMyScrap(String user_id, Pagenation pagenation) {
+      return userDAO.viewMyScrap(Map.of("user_id", user_id, "page", pagenation));
+   }
+
+   @Override
    public int countMyCommunity(String user_id) {
       return userDAO.countMyCommunity(user_id);
    }
@@ -58,6 +63,11 @@ public class UserServiceImp implements UserService{
    @Override
    public int countMyRecipe(String user_id) {
       return userDAO.countMyRecipe(user_id);
+   }
+
+   @Override
+   public int countMyScrap(String user_id) {
+      return userDAO.countMyScrap(user_id);
    }
 
    @Override
@@ -143,6 +153,13 @@ public class UserServiceImp implements UserService{
    @Override
    public int checkId(String user_id) {
       return userDAO.checkId(user_id);
+   }
+
+
+
+   @Override
+   public UserDTO findUserById(String user_id) {
+      return userDAO.findUserById(user_id);
    }
 
 }

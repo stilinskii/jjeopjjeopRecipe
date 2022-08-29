@@ -18,8 +18,8 @@
         SELECT * FROM comment_board where board_id=#{id}
     </select>
 
-    <select id="findCommentByUserId" resultType="String">
-        SELECT * FROM comment_board where user_id = #{user_id}
+    <select id="findCommentById" resultType="CommunityCommentDTO">
+        SELECT * FROM comment_board where id = #{commentId}
     </select>
 
     <delete id="deleteCommentById" parameterType="int">

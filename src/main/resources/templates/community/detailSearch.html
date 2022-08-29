@@ -85,11 +85,10 @@
           >
             글 수:
           </p>
-          <div></div>
         </div>
 
         <div class="container-fluid">
-          <div>
+          <div th:if="${board}">
             <table class="table caption-top">
               <thead class="bg-secondary bg-gradient">
                 <tr>
@@ -120,22 +119,6 @@
                   <td th:text="${el.formatted_created_at}">@mdo</td>
                   <td th:text="${el.read_count}">@mdo</td>
                   <td th:text="${el.like_count}">@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                  <td>@fat</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Larry</td>
-                  <td>the Bird</td>
-                  <td>@twitter</td>
-                  <td>@twitter</td>
-                  <td>@twitter</td>
                 </tr>
               </tbody>
             </table>

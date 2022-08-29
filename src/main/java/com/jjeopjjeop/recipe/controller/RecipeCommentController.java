@@ -28,7 +28,6 @@ public class RecipeCommentController {
         // 덧글 처리
         Pagenation pagenation = new Pagenation(Integer.parseInt(commentCurrentPage), service.countProcess(Integer.parseInt(rcp_seq)), false);
 
-        //recipeCommentPageDTO.setRecipeCommentDTOList(service.listProcess(recipeCommentPageDTO));
         Map<String, Object> map = new HashMap<>();
         map.put("list", service.listProcess(pagenation, Integer.parseInt(rcp_seq)));
         map.put("page", pagenation);

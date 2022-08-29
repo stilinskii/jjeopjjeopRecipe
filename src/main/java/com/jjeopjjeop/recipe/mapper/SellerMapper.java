@@ -17,4 +17,8 @@ public interface SellerMapper {
     @Insert("insert into Seller values(#{seller.user_id}, #{seller.business_name}, #{seller.registration_number}, #{seller.seller_phone}, #{seller.seller_address},'0')")
     void insert(@Param("seller") SellerDTO SellerDTO);
 
+
+    @Select("select count(*) from Seller where user_id=#{user_id}")
+    Integer findSellerById(@Param("user_id") String user_id);
+
 }
