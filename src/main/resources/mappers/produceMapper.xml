@@ -134,6 +134,7 @@
 		FROM produce_board, pay_history
 		WHERE pay = 1
 		AND produce_board.produce_num = pay_history.produce_num
+		AND produce_board.end_of_sale =0
 		GROUP BY produce_board.produce_num, produce_board.user_id, produce_board.produce_type, produce_board.produce_name, produce_board.price, produce_board.produce_image, produce_board.produce_image_path, produce_board.produce_description
 		ORDER BY sum(quantity) DESC
 		)rcp)rcp_li
