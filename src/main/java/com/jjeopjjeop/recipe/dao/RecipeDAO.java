@@ -33,6 +33,7 @@ public interface RecipeDAO {
     public void updateScrapP(int num); //레시피 스크랩수 증가
     public void scrapM(UserScrapDTO userScrapDTO); //스크랩 해제
     public void updateScrapM(int num); //레시피 스크랩수 감소
+    public List<RecipeDTO> getScraps(String user_id); //스크랩한 레시피 조회
 
     // report 처리
     public int checkReport(ReportRecipeDTO reportRecipeDTO); //중복인가?

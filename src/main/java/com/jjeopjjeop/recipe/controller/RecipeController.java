@@ -170,10 +170,6 @@ public class RecipeController {
     @MySecured(role = MySecured.Role.USER)
     @GetMapping("/recipe/write")
     public String rcpWriteMethod(Model model, HttpSession session){
-//        if(session.getAttribute("user_id") == null){
-//            return "redirect:/login";
-//        }
-
         RecipeDTO recipeDTO = new RecipeDTO();
 
         // 레시피 분류 목록
@@ -197,8 +193,6 @@ public class RecipeController {
             // 레시피 분류 목록
             List<CategoryDTO> cateList = service.cateListProcess();
             model.addAttribute("cateList", cateList);
-
-            //log.info("errors={}", bindingResult);
             return "recipe/rcpWrite";
         }
 
