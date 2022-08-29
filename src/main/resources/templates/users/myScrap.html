@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head('내 레시피')">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- bootstrap: header에 추가하지 않으면 서버 재시작해야 적용된 내용 확인할 수 있음 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- icons -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+<nav th:replace="fragments/nav :: front-nav(title)"></nav>
+<div class="wrapper d-flex align-items-stretch">
+    <div class="sidenav" th:replace="fragments/userSidebar :: userSidebar"></div>
+    <div id="content" class="main pt-5">
+        <div class="container py-5 h-100">
+            <h4 class="row d-flex justify-content-center align-items-center mb-3">스크랩한 레시피</h4>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">조회</th>
+                    <th scope="col">스크랩 수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="myRecipe :${myRecipeList}">
+                    <th scope="row" th:text="${myRecipe.rcp_seq}">1</th>
+                    <td>
+                        <a
+                            th:text="${myRecipe.rcp_name}"
+                            th:href="@{/recipe/view/{rcp_seq}(rcp_seq=${#numbers.formatInteger(myRecipe.rcp_seq, 3)}, rcp_sort=${recipePageDTO.rcp_sort}
+                                    , cate_seq=${recipePageDTO.cate_seq}, currentPage=${recipePageDTO.currentPage})}">
+                            Title
+                        </a>
+                    </td>
+                    <td th:text="${myRecipe.user_id}">Writer</td>
+                    <td th:text="${myRecipe.rcp_date}">WriteDate</td>
+                    <td th:text="${myRecipe.rcp_viewcnt}">ViewCount</td>
+                    <td th:text="${myRecipe.scrap}">LikeCount</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <nav class="mt-3" th:if="${page.count>page.perPage}">
+            <ul class="pagination justify-content-center">
+                <li
+                        class="page-item"
+                        th:classappend="${page.page == 0} ? 'disabled'"
+                >
+                    <a
+                            th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}"
+                            class="page-link"
+                    >&laquo;</a
+                    >
+                </li>
+                <li
+                        class="page-item"
+                        th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
+                        th:classappend="${page.page==number-1} ? 'active'"
+                >
+                    <a
+                            th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
+                            class="page-link"
+                            th:text="${number}"
+                    ></a>
+                </li>
+                <li
+                        class="page-item"
+                        th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'"
+                >
+                    <a
+                            th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}"
+                            class="page-link"
+                    >&raquo;</a
+                    >
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>
