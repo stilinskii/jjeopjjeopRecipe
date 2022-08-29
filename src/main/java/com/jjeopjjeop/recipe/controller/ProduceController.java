@@ -75,6 +75,7 @@ public class ProduceController {
     }
 
     private boolean isSeller(UserDTO user) {
+        System.out.println();
         return user.getUsertype() < 2;
     }
 

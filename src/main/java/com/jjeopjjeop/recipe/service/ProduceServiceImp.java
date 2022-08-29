@@ -25,12 +25,6 @@ class ProduceServiceImp implements ProduceService {
 
     @Override
     public void writeProcess(ProduceDTO produceDTO, MultipartFile file) throws Exception{
-//        String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\media\\produce";
-//        UUID uuid = UUID.randomUUID();
-//        String fileName = uuid + "_" + file.getOriginalFilename();
-//
-//        File saveFile = new File(projectPath, fileName);
-//        file.transferTo(saveFile);
         String fileName = imageStore(file);
 
         produceDTO.setProduce_image(fileName);
@@ -53,7 +47,10 @@ class ProduceServiceImp implements ProduceService {
     //판매글 작성과 판매글 수정을 위한 이미지 저장 메소드
     public String imageStore(MultipartFile file) throws Exception{
         String fileName;
-        if(file != null) {//업로드한 파일이 있으면
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println(file.isEmpty());
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        if(!file.isEmpty()) {//업로드한 파일이 있으면
             // 저장하기
             String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\media\\produce";
             UUID uuid = UUID.randomUUID();
@@ -63,6 +60,9 @@ class ProduceServiceImp implements ProduceService {
         }else {
             fileName = "";
         }
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println(fileName);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         return fileName;
     }
