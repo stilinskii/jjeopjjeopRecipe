@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,9 +46,8 @@ public class ProduceController {
 
     //판매글 작성폼 불러오기
     @MySecured
-    @GetMapping({"/produce/write"})
+    @GetMapping("/produce/write")
     public String produceWriteForm(Model model) {
-
         model.addAttribute("produceDTO", new ProduceDTO()); //빈 오브젝트를 뷰에 넘겨준다.
         return "/produce/produceWrite";
     }
@@ -54,8 +55,18 @@ public class ProduceController {
 
     //판매글 작성 반영
     @MySecured
-    @PostMapping({"/produce/write"})
-    public String produceWrite(ProduceDTO produceDTO, MultipartFile file) throws Exception{
+    @PostMapping("/produce/write")
+    public String produceWrite(@Validated ProduceDTO produceDTO, MultipartFile file, BindingResult bindingResult) throws Exception{
+        if(bindingResult.hasErrors()){
+            System.out.println("==============비정상=======================");
+            System.out.println(produceDTO);
+            System.out.println("======================================");
+            return "/produce/produceWrite";
+        }
+
+        System.out.println("===============정상======================");
+        System.out.println(produceDTO);
+        System.out.println("======================================");
         produceService.writeProcess(produceDTO, file);
         return "redirect:/produce/list/0";
     }
@@ -64,7 +75,6 @@ public class ProduceController {
     //판매글 조회(필터링)
     @GetMapping("/produce/list/{type}")
     public ModelAndView produceList(@PathVariable("type") int type, @RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav) {
-
         int totalRecord = produceService.produceFilterCount(type);// 전체 레코드 수
 
         Pagenation pagenation = new Pagenation(page,9, totalRecord); //페이지 처리를 위한 계산
@@ -75,9 +85,19 @@ public class ProduceController {
         map.put("endRow", pagenation.getEndRow());
         map.put("produce_type", type);
 
+        List<ProduceDTO> list = produceService.produceList(map);
         //produceList.html에 보낼 값들.
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
-        mav.addObject("list", produceService.produceList(map));  //판매글 리스트 넘겨주기
+        mav.addObject("list", list);  //판매글 리스트 넘겨주기
+
+        //판매자 id로 판매자 상호명 구하기.
+        Map<String, String> idToBusinessName = new HashMap<>();
+        for (ProduceDTO item:list) {
+            String businessName = produceService.searchSellerBusinessName(item.getUser_id());
+            idToBusinessName.put(item.getUser_id(), businessName);
+        }
+        mav.addObject("idToBusinessName", idToBusinessName);
+
         mav.setViewName("/produce/produceList");
         return mav;
     }
@@ -95,43 +115,61 @@ public class ProduceController {
         map.put("endRow", pagenation.getEndRow());
         map.put("sort", sort);
 
+        List<ProduceDTO> list = produceService.produceListSort(map);
+
         //produceList.html에 보낼 값들.
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
-        mav.addObject("list", produceService.produceListSort(map));  //판매글 리스트 넘겨주기
+        mav.addObject("list", list );  //판매글 리스트 넘겨주기
+
+        //판매자 id로 판매자 상호명 구하기.
+        Map<String, String> idToBusinessName = new HashMap<>();
+        for (ProduceDTO item:list) {
+            String businessName = produceService.searchSellerBusinessName(item.getUser_id());
+            idToBusinessName.put(item.getUser_id(), businessName);
+        }
+        mav.addObject("idToBusinessName", idToBusinessName);
+
         mav.setViewName("/produce/produceList");
         return mav;
     }
     //////////////////////////////////////////////////////////////////////////////////////
-
-    //판매글 삭제
+    //판매종료
     @MySecured
-    @GetMapping({"/produce/delete/{produceNum}"})
-    public String produceDelete(@PathVariable("produceNum") int produce_num) {
-        produceService.produceDeleteProcess(produce_num);
-
+    @GetMapping("/produce/update/endOfSale/{produceNum}")
+    public String produceUpdateSale(@PathVariable("produceNum") int produce_num){
+        produceService.produceUpdateSale(produce_num);
         return "redirect:/produce/list/0";
     }
 
     //판매글 상세보기
     @GetMapping("/produce/view/{produceNum}")
-    public ModelAndView produceView(@PathVariable("produceNum") int produce_num, ModelAndView mav) {
+    public ModelAndView produceView(@PathVariable("produceNum") int produce_num, ModelAndView mav, HttpServletRequest request) {
         //판매글 상세내용
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num); //produce_num에 해당하는 정보 가져오기
         mav.addObject("produceDTO", produceDTO);//가져온 정보 보내기
+        mav.addObject("businessName", produceService.searchSellerBusinessName(produceDTO.getUser_id()));
         mav.setViewName("/produce/produceView");
 
         //리뷰
         List<ReviewDTO> list = reviewService.reviewListProcess(produce_num);
         mav.addObject("list", list);
 
+        //직전페이지 정보
+        String beforeAddress = request.getHeader("referer");
+        if(beforeAddress.indexOf("/produce/list") > 0){ //직전페이지가 판매글 리스트라면
+            mav.addObject("beforeAddress", beforeAddress);  //직전페이지 url를 뷰에 보내기기
+        }
+
+
         return mav;
     }
 
     //판매글 수정폼
     @MySecured
-    @GetMapping({"/produce/update/{produceNum}"})
+    @GetMapping("/produce/update/{produceNum}")
     public ModelAndView produceUpdateForm(@PathVariable("produceNum") int produce_num, ModelAndView mav) {
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num);
+        produceDTO.setProduce_image(produceDTO.getProduce_image().substring(produceDTO.getProduce_image().lastIndexOf('_')+1)); //기존의 파일이미지 가지고 오기.
         mav.addObject("produceDTO", produceDTO);
         mav.setViewName("produce/produceUpdateForm");
         return mav;
@@ -139,9 +177,22 @@ public class ProduceController {
 
     //판매글 수정 반영
     @MySecured
-    @PostMapping({"/produce/update/{produceNum}"})
-    public String produceUpdate(@PathVariable("produceNum") int produce_num, ProduceDTO produceDTO) {
-        produceService.produceUpdateProcess(produceDTO);
+    @PostMapping("/produce/update/{produceNum}")
+    public String produceUpdate(@PathVariable("produceNum") int produce_num,@Validated ProduceDTO produceDTO, MultipartFile file, BindingResult bindingResult, Model model) throws Exception {
+        if (bindingResult.hasErrors()) { //에러있으면
+            return "/produce/reviewUpdate";
+        }
+
+
+        produceService.produceUpdate(produceDTO, file);
         return "redirect:/produce/view/" + produce_num;
     }
+    /*
+    @MySecured
+    @PostMapping("/produce/write")
+    public String produceWrite(ProduceDTO produceDTO, MultipartFile file) throws Exception{
+        produceService.writeProcess(produceDTO, file);
+        return "redirect:/produce/list/0";
+    }
+     */
 }

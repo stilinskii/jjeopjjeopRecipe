@@ -7,6 +7,7 @@ import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.KakaoPay;
 import com.jjeopjjeop.recipe.service.PayService;
 
+import com.jjeopjjeop.recipe.service.ProduceService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,8 @@ public class PayController {
 
     @Autowired
     private PayService payService;
-
+    @Autowired
+    private ProduceService produceService;
     public PayController() {
     }
 
@@ -59,10 +61,20 @@ public class PayController {
         map.put("endRow", pagenation.getEndRow());
         map.put("user_id", user_id);
 
-        mav.addObject("list", payService.cartView(map));
+        List<ProduceDTO> list = payService.cartView(map);
+        mav.addObject("list", list);
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
-        mav.setViewName("/users/cart");
 
+        //판매자 id로 판매자 상호명 구하기.
+        Map<String, String> idToBusinessName = new HashMap<>();
+        for (ProduceDTO item:list) {
+           String businessName = produceService.searchSellerBusinessName(item.getUser_id());
+           idToBusinessName.put(item.getUser_id(), businessName);
+        }
+        System.out.println(idToBusinessName);
+        mav.addObject("idToBusinessName", idToBusinessName);
+
+        mav.setViewName("/users/cart");
         return mav;
     }
 
@@ -82,10 +94,19 @@ public class PayController {
         map.put("endRow", pagenation.getEndRow());
         map.put("user_id", user_id);
 
-        mav.addObject("list", payService.payView(map));
+        List<ProduceDTO> list = payService.payView(map);
+        mav.addObject("list", list);
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
-        mav.setViewName("/users/payment");
 
+        //판매자 id로 판매자 상호명 구하기.
+        Map<String, String> idToBusinessName = new HashMap<>();
+        for (ProduceDTO item:list) {
+            String businessName = produceService.searchSellerBusinessName(item.getUser_id());
+            idToBusinessName.put(item.getUser_id(), businessName);
+        }
+        mav.addObject("idToBusinessName", idToBusinessName);
+
+        mav.setViewName("/users/payment");
         return mav;
     }
 

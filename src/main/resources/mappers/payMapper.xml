@@ -29,14 +29,12 @@ user_id = #{user_id}는 혹시 다른 사람이 결제하는 거랑 겹칠까봐
         <collection property="payDTOList" javaType="java.util.List" ofType="com.jjeopjjeop.recipe.dto.PayDTO" autoMapping="true" />
     </resultMap>
 
-
-<!-- MAP으로? 아님 CONTROLLER에서 거르기?-->
     <!--장바구니 버튼 누르면 나오는 장바구니 목록. pay=0인(즉 구매하지 않은) 컬럼을 불러온다. -->
     <select id="cartView" parameterType="Map" resultMap="produce_pay">
         <![CDATA[
         	SELECT rcp_li.* FROM
                 (SELECT rcp.*, rownum rm FROM
-                    ( SELECT produce_board.produce_num, pay_history.pay_num, pay_history.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price
+                    ( SELECT produce_board.produce_num, pay_history.pay_num, produce_board.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price, produce_board.end_of_sale
                         FROM pay_history, produce_board
                         WHERE pay_history.pay = 0
                         AND pay_history.user_id = #{user_id}
@@ -51,7 +49,7 @@ user_id = #{user_id}는 혹시 다른 사람이 결제하는 거랑 겹칠까봐
         <![CDATA[
         	SELECT rcp_li.* FROM
                 (SELECT rcp.*, rownum rm FROM
-                    ( SELECT produce_board.produce_num, pay_history.pay_num, pay_history.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price, pay_history.review_check
+                    ( SELECT produce_board.produce_num, pay_history.pay_num, produce_board.user_id, produce_board.produce_name, produce_board.price, pay_history.quantity, pay_history.pay, pay_history.total_price, pay_history.review_check
                         FROM pay_history, produce_board
                         WHERE pay_history.pay = 1
                         AND pay_history.user_id = #{user_id}
@@ -73,13 +71,6 @@ user_id = #{user_id}는 혹시 다른 사람이 결제하는 거랑 겹칠까봐
 
 
     <!--===========================================================================-->
-
-    <!-- 장바구니 목록에서 제거하기. 나중에 user_id부분도 넣어야할듯?-->
-    <delete id="cartDelete" parameterType="int">
-        DELETE FROM pay_history
-        WHERE pay_num = #{pay_num}
-        AND pay = 0
-    </delete>
 
     <!--결제완료된 품목의 pay를 1로 바꾸기. 나중에 user_id부분도 넣어야할듯?->아닌듯. 어차피 앞에서 다 걸러졌으니까 괜찮겠다.-->
     <update id="cartUpdate" parameterType="int">

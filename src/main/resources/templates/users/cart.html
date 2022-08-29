@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head('내 게시글')">
-    <!-- th:replace="fragments/head('내 게시글')" 일단 빼둠.-->
+<head>
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>장바구니</title>
         <!-- bootstrap: header에 추가하지 않으면 서버 재시작해야 적용된 내용 확인할 수 있음 -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
         <!-- icons -->
@@ -31,6 +30,7 @@
                     <tr class="table-warning">
                         <th scope="col">일련번호</th>
                         <th scope="col">상품명</th>
+                        <th scope="col">판매자</th>
                         <th scope="col">수량 </th>
                         <th scope="col">총가격</th>
                         <th scope="col">결제</th>
@@ -44,13 +44,30 @@
                             <th:block th:each="payDTO : ${produceDTO.payDTOList}">
                                 <td th:text="${page.perPage * page.page + produceDTOStat.count}">일련번호</td>
                                 <!--페이지당 보이는 게시글 수 * 현재페이지번호 + 한페이지당 일련번호로 계산해서 페이지 넘어가도 일련번호 이어지게 만듧.-->
-                                <td><a th:href="@{/produce/view/{produceNum}(produceNum=${produceDTO.produce_num})}" th:text="${produceDTO.produce_name}"></a></td>
+                                <td>
+                                    <th:block th:if="${produceDTO.end_of_sale == 0}">
+                                        <a th:href="@{/produce/view/{produceNum}(produceNum=${produceDTO.produce_num})}" th:text="${produceDTO.produce_name}">\
+                                        </a>
+                                    </th:block>
+                                    <th:block th:unless="${produceDTO.end_of_sale == 0}">
+                                        <a href="#" style="color:black" th:text="${produceDTO.produce_name} + '(판매종료)'">\</a>
+                                    </th:block>
+                                </td>
+                                <th:block th:each="item : ${idToBusinessName}">
+                                    <th:block th:if="${produceDTO.user_id == item.key}">
+                                        <td th:text="${item.value}">판매자</td>
+                                    </th:block>
+                                </th:block>
                                 <td th:text="${payDTO.quantity}">수량</td>
                                 <td data-th-text="${#numbers.formatInteger(payDTO.total_price, 3, 'COMMA') + '원'}">총가격</td>
                                 <td>
-                                    <form method="post" th:action="@{/kakaoPay/{pay_num}(pay_num=${payDTO.pay_num})}">
-                                        <button class="btn btn-md btn-warning">카카오페이로 결제하기</button>
-                                    </form>
+                                    <th:block th:if="${produceDTO.end_of_sale == 0}">
+                                        <form method="post" th:action="@{/kakaoPay/{pay_num}(pay_num=${payDTO.pay_num})}">
+                                            <button class="btn btn-md btn-warning">카카오페이로 결제하기</button>
+                                        </form>
+                                    </th:block>
+                                    <th:block th:unless="${produceDTO.end_of_sale == 0}">
+                                        결제불가(판매종료)</th:block>
                                 </td>
                                 <td><a th:href="@{/mypage/cart/delete/{pay_num}(pay_num=${payDTO.pay_num})}">
                                     <button type="button" class="btn btn-md btn-warning confirmDeletion">삭제</button></a>
@@ -62,50 +79,34 @@
             </table>
 
             <!--  ====================페이지네이션 시작======================-->
-<!--            <div class="row fixed-bottom" data-aos="fade-up">-->
-<!--                <div class="col-md-12 text-center">-->
-<!--                    <div class="site-block-27">-->
-<!--                        <ul>-->
-<!--                            <li><a href="#">&lt;</a></li>-->
-<!--                            <th:block th:each="pDtos : ${#numbers.sequence(pDto.startPage, pDto.endPage)}">-->
-<!--                                <li class="page-item active">-->
-<!--                                    <a th:if="${pDtos} == ${pDto.currentPage}" th:href="@{/mypage/cart/view}" th:text="${pDtos}"></a>-->
-<!--                                </li>-->
-<!--                                <li class="page-item">-->
-<!--                                    <a th:if="${pDtos} != ${pDto.currentPage}" th:href="@{/mypage/cart/view(currentPage=${pDtos})}" th:text="${pDtos}"></a>-->
-<!--                                </li>-->
-<!--                            </th:block>-->
-<!--                            <li><a href="#">&gt;</a></li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
-<!--                </div>-->
-                <!--  ====================페이지네이션 끝======================-->
             <nav class="mt-3" th:if="${page.count>page.perPage}">
                 <ul class="pagination">
                     <li
-                        class="page-item"
-                        th:classappend="${page.page == 0} ? 'disabled'">
+                            class="page-item"
+                            th:classappend="${page.page == 0} ? 'disabled'">
                         <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}"
-                            class="page-link">Previous</a>
+                           class="page-link">Previous</a>
                     </li>
                     <li
-                        class="page-item"
-                        th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
-                        th:classappend="${page.page==number-1} ? 'active'">
+                            class="page-item"
+                            th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
+                            th:classappend="${page.page==number-1} ? 'active'">
                         <a
-                            th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
-                            class="page-link"
-                            th:text="${number}"
+                                th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
+                                class="page-link"
+                                th:text="${number}"
                         ></a>
                     </li>
                     <li
-                        class="page-item"
-                        th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'">
+                            class="page-item"
+                            th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'">
                         <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}"
-                            class="page-link">Next</a>
+                           class="page-link">Next</a>
                     </li>
                 </ul>
             </nav>
+                <!--  ====================페이지네이션 끝======================-->
+
         </div>
     </div>
 </div>

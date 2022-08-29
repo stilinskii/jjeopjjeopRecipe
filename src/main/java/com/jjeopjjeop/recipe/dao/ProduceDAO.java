@@ -16,7 +16,7 @@ public interface ProduceDAO {
 
     List<ProduceDTO> produceListSort(Map<String, Object> map); //판매글 리스트 정렬
     
-    void produceDelete(int produce_num); //판매글 삭제하기
+    void produceUpdateSale(int produce_num); //판매중지로 변경
 
     ProduceDTO produceView(int produce_num); //판매글 상세보기
 
@@ -26,11 +26,12 @@ public interface ProduceDAO {
     
     int produceSortCount(int sort); //페이지처리를 위한 판매글(정렬) 개수세기
 
+    String searchSellerBusinessName(String user_id); //판매자id로 상호명 검색.
+
     //하영 통합검색
     List<ProduceDTO> findProduceByKeyword(String keyword);
 
     List<ProduceDTO> findProduceByKeywordWithPaging(Map<String, Object> map);
-
 
     List<Integer> getFourProduceNumOrderBySoldCount();
 }
