@@ -3,37 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>농산물 직거래 마당</title>
-    <!--==========================임의추가 시작==========================-->
-<!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"-->
-<!--          th:href="@{/css/bootstrap.css}"/>-->
 
-    <!--아래 4줄은 드롭다운이 안돼서 임의로 넣음.https://coding-dahee.tistory.com/50-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-
-    <!--==========================임의 추가 끝==========================-->
-
-    <th:block th:replace="fragments/head :: links"> </th:block><!--이유를 모르겠는데 아래 두줄보다 얘가 위에 있어야 페이지네이션 노란색이 먹힘/-->
-    <link href="/static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+    <th:block th:replace="fragments/head :: links"></th:block>
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
-<div class="site-wrap">
-    <div class="site-section">
+<div class="site-section">
         <div class="container">
+            <div class="d-flex flex-column align-items-center">
+                <h1>농산물 직거래 마당</h1>
+            </div>
             <button class="btn btn-warning btn-lg mb-3"><a th:href="@{/produce/write}" class="a-to-black">판매글 쓰기</a></button>
             <div class="row mb-5">
                 <div class="col-md-12 order-2"><!-- 얘가 우측통째로 -->
                     <!--================드롭다운 시작=================-->
                     <div class="row">
                         <div class="col-md-12 mb-5">
-                            <div class="float-md-left mb-4"><h1>농산물 직거래 마당</h1></div>
                             <div class="d-flex">
-                                <div class="dropdown mr-1 ml-md-auto">
-                                    <button type="button" class="btn btn-warning btn-md dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="dropdown">
+                                    <button type="button" class="btn btn-warning btn-md dropdown-toggle m-1" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         분류
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
@@ -45,7 +34,9 @@
                                     </div>
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-warning btn-md dropdown-toggle" id="dropdownMenuReference" data-toggle="dropdown">정렬</button>
+                                    <button type="button" class="btn btn-warning btn-md dropdown-toggle m-1" id="dropdownMenuReference" data-toggle="dropdown">
+                                        정렬
+                                    </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
                                         <a class="dropdown-item" th:href="@{/produce/list/0}">최신순</a>
                                         <a class="dropdown-item" th:href="@{/produce/list/sort/1}">판매량 순</a>
@@ -86,41 +77,40 @@
                         <!--  ====================상품 카드 끝======================-->
 
                     <!--  ====================페이지네이션 시작======================-->
-<!--                        fixed-bottom 일단 이걸로 아래에 고정해놨는데 너무아래라서 나중에 바꿔야할듯-->
-<!-- .page-item.active .page-link -->
-                    <div class="row fixed-bottom" data-aos="fade-up" th:if="${page.count>page.perPage}">
-                        <div class="col-md-12 text-center">
-<!--                            이거 없으면 페이지네이션 왼쪽하단으로 이동됨-->
-                            <div class="pages">
-                                <ul class="pagination" style="justify-content: center">
-                                    <li class="page-item" th:classappend="${page.page == 0} ? 'disabled'">
-                                        <a  th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}" class="page-link"
-                                        style="background-color: #ffbe33">
-                                            &lt;
-                                        </a>
-                                    </li>
-                                    <li class="page-item"
+                        <nav class="mt-3" th:if="${page.count>page.perPage}">
+                            <ul class="pagination justify-content-center">
+                                <li
+                                        class="page-item"
+                                        th:classappend="${page.page == 0} ? 'disabled'">
+                                    <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}"
+                                       class="page-link">&laquo;</a>
+                                </li>
+                                <li
+                                        class="page-item"
                                         th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
                                         th:classappend="${page.page==number-1} ? 'active'">
-                                        <a th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
-                                           class="page-link" th:text="${number}"></a>
-                                    </li>
-                                    <li class="page-item" th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'">
-                                        <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}" class="page-link"
-                                            style="background-color: #ffbe33">
-                                            &gt;
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                                    <a
+                                            th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
+                                            class="page-link"
+                                            th:text="${number}"
+                                    ></a>
+                                </li>
+                                <li
+                                        class="page-item"
+                                        th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'">
+                                    <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}"
+                                       class="page-link">&raquo;</a>
+                                </li>
+                            </ul>
+                        </nav>
                         <!--  ====================페이지네이션 끝======================-->
-                    
+                    </div>
             </div>
         </div>
     </div>
-    </div>
-</div>
+</div> 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 </body>
 </html>

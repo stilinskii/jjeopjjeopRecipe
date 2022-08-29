@@ -75,7 +75,6 @@ public class ProduceController {
     }
 
     private boolean isSeller(UserDTO user) {
-        System.out.println();
         return user.getUsertype() < 2;
     }
 
@@ -175,16 +174,26 @@ public class ProduceController {
 
     //판매글 상세보기
     @GetMapping("/produce/view/{produceNum}")
-    public ModelAndView produceView(@PathVariable("produceNum") int produce_num, ModelAndView mav, HttpServletRequest request) {
+    public ModelAndView produceView(@PathVariable("produceNum") int produce_num, ModelAndView mav, HttpServletRequest request, @RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
         //판매글 상세내용
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num); //produce_num에 해당하는 정보 가져오기
         mav.addObject("produceDTO", produceDTO);//가져온 정보 보내기
         mav.addObject("businessName", produceService.searchSellerBusinessName(produceDTO.getUser_id()));
         mav.setViewName("/produce/produceView");
 
+        int totalRecord = reviewService.reviewCount(produce_num);
+        Pagenation pagenation = new Pagenation(page,5, totalRecord); //페이지 처리를 위한 계산
+        //mapper에 보낼 값들.
+        Map<String, Object> map = new HashMap<>();
+        map.put("startRow", pagenation.getStartRow());
+        map.put("endRow", pagenation.getEndRow());
+        map.put("produce_num", produce_num);
+
         //리뷰
-        List<ReviewDTO> list = reviewService.reviewListProcess(produce_num);
+        List<ReviewDTO> list = reviewService.reviewList(map);
         mav.addObject("list", list);
+
+        mav.addObject("page", pagenation);
 
         //직전페이지 정보
         String beforeAddress = request.getHeader("referer");

@@ -141,3 +141,14 @@ a:focus {
 .active {
   color: #e69c00;
 }
+/* =====================pagination 스타일 변경 시작==================== */
+/*클릭된 칸을 노란색으로 채우기*/
+.page-item.active .page-link {
+  color: #fff;
+  background-color: #ffbe33;
+  border-color: #ccc;
+  }
+
+/*글씨 검정색으로*/
+.pagination a{color:black;}
+/* =====================pagination 스타일 변경 끝==================== */

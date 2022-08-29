@@ -5,13 +5,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.jjeopjjeop.recipe.dao.ReviewDAO">
-<!--    <select id="reviewList" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ReviewDTO">-->
-<!--        SELECT * FROM produce_review WHERE produce_name = #{produce_name}-->
-<!--    </select>-->
 
 <!--판매글 상세보기에서 해당 판매글에 대한 리뷰 목록 보여주기-->
-    <select id="reviewList" parameterType="int" resultType="com.jjeopjjeop.recipe.dto.ReviewDTO">
-        SELECT produce_review.pay_num, produce_review.rating, produce_review.content, produce_review.created_date
+    <select id="reviewList" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ReviewDTO">
+        <![CDATA[
+        	SELECT rcp_li.* FROM
+                (SELECT rcp.*, rownum rm FROM
+                    ( SELECT produce_review.pay_num, produce_review.rating, produce_review.content, produce_review.created_date
+                        FROM produce_review, pay_history
+                        WHERE produce_review.pay_num = pay_history.pay_num
+                        AND pay_history.produce_num = #{produce_num}
+                        ORDER BY pay_num
+                        )rcp)rcp_li
+            WHERE rm >= #{startRow} AND rm <= #{endRow}
+        ]]>
+    </select>
+
+<!--페이지 처리를 위한 각 판매글에 대한 리뷰 개수-->
+    <select id="reviewCount" resultType="int" parameterType="int">
+        SELECT count(*)
         FROM produce_review, pay_history
         WHERE produce_review.pay_num = pay_history.pay_num
         AND pay_history.produce_num = #{produce_num}
