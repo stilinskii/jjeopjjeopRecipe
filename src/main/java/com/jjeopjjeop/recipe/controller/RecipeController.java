@@ -315,7 +315,7 @@ public class RecipeController {
         }
 
         service.deleteProcess(rcp_seq, urlPath(request, 0), urlPath(request, 1));
-        return session.getAttribute("user_id").equals("admin") ? "redirect:/admin/c_index" : "redirect:/recipe/list";
+        return session.getAttribute("user_id").equals("admin") ? "redirect:/admin/r_index" : "redirect:/recipe/list";
     }
 
     // 첨부파일 처리를 위한 메소드
