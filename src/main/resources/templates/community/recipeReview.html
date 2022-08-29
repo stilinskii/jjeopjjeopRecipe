@@ -70,7 +70,12 @@
                 </thead>
                 <tbody>
                   <tr th:each="el,iterStat:${board}">
-                    <th scope="row" th:text="${iterStat.count}">1</th>
+                    <th
+                      scope="row"
+                      th:text="${page.perPage * page.page + iterStat.count}"
+                    >
+                      1
+                    </th>
                     <td>
                       <a
                         th:href="@{|/community/post?id=${el.id}|}"

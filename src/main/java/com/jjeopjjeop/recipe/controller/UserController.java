@@ -1,6 +1,6 @@
 package com.jjeopjjeop.recipe.controller;
 
-import com.jjeopjjeop.recipe.config.MyProperties;
+
 import com.jjeopjjeop.recipe.config.MySecured;
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.dto.RecipeDTO;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,10 +33,10 @@ public class UserController {
 
    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-   @Autowired
-   private MyProperties prop;
-   @Autowired
-   private JavaMailSender javaMailSender;
+//   @Autowired
+//   private MyProperties prop;
+//   @Autowired
+//   private JavaMailSender javaMailSender;
    @Autowired
    private UserDTO userDTO;
    @Autowired
@@ -175,7 +174,7 @@ public class UserController {
       return "/users/findpw";
    }
 
-   //인증번호 발송
+   //인증번호 발송 ===> application.properties 노출로 보안 이슈 발생 ==> 기존 아이디 찾기와 동일한 방식으로 변경
    @PostMapping("/findpw")
    public String sendEmail(@ModelAttribute("user") UserDTO userDTO, Model model, RedirectAttributes rAttr) throws Exception{
       userDTO = userServiceImp.findPassword(userDTO);
@@ -186,12 +185,14 @@ public class UserController {
          return "redirect:/findpw";
       }else {
 
-         String email = userDTO.getEmail();
+//         String email = userDTO.getEmail();
+//
+//         userServiceImp.updatePassword(userDTO);
+//         userServiceImp.sendMail(email);
+//
+//         logger.info(email);
+           model.addAttribute("user", userDTO);
 
-         userServiceImp.updatePassword(userDTO);
-         userServiceImp.sendMail(email);
-
-         logger.info(email);
          return "users/findpwComplete";
       }
    }
