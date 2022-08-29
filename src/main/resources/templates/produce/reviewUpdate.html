@@ -23,12 +23,12 @@
                             <input type="hidden" class="form-control" placeholder="아이디" th:value="${session.user_id}"/>
                         </div>
                         <div>
-                            <select class="form-control nice-select wide" name='rating' size='1' th:value="*{rating}"
-                                    th:field="*{rating}" th:errorclass="is-invalid">
+                            <select class="form-control nice-select wide" name='rating' size='1'
+                                    th:value="*{rating}" th:field="*{rating}" th:errorclass="is-invalid">
 <!-- https://velog.io/@max9106/Thymeleaf-%EC%9E%90%EC%A3%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EB%AC%B8%EB%B2%95
 th:field: 각각 필드들을 매핑을 해주는 역할을 한다. 설정해 준 값으로, th:object에 설정해 준 객체의 내부와 매칭해준다.
 잘모르겠는데 이거없으면 기존에 저장된 별점이 나오지 않음. -->
-                                <option value="" selected>점수선택</option>
+                                <option th:value="">점수선택</option>
                                 <option th:value="0.5">0.5</option>
                                 <option th:value="1">1</option>
                                 <option th:value="1.5">1.5</option>

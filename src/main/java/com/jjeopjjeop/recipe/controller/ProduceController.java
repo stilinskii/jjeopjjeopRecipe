@@ -53,20 +53,14 @@ public class ProduceController {
     }
 
 
+    //바인딩 리절트가 검사받을 객체 바로 뒤에 와야함!!!!!!!!!!!!!!!!!!!!!!!
     //판매글 작성 반영
     @MySecured
     @PostMapping("/produce/write")
-    public String produceWrite(@Validated ProduceDTO produceDTO, MultipartFile file, BindingResult bindingResult) throws Exception{
+    public String produceWrite(@Validated ProduceDTO produceDTO, BindingResult bindingResult, MultipartFile file) throws Exception{
         if(bindingResult.hasErrors()){
-            System.out.println("==============비정상=======================");
-            System.out.println(produceDTO);
-            System.out.println("======================================");
             return "/produce/produceWrite";
         }
-
-        System.out.println("===============정상======================");
-        System.out.println(produceDTO);
-        System.out.println("======================================");
         produceService.writeProcess(produceDTO, file);
         return "redirect:/produce/list/0";
     }
@@ -159,8 +153,6 @@ public class ProduceController {
         if(beforeAddress.indexOf("/produce/list") > 0){ //직전페이지가 판매글 리스트라면
             mav.addObject("beforeAddress", beforeAddress);  //직전페이지 url를 뷰에 보내기기
         }
-
-
         return mav;
     }
 
@@ -171,28 +163,18 @@ public class ProduceController {
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num);
         produceDTO.setProduce_image(produceDTO.getProduce_image().substring(produceDTO.getProduce_image().lastIndexOf('_')+1)); //기존의 파일이미지 가지고 오기.
         mav.addObject("produceDTO", produceDTO);
-        mav.setViewName("produce/produceUpdateForm");
+        mav.setViewName("produce/produceUpdate");
         return mav;
     }
 
     //판매글 수정 반영
     @MySecured
     @PostMapping("/produce/update/{produceNum}")
-    public String produceUpdate(@PathVariable("produceNum") int produce_num,@Validated ProduceDTO produceDTO, MultipartFile file, BindingResult bindingResult, Model model) throws Exception {
+    public String produceUpdate(@PathVariable("produceNum") int produce_num,@Validated ProduceDTO produceDTO, BindingResult bindingResult, MultipartFile file) throws Exception {
         if (bindingResult.hasErrors()) { //에러있으면
-            return "/produce/reviewUpdate";
+            return "/produce/produceUpdate";
         }
-
-
         produceService.produceUpdate(produceDTO, file);
         return "redirect:/produce/view/" + produce_num;
     }
-    /*
-    @MySecured
-    @PostMapping("/produce/write")
-    public String produceWrite(ProduceDTO produceDTO, MultipartFile file) throws Exception{
-        produceService.writeProcess(produceDTO, file);
-        return "redirect:/produce/list/0";
-    }
-     */
 }
