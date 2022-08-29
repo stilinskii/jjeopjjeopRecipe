@@ -29,31 +29,6 @@ public class SellerController {
 
     private final SellerService sellerService;
 
-//    @Autowired
-//    private SellerService sellerService;
-//
-//    @Autowired
-//    private SellerDTO sellerDTO;
-
-
-//    @RequestMapping(value = "/seller/view", method = RequestMethod.GET)
-//    public ModelAndView listSeller(ModelAndView mav, HttpServletRequest request) throws Exception{
-//        String viewName = (String)request.getAttribute("viewName");
-//        System.out.println("list viewName :" + viewName);
-//        mav.addObject("sellerList", sellerService.listSeller());
-//        mav.setViewName("/templates/seller/view");
-//        return mav;
-//            }
-
-//    @RequestMapping(value = "/seller/write", method = RequestMethod.POST)
-//    public ModelAndView insertSeller(@ModelAttribute("member") SellerDTO sellerDTO, HttpServletRequest request,
-//                                     HttpServletResponse response) throws Exception {
-//        //request.setCharacterEncoding("utf-8");// 자동 인코딩이 된다.
-//        int result = 0;
-//        result = sellerService.insertSeller(sellerDTO);
-//        ModelAndView mav = new ModelAndView("redirect:/seller/view");
-//        return mav;
-//    }
 
     @GetMapping("/seller/form")
     public String all(Model model){

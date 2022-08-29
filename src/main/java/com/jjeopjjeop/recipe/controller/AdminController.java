@@ -44,7 +44,7 @@ public class AdminController {
     @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/u_index")
     public String UserList(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model,String keyword) {
-        log.info("회원 리스트");
+        //log.info("회원 리스트");
        Pagenation pagenation = new Pagenation(page, 10, adminService.countUser(new Pagenation()));
        pagenation.setKeyword(keyword);
        List<UserDTO> users = adminService.userList(pagenation);
@@ -66,7 +66,7 @@ public class AdminController {
     @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("delU/{user_id}")
     public String delUser(@PathVariable String user_id){
-        log.info("user_id={}",user_id);
+        //log.info("user_id={}",user_id);
         adminService.delUser(user_id);
         return "redirect:/admin/u_index";
     }
@@ -83,7 +83,7 @@ public class AdminController {
     @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/s_index")
     public String nSellerList(@RequestParam(value = "page", required = false, defaultValue = "0")Integer page, Model model){
-       log.info("nseller");
+       //log.info("nseller");
        Pagenation pagenation = new Pagenation(page,10,adminService.countNseller());
        List<SellerDTO> nsellers = adminService.nSellerList(pagenation);
 
@@ -148,7 +148,6 @@ public class AdminController {
     //레시피글 누르면 상세내용 페이지 ->???????
     @GetMapping("/recipe/view/{rcp_seq}")
     public String rcpdetail(String rcp_name, Model model){
-        // model.addAttribute("RecipeDTO", );
         return "redirect:/recipe/rcpView";
     }
 
@@ -175,7 +174,7 @@ public class AdminController {
     @MySecured(role = MySecured.Role.ADMIN)
     @GetMapping("/delcom/{id}")
     public String delcomm(@PathVariable Integer id){
-        log.info("access");
+        //log.info("access");
         adminService.delcomm(id);
         //model.addAttribute("delcomm", delcomm);
         return "redirect:/admin/c_index";
