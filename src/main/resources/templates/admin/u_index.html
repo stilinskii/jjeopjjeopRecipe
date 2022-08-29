@@ -5,25 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>admin main</title>
-    <th:block th:replace="fragments/head :: link">
-
-        <!-- bootstrap  -->
-        <link
-                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-                rel="stylesheet"
-        />
-
-        <link
-                href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-                rel="stylesheet"
-        />
-        <!-- icons -->
-        <link
-                href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-                rel="stylesheet"
-        />
-        <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}" />
-    </th:block>
+    <th:block th:replace="fragments/head :: link"></th:block>
 
     <link
             rel="stylesheet"
@@ -82,23 +64,14 @@
                         <th scope="col">유저타입</th>
                         <th scope="col">이름</th>
                         <th scope="col">닉네임</th>
-                        <!--                <th scope="col">이메일</th>-->
-                        <!--                <th scope="col">폰번호</th>-->
-                        <!--                <th scope="col">생일</th>-->
-                        <!--                <th scope="col">성별</th>-->
-
                         <th scope="col">주소</th>
-                        <!--                <th scope="col">상세보기</th>-->
                         <th scope="col">탈퇴</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="au:${users}">
-                        <!--                        <th scope="row" th:text="${rn}">1</th>-->
-                        <!--                <a th:href="@{|/community/post?id=${el.id}|}"><td th:text="${el.title}">제목</td></a>-->
                         <td><a th:href="@{|/admin/detailU?user_id=${au.user_id}|}" th:text="${au.user_id}"></a></td>
                         <td th:text="${au.password}"></td>
-<!--                        <td th:text="${au.usertype==1} ? '회원' : '판매자'"></td>-->
                         <td th:switch="${au.usertype}">
                             <span th:case="3">관리자</span>
                             <span th:case="2">판매자</span>
@@ -107,15 +80,8 @@
 
                         <td th:text="${au.username}"></td>
                         <td th:text="${au.nickname}"></td>
-                        <!--                <td th:text="${au.email}"></td>-->
-                        <!--                <td th:text="${au.phone}"></td>-->
-                        <!--                <td th:text="${au.birthday}"></td>-->
-                        <!--                <td th:text="${au.gender}"></td>-->
-                        <!--                <td th:text="${au.postno}"></td>-->
                         <td th:text="${au.address}"></td>
-
                         <td><a th:href="@{|/admin/upU/${au.user_id}|}" class="btn btn-sm" onclick="alert('탈퇴되었습니다.')">탈퇴</a></td>
-<!--                        <p th:text="${au.user_id}"></p>-->
                     </tr>
                     </tbody>
                 </table>

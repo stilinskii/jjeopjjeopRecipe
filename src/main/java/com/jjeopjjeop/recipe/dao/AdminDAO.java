@@ -14,12 +14,10 @@ import java.util.Map;
 public interface AdminDAO {
 
     //회원 카운트
-    //public int countUser(Pagenation pagenation);
     public int countUser(Pagenation pagenation);
 
     //회원 리스트
     public List<UserDTO> userList(Pagenation pagenation);
-    //public List<UserDTO> UserList(A_criteria cri);
 
     //레시피 신고순 리스트
     public List<RecipeDTO> rcpList(Map<String, Object> map);
