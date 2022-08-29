@@ -7,7 +7,6 @@ import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import java.io.File;
 import java.util.*;
 
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,19 +130,19 @@ class ProduceServiceImp implements ProduceService {
 
     //하영 통합검색에 필요.
     @Override
-    public List<ProduceDTO> findProductsByKeyword(String keyword) {
-        return produceDAO.findProductsByKeyword(keyword);
+    public List<ProduceDTO> findProduceByKeyword(String keyword) {
+        return produceDAO.findProduceByKeyword(keyword);
     }
 
     @Override
-    public List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, Pagenation pagenation) {
+    public List<ProduceDTO> findProduceByKeywordWithPaging(String keyword, Pagenation pagenation) {
         Map<String, Object> map = new HashMap<>();
         map.put("keyword",keyword);
         map.put("startRow",pagenation.getStartRow());
         map.put("endRow",pagenation.getEndRow());
         log.info("map info={},{},{}",keyword,pagenation.getStartRow(),pagenation.getEndRow());
 
-        return produceDAO.findProductsByKeywordWithPaging(map);
+        return produceDAO.findProduceByKeywordWithPaging(map);
     }
 
     @Override

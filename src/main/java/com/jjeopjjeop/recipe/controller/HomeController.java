@@ -43,7 +43,7 @@ public class HomeController {
         return "index";
     }
 
-//상세검색 시작
+//통합검색 시작
     @GetMapping("/search")
     public String searchPage(){
         return "searchPage";
@@ -77,18 +77,18 @@ public class HomeController {
 
 
         //shopping - 쇼핑에는 키워드 검색 기능이 따로 없어서 만듦
-        List<ProduceDTO> productListAll = produceService.findProductsByKeyword(keyword);
+        List<ProduceDTO> productListAll = produceService.findProduceByKeyword(keyword);
         int totalCnt = productListAll.size();
 
         if(totalCnt==0){
-            redirectAttributes.addFlashAttribute("NoProductList",true);
+            redirectAttributes.addFlashAttribute("NoProduceList",true);
         }else{
             List<ProduceDTO> productList = productListAll.size()>4 ? getSmallProductList(productListAll):productListAll;
-            redirectAttributes.addFlashAttribute("productList",productList);//상품 4개
-            redirectAttributes.addFlashAttribute("productListSize",productListAll.size());
+            redirectAttributes.addFlashAttribute("produceList",productList);//상품 4개
+            redirectAttributes.addFlashAttribute("produceListSize",productListAll.size());
 
             //더보기 결과 페이지네이션을 위해
-            session.setAttribute("productListAllTotalCnt",totalCnt);
+            session.setAttribute("produceListAllTotalCnt",totalCnt);
             session.setAttribute("keyword",keyword);
         }
 
@@ -107,7 +107,7 @@ public class HomeController {
     }
 
 
-    @GetMapping("/moreProduct")
+    @GetMapping("/moreProduce")
     public ModelAndView produceList(@RequestParam(value="page", required=false, defaultValue = "0") int page, String keyword, HttpSession session, ModelAndView mav) {
        //1페이지 이상으로갈때 keyword파라미터 없어지는걸 대비.
         if(StringUtils.isEmpty(keyword)){
@@ -118,7 +118,7 @@ public class HomeController {
         int totalRecord = (int) session.getAttribute("productListAllTotalCnt");
 
         Pagenation pagenation = new Pagenation(page,9, totalRecord);
-        List<ProduceDTO> list = produceService.findProductsByKeywordWithPaging(keyword,pagenation);
+        List<ProduceDTO> list = produceService.findProduceByKeywordWithPaging(keyword,pagenation);
 
         mav.addObject("totalRecord", totalRecord); //전체 레코드 정보 넘기기
         mav.addObject("list", list);  //판매글 리스트 넘겨주기
@@ -142,7 +142,6 @@ public class HomeController {
 
         // 검색 레시피 목록
         List<RecipeDTO> rcpList = recipeService.searchListProcess(pagenation, rcp_sort, cate_seq, keyword);
-        //System.out.println(rcpList);
 
         mav.addObject("rcp_sort", rcp_sort);
         mav.addObject("cate_seq", cate_seq);

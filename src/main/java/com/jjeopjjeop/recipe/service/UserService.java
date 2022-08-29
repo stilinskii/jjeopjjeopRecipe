@@ -33,4 +33,5 @@ public interface UserService {
 
    public int checkId(String user_id);
 
+   UserDTO findUserById(String user_id);
 }

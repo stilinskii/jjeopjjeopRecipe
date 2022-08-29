@@ -1,7 +1,10 @@
 package com.jjeopjjeop.recipe.controller;
 
 import com.jjeopjjeop.recipe.config.MySecured;
-import com.jjeopjjeop.recipe.dto.*;
+import com.jjeopjjeop.recipe.dto.CommunityCommentDTO;
+import com.jjeopjjeop.recipe.dto.CommunityDTO;
+import com.jjeopjjeop.recipe.dto.RecipeDTO;
+import com.jjeopjjeop.recipe.dto.UserDTO;
 import com.jjeopjjeop.recipe.form.CommunitySearchForm;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.CommunityService;
@@ -75,37 +78,31 @@ public class CommunityController {
 
     @MySecured
     @PostMapping("/form")
-    public String forFormSubmit(@Validated @ModelAttribute("community") CommunityDTO community, BindingResult bindingResult, @RequestPart(value = "image",required=false) List<MultipartFile> image,HttpSession session){
+    public String forFormSubmit(@Validated @ModelAttribute("community") CommunityDTO community,
+                                BindingResult bindingResult,
+                                @RequestPart(value = "image",required=false) List<MultipartFile> image,
+                                HttpSession session){
         if(bindingResult.hasErrors()){
             return "community/form";
         }
-
         //성공로직
-        UserDTO user = getUser(session);
-        String userId = user.getUser_id();
+        String userId = getUserId(session);
         community.setUser_id(userId);
 
-        //자유글이면 레시피가 선택됐더라도 선택X
-        if(community.getCategory().equals("0")){
-            community.setRcp_seq(null);
-        }
-
-        //사진 있으면 사진있는 게시판이라고 표시(인덱스에서 사진있음 표시 위해)
-        if(image.get(0).isEmpty()){
-            community.setImage_exists(0);
-        }else{
-            community.setImage_exists(1);
-        }
         communityService.save(community,image);
 
-
         return "redirect:/community/post?id="+community.getId();
+    }
+
+    private String getUserId(HttpSession session) {
+        String userId = (String) session.getAttribute("user_id");
+        return userId;
     }
 
     //ajax
     @MySecured
     @PostMapping("/form/searchRecipe")
-    public String searchKeyword(String searchKey, Model model){
+    public String searchRecipeByKeyword(String searchKey, Model model){
         List<RecipeDTO> recipes = recipeService.searchListByKeyword(searchKey);
         model.addAttribute("recipes",recipes);
        return "community/form :: .recipe-box";
@@ -115,26 +112,26 @@ public class CommunityController {
     @GetMapping("/post")
     public String post(Integer id, Model model, HttpSession session){
 
-        UserDTO user = getUser(session);
-        String userId = user.getUser_id();
+        String userId = getUserId(session);
+
         //로그인한 유저가 해당 포스트 좋아요 했는지도 확인함.
         CommunityDTO post = communityService.findPostWithLikeInfo(id,userId);
-        List<CommunityCommentDTO> comments = communityService.findComments(id);
-        log.info("post.getCategory()={}",post.getCategory());
-        //글이 레시피 후기글이면 레시피 정보도 넘기기.
-        Integer rep_scq = post.getRcp_seq();
-        if(rep_scq != null && rep_scq !=0){
-            RecipeDTO recipeDTO = recipeService.contentProcess(rep_scq);
-            model.addAttribute("recipe", recipeDTO);
 
-        }else {
-            //삭제된 레시피의 후기글일때 넘기기.
-            if (post.getCategory().equals("2")) {
+        //댓글
+        List<CommunityCommentDTO> comments = communityService.findComments(id);
+
+        //글이 레시피 후기글이면 레시피 정보도 넘기기.
+        String category = post.getCategory();
+        if(category.equals("1")){
+            if(post.getRcp_seq()==null){
                 model.addAttribute("deletedRecipe", true);
+            }else{
+                Integer rep_scq = post.getRcp_seq();
+                RecipeDTO recipeDTO = recipeService.contentProcess(rep_scq);
+                model.addAttribute("recipe", recipeDTO);
             }
         }
-        //로그인한 유저의 정보도 뷰에 넘김.
-        model.addAttribute("user",user);
+
         //포스트
         model.addAttribute("community",post);
         //댓글
@@ -268,26 +265,53 @@ public class CommunityController {
                                @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                Model model, HttpServletRequest request){
 
-        Pagenation pagenation = new Pagenation(page,10,totalCnt);
         //검색을 통해서 들어온거면 검색 값 넘기기. 아니면 안넘김.
-        String referer = request.getHeader("referer");
-        if(referer.contains("/community/search")){
+        if(isFromSearch(request)){
+            Pagenation pagenation = new Pagenation(page,10,totalCnt);
             List<CommunityDTO> communityBySearch = communityService.findCommunityBySearch(form, pagenation);
-            model.addAttribute("board",communityBySearch);
-        }
+            CommunitySearchForm communitySearchForm = form;
 
-        model.addAttribute("page",pagenation);
+            model.addAttribute("board",communityBySearch);
+            model.addAttribute("searchForm",communitySearchForm);
+            model.addAttribute("page",pagenation);
+        }
 
         return "community/detailSearch";
     }
 
+    private boolean isFromSearch(HttpServletRequest request) {
+        String[] referer = request.getHeader("referer").split("/");
+        String lastUri = referer[referer.length - 1];
+        return lastUri.contains("search");
+    }
+    
     @PostMapping("/search")
     public String detailSearchSubmit(CommunitySearchForm searchForm){
-        totalCnt = communityService.countCommunityBySearch(searchForm);
         form=searchForm;
+        totalCnt = communityService.countCommunityBySearch(searchForm);
         return "redirect:/community/search";
     }
 
+
+
+    //    @GetMapping("/search")
+//    public String detailSearch(@ModelAttribute("searchForm") CommunitySearchForm searchForm,
+//                               @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+//                               Model model){
+//
+//        //검색을 통해 form이 생성되면 정보 넘기기
+//        if(form!=null){
+//            Pagenation pagenation = new Pagenation(page,10,totalCnt);
+//            List<CommunityDTO> communityBySearch = communityService.findCommunityBySearch(form, pagenation);
+//            CommunitySearchForm communitySearchForm = form;
+//
+//            model.addAttribute("board",communityBySearch);
+//            model.addAttribute("searchForm",communitySearchForm);
+//            model.addAttribute("page",pagenation);
+//        }
+//
+//        return "community/detailSearch";
+//    }
 
 
 

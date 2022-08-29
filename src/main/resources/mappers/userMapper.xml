@@ -134,4 +134,9 @@
         FROM(SELECT rcp.*, rownum rm FROM (SELECT * FROM recipe) rcp) rcp_li
         WHERE user_id=#{user_id}
     </select>
+
+
+    <select id="findUserById" resultType="com.jjeopjjeop.recipe.dto.UserDTO" parameterType="String">
+        SELECT * FROM user_j WHERE user_id=#{user_id}
+    </select>
 </mapper>

@@ -2,7 +2,6 @@ package com.jjeopjjeop.recipe.restAPI.community;
 
 import com.jjeopjjeop.recipe.dto.CommunityDTO;
 import com.jjeopjjeop.recipe.mapper.CommunityApiMapper;
-import com.jjeopjjeop.recipe.service.CommunityService;
 import io.swagger.annotations.ApiImplicitParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//http://localhost:8081/swagger-ui.html#/community-api-controller
 @Slf4j
 @RestController
 @RequestMapping("/api/community")
