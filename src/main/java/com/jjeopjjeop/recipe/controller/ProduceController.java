@@ -199,7 +199,9 @@ public class ProduceController {
     @GetMapping("/produce/update/{produceNum}")
     public ModelAndView produceUpdateForm(@PathVariable("produceNum") int produce_num, ModelAndView mav) {
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num);
-        produceDTO.setProduce_image(produceDTO.getProduce_image().substring(produceDTO.getProduce_image().lastIndexOf('_')+1)); //기존의 파일이미지 가지고 오기.
+        if(produceDTO.getProduce_image() != null) {
+            produceDTO.setProduce_image(produceDTO.getProduce_image().substring(produceDTO.getProduce_image().lastIndexOf('_') + 1)); //기존의 파일이미지 가지고 오기.
+        }
         mav.addObject("produceDTO", produceDTO);
         mav.setViewName("produce/produceUpdate");
         return mav;

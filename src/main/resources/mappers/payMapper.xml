@@ -71,6 +71,12 @@ user_id = #{user_id}는 혹시 다른 사람이 결제하는 거랑 겹칠까봐
 
 
     <!--===========================================================================-->
+    <!-- 장바구니 목록에서 제거하기.-->
+    <delete id="cartDelete" parameterType="int">
+        DELETE FROM pay_history
+        WHERE pay_num = #{pay_num}
+        AND pay = 0
+    </delete>
 
     <!--결제완료된 품목의 pay를 1로 바꾸기. 나중에 user_id부분도 넣어야할듯?->아닌듯. 어차피 앞에서 다 걸러졌으니까 괜찮겠다.-->
     <update id="cartUpdate" parameterType="int">

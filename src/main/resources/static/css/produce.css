@@ -11,10 +11,11 @@
 /*.pages의 모든 a의 글씨색 검정색으로 */
 .pages a{color:black;}
 
+.pagination a{color:black;}
   /* 페이지 표시하는 글자들 가운데, 옆으로나열, 크기 조절 등 */
 .pages ul li a {
-  /* text-align: center; */
-  /* display: inline-block; */
+  text-align: center;
+ /* display: inline-block;*/
   width: 40px;
   height: 40px;
   line-height: 40px;
