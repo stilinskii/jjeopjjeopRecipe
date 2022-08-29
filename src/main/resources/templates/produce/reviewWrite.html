@@ -19,7 +19,7 @@
         <div class="row d-flex justify-content-center">
             <div class="col-md-6">
                 <div class="form_container">
-                    <form name="write" id="write" method="post" enctype="multipart/form-data"
+                    <form name="write" id="write" method="post"
                           th:action="@{/review/write}" th:object="${reviewDTO}">
                         <div>
                             <input type="hidden" class="form-control" placeholder="아이디" th:value="${session.user_id}"/>
