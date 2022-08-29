@@ -58,7 +58,7 @@ public class CommunityController {
 
     @GetMapping("/freeForum")
     public String freeForum(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, Model model){
-        Pagenation pagenation = new Pagenation(page,10,communityService.recipeReviewCount());
+        Pagenation pagenation = new Pagenation(page,10,communityService.freeForumCount());
         List<CommunityDTO> board = communityService.getFreeForums(pagenation);
 
         model.addAttribute("board",board);
