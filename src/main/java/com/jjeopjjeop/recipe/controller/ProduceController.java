@@ -6,25 +6,30 @@ import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.jjeopjjeop.recipe.service.ReviewService;
+import com.jjeopjjeop.recipe.service.SellerService;
+import com.jjeopjjeop.recipe.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.standard.expression.Each;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Slf4j
@@ -38,24 +43,62 @@ public class ProduceController {
     @Autowired
     private ReviewService reviewService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private SellerService sellerService;
 
     public ProduceController() {
     }
 
     //판매글 작성폼 불러오기
     @MySecured
-    @GetMapping({"/produce/write"})
-    public String produceWriteForm(Model model) {
-
+    @GetMapping("/produce/write")
+    public String produceWriteForm(Model model,HttpServletResponse response, HttpSession session) throws IOException {
+        String user_id = (String) session.getAttribute("user_id");
+        UserDTO user = userService.findUserById(user_id);
+        //유저 타입이 판매자가 아닌경우
+        if(isSeller(user)){
+            //이미 판매자 등록했는데 아직 승인이 안난경우
+            if(isWaitingToBeApproved(user_id)){
+                alertAndMovePage(response,"판매자 등록 처리중입니다. 잠시만 기다려주세요!","/produce/list/0");
+            }else{
+                //판매자 등록 안한경우
+                alertAndMovePage(response,"판매자가 아닙니다. 우선 판매자로 등록해주세요!","/seller/write");
+            }
+        }
+            //성공로직
         model.addAttribute("produceDTO", new ProduceDTO()); //빈 오브젝트를 뷰에 넘겨준다.
+
         return "/produce/produceWrite";
     }
 
+    private boolean isSeller(UserDTO user) {
+        System.out.println();
+        return user.getUsertype() < 2;
+    }
 
+    private boolean isWaitingToBeApproved(String user_id) {
+        return sellerService.findSellerById(user_id) > 0;
+    }
+
+    public static void alertAndMovePage(HttpServletResponse response, String alertText, String nextPage)  throws IOException {
+        response.setContentType("text/html;charset=euc-kr");
+        response.setCharacterEncoding("euc-kr");
+        PrintWriter out = response.getWriter();
+        out.println("<script>alert('"+alertText+"');location.href='"+nextPage+"';</script>");
+        out.flush();
+    }
+
+    //바인딩 리절트가 검사받을 객체 바로 뒤에 와야함!!!!!!!!!!!!!!!!!!!!!!!
     //판매글 작성 반영
     @MySecured
-    @PostMapping({"/produce/write"})
-    public String produceWrite(ProduceDTO produceDTO, MultipartFile file) throws Exception{
+    @PostMapping("/produce/write")
+    public String produceWrite(@Validated ProduceDTO produceDTO, BindingResult bindingResult, MultipartFile file) throws Exception{
+        if(bindingResult.hasErrors()){
+            return "/produce/produceWrite";
+        }
         produceService.writeProcess(produceDTO, file);
         return "redirect:/produce/list/0";
     }
@@ -64,7 +107,6 @@ public class ProduceController {
     //판매글 조회(필터링)
     @GetMapping("/produce/list/{type}")
     public ModelAndView produceList(@PathVariable("type") int type, @RequestParam(value = "page", required = false, defaultValue = "0") Integer page, ModelAndView mav) {
-
         int totalRecord = produceService.produceFilterCount(type);// 전체 레코드 수
 
         Pagenation pagenation = new Pagenation(page,9, totalRecord); //페이지 처리를 위한 계산
@@ -75,9 +117,19 @@ public class ProduceController {
         map.put("endRow", pagenation.getEndRow());
         map.put("produce_type", type);
 
+        List<ProduceDTO> list = produceService.produceList(map);
         //produceList.html에 보낼 값들.
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
-        mav.addObject("list", produceService.produceList(map));  //판매글 리스트 넘겨주기
+        mav.addObject("list", list);  //판매글 리스트 넘겨주기
+
+        //판매자 id로 판매자 상호명 구하기.
+        Map<String, String> idToBusinessName = new HashMap<>();
+        for (ProduceDTO item:list) {
+            String businessName = produceService.searchSellerBusinessName(item.getUser_id());
+            idToBusinessName.put(item.getUser_id(), businessName);
+        }
+        mav.addObject("idToBusinessName", idToBusinessName);
+
         mav.setViewName("/produce/produceList");
         return mav;
     }
@@ -95,53 +147,72 @@ public class ProduceController {
         map.put("endRow", pagenation.getEndRow());
         map.put("sort", sort);
 
+        List<ProduceDTO> list = produceService.produceListSort(map);
+
         //produceList.html에 보낼 값들.
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
-        mav.addObject("list", produceService.produceListSort(map));  //판매글 리스트 넘겨주기
+        mav.addObject("list", list );  //판매글 리스트 넘겨주기
+
+        //판매자 id로 판매자 상호명 구하기.
+        Map<String, String> idToBusinessName = new HashMap<>();
+        for (ProduceDTO item:list) {
+            String businessName = produceService.searchSellerBusinessName(item.getUser_id());
+            idToBusinessName.put(item.getUser_id(), businessName);
+        }
+        mav.addObject("idToBusinessName", idToBusinessName);
+
         mav.setViewName("/produce/produceList");
         return mav;
     }
     //////////////////////////////////////////////////////////////////////////////////////
-
-    //판매글 삭제
+    //판매종료
     @MySecured
-    @GetMapping({"/produce/delete/{produceNum}"})
-    public String produceDelete(@PathVariable("produceNum") int produce_num) {
-        produceService.produceDeleteProcess(produce_num);
-
+    @GetMapping("/produce/update/endOfSale/{produceNum}")
+    public String produceUpdateSale(@PathVariable("produceNum") int produce_num){
+        produceService.produceUpdateSale(produce_num);
         return "redirect:/produce/list/0";
     }
 
     //판매글 상세보기
     @GetMapping("/produce/view/{produceNum}")
-    public ModelAndView produceView(@PathVariable("produceNum") int produce_num, ModelAndView mav) {
+    public ModelAndView produceView(@PathVariable("produceNum") int produce_num, ModelAndView mav, HttpServletRequest request) {
         //판매글 상세내용
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num); //produce_num에 해당하는 정보 가져오기
         mav.addObject("produceDTO", produceDTO);//가져온 정보 보내기
+        mav.addObject("businessName", produceService.searchSellerBusinessName(produceDTO.getUser_id()));
         mav.setViewName("/produce/produceView");
 
         //리뷰
         List<ReviewDTO> list = reviewService.reviewListProcess(produce_num);
         mav.addObject("list", list);
 
+        //직전페이지 정보
+        String beforeAddress = request.getHeader("referer");
+        if(beforeAddress.indexOf("/produce/list") > 0){ //직전페이지가 판매글 리스트라면
+            mav.addObject("beforeAddress", beforeAddress);  //직전페이지 url를 뷰에 보내기기
+        }
         return mav;
     }
 
     //판매글 수정폼
     @MySecured
-    @GetMapping({"/produce/update/{produceNum}"})
+    @GetMapping("/produce/update/{produceNum}")
     public ModelAndView produceUpdateForm(@PathVariable("produceNum") int produce_num, ModelAndView mav) {
         ProduceDTO produceDTO = produceService.produceViewProcess(produce_num);
+        produceDTO.setProduce_image(produceDTO.getProduce_image().substring(produceDTO.getProduce_image().lastIndexOf('_')+1)); //기존의 파일이미지 가지고 오기.
         mav.addObject("produceDTO", produceDTO);
-        mav.setViewName("produce/produceUpdateForm");
+        mav.setViewName("produce/produceUpdate");
         return mav;
     }
 
     //판매글 수정 반영
     @MySecured
-    @PostMapping({"/produce/update/{produceNum}"})
-    public String produceUpdate(@PathVariable("produceNum") int produce_num, ProduceDTO produceDTO) {
-        produceService.produceUpdateProcess(produceDTO);
+    @PostMapping("/produce/update/{produceNum}")
+    public String produceUpdate(@PathVariable("produceNum") int produce_num,@Validated ProduceDTO produceDTO, BindingResult bindingResult, MultipartFile file) throws Exception {
+        if (bindingResult.hasErrors()) { //에러있으면
+            return "/produce/produceUpdate";
+        }
+        produceService.produceUpdate(produceDTO, file);
         return "redirect:/produce/view/" + produce_num;
     }
 }

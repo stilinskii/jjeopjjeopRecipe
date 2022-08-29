@@ -9,7 +9,7 @@
     </select>
 
     <select id="recipeReviewCount" resultType="int">
-        SELECT count(*) FROM communityboard WHERE category = 1
+        SELECT count(*) FROM communityboard WHERE category > 0
     </select>
 
     <select id="freeForumCount" resultType="int">
@@ -17,20 +17,20 @@
     </select>
 
     <select id="list" parameterType="com.jjeopjjeop.recipe.pagenation.Pagenation" resultType="CommunityDTO">
-        SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
+        SELECT * FROM (select t1.*,row_number() OVER (order by created_at DESC) AS seqnum
         FROM CommunityBoard t1) t1
         WHERE seqnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
     <select id="recipeReviewList" parameterType="com.jjeopjjeop.recipe.pagenation.Pagenation" resultType="CommunityDTO">
-        SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
+        SELECT * FROM (select t1.*,row_number() OVER (order by created_at DESC) AS seqnum
         from CommunityBoard t1
         WHERE category = 1) t1
         WHERE seqnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
     <select id="freeForumList" parameterType="com.jjeopjjeop.recipe.pagenation.Pagenation" resultType="CommunityDTO">
-        SELECT * FROM (select t1.*,row_number() OVER (order by id DESC) AS seqnum
+        SELECT * FROM (select t1.*,row_number() OVER (order by created_at DESC) AS seqnum
         FROM CommunityBoard t1
         WHERE category = 0) t1
         WHERE seqnum BETWEEN #{startRow} AND #{endRow}
@@ -38,7 +38,7 @@
 
     <insert id="insert" parameterType="CommunityDTO">
         INSERT INTO CommunityBoard
-        VALUES(CommunityBoard_SEQ.nextval,#{user_id,jdbcType=VARCHAR},#{rcp_seq},#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0,#{image_exists,jdbcType=VARCHAR})
+        VALUES(CommunityBoard_SEQ.nextval,#{user_id,jdbcType=VARCHAR},#{rcp_seq,jdbcType=VARCHAR},#{category,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},sysdate,sysdate,0,0,0,#{image_exists,jdbcType=VARCHAR})
         <selectKey resultType="int" keyProperty="id" order="AFTER">
             SELECT CommunityBoard_SEQ.CURRVAL FROM DUAL
         </selectKey>
@@ -50,7 +50,7 @@
 
     <insert id="storeImage" parameterType="ImageDTO">
         INSERT INTO Image
-        VALUES(#{board_id},Image_SEQ.nextval,#{filename,jdbcType=VARCHAR})
+        VALUES(Image_SEQ.nextval,#{filename,jdbcType=VARCHAR},#{board_id})
     </insert>
 
     <select id="findImageByPostId" parameterType="int" resultType="ImageDTO">
@@ -99,7 +99,7 @@
         where USER_ID =#{userId} and COMMUNITY_BOARD_ID=#{postId}
     </select>
 
-    <insert id="updatePost" parameterType="CommunityDTO">
+    <update id="updatePost" parameterType="CommunityDTO">
         UPDATE communityboard
         SET
         CATEGORY = #{category},
@@ -110,11 +110,11 @@
         UPDATED_AT = sysdate
         WHERE
         id = #{id}
-      </insert>
+      </update>
 
     <select id="findCommunityBySearch" parameterType="Map" resultType="CommunityDTO">
 
-        SELECT * FROM (SELECT t1.* ,row_number() OVER (order by id DESC) AS seqnum FROM (SELECT * FROM (SELECT * FROM communityboard
+        SELECT * FROM (SELECT t1.* ,row_number() OVER (order by created_at DESC) AS seqnum FROM (SELECT * FROM (SELECT * FROM communityboard
 
             <choose>
                 <when test="form.category == 'all'">

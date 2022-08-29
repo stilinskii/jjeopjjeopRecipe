@@ -218,7 +218,7 @@
     </delete>
 
     <update id="changeDeletedRcp" parameterType="int">
-        UPDATE communityboard SET rcp_seq = null, category = 2
+        UPDATE communityboard SET rcp_seq = null
         WHERE rcp_seq = #{rcp_seq}
     </update>
 

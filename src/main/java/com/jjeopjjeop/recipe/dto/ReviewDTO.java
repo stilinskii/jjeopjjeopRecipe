@@ -13,16 +13,7 @@ import java.sql.Date;
 @Data
 public class ReviewDTO {
 
-/*
-pay_num	NUMBER		NOT NULL,
-produce_name	VARCHAR2(30)		NOT NULL,
-rating	NUMBER		NOT NULL,
-content	VARCHAR2(200)		NOT NULL,
-created_date	DATE		NOT NULL
- */
-
     private Integer pay_num;
-    private String produce_name;
 
     @NotNull(message = "별점을 선택해주세요")
     private Float rating;

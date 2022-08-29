@@ -89,7 +89,7 @@ public class SellerController {
         sellerDTO.setUser_id(user_id);
 
         sellerService.save(sellerDTO);
-        return "redirect:/produce/list";
+        return "redirect:/produce/list/0";
 
     }
 

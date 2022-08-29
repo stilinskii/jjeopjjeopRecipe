@@ -34,7 +34,7 @@
           >
             카테고리>
           </p>
-          <div th:if="${user.user_id}==${community.user_id}">
+          <div th:if="${session.user_id}==${community.user_id}">
             <a
               class="btn btn-secondary btn-sm bd-highlight mx-1"
               th:href="@{|/community/edit/${community.id}|}"
@@ -49,6 +49,7 @@
         </div>
         <h1 th:text="${community.title}">글제목</h1>
         <div class="d-flex bd-highlight detail">
+    
           <p
             class="me-auto bd-highlight"
             th:text="${community.user_id}"
@@ -67,6 +68,9 @@
           </p>
         </div>
         <hr class="my-2 line border border-dark" />
+        <div th:if="${deletedRecipe}">
+          <h3>레시피가 삭제되었습니다.</h3>
+        </div>
         <div
           th:if="${recipe}"
           class="result d-flex justify-content-between border border-secondary m-1 rounded"
@@ -163,7 +167,7 @@
                 disabled
               />
               <p th:text="${comment.formatted_created_at}">작성일자</p>
-              <div th:if="${user.user_id}==${comment.user_id}">
+              <div th:if="${session.user_id}==${comment.user_id}">
                 <button type="button" class="btn btn-secondary btn-sm edit-btn">
                   수정
                 </button>
@@ -174,7 +178,7 @@
                   삭제
                 </a>
               </div>
-              <div th:unless="${user.user_id}==${comment.user_id}">
+              <div th:unless="${session.user_id}==${comment.user_id}">
                 <a
                   th:href="@{|/community/post/comment/report?commentId=${comment.id}|}"
                   class="btn btn-secondary btn-sm confirmReport"
@@ -187,7 +191,7 @@
           <!-- 댓글 남기기 -->
           <hr class="my-2 line border border-dark" />
           <div class="post_comment">
-            <h6 th:text="${user.user_id}">로그인한 회원 아이디</h6>
+            <h6 th:text="${session.user_id}">로그인한 회원 아이디</h6>
             <div class="d-flex justify-content-between py-2">
               <form
                 action="/community/post/comment"
