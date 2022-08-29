@@ -14,9 +14,11 @@ public interface UserService {
    public List<CommunityDTO> listMyCommunity(String user_id, Pagenation pagenation);
    public List<CommunityDTO> listMyReview(String user_id, Pagenation pagenation);
    public List<RecipeDTO> listMyRecipe(String user_id, Pagenation pagenation);
+   public List<RecipeDTO> listMyScrap(String user_id, Pagenation pagenation);
    public int countMyCommunity(String user_id);
    public int countMyReview(String user_id);
    public int countMyRecipe(String user_id);
+   public int countMyScrap(String user_id);
    public int addUser(UserDTO userDTO);
    public int removeUser(String user_id, String password);
    public UserDTO login(UserDTO userDTO);
