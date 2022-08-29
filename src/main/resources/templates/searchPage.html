@@ -101,23 +101,23 @@
         검색어를 입력해주세요!
       </div>
       <!-- ================상품 검색결과==================== -->
-      <div th:if="${NoProductList}">
+      <div th:if="${NoProduceList}">
         <h4>연관 상품이 없습니다.</h4>
       </div>
-      <div class="shopping-popular bg-white mb-5" th:if="${productList}">
+      <div class="shopping-popular bg-white mb-5" th:if="${produceList}">
         <div class="d-flex title">
-          <p>총 <h5 class="rcpSize" th:text="${productListSize}"> 00 </h5>개의 상품이 있습니다</p>
+          <p>총 <h5 class="rcpSize" th:text="${produceListSize}"> 00 </h5>개의 상품이 있습니다</p>
 
           <!-- 품절임박한 상품 순으로 정렬된 레시피 페이지로 이동 -->
-          <h6 class="ms-auto" th:if="${productListSize > 4}">
-            <a th:href="@{|/moreProduct?keyword=${keyword}|}">> 더보기</a>
+          <h6 class="ms-auto" th:if="${produceListSize > 4}">
+            <a th:href="@{|/moreProduce?keyword=${keyword}|}">> 더보기</a>
           </h6>
         </div>
         <div class="row">
           <div
             class="col-3 mb-4"
             data-aos="fade-up"
-            th:each="produce : ${productList}"
+            th:each="produce : ${produceList}"
           >
             <div
               class="block-4 text-center border"

@@ -99,12 +99,12 @@
 	</select>
 
 	<!--======================================index.html용==================================================-->
-	<select id="findProductsByKeyword" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+	<select id="findProduceByKeyword" parameterType="String" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		SELECT * FROM produce_board WHERE produce_name LIKE '%' || #{keyword, jdbcType=VARCHAR} || '%'
 
 	</select>
 
-	<select id="findProductsByKeywordWithPaging" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
+	<select id="findProduceByKeywordWithPaging" parameterType="Map" resultType="com.jjeopjjeop.recipe.dto.ProduceDTO">
 		<![CDATA[
         SELECT rcp_li.* FROM
             (SELECT rcp.*, rownum rm FROM

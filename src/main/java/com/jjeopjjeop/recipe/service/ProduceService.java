@@ -1,7 +1,6 @@
 package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,8 +24,8 @@ public interface ProduceService {
     int produceSortCount(int sort); //페이지처리를 위한 판매글(정렬) 개수세기
 
     //하영
-    List<ProduceDTO> findProductsByKeyword(String keyword);
-    List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, Pagenation pagenation);
+    List<ProduceDTO> findProduceByKeyword(String keyword);
+    List<ProduceDTO> findProduceByKeywordWithPaging(String keyword, Pagenation pagenation);
 
     List<ProduceDTO> getPopularProduceList();
 }

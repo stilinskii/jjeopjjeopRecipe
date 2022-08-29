@@ -1,12 +1,9 @@
 package com.jjeopjjeop.recipe.dao;
 
-import com.jjeopjjeop.recipe.dto.PayDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
 import java.util.List;
 import java.util.Map;
 
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
-import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -30,9 +27,9 @@ public interface ProduceDAO {
     int produceSortCount(int sort); //페이지처리를 위한 판매글(정렬) 개수세기
 
     //하영 통합검색
-    List<ProduceDTO> findProductsByKeyword(String keyword);
+    List<ProduceDTO> findProduceByKeyword(String keyword);
 
-    List<ProduceDTO> findProductsByKeywordWithPaging(Map<String, Object> map);
+    List<ProduceDTO> findProduceByKeywordWithPaging(Map<String, Object> map);
 
 
     List<Integer> getFourProduceNumOrderBySoldCount();
