@@ -58,7 +58,7 @@ public class UserController {
       if (bindingResult.hasErrors()){
          //회원가입 실패 시 기존 데이터 유지
          //model.addAttribute("userDTO", userDTO);
-         logger.info("errors={}", bindingResult);
+//         logger.info("errors={}", bindingResult);
 //         model.addAttribute("message", "형식에 맞지 않는 값이 입력되었습니다.");
          return "users/signup";
       }else {
@@ -75,8 +75,8 @@ public class UserController {
    @GetMapping("/signup/idCheck")
    public int userIdExist(String user_id, Model model){
       int result = userServiceImp.checkId(user_id);
-      log.info("idCheck result: " + user_id);
-      log.info("checkId result: " + result);
+//      log.info("idCheck result: " + user_id);
+//      log.info("checkId result: " + result);
       model.addAttribute("user_id", user_id);
       return result;
    }
@@ -178,7 +178,7 @@ public class UserController {
    @PostMapping("/findpw")
    public String sendEmail(@ModelAttribute("user") UserDTO userDTO, Model model, RedirectAttributes rAttr) throws Exception{
       userDTO = userServiceImp.findPassword(userDTO);
-      logger.info("userDTO={}", userDTO);
+//      logger.info("userDTO={}", userDTO);
 
       if(userDTO == null){
          rAttr.addFlashAttribute("message", "아이디와 이메일이 일치하지 않습니다.");
@@ -218,7 +218,7 @@ public class UserController {
       user_id = (String) session.getAttribute("user_id");
       UserDTO userDTO = userServiceImp.readMypage(user_id);
 //      System.out.println(userDTO.getPassword());
-      log.info("userDTO={}", userDTO);
+//      log.info("userDTO={}", userDTO);
       model.addAttribute("user", userDTO);
       return "users/mypageEdit";
    }
@@ -227,7 +227,7 @@ public class UserController {
    public String updateMypage(@Validated @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult,
                               RedirectAttributes rAttr, Model model){
       if(bindingResult.hasErrors()){
-         logger.info("errors={}", bindingResult);
+//         logger.info("errors={}", bindingResult);
          model.addAttribute("message", "형식에 맞지 않는 값이 입력되었습니다.");
          return "users/mypageEdit";
       }else{
@@ -255,8 +255,8 @@ public class UserController {
       String sessionId = user.getUser_id();
       String sessionPassword = user.getPassword();
 
-      System.out.println("session: "+sessionPassword);
-      System.out.println("Input: "+password);
+//      System.out.println("session: "+sessionPassword);
+//      System.out.println("Input: "+password);
 
       if(!(sessionId.equals(user_id))){
          rAttr.addFlashAttribute("message", "아이디가 일치하지 않습니다.");
@@ -267,7 +267,7 @@ public class UserController {
       } else {
          logger.info("post withdraw");
          userServiceImp.removeUser(user_id, password);
-         System.out.println(userServiceImp.removeUser(user_id, password));
+//         System.out.println(userServiceImp.removeUser(user_id, password));
          session.invalidate();
          return "users/withdrawComplete";
       }
@@ -289,10 +289,10 @@ public class UserController {
       model.addAttribute("user_id", user_id);
       model.addAttribute("myCommunityList", communityDTOList);
       model.addAttribute("page", pagenation);
-      System.out.println("page= "+page);
-      System.out.println("startRow: "+pagenation.getStartRow()+" / endRow: "+pagenation.getEndRow());
-      System.out.println("myCommunityList: " + communityDTOList);
-      System.out.println("page: " + pagenation);
+//      System.out.println("page= "+page);
+//      System.out.println("startRow: "+pagenation.getStartRow()+" / endRow: "+pagenation.getEndRow());
+//      System.out.println("myCommunityList: " + communityDTOList);
+//      System.out.println("page: " + pagenation);
       return "users/myCommunity";
    }
 
