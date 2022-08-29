@@ -61,7 +61,7 @@ public class ProduceController {
         //유저 타입이 판매자가 아닌경우
         if(isSeller(user)){
             //이미 판매자 등록했는데 아직 승인이 안난경우
-            if(isApprovedAsSeller(user_id)){
+            if(isWaitingToBeApproved(user_id)){
                 alertAndMovePage(response,"판매자 등록 처리중입니다. 잠시만 기다려주세요!","/produce/list/0");
             }else{
                 //판매자 등록 안한경우
@@ -78,7 +78,7 @@ public class ProduceController {
         return user.getUsertype() < 2;
     }
 
-    private boolean isApprovedAsSeller(String user_id) {
+    private boolean isWaitingToBeApproved(String user_id) {
         return sellerService.findSellerById(user_id) > 0;
     }
 
