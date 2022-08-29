@@ -170,6 +170,8 @@ public class RecipeServiceImp implements RecipeService{
 
         // 후기글 있으면 후기글 분류 변경
         dao.changeDeletedRcp(rcp_seq);
+
+        // 레시피 삭제
         dao.delete(rcp_seq);
     }
 

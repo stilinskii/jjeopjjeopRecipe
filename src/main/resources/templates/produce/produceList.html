@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>농산물 직거래 장터</title>
+    <title>농산물 직거래 마당</title>
     <!--==========================임의추가 시작==========================-->
 <!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.0/css/bootstrap.css"-->
 <!--          th:href="@{/css/bootstrap.css}"/>-->
@@ -64,7 +64,12 @@
                                 <figure class="block-4-image">
                                     <!--이미지 클릭해도 상세페이지로 가게 설정함. 아님 아예 a태그 이벤트 막는게 나은가?-->
                                     <a th:href="@{/produce/view/{produce_num}(produce_num=${produce.produce_num})}">
-                                        <img class="img-fluid" th:src="${produce.produce_image_path}" alt="상품이미지" />
+                                        <th:block th:if="${#strings.isEmpty(produce.produce_image)}">
+                                            <img class="img-fluid" src="\media\images\rcp_mainimg.png" alt="대체이미지" />
+                                        </th:block>
+                                        <th:block th:unless="${#strings.isEmpty(produce.produce_image)}">
+                                            <img class="img-fluid" th:src="${produce.produce_image_path}" alt="상품이미지" />
+                                        </th:block>
                                     </a>
                                 </figure>
                                 <div class="block-4-text p-4">

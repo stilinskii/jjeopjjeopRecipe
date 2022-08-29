@@ -36,8 +36,7 @@ public class RecipeController {
     @GetMapping("/recipe/list")
     public ModelAndView rcpListMethod(@RequestParam(value="rcp_sort", required=false, defaultValue = "0") Integer rcp_sort,
                                       @RequestParam(value="cate_seq", required=false, defaultValue = "0") int cate_seq,
-                                      @RequestParam(value="page", required=false, defaultValue = "1") int page, ModelAndView mav,
-                                      HttpSession session){
+                                      @RequestParam(value="page", required=false, defaultValue = "1") int page, ModelAndView mav){
 
         // 전체 레코드 수
         Pagenation pagenation = new Pagenation(page, service.countProcess(cate_seq), true);
@@ -171,10 +170,6 @@ public class RecipeController {
     @MySecured(role = MySecured.Role.USER)
     @GetMapping("/recipe/write")
     public String rcpWriteMethod(Model model, HttpSession session){
-//        if(session.getAttribute("user_id") == null){
-//            return "redirect:/login";
-//        }
-
         RecipeDTO recipeDTO = new RecipeDTO();
 
         // 레시피 분류 목록
@@ -198,8 +193,6 @@ public class RecipeController {
             // 레시피 분류 목록
             List<CategoryDTO> cateList = service.cateListProcess();
             model.addAttribute("cateList", cateList);
-
-            //log.info("errors={}", bindingResult);
             return "recipe/rcpWrite";
         }
 
@@ -322,7 +315,7 @@ public class RecipeController {
         }
 
         service.deleteProcess(rcp_seq, urlPath(request, 0), urlPath(request, 1));
-        return session.getAttribute("user_id").equals("admin") ? "redirect:/admin/c_index" : "redirect:/recipe/list";
+        return session.getAttribute("user_id").equals("admin") ? "redirect:/admin/r_index" : "redirect:/recipe/list";
     }
 
     // 첨부파일 처리를 위한 메소드

@@ -129,12 +129,28 @@
         ]]>
     </select>
 
+    <select id="viewMyScrap" parameterType="Map" resultType="RecipeDTO">
+        SELECT * FROM
+        (SELECT rownum rm, r.* FROM
+        (SELECT rcp_seq, rcp_name, user_id, rcp_viewcnt, scrap FROM recipe
+        WHERE rcp_seq IN (SELECT rcp_seq FROM user_rcp WHERE user_id = #{user_id})
+        ORDER BY rcp_seq DESC)r)
+        <![CDATA[
+        WHERE rm >= #{page.startRow} AND rm <= #{page.endRow}
+        ]]>
+    </select>
+
     <select id="countMyRecipe" parameterType="String" resultType="int">
         SELECT count(rcp_seq)
         FROM(SELECT rcp.*, rownum rm FROM (SELECT * FROM recipe) rcp) rcp_li
         WHERE user_id=#{user_id}
     </select>
 
+    <select id="countMyScrap" parameterType="String" resultType="int">
+        SELECT count(*) FROM recipe
+        WHERE rcp_seq IN (SELECT rcp_seq FROM user_rcp WHERE user_id = #{user_id})
+        ORDER BY rcp_seq DESC
+    </select>
 
     <select id="findUserById" resultType="com.jjeopjjeop.recipe.dto.UserDTO" parameterType="String">
         SELECT * FROM user_j WHERE user_id=#{user_id}

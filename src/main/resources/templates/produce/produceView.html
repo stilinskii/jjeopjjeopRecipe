@@ -57,7 +57,12 @@
             <!-- ===========================상품소개 시작=======================================-->
              <div class="row">
                 <div class="col-md-6"><!--왼쪽 6칸은 상품이미지-->
-                    <img class="img-fluid" th:src="${produceDTO.produce_image_path}" alt="첨부이미지" />
+                    <th:block th:if="${#strings.isEmpty(produceDTO.produce_image)}">
+                        <img class="img-fluid" src="\media\images\rcp_mainimg.png" alt="대체이미지" />
+                    </th:block>
+                    <th:block th:unless="${#strings.isEmpty(produceDTO.produce_image)}">
+                        <img class="img-fluid" th:src="${produceDTO.produce_image_path}" alt="상품이미지" />
+                    </th:block>
                 </div>
                 <div class="col-md-6"><!--오른쪽 6칸은 기타 상품설명 등-->
                     <div>

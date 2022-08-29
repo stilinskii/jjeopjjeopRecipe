@@ -19,31 +19,35 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-md-6">
                     <div class="form_container">
-                        <form name="update" id="update" method="post" th:action="@{/produce/update/{produceNum}(produceNum=${produceDTO.produce_num})}" enctype="multipart/form-data"
+                        <form name="update" id="update" method="post" enctype="multipart/form-data"
+                              th:action="@{/produce/update/{produceNum}(produceNum=${produceDTO.produce_num})}"
                               th:object="${produceDTO}">
-                            <input type="hidden" name="produce_num" placeholder="게시글번호" th:value="${produceDTO.produce_num}"
-                                />
+                            <input type="hidden" name="produce_num" placeholder="게시글번호" th:value="${produceDTO.produce_num}"/>
                                 <!--이게 있어야 produce_num이 mapper로 넘어갈 수있다. -->
-
                             <div>
-                                <input type="text" class="form-control" name="user_id" id="user_id" placeholder="아이디" th:value="${produceDTO.user_id}"/>
+                                <input type="hidden" class="form-control" name="user_id" id="user_id" placeholder="아이디" th:value="${produceDTO.user_id}"/>
                             </div>
                             <div>
                                 <select class="form-control nice-select wide" name='produce_type' size='1'
-                                        th:field="${produceDTO.produce_type}" th:value="${produceDTO.produce_type}">
-                                    <option th:value="0" selected>상품종류선택</option>
+                                        th:field="*{produce_type}" th:value="${produceDTO.produce_type}"
+                                        th:errorclass="is-invalid">
+                                    <option value="">상품종류선택</option>
                                     <option th:value="1">채소</option>
                                     <option th:value="2">과일 </option>
                                     <option th:value="3">곡물</option>
                                     <option th:value="4">기타</option>
                                 </select>
+                                <div class="invalid-feedback" th:errors="*{produce_type}">오류메시지</div>
                             </div>
                             <div>
-                                <input type="text" class="form-control" name="produce_name" placeholder="상품명" th:value="${produceDTO.produce_name}" th:field="*{produce_name}"/>
+                                <input type="text" class="form-control" name="produce_name" placeholder="상품명"
+                                       th:value="${produceDTO.produce_name}" th:field="*{produce_name}" th:errorclass="is-invalid"/>
+                                <div class="invalid-feedback" th:errors="*{produce_name}">오류메시지</div>
                             </div>
                             <div>
-                                <input type="text" class="form-control" name="price" placeholder="금액(숫자만 입력해주세요)" th:value="${produceDTO.price}"
-                                       th:field="*{price}"/>
+                                <input type="text" class="form-control" name="price" placeholder="금액(숫자만 입력해주세요)"
+                                       th:value="${produceDTO.price}" th:field="*{price}" th:errorclass="is-invalid"/>
+                                <div class="invalid-feedback" th:errors="*{price}">오류메시지</div>
                             </div>
                             <div class="mt-4">
                                 <label for="input-file" class="button" style="color:blue">
@@ -55,11 +59,12 @@
                             </div>
                             <div>
                                 <textarea class="form-control" name="produce_description" th:text="${produceDTO.produce_description}"
-                                          th:field="*{produce_description}">상품상세설명</textarea>
+                                          th:field="*{produce_description}" th:errorclass="is-invalid">상품상세설명</textarea>
                                 <!-- textarea는 th:value 안먹힘. th:text로 하기.-->
+                                <div class="invalid-feedback" th:errors="*{produce_description}">오류메시지</div>
                             </div>
                             <div class="btn_box d-flex justify-content-center">
-                                <button type="submit">수정</button>
+                                <button>수정</button>
                             </div>
                         </form>
                     </div>
