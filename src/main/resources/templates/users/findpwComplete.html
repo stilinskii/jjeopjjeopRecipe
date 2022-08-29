@@ -16,7 +16,10 @@
 <body>
 <nav th:replace="fragments/nav :: front-nav(title)"></nav>
     <div class="container d-flex justify-content-center align-items-center mt-5">
-        임시비밀번호가 발송되었습니다.<br/>이메일을 통해 비밀번호 확인 후 로그인해주시기 바랍니다.
+<!--        임시비밀번호가 발송되었습니다.<br/>이메일을 통해 비밀번호 확인 후 로그인해주시기 바랍니다.-->
+        회원님의 비밀번호는
+        <span th:text="${user.password}" class="text-warning text-weight bold"></span>입니다.
+        로그인해주시기 바랍니다.
     </div>
     <div class="d-flex justify-content-center pt-5">
         <input
