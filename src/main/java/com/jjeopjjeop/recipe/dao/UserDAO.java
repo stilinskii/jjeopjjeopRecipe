@@ -30,4 +30,6 @@ public interface UserDAO {
    public int countMyCommunity(String user_id) throws DataAccessException;
    public int countMyRecipe(String user_id) throws DataAccessException;
    public int countMyReview(String user_id) throws DataAccessException;
+
+    UserDTO findUserById(String user_id);
 }

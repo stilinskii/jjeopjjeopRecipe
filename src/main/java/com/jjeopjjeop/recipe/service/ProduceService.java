@@ -1,7 +1,6 @@
 package com.jjeopjjeop.recipe.service;
 
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,8 +28,8 @@ public interface ProduceService {
     String searchSellerBusinessName(String user_id); //판매자id로 상호명 검색.
 
     //하영
-    List<ProduceDTO> findProductsByKeyword(String keyword);
-    List<ProduceDTO> findProductsByKeywordWithPaging(String keyword, Pagenation pagenation);
+    List<ProduceDTO> findProduceByKeyword(String keyword);
+    List<ProduceDTO> findProduceByKeywordWithPaging(String keyword, Pagenation pagenation);
 
     List<ProduceDTO> getPopularProduceList();
 }

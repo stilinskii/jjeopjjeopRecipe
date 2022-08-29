@@ -6,12 +6,15 @@ import com.jjeopjjeop.recipe.dto.*;
 import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import com.jjeopjjeop.recipe.service.ProduceService;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.jjeopjjeop.recipe.service.ReviewService;
+import com.jjeopjjeop.recipe.service.SellerService;
+import com.jjeopjjeop.recipe.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,9 +27,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.standard.expression.Each;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Slf4j
@@ -40,6 +43,11 @@ public class ProduceController {
     @Autowired
     private ReviewService reviewService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private SellerService sellerService;
 
     public ProduceController() {
     }
@@ -47,11 +55,40 @@ public class ProduceController {
     //판매글 작성폼 불러오기
     @MySecured
     @GetMapping("/produce/write")
-    public String produceWriteForm(Model model) {
+    public String produceWriteForm(Model model,HttpServletResponse response, HttpSession session) throws IOException {
+        String user_id = (String) session.getAttribute("user_id");
+        UserDTO user = userService.findUserById(user_id);
+        //유저 타입이 판매자가 아닌경우
+        if(isSeller(user)){
+            //이미 판매자 등록했는데 아직 승인이 안난경우
+            if(isWaitingToBeApproved(user_id)){
+                alertAndMovePage(response,"판매자 등록 처리중입니다. 잠시만 기다려주세요!","/produce/list/0");
+            }else{
+                //판매자 등록 안한경우
+                alertAndMovePage(response,"판매자가 아닙니다. 우선 판매자로 등록해주세요!","/seller/write");
+            }
+        }
+            //성공로직
         model.addAttribute("produceDTO", new ProduceDTO()); //빈 오브젝트를 뷰에 넘겨준다.
+
         return "/produce/produceWrite";
     }
 
+    private boolean isSeller(UserDTO user) {
+        return user.getUsertype() < 2;
+    }
+
+    private boolean isWaitingToBeApproved(String user_id) {
+        return sellerService.findSellerById(user_id) > 0;
+    }
+
+    public static void alertAndMovePage(HttpServletResponse response, String alertText, String nextPage)  throws IOException {
+        response.setContentType("text/html;charset=euc-kr");
+        response.setCharacterEncoding("euc-kr");
+        PrintWriter out = response.getWriter();
+        out.println("<script>alert('"+alertText+"');location.href='"+nextPage+"';</script>");
+        out.flush();
+    }
 
     //바인딩 리절트가 검사받을 객체 바로 뒤에 와야함!!!!!!!!!!!!!!!!!!!!!!!
     //판매글 작성 반영

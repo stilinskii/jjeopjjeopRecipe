@@ -4,6 +4,7 @@ package com.jjeopjjeop.recipe.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotBlank;
@@ -22,14 +23,15 @@ public class CommunityDTO {
     private String user_id;
     private Integer rcp_seq;//레시피후기일경우 번호
     private String category;
-    @NotBlank
+
     @Size(min=1,max=30)
     private String title;
     @Size(min=1)
     private String content;
+
     private Date created_at;
     private String formatted_created_at;
-    private String updated_at;
+    private Date updated_at;
     private Integer read_count;
     private Integer like_count;
     private Integer report;

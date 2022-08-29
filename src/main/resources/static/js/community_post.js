@@ -34,35 +34,58 @@ const commentBox = document.querySelectorAll('input.comment-content');
 let editBtnsArr = Array.from(editBtns);
 let action = true;
 
-activeEditComment();
+activateEditComment();
 
-function activeEditComment() {
+function activateEditComment() {
   editBtns.forEach((editBtn) => {
-    console.log(editBtn);
-
-    editBtn.addEventListener('click', function () {
-      let index = editBtnsArr.indexOf(editBtn);
-      console.log('index=' + index);
-      //버튼과 짝인 인풋박스 파라미터로 보내기
-      editmode(commentBox[index]);
-    });
+    editBtn.addEventListener('click', editmode);
   });
 }
 
-function editmode(editBox) {
+function editmode() {
+  let inputEle =
+    this.parentElement.previousElementSibling.previousElementSibling;
   if (action) {
-    editBox.disabled = false;
+    inputEle.disabled = false;
   } else {
-    const commentId = editBox.previousElementSibling.value;
-    let editedVal = editBox.value;
+    let commentId = inputEle.previousElementSibling.value;
+    let editedVal = inputEle.value;
     let data = { commentId: commentId, content: editedVal };
     $.post('/community/post/comment/edit', data).done(function () {
       console.log('edit success');
-      editBox.disabled = true;
+      inputEle.disabled = true;
     });
   }
   action = !action;
 }
+
+// function activeEditComment() {
+//   editBtns.forEach((editBtn) => {
+//     console.log(editBtn);
+
+//     editBtn.addEventListener('click', function () {
+//       let index = editBtnsArr.indexOf(editBtn);
+//       console.log('index=' + index);
+//       //버튼과 짝인 인풋박스 파라미터로 보내기
+//       editmode(commentBox[index]);
+//     });
+//   });
+// }
+
+// function editmode(editBox) {
+//   if (action) {
+//     editBox.disabled = false;
+//   } else {
+//     const commentId = editBox.previousElementSibling.value;
+//     let editedVal = editBox.value;
+//     let data = { commentId: commentId, content: editedVal };
+//     $.post('/community/post/comment/edit', data).done(function () {
+//       console.log('edit success');
+//       editBox.disabled = true;
+//     });
+//   }
+//   action = !action;
+// }
 
 // 삭제 확인
 $(function () {

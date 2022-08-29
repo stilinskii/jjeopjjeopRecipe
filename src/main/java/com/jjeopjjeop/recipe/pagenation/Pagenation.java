@@ -1,10 +1,9 @@
 package com.jjeopjjeop.recipe.pagenation;
 
-import com.jjeopjjeop.recipe.dto.PagenationDTO;
-import lombok.*;
-import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @AllArgsConstructor
