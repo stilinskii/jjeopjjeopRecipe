@@ -98,14 +98,13 @@ public class PayController {
         mav.addObject("list", list);
         mav.addObject("page", pagenation); //페이지 정보 넘겨주기
 
-        //판매자 id로 판매자 상호명 구하기.
+        //판매자 id로 판매자 상호명 구하기
         Map<String, String> idToBusinessName = new HashMap<>();
         for (ProduceDTO item:list) {
             String businessName = produceService.searchSellerBusinessName(item.getUser_id());
             idToBusinessName.put(item.getUser_id(), businessName);
         }
         mav.addObject("idToBusinessName", idToBusinessName);
-
         mav.setViewName("/users/payment");
         return mav;
     }
