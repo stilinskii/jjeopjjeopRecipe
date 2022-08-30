@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReviewServiceImp implements ReviewService{
@@ -17,9 +18,14 @@ public class ReviewServiceImp implements ReviewService{
     }
 
     @Override
-    public List<ReviewDTO> reviewListProcess(int produce_num) {
+    public List<ReviewDTO> reviewList(Map<String, Object> map) {
 
-        return reviewDAO.reviewList(produce_num);
+        return reviewDAO.reviewList(map);
+    }
+
+    @Override
+    public int reviewCount(int produce_num) {
+        return reviewDAO.reviewCount(produce_num);
     }
 
     //리뷰삭제

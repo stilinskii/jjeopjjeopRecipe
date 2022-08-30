@@ -2,41 +2,6 @@
     color: black;
 }
 
-.form_section textarea{
-  resize: none;  /*  사용자가 드래그로 크기조절하는 거 막기. */
-  height: 100px; /*근데 이게 안먹힌다. 직접 style=~해야됨.*/
-}
-
-/* ==============pagination 시작========================== */
-/*.pages의 모든 a의 글씨색 검정색으로 */
-.pages a{color:black;}
-
-.pagination a{color:black;}
-  /* 페이지 표시하는 글자들 가운데, 옆으로나열, 크기 조절 등 */
-.pages ul li a {
-  text-align: center;
- /* display: inline-block;*/
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  border-radius: 50%;
-  border: 1px solid #ccc; }
-
-  /* active인 li의 a만 배경을 노랗게 */
-.pages ul li.active a {
-  background: #FFC947;
-  color: rgb(0, 0, 0);
-  border: 1px solid transparent; }
-
-  /*왜 안먹힘...? */
-.page-item.active .page-link {
-  z-index: 1;
-  color: #fff;
-  background-color: #ffbe33;
-  border-color: #ccc;
-  }
-/* ==============pagination 끝========================= */
-
 /* =================판매글 카드 시작======================= */
   /*아마 판매글 글씨체?*/
 .block-4 {
@@ -73,6 +38,14 @@
           box-shadow: none;
 }
 
+/* 입력칸중 textarea만 크게 보이게.
+.form_section textarea<- 이렇게 지정하면 틀림.
+위에서 입력칸들 css정해서 textarea rows가 안통하는 거임.*/
+.form_section .form_container textarea.form-control {
+  height: 150px;
+  resize: none;
+}
+
 /* 입력폼의 버튼에 스타일 */
 .form_section .form_container button {
   margin-top: 15px;
@@ -104,28 +77,10 @@
   font-weight: bold;
 }
 
-/*=======================produceView, produceList css====================================*/
-
-.site-wrap:before {
-  -webkit-transition: .3s all ease-in-out;
-  -o-transition: .3s all ease-in-out;
-  transition: .3s all ease-in-out;
-  background: rgba(0, 0, 0, 0.6);
-  content: "";
-  position: absolute;
-  z-index: 2000;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0;
-  visibility: hidden; }
-
+/*=======================produceView, produceList====================================*/
+  /* 적절한 여백 */
 .site-section {
   padding: 2.5em 0; }
   @media (min-width: 768px) {
     .site-section {
       padding: 5em 0; } }
-
-.site-section.site-section-sm {
-  padding: 4em 0; }

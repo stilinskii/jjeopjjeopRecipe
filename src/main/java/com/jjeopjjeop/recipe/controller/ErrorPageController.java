@@ -14,19 +14,19 @@ public class ErrorPageController {
 
    @GetMapping("/error-page/400")
    public String errorPage400(HttpServletRequest request, HttpServletResponse response){
-      log.info("errorPage400");
+//      log.info("errorPage400");
       return "error/400";
    }
 
    @GetMapping("/error-page/500")
    public String errorPage500(HttpServletRequest request, HttpServletResponse response){
-      log.info("errorPage500");
+//      log.info("errorPage500");
       return "error/500";
    }
    
    @GetMapping("/error-page/404")
    public String errorPage404(HttpServletRequest request, HttpServletResponse response){
-      log.info("errorPage404");
+//      log.info("errorPage404");
       return "error/404";
    }
 

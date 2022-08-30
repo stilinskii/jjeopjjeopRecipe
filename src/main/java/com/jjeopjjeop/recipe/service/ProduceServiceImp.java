@@ -47,9 +47,6 @@ class ProduceServiceImp implements ProduceService {
     //판매글 작성과 판매글 수정을 위한 이미지 저장 메소드
     public String imageStore(MultipartFile file) throws Exception{
         String fileName;
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        System.out.println(file.isEmpty());
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
         if(!file.isEmpty()) {//업로드한 파일이 있으면
             // 저장하기
             String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\media\\produce";
@@ -60,9 +57,6 @@ class ProduceServiceImp implements ProduceService {
         }else {
             fileName = "";
         }
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        System.out.println(fileName);
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         return fileName;
     }
