@@ -1,10 +1,7 @@
 package com.jjeopjjeop.recipe.dao;
 
-import com.jjeopjjeop.recipe.dto.PagenationDTO;
 import com.jjeopjjeop.recipe.dto.PayDTO;
 import com.jjeopjjeop.recipe.dto.ProduceDTO;
-import com.jjeopjjeop.recipe.dto.RecipePageDTO;
-import com.jjeopjjeop.recipe.pagenation.Pagenation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

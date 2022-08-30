@@ -140,7 +140,7 @@ class ProduceServiceImp implements ProduceService {
         map.put("keyword",keyword);
         map.put("startRow",pagenation.getStartRow());
         map.put("endRow",pagenation.getEndRow());
-        log.info("map info={},{},{}",keyword,pagenation.getStartRow(),pagenation.getEndRow());
+
 
         return produceDAO.findProduceByKeywordWithPaging(map);
     }
