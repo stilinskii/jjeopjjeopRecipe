@@ -3,48 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!--임의 추가 시작-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <!--임의 추가 끝-->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
     <th:block th:replace="fragments/head :: links"> </th:block>
     <link href="/static/css/produce.css" th:href="@{/css/produce.css}" rel="stylesheet"/>
-    <script type="text/javascript" th:inline="javascript">
-        $(document).ready(function() {
-        //+, -버튼
-        var sitePlusMinus = function() {
-            $('.js-btn-minus').on('click', function(e){
-                e.preventDefault();
-                if ( $(this).closest('.input-group').find('.form-control').val() != 0  ) {
-                    $(this).closest('.input-group').find('.form-control').val(parseInt($(this).closest('.input-group').find('.form-control').val()) - 1);
-                } else {
-                    $(this).closest('.input-group').find('.form-control').val(parseInt(0));
-                }
-            });
-            $('.js-btn-plus').on('click', function(e){
-                e.preventDefault();
-                $(this).closest('.input-group').find('.form-control').val(parseInt($(this).closest('.input-group').find('.form-control').val()) + 1);
-            });
-        };
-        sitePlusMinus();
-        });
-    </script>
 </head>
 <body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script th:src="@{/js/produce.js}" defer type="text/javascript"></script>
 <nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
-<div class="site-wrap">
     <div class="bg-light py-3">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 mb-0">
                     <th:block th:if="${beforeAddress} ==null">
-                        <a th:href="@{/produce/list/0}">목록</a>
+                        <a th:href="@{/produce/list/0}">농산물 직거래 마당</a>
                     </th:block>
                     <th:block th:unless="${beforeAddress} ==null">
-                        <a th:href="${beforeAddress}">목록</a>
+                        <a th:href="${beforeAddress}">농산물 직거래 마당</a>
                     </th:block>
                     <span class="mx-2 mb-0">/</span>
                     <strong class="text-black" th:text="${produceDTO.produce_name}">상품명</strong></div>
@@ -79,79 +54,93 @@
                     </th:block>
                     <p th:text="'['+${businessName}+']'">seller_name</p>
                     <span><strong class="text-dark h4" data-th-text="${#numbers.formatInteger(produceDTO.price, 3, 'COMMA') + '원'}">상품가격</strong></span>
-                    <p th:text="${produceDTO.produce_description}">상품설명</p>
+                    <p th:text="${produceDTO.produce_description}" class="mt-2">상품설명</p>
 
                     <form name="cartWrite" id="cartWrite" method="post">
-<!--                        th:action="@{/cart/write/}"-->
-                        <div class="mb-5">
-                            <div class="input-group mb-3" style="max-width: 120px;">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-warning js-btn-minus" type="button">&minus;</button>
-                                </div>
-                                <input type="text" class="form-control text-center" value="1"
-                                   aria-label="Example text with button addon" aria-describedby="button-addon1"
-                                    name="quantity">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-warning js-btn-plus" type="button">&plus;</button>
-                                </div>
+                        <div class="input-group mb-3" style="max-width: 120px;">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-warning js-btn-minus" type="button">&minus;</button>
+                            </div>
+                            <input type="text" class="form-control text-center" value="1"
+                               aria-label="Example text with button addon" aria-describedby="button-addon1"
+                                name="quantity">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-warning js-btn-plus" type="button">&plus;</button>
                             </div>
                         </div>
                         <!--장바구니 넣을 때 user_id도 같이 넣어주기-->
                         <input type="hidden" th:value="${session.user_id}" name="user_id">
                         <!-- 장바구니넣을때 produce_num을 넣어주기위해-->
                         <input type="hidden" th:value="${produceDTO.produce_num}" name="produce_num" placeholder="게시글번호" />
-
-                        <button class="btn btn-lg btn-warning" onclick="javascript: form.action='/cart/write/';">장바구니</button>
-                        <br /><br />
-                        <button class="btn btn-lg btn-warning" onclick="javascript: form.action='/kakaoPayDirect';">카카오페이로 결제하기</button>
+                        <div class="row m-1">
+                            <button class="btn btn-lg btn-warning col-md-4" onclick="javascript: form.action='/cart/write/';">장바구니</button>
+                            <span class="col-md-1"></span>
+                            <button class="btn btn-lg btn-warning col-md-6" onclick="javascript: form.action='/kakaoPayDirect';">카카오페이로 결제</button>
+                        </div>
                     </form>
                 </div>
             </div>
             <!-- ===========================상품소개 끝=======================================-->
             <!-- ===========================리뷰 시작=======================================-->
-<!--            <form name="reviewList" method="post" th:action="@{/produce/view/test/{produceNum}(produceNum=${produceDTO.produce_num})}">-->
-<!--                <input type="text" th:value="${produceDTO.produce_num}" name="produce_num" />-->
-<!--                <button>리뷰보기</button>-->
-<!--            </form>-->
-
-            <!--    <a th:href="@{/produce/view/test/{produceName}(produceName=${produceDTO.produce_name})}">-->
-            <!--        <button>리뷰보기</button>-->
-            <!--    </a>-->
-
-            <!--    <form name="update" id="update" method="post" th:action="@{/produce/update/{produceNum}(produceNum=${produceDTO.produce_num})}">-->
-            <!--인코딩방식때문에 get으로 하니까 안됨. post로 하기. href로 하면-->
-            <br /><br />
-            <h2>구매자 리뷰</h2> <br />
-
-            <th:block th:if="${#lists.isEmpty(list)}">
-                <h5>등록된 리뷰가 없습니다.</h5>
-            </th:block>
-            <th:block th:unless="${#lists.isEmpty(list)}">
-                <table class="table">
-                    <thead class="table-warning">
-                    <tr>
-                        <th scope="col">일련번호</th>
-                        <th scope="col">점수</th>
-                        <th scope="col">리뷰작성날짜</th>
-                        <th scope="col">내용</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="reviewDTO : ${list}">
-                            <td th:text="${reviewDTOStat.count}"></td><!--변수명Stat.count는 1부터 시작하는 일련번호-->
-                            <td><th:block th:text="${reviewDTO.rating} +'점'" /></td>
-                            <td><th:block th:text="${reviewDTO.created_date}" /></td>
-                            <td><th:block th:text="${reviewDTO.content}"/></td>
+            <div class="mb-5 mt-3">
+                <h2 class="mt-3 mb-3">구매자 리뷰</h2>
+                <th:block th:if="${#lists.isEmpty(list)}">
+                    <h5>등록된 리뷰가 없습니다.</h5>
+                </th:block>
+                <th:block th:unless="${#lists.isEmpty(list)}">
+                    <table class="table text-center">
+                        <thead class="table-warning">
+                        <tr class="row">
+                            <th scope="col" class="col-1">일련번호</th>
+                            <th scope="col" class="col-1">점수</th>
+                            <th scope="col" class="col-2">작성날짜</th>
+                            <th scope="col" class="col-8">내용</th>
                         </tr>
-                    </tbody>
-                </table>
-            </th:block>
-            <br><br><br>
+                        </thead>
+                        <tbody>
+                            <tr th:each="reviewDTO : ${list}" class="row">
+                                <td class="col-1" th:text="${page.perPage * page.page + reviewDTOStat.count}"></td><!--변수명Stat.count는 1부터 시작하는 일련번호-->
+                                <!--페이지당 보이는 게시글 수 * 현재페이지번호 + 한페이지당 일련번호로 계산해서 페이지 넘어가도 일련번호 이어지게 만듧.-->
+                                <td class="col-1"><th:block th:text="${reviewDTO.rating} +'점'" /></td>
+                                <td class="col-2"><th:block th:text="${reviewDTO.created_date}" /></td>
+                                <td class="col-8" style="word-break:break-all"><th:block th:text="${reviewDTO.content}"/></td>
+<!--                            style="word-break:break-all" <- 내용이 넘칠경우 자동 줄바꿈.-->
+                            </tr>
+                        </tbody>
+                    </table>
+                </th:block>
+            </div>
             <!--=======================================리뷰 끝=============================================== -->
+            <!--  ====================페이지네이션 시작======================-->
+            <nav class="mt-3" th:if="${page.count>page.perPage}">
+                <ul class="pagination justify-content-center">
+                    <li
+                            class="page-item"
+                            th:classappend="${page.page == 0} ? 'disabled'">
+                        <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page-1}__|}"
+                           class="page-link">&laquo;</a>
+                    </li>
+                    <li
+                            class="page-item"
+                            th:each="number : ${#numbers.sequence(page.startPageNum,page.endPageNum)}"
+                            th:classappend="${page.page==number-1} ? 'active'">
+                        <a
+                                th:href="@{|${#httpServletRequest.requestURI}?page=__${number-1}__|}"
+                                class="page-link"
+                                th:text="${number}"
+                        ></a>
+                    </li>
+                    <li
+                            class="page-item"
+                            th:classappend="${page.page == page.totalPageCnt-1} ? 'disabled'">
+                        <a th:href="@{|${#httpServletRequest.requestURI}?page=__${page.page+1}__|}"
+                           class="page-link">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+            <!--  ====================페이지네이션 끝======================-->
         </div>
     </div>
-</div>
-
 <!--임의 추가 시작-->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>

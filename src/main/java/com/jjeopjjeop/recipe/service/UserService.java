@@ -24,10 +24,10 @@ public interface UserService {
    public UserDTO login(UserDTO userDTO);
    public UserDTO findId(UserDTO userDTO);
    public UserDTO findPassword(UserDTO userDTO);
-   public int updatePassword(UserDTO userDTO);
+//   public int updatePassword(UserDTO userDTO);
 
-   public String getTempPassword();
-   public void sendMail(String email);
+//   public String getTempPassword();
+//   public void sendMail(String email);
 
    public UserDTO readMypage(String user_id);
 

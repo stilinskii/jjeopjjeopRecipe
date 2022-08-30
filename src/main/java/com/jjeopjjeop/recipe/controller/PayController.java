@@ -71,7 +71,6 @@ public class PayController {
            String businessName = produceService.searchSellerBusinessName(item.getUser_id());
            idToBusinessName.put(item.getUser_id(), businessName);
         }
-        System.out.println(idToBusinessName);
         mav.addObject("idToBusinessName", idToBusinessName);
 
         mav.setViewName("/users/cart");
