@@ -52,7 +52,6 @@
     });
 
     $("#submitBtn").on("click", function(){
-        console.log($("textarea[name=manual_txt]").val());
         if($("textarea[name=manual_txt]").val() == ""){
             alertMsg = "<p>요리 순서별 요리 방법을 입력하세요.</p>";
             $(".modal-body p").html(alertMsg);

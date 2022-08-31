@@ -112,7 +112,6 @@ public class RecipeController {
 
         for(int i=0; i<list.size(); i++){
             cate_list.add(list.get(i).getCate_name());
-            System.out.println(list.get(i).getCate_name());
         }
 
         mav.addObject("cate_list", service.getRcpCateProcess(rcp_seq));
