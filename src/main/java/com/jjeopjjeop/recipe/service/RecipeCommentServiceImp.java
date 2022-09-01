@@ -17,7 +17,6 @@ public class RecipeCommentServiceImp implements RecipeCommentService{
     private RecipeCommentDAO dao;
 
     public RecipeCommentServiceImp() {
-
     }
 
     @Override
@@ -33,7 +32,6 @@ public class RecipeCommentServiceImp implements RecipeCommentService{
 
     @Override
     public void writeProcess(RecipeCommentDTO recipeCommentDTO) {
-
         dao.write(recipeCommentDTO);
     }
 
