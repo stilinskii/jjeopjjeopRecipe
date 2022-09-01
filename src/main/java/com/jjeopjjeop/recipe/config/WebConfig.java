@@ -9,8 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    private final HandlerInterceptor authInterceptor;
 
+    private final HandlerInterceptor authInterceptor;
     public WebConfig(HandlerInterceptor authInterceptor) {
         this.authInterceptor = authInterceptor;
     }
