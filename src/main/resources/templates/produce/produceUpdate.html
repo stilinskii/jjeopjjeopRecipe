@@ -50,7 +50,7 @@
                                 <div class="invalid-feedback" th:errors="*{price}">오류메시지</div>
                             </div>
                             <div class="mt-4">
-                                <label for="input-file" class="button mr-1" style="color:blue">
+                                <label for="input-file" class="button mr-1" style="color:blue; cursor:pointer;">
                                     여기를 클릭하여 상품이미지 업로드
                                 </label>
                                 <input type="text" id="fileName" name="fileName" placeholder="업로드한 파일명" readonly th:value="${produceDTO.produce_image}">
