@@ -294,24 +294,7 @@ public class CommunityController {
 
 
 
-    //    @GetMapping("/search")
-//    public String detailSearch(@ModelAttribute("searchForm") CommunitySearchForm searchForm,
-//                               @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-//                               Model model){
-//
-//        //검색을 통해 form이 생성되면 정보 넘기기
-//        if(form!=null){
-//            Pagenation pagenation = new Pagenation(page,10,totalCnt);
-//            List<CommunityDTO> communityBySearch = communityService.findCommunityBySearch(form, pagenation);
-//            CommunitySearchForm communitySearchForm = form;
-//
-//            model.addAttribute("board",communityBySearch);
-//            model.addAttribute("searchForm",communitySearchForm);
-//            model.addAttribute("page",pagenation);
-//        }
-//
-//        return "community/detailSearch";
-//    }
+
 
 
 
