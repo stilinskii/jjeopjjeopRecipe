@@ -112,3 +112,37 @@ Tool : IntelliJ, VS Code, GitHub
 <br>
 
 ### 관리자
+
+```
+- 회원 관리
+  전체 회원목록, 회원 상세보기, 회원 탈퇴
+- 레시피 관리
+  전체 레시피 목록(신고순), 레시피 삭제, 레시피 상세보기
+- 판매자 관리
+  판매자 신청 목록, 판매자 승인, 판매자 승인취소
+- 게시판 관리
+  게시물 전체 목록(신고순), 게시물 상세보기, 게시물 삭제
+- 판매자 등록
+  판매자 등록 페이지
+```
+
+- 관리자 메인
+  ![메인](https://user-images.githubusercontent.com/104446775/187861254-35e6ce54-bdd1-4808-ba35-7165601de7d7.PNG)
+
+- 회원 관리
+  ![회원관리페이지](https://user-images.githubusercontent.com/104446775/187858549-9923b987-19ca-483c-9e4e-a23d115ce018.PNG)
+  ![회원상세페이지](https://user-images.githubusercontent.com/104446775/187858943-ac621238-15e3-4908-aca1-f69749f8559f.PNG)
+  ![아이디 검색결과](https://user-images.githubusercontent.com/104446775/187859202-3766608e-c0cb-4fcd-a2d0-4d46e2799f3a.PNG)
+
+- 레시피 관리
+  ![레시피관리1](https://user-images.githubusercontent.com/104446775/187859457-59469cf1-50ef-45b4-9f6b-06496a1b4a1d.PNG)
+
+- 판매자 관리
+  ![판매자관리 승인목록](https://user-images.githubusercontent.com/104446775/187859907-4c4bc289-f7c0-4e40-a163-71e509c5b417.PNG)
+  ![판매자관리 승인취소](https://user-images.githubusercontent.com/104446775/187860013-35a2c2ed-a07a-4b64-a3fb-63c003925a1e.PNG)
+
+- 게시판 관리
+  ![게시판 목록](https://user-images.githubusercontent.com/104446775/187860596-84e1b102-8ebf-4eb7-a3db-866a56be9fb4.PNG)
+
+- 판매자 등록
+  ![판매자 등록](https://user-images.githubusercontent.com/104446775/187862654-8468e730-5f0e-4320-a0c2-0f07a869da66.PNG)

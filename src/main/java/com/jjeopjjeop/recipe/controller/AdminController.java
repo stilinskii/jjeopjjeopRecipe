@@ -135,7 +135,7 @@ public class AdminController {
 
 
         // 전체 레시피 목록
-        List<RecipeDTO> rcpList = service.listProcess(pagenation, rcp_sort, cate_seq);
+        List<RecipeDTO> rcpList = adminService.rcpList(pagenation, rcp_sort, cate_seq);
 
         mav.addObject("rcp_sort", rcp_sort);
         mav.addObject("cate_seq", cate_seq);
