@@ -7,15 +7,13 @@
 
 ## 요구사항
 
----
-
 ![팀프로젝트 역할분담](https://user-images.githubusercontent.com/96387509/187103328-3288ff52-5982-4b4a-8ca1-e06a535321c7.png)
 
 <br>
 <br>
 
 ## ERD
-
+![파이널 프로젝트](https://user-images.githubusercontent.com/105467839/188069078-1b7e0755-9fef-4309-9451-e626806ac409.png)
 ---
 
 <br>
@@ -23,7 +21,6 @@
 
 ## 팀원 및 맡은 역할 소개
 
-<hr>
 임하영
 (팀장)
 
@@ -83,16 +80,19 @@ Tool : IntelliJ, VS Code, GitHub
 <br>
 <br>
 
+---
 ### 레시피
 
 <br>
 <br>
 
+---
 ### 쇼핑
 
 <br>
 <br>
 
+---
 ### 커뮤니티 게시판
 
 ```
@@ -121,11 +121,38 @@ Tool : IntelliJ, VS Code, GitHub
 <br>
 <br>
 
+---
 ### 회원
+```
+레시피 작성 및 쇼핑 등 사이트를 이용하기 위해서는 회원가입이 필수입니다.
+유효하지 않은 값을 기입한 경우 회원가입을 할 수 없습니다.
+아이디/비밀번호 찾기를 통해 가입 시 기재한 아이디와 비밀번호를 찾을 수 있습니다.
+DB에 저장된 아이디, 비밀번호와 동일한 값인 경우 로그인할 수 있습니다.
+```
+- 회원가입
+![signup](https://user-images.githubusercontent.com/105467839/188056426-d89996c9-98be-4069-9598-38a1ae8957d1.gif)
+- 아이디 찾기
+![findId](https://user-images.githubusercontent.com/105467839/188068581-953f39fb-0cdd-4761-a251-cb702c2cf4b0.gif)
+- 로그인
+![login](https://user-images.githubusercontent.com/105467839/188068163-30beb130-daea-4312-80ad-d44533e21377.gif)
 
+---
+### 마이페이지
+```
+로그인 후 마이페이지에서 비밀번호를 비롯한 내 정보를 수정할 수 있습니다.
+마이페이지에서 내 스크랩, 내 레시피, 내 게시글, 내 장바구니, 내 구매내역을 조회할 수 있으며 링크를 통해 해당 게시글로 이동할 수 있습니다.
+아이디와 비밀번호를 입력하여 회원탈퇴를 할 수 있습니다. 다만 실제 데이터가 삭제되지 않고 별도로 구분되어 관리됩니다.
+```
+- 내 정보 수정
+![mypageEdit](https://user-images.githubusercontent.com/105467839/188057279-0b885436-df50-4fe4-9a87-68beb67ece7c.gif)
+- 내 스크랩, 내 레시피, 내 게시글, 내 장바구니, 내 구매내역
+![myPages](https://user-images.githubusercontent.com/105467839/188058764-4e7c41c8-e393-4351-a691-5dcdd7b9d467.gif)
+- 회원탈퇴
+![myAccount](https://user-images.githubusercontent.com/105467839/188057583-10e2b73d-56a3-4342-aba8-6b9a45e43d62.gif)
 <br>
 <br>
 
+---
 ### 관리자
 
 ```
