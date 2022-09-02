@@ -145,7 +145,7 @@ public class CommunityController {
     }
 
 
-    @MySecured
+    @MySecured 
     @GetMapping("/edit/{postId}")
     public String editPostById(@PathVariable Integer postId, Model model){
         CommunityDTO post = communityService.findPostById(postId);
