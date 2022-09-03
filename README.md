@@ -92,14 +92,22 @@ Tool : IntelliJ, VS Code, GitHub
 ```
 
 - 레시피 index
+![list인덱스](https://user-images.githubusercontent.com/101542378/188267504-b63a69ff-1208-4186-9d6d-4a945050d3d7.png)
 
 - 분류별 열람 / 정렬
+![레시피분류정렬](https://user-images.githubusercontent.com/101542378/188267560-4b54d3a5-80ce-4644-b89a-60e11be7252b.gif){: width="300"}
 
 - 검색
+![레시피검색](https://user-images.githubusercontent.com/101542378/188267631-e5c4c2dd-2000-484c-8883-312e3db0712c.gif)
 
 - 레시피 작성
+![레시피작성](https://user-images.githubusercontent.com/101542378/188267637-7e34a73f-bf36-47c0-9d90-7003e913adff.gif)
 
 - 본문 
+![레시피본문](https://user-images.githubusercontent.com/101542378/188267645-bc750ab6-3ca2-4530-9fda-f58816ace965.gif)
+
+- 레시피 덧글
+![레시피덧글](https://user-images.githubusercontent.com/101542378/188267660-989c3016-9730-40a3-aeb2-492384d8fee2.gif)
 
 <br>
 <br>
