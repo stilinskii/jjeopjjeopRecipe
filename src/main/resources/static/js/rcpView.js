@@ -12,10 +12,12 @@
         "user_id": '<%=(String)session.getAttribute("uid")%>'
     };
 
+    // 뷰 화면 첫 접속 시 1페이지 자동 클릭
     $(function(){
         $('.page-num').first().click();
     });
 
+    // 댓글 내용 출력 함수
     function getCommentList(){
         $.getJSON("/recipe/comment/list", {rcp_seq : rcp_seq, commentCurrentPage : commentCurrentPage}, function(obj){
             let comment_list = '';
@@ -217,10 +219,10 @@
 
     // 공유 관리
     shareBtn.onclick = function(){
-      var copyText = "http://localhost:8081/recipe/view/" + $('#rcp_seq').val();
       var textArea = document.createElement("textarea");//textarea 생성
+      var copyURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname;
 
-      textArea.value = copyText;//textarea에 텍스트 입력
+      textArea.value = copyURL;//textarea에 텍스트 입력
       document.body.appendChild(textArea);//body에 textarea 추가
 
       textArea.select();//선택
