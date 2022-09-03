@@ -10,6 +10,8 @@
 </head>
 
 <body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script th:src="@{/js/produce.js}" defer type="text/javascript"></script>
 <nav th:replace="fragments/nav :: front-nav('shopping')"></nav>
 
 <section class="form_section layout_padding mt-5"><!--mt-5: margin top을 5만큼 줘라-->
@@ -48,10 +50,10 @@
               <div class="invalid-feedback" th:errors="*{price}">오류</div>
             </div>
            <div class="mt-4">
-             <label for="input-file" class="button mr-1" style="color:blue">
+             <label for="input-file" class="button mr-1" style="color:blue; cursor:pointer;">
                여기를 클릭하여 상품이미지 업로드
              </label>
-             <input type="text" id="fileName" name="fileName" placeholder="업로드한 파일명">
+             <input type="text" id="fileName" name="fileName" placeholder="업로드한 파일명" readonly>
              <input type="file" name="file" id="input-file" class="form-control-lg" style="display:none"
                     onchange="javascript:document.getElementById('fileName').value = this.value.slice(this.value.lastIndexOf('\\')+1)">
            </div>

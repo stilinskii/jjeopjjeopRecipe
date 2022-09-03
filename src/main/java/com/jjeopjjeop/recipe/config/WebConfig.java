@@ -9,8 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    private final HandlerInterceptor authInterceptor;
 
+    private final HandlerInterceptor authInterceptor;
     public WebConfig(HandlerInterceptor authInterceptor) {
         this.authInterceptor = authInterceptor;
     }
@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String projectPath = "file:\\" + System.getProperty("user.dir") +"\\src\\main\\resources\\static\\media\\";
+        String projectPath = "\\var\\lib\\tomcat9\\webapps\\jjeopjjeopRecipe\\WEB-INF\\classes\\static\\media\\";
         registry
                 .addResourceHandler("/media/**")
                 .addResourceLocations(projectPath);

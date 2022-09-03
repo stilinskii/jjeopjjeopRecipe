@@ -52,7 +52,7 @@ public class FileStore {
     }
 
     public String getStorePath(String dirName){
-        return imageDir+dirName+"\\";
+        return imageDir+dirName+"/";
     }
 
     public void deleteImages(List<ImageDTO> images, String dirName){
