@@ -50,7 +50,7 @@ class ProduceServiceImp implements ProduceService {
         if(!file.isEmpty()) {//업로드한 파일이 있으면
             // 저장하기
 //            /var/lib/tomcat9/webapps/jjeopjjeopRecipe/WEB-INF/classes/static/media/
-            String projectPath = "/var/lib/tomcat9/webapps/jjeopjjeopRecipe/WEB-INF/classes/static/media/produce";
+            String projectPath = "/usr/local/tomcat9/webapps/jjeopjjeopRecipe/WEB-INF/classes/static/media/produce";
             UUID uuid = UUID.randomUUID();
             fileName = uuid + "_" + file.getOriginalFilename();
             File saveFile = new File(projectPath, fileName);
@@ -80,7 +80,7 @@ class ProduceServiceImp implements ProduceService {
         }else {
             //파일이 바뀌어서 비어있지 않다면
             ////media폴더에 있는 이미지파일도 같이 삭제
-            String filePath = "/var/lib/tomcat9/webapps/jjeopjjeopRecipe/WEB-INF/classes/static/media/produce/"
+            String filePath = "/usr/local/tomcat9/webapps/jjeopjjeopRecipe/WEB-INF/classes/static/media/produce/"
                     + produceDAO.produceView(produceDTO.getProduce_num()).getProduce_image(); //이미지 파일 경로
             File deleteFile = new File(filePath);
             if(deleteFile.exists()) {
