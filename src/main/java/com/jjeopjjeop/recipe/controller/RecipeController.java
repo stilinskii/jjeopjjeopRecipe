@@ -322,9 +322,9 @@ public class RecipeController {
         //String serverPath = request.getServletContext().getRealPath("/");
         String root = "";
         if(num==0){
-            root = "/usr/local/tomcat9/webapps/jjeopjjeopRecipe/WEB-INF/classes/static/media/recipe/";
+            root = "/home/ubuntu/tomcat9/webapps/jjeopjjeopRecipe/WEB-INF/classes/static/media/recipe/";
         }else{
-            root = "/usr/local/tomcat9/webapps/jjeopjjeopRecipe/WEB-INF/classes/static/media/recipe/manual/";
+            root = "/home/ubuntu/tomcat9/webapps/jjeopjjeopRecipe/WEB-INF/classes/static/media/recipe/manual/";
         }
         //String saveDirectory = root + "temp" + File.separator;
         return root;
