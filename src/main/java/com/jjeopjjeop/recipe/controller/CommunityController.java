@@ -260,21 +260,18 @@ public class CommunityController {
 
 
     //상세검색
+    int totalCnt;
+    CommunitySearchForm form;
     @GetMapping("/search")
     public String detailSearch(@ModelAttribute("searchForm") CommunitySearchForm searchForm,
                                @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                Model model, HttpServletRequest request){
 
         //검색을 통해서 들어온거면 검색 값 넘기기. 아니면 안넘김.
-        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-        if(isFromSearch(inputFlashMap)){
-            CommunitySearchForm form = (CommunitySearchForm) inputFlashMap.get("searchForm");
-            int totalCnt = (int) inputFlashMap.get("totalCnt");
-
+        if(isFromSearch(request)){
             Pagenation pagenation = new Pagenation(page,10,totalCnt);
             List<CommunityDTO> communityBySearch = communityService.findCommunityBySearch(form, pagenation);
             CommunitySearchForm communitySearchForm = form;
-
 
             model.addAttribute("board",communityBySearch);
             model.addAttribute("searchForm",communitySearchForm);
@@ -284,16 +281,16 @@ public class CommunityController {
         return "community/detailSearch";
     }
 
-    private boolean isFromSearch(Map<String, ?> inputFlashMap) {
-        return inputFlashMap != null && !inputFlashMap.isEmpty();
+    private boolean isFromSearch(HttpServletRequest request) {
+        String[] referer = request.getHeader("referer").split("/");
+        String lastUri = referer[referer.length - 1];
+        return lastUri.contains("search");
     }
 
-    
     @PostMapping("/search")
-    public String detailSearchSubmit(CommunitySearchForm searchForm, RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("searchForm",searchForm);
-        redirectAttributes.addFlashAttribute("totalCnt",communityService.countCommunityBySearch(searchForm));
-
+    public String detailSearchSubmit(CommunitySearchForm searchForm){
+        form=searchForm;
+        totalCnt = communityService.countCommunityBySearch(searchForm);
         return "redirect:/community/search";
     }
 
