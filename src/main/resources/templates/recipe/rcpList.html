@@ -17,6 +17,7 @@
   <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
   <input type="hidden" th:value="${pagenation.page}">
   <input type="hidden" th:value="${cate_seq}">
+  <br/>
   <main class="custom container">
     <form action="/recipe/search">
       <div class="input-group rounded hero-image">
@@ -174,6 +175,7 @@
         </div>
       </div>
   </main>
+  <br/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="/static/js/rcpList.js" th:src="@{/js/rcpList.js}"></script>
   </body>

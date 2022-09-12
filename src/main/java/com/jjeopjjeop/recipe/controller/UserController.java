@@ -343,8 +343,6 @@ public class UserController {
    @GetMapping("/mypage/scrap")
    public String showMyScrap(String user_id, RecipePageDTO recipePageDTO, @RequestParam(value="page", required = false, defaultValue = "0") int page,
                               HttpSession session, Model model){
-      logger.info("Get myScrap");
-
       user_id = (String) session.getAttribute("user_id");
       Pagenation pagenation = new Pagenation(page, 5, userServiceImp.countMyScrap(user_id));
 

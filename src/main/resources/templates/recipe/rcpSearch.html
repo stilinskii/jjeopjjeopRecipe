@@ -15,6 +15,7 @@
 </head>
 <body>
 <nav th:replace="fragments/nav :: front-nav('recipe')"></nav>
+<br/>
 <main class="custom container">
     <form action="/recipe/search">
         <div class="input-group rounded hero-image">
@@ -139,13 +140,14 @@
                 </li>
             </ul>
         </nav>
-        <div class="d-grid col-4 mx-auto">
+        <div class="d-grid col-4 mx-auto" style="margin-bottom: 30px;">
             <a th:href="@{/recipe/write}" class="btn btn-warning" style="color:#fff;">
                 새 레시피 등록하기
             </a>
         </div>
     </div>
 </main>
+<br/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="/static/js/rcpList.js" th:src="@{/js/rcpList.js}"></script>
 </body>

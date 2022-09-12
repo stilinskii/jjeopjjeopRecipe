@@ -1,5 +1,13 @@
+body{
+ background-color: #f0f0f0;
+}
+
 .custom {
   min-width: 950px;
+  background-color: #fff;
+  padding-left: 30px;
+  padding-right: 30px;
+  border: 1px solid rgb(211, 211, 211);
 }
 
 a {

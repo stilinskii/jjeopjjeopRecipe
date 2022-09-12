@@ -24,12 +24,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String projectPath = "\\var\\lib\\tomcat9\\webapps\\jjeopjjeopRecipe\\WEB-INF\\classes\\static\\media\\";
+        String projectPath = "\\usr\\local\\tomcat9\\webapps\\jjeopjjeopRecipe\\WEB-INF\\classes\\static\\media\\";
         registry
                 .addResourceHandler("/media/**")
                 .addResourceLocations(projectPath);
 
     }
-
 
 }

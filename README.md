@@ -83,12 +83,53 @@ Tool : IntelliJ, VS Code, GitHub
 ---
 ### 레시피
 
+```
+레시피를 작성하고, 다른 사람의 레시피를 볼 수 있는 레시피 게시판입니다.
+레시피를 분류별로 열람할 수 있으며 작성일, 스크랩, 조회수를 기준으로 정렬하여 열람할 수 있습니다.
+검색 페이지에서도 같은 기능이 제공됩니다.
+레시피 본문 조회 페이지에서는 스크랩, 클립보드에 링크 복사, 신고, 덧글 작성 및 수정이 가능합니다.
+레시피를 작성할 때에는 원하는 만큼 레시피 분류를 추가하거나 요리 단계를 추가할 수 있습니다.
+```
+
+- 레시피 index   
+![list인덱스](https://user-images.githubusercontent.com/101542378/188267504-b63a69ff-1208-4186-9d6d-4a945050d3d7.png)
+<br>
+<br>
+
+- 분류별 열람 / 정렬   
+<img src="https://user-images.githubusercontent.com/101542378/188267560-4b54d3a5-80ce-4644-b89a-60e11be7252b.gif" width="70%" />
+<br>
+<br>
+
+- 검색   
+<img src="https://user-images.githubusercontent.com/101542378/188267631-e5c4c2dd-2000-484c-8883-312e3db0712c.gif" width="70%" />
+<br>
+<br>
+
+- 레시피 작성   
+<img src="https://user-images.githubusercontent.com/101542378/188267637-7e34a73f-bf36-47c0-9d90-7003e913adff.gif" width="70%" />
+<br>
+<br>
+
+- 본문    
+<img src="https://user-images.githubusercontent.com/101542378/188267645-bc750ab6-3ca2-4530-9fda-f58816ace965.gif" width="70%" />
+<br>
+<br>
+
+- 레시피 덧글   
+<img src="https://user-images.githubusercontent.com/101542378/188267660-989c3016-9730-40a3-aeb2-492384d8fee2.gif" width="70%" />
 <br>
 <br>
 
 ---
 ### 쇼핑
-
+```
+농산물 판매글을 올리고, 농산물을 구매할 수 있는 쇼핑마당입니다. 
+필터링(채소, 과일 등의 상품 종류)과 정렬(판매량, 리뷰평점 등) 기능이 있습니다.
+상세화면에서 상품의 자세한 정보와 구매한 회원의 리뷰를 확인할 수 있으며, 수량을 선택해 장바구니에 넣거나 결제할 수 있습니다.
+결제는 카카오페이를 통해 이뤄집니다. 
+마이페이지에서 장바구니항목과 결제내역을 확인할 수 있습니다.
+```
 <br>
 <br>
 
