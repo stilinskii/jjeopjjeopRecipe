@@ -280,7 +280,7 @@ public class CommunityController {
             model.addAttribute("searchForm",communitySearchForm);
             model.addAttribute("page",pagenation);
         }
-        
+
         return "community/detailSearch";
     }
 
