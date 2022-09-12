@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -145,7 +147,7 @@ public class CommunityController {
     }
 
 
-    @MySecured 
+    @MySecured
     @GetMapping("/edit/{postId}")
     public String editPostById(@PathVariable Integer postId, Model model){
         CommunityDTO post = communityService.findPostById(postId);
@@ -258,37 +260,40 @@ public class CommunityController {
 
 
     //상세검색
-    int totalCnt;
-    CommunitySearchForm form;
     @GetMapping("/search")
     public String detailSearch(@ModelAttribute("searchForm") CommunitySearchForm searchForm,
                                @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                Model model, HttpServletRequest request){
 
         //검색을 통해서 들어온거면 검색 값 넘기기. 아니면 안넘김.
-        if(isFromSearch(request)){
+        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+        if(isFromSearch(inputFlashMap)){
+            CommunitySearchForm form = (CommunitySearchForm) inputFlashMap.get("searchForm");
+            int totalCnt = (int) inputFlashMap.get("totalCnt");
+
             Pagenation pagenation = new Pagenation(page,10,totalCnt);
             List<CommunityDTO> communityBySearch = communityService.findCommunityBySearch(form, pagenation);
             CommunitySearchForm communitySearchForm = form;
+
 
             model.addAttribute("board",communityBySearch);
             model.addAttribute("searchForm",communitySearchForm);
             model.addAttribute("page",pagenation);
         }
-
+        
         return "community/detailSearch";
     }
 
-    private boolean isFromSearch(HttpServletRequest request) {
-        String[] referer = request.getHeader("referer").split("/");
-        String lastUri = referer[referer.length - 1];
-        return lastUri.contains("search");
+    private boolean isFromSearch(Map<String, ?> inputFlashMap) {
+        return inputFlashMap != null && !inputFlashMap.isEmpty();
     }
+
     
     @PostMapping("/search")
-    public String detailSearchSubmit(CommunitySearchForm searchForm){
-        form=searchForm;
-        totalCnt = communityService.countCommunityBySearch(searchForm);
+    public String detailSearchSubmit(CommunitySearchForm searchForm, RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("searchForm",searchForm);
+        redirectAttributes.addFlashAttribute("totalCnt",communityService.countCommunityBySearch(searchForm));
+
         return "redirect:/community/search";
     }
 
