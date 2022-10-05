@@ -14,7 +14,13 @@
 
 ## ERD
 ![파이널 프로젝트](https://user-images.githubusercontent.com/105467839/188069078-1b7e0755-9fef-4309-9451-e626806ac409.png)
----
+
+
+<br>
+<br>
+
+## WBS
+![image](https://user-images.githubusercontent.com/96387509/194100473-5a76aad5-233c-4465-8c0e-01ac86f52a4a.png)
 
 <br>
 <br>
