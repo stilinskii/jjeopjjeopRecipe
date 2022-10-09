@@ -55,9 +55,9 @@
 ## 사용기술
 
 ```
-Backend: Java 11, Spring boot 2.7.2, Gradle, MyBatis, thymeleaf, Ajax
+Backend: Java 11, Spring boot 2.7.2, Gradle, MyBatis, thymeleaf
 DB : Oracle 11.2
-Front : HTML5, CSS, JavaScript, JQuery, Bootstrap
+Front : HTML5, CSS, JavaScript, JQuery, Bootstrap, Ajax
 Tool : IntelliJ, VS Code, GitHub
 ```
 
